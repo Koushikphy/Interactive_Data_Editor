@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Help</title>
+        <style type="text/css" media="screen">
+            *{
+                margin: 0px 0px 0px 0px;
+                padding: 0px 0px 0px 0px;
+            }
+
+            body, html {
+                padding: 3px 3px 3px 3px;
+
+                background-color: #D8DBE2;
+
+                font-family: Verdana, sans-serif;
+                font-size: 13pt;
+                text-align: center;
+            }
+            .main_page {
+                position: relative;
+                display: table;
+
+                width: 800px;
+
+                margin-bottom: 3px;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 0px 0px 0px 0px;
+
+                border-width: 2px;
+                border-color: #212738;
+                border-style: solid;
+
+                background-color: #FFFFFF;
+
+                text-align: left;
+            }
+            .content_section {
+                margin: 3px 3px 3px 3px;
+
+                background-color: #FFFFFF;
+
+                text-align: left;
+            }
+            .section_header {
+                padding: 3px 6px 3px 5px;
+
+                background-color: #515651;
+
+                color: #FFFFFF;
+                font-weight: bold;
+                font-size: 111%;
+                text-align: left;
+            }
+
+            .section_header_grey {
+                background-color: #5d5a00;
+                text-align: center;
+            }
+
+            .footer {
+                 width:100%;
+                 height:30px;
+                 font-family: 'Lobster';
+                 font-style: italic; 
+                 font-size: 21px; 
+            }
+
+            .points{
+                 width:100%;
+                 font-style: italic; 
+                 font-size: 16px; 
+                 color: #f44b42;
+                 font-weight: bold;
+                margin : 2px 0px 2px 5px;
+                text-decoration: underline;
+            }
+
+            .info {
+                margin: 0px 2px 5px 13px;
+                font-size: 15px;
+                text-align: justify;
+            }
+
+            .header {
+                margin : 10px 9px 13px 5px;
+                text-align: justify;
+            }
+            .short{
+                display: inline-block;
+                width:17pc  ;
+                font-style: italic; 
+                font-size: 15px; 
+                color: #f44b42;
+                font-weight: bold;
+                margin : 3px 0px 2px 5px;
+                text-decoration: underline;
+            }
+
+            .dom{
+                font-family: "Courier New";
+                font-weight: bold;
+            }
+        </style>
+</head>
+<body>
+
+        <div class="main_page">
+            <div class="section_header section_header_grey" style="font-size: 23px "><i>Interactive Data Editor by Koushik Naskar</i></div>
+<p class="header">These programmes can be used to interactively edit and plot any 2D or gridded 3D data. In case of editing a gridded 3D data, the data will be projected on a 2D-plane for any particular X or Y-value . While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D viewer links. Load the data file through the choose/browse file button, and after editing, download the data by clicking save option. Editing scattered 3D data is not supported as of now. <br> 
+</label></p>
+            <div class="content_section ">
+
+            <div >
+                <div class="section_header ">
+                    Features:
+                </div>
+                
+                    <div class="points">1. Dragging by mouse :</div> 
+                    <p class="info">Any one or multiple points can be moved by dragging it with mouse. By default dragging by mouse will move the point only along Y axis, X coordinate will be locked. Uncheck the <label class="dom">Points not movable horizontally</label> to move it freely along any direction. If multiple points is selected, then dragging any selected points will move all of them.</p>
+
+                    <div class="points">2. Smooth out : </div>
+                    <p class="info">Here You can smooth out a fluctuating/spikey portion of the data using two methods : Spline Interpolation and Moving Average method by pressing the assigned keys. Spline Interpolation can sometimes behave unexpectedly, in that case you can use Moving Average to smooth out your data.</p>
+
+                    <div class="points">3. Change Sign: </div>
+                    <p class="info">This will change the Y coordinate sign of the selected points.</p>
+
+                    <div class="points">4. Move or Reflect : </div>
+                    <p class="info">Selected data points can be moved or reflected/mirrored in their immediate neighbourhood. See the Keyboard Shortcut section for details.</p>
+
+                    <div class="points">5. Undo: </div>
+                    <p class="info">Any immediate changes to the plot can be undone/redone. At present only one step undo is provided.</p>
+
+                    <div class="points">6. Data comparison: </div>
+                    <p class="info">A second data/plot can be added for comparing the edits made to the first plot. Load the data for this through the specified button and check/uncheck the <label class="dom">Compare Date</label> to show/hide the plot. This second plot is not editable.</p>
+
+
+
+                <div class="section_header ">
+                    KeyBoard ShortCuts:
+                </div>
+
+                <div style="font-size: 15px">
+                <label class="short">1. "< space>" :</label> Autoscale both axes.<br>
+                <label class="short">2. "z" :</label> Zoom mode.<br>
+                <label class="short">3. "s" :</label> Selection mode.<br>
+                <label class="short">4. "d" :</label> Smooth Out using Spline Interpolation.<br>
+                <label class="short">5. "m"</label> Smooth Out the selected part of the data using Moving <label class="short"> </label> Average method. Press & hold the button to apply the method <label class="short"> </label> repeatedly to make the data more smoother.
+                <label class="short">6. "c" :</label> Change Sign.<br>
+                <label class="short">7. "ctrl+z":</label> Undo/Redo.<br>
+                <label class="short">8. "< dot>":</label> Move slider up.<br>
+                <label class="short">9. "< comma>":</label> Move slider down.<br>
+                <label class="short">10. Ctrl + Left or Right Arrow :</label> Move selected data points   to its immediate left or right.<br>
+                <label class="short">11. Shift + Left or Right Arrow :</label> Reflect/Mirror selected data points   to its immediate left or right.<br>
+                <label class="short">12. Ctrl + 1 or 2 or 3:</label> Make the data symmetric about Y value 120 in a special case.<br>
+
+</div>
+
+
+            </div>
+            </div>
+        </div>
+
+
+
+
+
+
+</body>
+</html>

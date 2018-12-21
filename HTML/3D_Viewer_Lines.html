@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Interactive Data Editor</title>
+<link href="../JsCSS/style.css" rel="stylesheet"/>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="../JsCSS/plotly-latest.min.js"></script>
+<script src="../JsCSS/jquery.min.js"></script>
+</head>
+<body>
+ <div class="basediv" id="figurecontainer"></div>
+    <div class="floatdiv">
+<div id="status" style="font-size: 19px; padding-bottom: 7px"><i><b>Waiting to get Update...</b><br/>Any changes made in the 3D_Editor will be updated here on real time.</i></div>
+<form><input id="is_mark" onclick="mark_clicked(this)" type="checkbox"/> Markers </form>
+<div class="borders">
+        Axes Ranges  ⇒
+        X : <input onchange="setXRange(this.value)" type="text"/>
+        Y : <input onchange="setYRange(this.value)" type="text"/>
+        Z : <input onchange="setZRange(this.value)" type="text"/>
+</div>
+</div>
+<script src="../JsCSS/viewer.js"></script>
+<script>
+        var xxx=[],yyy=[],zzz=[];
+        window.addEventListener('storage', storeUpdate);
+        Plotly.newPlot(figurecontainer, initData(1) , layout, {displaylogo: false});
+
+
+
+        function makeRotation(){
+            var issame=true, b=data[0][0].length;
+            for (let a of data[0]){
+                if(a.length!=b){
+                    issame = false; break;
+                };
+            };
+
+            if(issame){
+                xxx=transpose(data[0]);
+                yyy=transpose(data[1]);
+                zzz=transpose(data[2]);
+                return;
+            };
+            console.log("Some data are missing!!");
+            var tmpData0 = [].concat(...data[0]).filter(Boolean),
+                tmpData1 = [].concat(...data[1]).filter(Boolean),
+                tmpData2 = [].concat(...data[2]).filter(Boolean);
+
+            var tmp = [...new Set(tmpData1)].sort((a, b) => a - b);
+
+            xxx=[],yyy=[],zzz=[];
+            for (let x of tmp){
+                var tmp0=[],tmp1=[],tmp2=[];
+                for(let i=0; i<tmpData0.length; i++){
+                    if(tmpData1[i]==x){
+                        tmp0.push(tmpData0[i]);
+                        tmp1.push(tmpData1[i]);
+                        tmp2.push(tmpData2[i]);
+                    };
+                };
+                xxx.push(tmp0);
+                yyy.push(tmp1);
+                zzz.push(tmp2);
+            };
+        };
+
+
+        function updatePlot() {
+            makeRotation();
+            xxx=data[0].concat(xxx),
+            yyy=data[1].concat(yyy),
+            zzz=data[2].concat(zzz);
+            if (figurecontainer.data.length != xxx.length) {
+                Plotly.newPlot(figurecontainer, initData(xxx.length) , layout);
+            };
+            Plotly.restyle(figurecontainer, {'x': xxx,'y': yyy,'z': zzz });
+            $("#status").html("<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>");
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Interactive Data Editor</title>
+<link href="../JsCSS/style.css" rel="stylesheet"/>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="../JsCSS/plotly-latest.min.js"></script>
+<script src="../JsCSS/jquery.min.js"></script>
+</head>
+<body>
+<header>
+        An interactive 3D plot editor <i>(projected on 2D for a particular theta value)</i>
+</header>
+<div class="row">
+
+<input type="submit" value="Choose File" onclick="fileLoader();">
+<label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+<div id="status">Load Data to plot. </div>
+<div style="float:right;"><i>View the 3D plot :</i> <a href="javascript:void(0)" onclick="openViewer(0);"> 3D_Surface_Viewer </a> or <a href="javascript:void(0)" onclick="openViewer(1);">3D_Line_Viewer   </a> </div>
+</div>
+
+
+
+<div class="row" id="iswap" style="padding-top: 3px">➧Plot along
+        <select autocomplete="off" onchange="isswap(this)" style="width:4pc;">
+<option>Phi</option>
+<option>Theta</option>
+</select> <label id="dummy2">for a particular Theta.</label>
+</div>
+<div class="row" style="padding-top: 7px">
+<input type="submit" value="Choose File" onclick="compfileLoader();">
+<label id="file_name2" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+<label id="dummy">⇐ Add Data here to compare.</label>
+<label id="isMark">
+<input checked="" id="check" onclick="incRefData(this)" type="checkbox"/> Compare Data
+        </label>
+</div>
+<br/>
+<div class="row">
+<p style="float: left; padding-top: 3px">Data column :</p>
+<br/>
+<select id="estate" onchange="colChanged(this.value)">
+<option value="3">4</option>
+<option value="4">5</option>
+<option value="5">6</option>
+</select>
+</div>
+<div class="slidecontainer">
+<p>Drag the slider to change theta value: </p>
+<input class="slider" id="x_input" max="90" min="0" oninput="sliderChanged()" step="1" type="range" value="0"/>
+<p style="display: inline-block">Theta : </p><span id="x_val"> 0 </span>
+</div>
+<div id="figurecontainer"></div>
+<script src="../JsCSS/functions.js"></script>
+<script src="../JsCSS/plotSetup.js"></script>
+<script>
+
+
+
+    
+    xName = "Phi";
+        serve = 1;var save_name="Hello.txt";
+        var col ={
+            x : 1, y:2, z:3
+        };
+
+        function isswap(key){
+            swapped = key.selectedIndex;
+            var [N1,N2] = ["Phi","Theta"];
+            var [n1,n2] = ["phi","theta"];
+            if (swapped) {
+                [n1,n2] =[n2,n1];
+                [N1,N2] =[N2,N1];
+            };
+            xName = N2;
+            $("header, p, #dummy2").html((_,html) => html.replace(n1,n2).replace(N1,N2));
+            [col.x, col.y]= [col.y,col.x];
+            rotateData();
+            thisJobs();
+        };
+
+
+        function thisJobs() {           
+            slider.value =th_in= 0;  
+            slider.max   = data.length-1;
+            xVal.innerHTML= data[0][col.x][0];
+            updatePlot(1);
+            startDragBehavior();
+            updateOnServer();
+        };
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>

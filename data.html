@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		.links{
+			margin: 9px;
+			margin-bottom: 13px;
+			font-size: larger;
+			font-weight: bold;
+		}
+	</style>
+	<title>Interactive Data Editor</title>
+</head>
+<body>
+<div style="font-size: xx-large;font-weight: bold;margin: 13px"><u>Sample Data:</u> </div>
+&nbsp;1.<a class="links" href="javascript:void(0)" onclick="save('Data/2D.dat');">2D</a><br>
+&nbsp;2.<a class="links" href="javascript:void(0)" onclick="save('Data/3D_1.dat');">3D</a><br>
+&nbsp;3.<a class="links" href="javascript:void(0)" onclick="save('Data/3D_2.dat');">3D_1</a><br>
+<script >
+const fs = require("fs");        
+const { remote, ipcRenderer } = require('electron');
+const path = require('path');
+const {dialog, BrowserWindow} = remote;
+const url = require('url');
+
+
+
+	function save(tmp) {
+
+		var ttt = path.join(__dirname, tmp);
+		console.log(ttt)
+		data = fs.readFileSync(ttt,"utf8");
+		var save_name = dialog.showSaveDialog({title:"Save File:",defaultPath:tmp});
+		fs.writeFileSync(save_name,data);
+	}
+</script>
+</body>
+</html>

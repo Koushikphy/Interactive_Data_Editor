@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Interactive Data Editor</title>
+<link href="../JsCSS/style.css" rel="stylesheet"/>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="../JsCSS/plotly-latest.min.js"></script>
+<script src="../JsCSS/jquery.min.js"></script>
+</head>
+<body>
+<header>
+        An interactive 2D and 3D plot editor.
+    </header>
+<div class="row">
+<input type="submit" value="Choose File" onclick="fileLoader();">
+<label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+<div id="status">Load Data to plot. </div>
+<div style="float:right;"><i>View the 3D plot :</i> <a href="javascript:void(0)" onclick="openViewer(0);"> 3D_Surface_Viewer </a> or <a href="javascript:void(0)" onclick="openViewer(1);">3D_Line_Viewer   </a> </div>
+</div>
+
+
+
+<div class="row" id="iswap" style="padding-top: 3px">➧Plot along
+        <select autocomplete="off" onchange="isswap(this)" style="width:3pc;">
+<option>Y</option>
+<option>X</option>
+</select> <label id="dummy2">for a particular X.</label>
+</div>
+<div class="row" style="padding-top: 7px">
+<input type="submit" value="Choose File" onclick="compfileLoader();">
+<label id="file_name2" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+<label id="dummy">⇐ Add Data here to compare.</label>
+<label id="isMark">
+<input checked="" id="check" onclick="incRefData(this)" type="checkbox"/> Compare Data
+        </label>
+<label style="float: right;">
+<input checked="" onclick="lockX(this)" type="checkbox"/> Points not movable horizontally. 
+        </label>
+</div>
+<div onchange="updateData();">
+<p style="padding-top: 5px; float: left;"></p>
+        X Column :<select id="xCol"></select>  
+        Y Column :<select id="yCol"></select>
+</div>
+<div class="row dummy" style="margin-top: 5px;">
+        Z Column <span style="padding-left: 2px"></span>:<select id="zCol" onchange="colChanged(this.selectedIndex)"></select>
+</div>
+<div class="slidecontainer dummy">
+<p style="float: left">Drag the slider to change "X" value:</p>
+<input class="slider" id="x_input" max="0" min="0" oninput="sliderChanged()" step="0" type="range" value="0"/>
+<p style="display: inline-block">X : </p><span id="x_val"> 0 </span>
+</div>
+<div class="row" id="figurecontainer"></div>
+<script src="../JsCSS/functions.js"></script>
+<script src="../JsCSS/plotSetup.js"></script>
+<script>
+    var first = localStorage.getItem("first");
+    if(!first) {
+        localStorage.setItem("first","1");
+        alert("New Feature added!!!\n\nNow you can smooth out selected part of the data using Moving Average method.\nSee Help for further details")
+    };
+        var col ={
+            x : 0, y:0, z:0
+        };
+
+
+        function isswap(key){
+            swapped = key.selectedIndex;
+            var [n1,n2] = ["Y","X"];
+            if (swapped) [n1,n2] =[n2,n1];
+            xName = n2;
+            $("header, p, #dummy2").html((_,html) => html.replace(n1,n2));
+            [xCol, yCol] = [yCol, xCol];
+            [col.x, col.y]= [col.y,col.x];
+            rotateData();
+            updateData();
+        };
+
+
+        function updateData() {
+            col.x = xCol.selectedIndex;
+            col.y = yCol.selectedIndex;
+            col.z = zCol.selectedIndex;
+            if (data.length!=1){ //3D
+                slider.value = th_in= 0;
+                slider.max   = data.length-1;
+                xVal.innerHTML= data[0][col.x][0];
+            } else {    //2D
+                col.z = col.y;
+                col.y = col.x;
+                col.x = 0;
+            };
+            updatePlot(1);
+            startDragBehavior();
+            updateOnServer();
+        };
+
+
+        function thisJobs() {
+            if (data.length==1){
+                $(".dummy,#iswap").hide();
+                serve =0;
+            };
+            var op = "";
+            for (var i = 1; i <= data[0].length; i++) {
+                op += '<option>' + i + '</option>';
+            };
+            var tmp = $("select:not(:first-child)");
+            for (var i = 0; i < tmp.length; i++) {
+                tmp[i].innerHTML = op;
+                tmp[i].selectedIndex = i;
+            };
+            updateData();
+        };
+    </script>
+</body>
+</html>
