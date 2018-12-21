@@ -75,11 +75,31 @@ function saveData() {
 
 
 ipcRenderer.on("data",function(e,d){
-    if(d=="save"){
-        saveData();
-    } else{
-        saveAs();
-    };
+    switch(d){
+        case "save":
+            saveData();
+            break;
+
+        case "svaeas" :
+            saveAs();
+            break;
+            
+        case "cs":
+            deleteInterpolate()
+            break;
+
+        case "ma" :
+            autoSmooth();
+            break;
+
+        case "csign":
+            changeSign();
+            break;
+
+        case "undo":
+            unDo();
+            break;
+    }
 });
 
 

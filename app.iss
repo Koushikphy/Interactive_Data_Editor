@@ -20,7 +20,7 @@ DisableProgramGroupPage=no
 DisableDirPage=no
 DisableWelcomePage=no
 
-OutputDir=C:\Users\Koushik Naskar\Desktop
+OutputDir=C:\Users\Koushik Naskar\Desktop\app
 OutputBaseFilename=Interactive Data Editor
 SetupIconFile=C:\Users\Koushik Naskar\Desktop\app\icons\charts.ico
 Compression=lzma

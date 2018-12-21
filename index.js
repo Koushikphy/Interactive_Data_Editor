@@ -21,7 +21,7 @@ ipcMain.on("nameMsg",function(e,d){
 
 app.on('ready', function(){
 
-    mainWindow = new BrowserWindow({show:false});
+    mainWindow = new BrowserWindow({show:false,minWidth:1150});
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
@@ -85,28 +85,28 @@ const mainMenuTemplate =  [
             label: "CS somoothing",
             accelerator:process.platform =='darwin' ? 'D' : 'D',
             click(){
-                mainWindow.webContents.send("data","saveas");
+                mainWindow.webContents.send("data","cs");
             }
         },
         {
             label: "MA Smoothing",
             accelerator:process.platform =='darwin' ? 'M' : 'M',
             click(){
-                mainWindow.webContents.send("data","saveas");
+                mainWindow.webContents.send("data","ma");
             }
         },
         {
             label: "Change Sign",
             accelerator:process.platform =='darwin' ? 'C' : 'C',
             click(){
-                mainWindow.webContents.send("data","saveas");
+                mainWindow.webContents.send("data","csign");
             }
         },
         {
             label: "Undo/Redo",
             accelerator:process.platform =='darwin' ? 'Command+Z' : 'Ctrl+Z',
             click(){
-                mainWindow.webContents.send("data","saveas");
+                mainWindow.webContents.send("data","undo");
             }
         }
         ]
