@@ -1,10 +1,118 @@
 const fs = require("fs");        
 const { remote, ipcRenderer } = require('electron');
 const path = require('path');
-const {dialog, BrowserWindow} = remote;
+const {dialog, BrowserWindow,Menu} = remote;
 const url = require('url');
 
-
+var viewer=[,,]
+const falseMenuTemplate =  [
+        {
+        label: 'File',
+        submenu:[
+            {
+                label : "Save",
+                enabled:false,
+                accelerator:process.platform == 'darwin' ? 'Command+S' : 'Ctrl+S',
+                click(){
+                    mainWindow.webContents.send("data","save");
+                }
+            },
+            {
+                label : "Save As",
+                enabled:false,
+                accelerator:process.platform =='darwin' ? 'Command+Ctrl+S' : 'Shift+Ctrl+S',
+                click(){
+                    mainWindow.webContents.send("data","saveas");
+                }
+            },
+            {type:'separator'},
+            {
+                label:'Go Home',
+                accelerator:process.platform == 'darwin' ? 'Command+H' : 'Ctrl+H',
+                click(){
+                    mainWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'index.html'),
+                    protocol: 'file:',
+                    slashes:true
+                    }));
+                }
+            },
+            {
+                role: "reload"
+            },
+            {type:'separator'},
+            {
+                role:"close",
+            }
+        ]
+    },
+    {
+        label: "Edit",
+        submenu:[
+        {
+            label: "CS somoothing",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'D' : 'D',
+            click(){
+                mainWindow.webContents.send("data","cs");
+            }
+        },
+        {
+            label: "MA Smoothing",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'M' : 'M',
+            click(){
+                mainWindow.webContents.send("data","ma");
+            }
+        },
+        {
+            label: "Change Sign",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'C' : 'C',
+            click(){
+                mainWindow.webContents.send("data","csign");
+            }
+        },
+        {
+            label: "Undo/Redo",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'Command+Z' : 'Ctrl+Z',
+            click(){
+                mainWindow.webContents.send("data","undo");
+            }
+        }
+        ]
+    },
+    {
+        label : "Help",
+        submenu:[
+        {
+            label: "Help",
+            click(){
+                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'icons/charts.ico')});
+                childWindow.loadURL(url.format({
+                pathname: path.join(__dirname, 'help.html'),
+                protocol: 'file:',
+                slashes:true
+                }));
+                childWindow.setMenu(null);
+                }
+        },
+        {
+            label: "About",
+            click(){
+                var childWindow = new BrowserWindow({width:500,height:500});
+                childWindow.loadURL(url.format({
+                pathname: path.join(__dirname, 'about.html'),
+                protocol: 'file:',
+                slashes:true
+                }));
+                childWindow.setMenu(null);
+                }
+        },
+        ]
+    }
+];
 
 function fileLoader(){
     const fname = dialog.showOpenDialog({properties: ['openFile']})[0];
@@ -47,7 +155,6 @@ function parseData(strDps) {
     newdat = newdat.map(x => transpose(x));
     return newdat;
 };
-
 
 
 function saveAs(){
@@ -103,14 +210,27 @@ ipcRenderer.on("data",function(e,d){
 });
 
 
+
+
 function openViewer(x){
     serve=1;
     var target = "3D_Viewer_Surface.html"
     if(x) target = "3D_Viewer_Lines.html"
-    var width = parseFloat(screen.width)*0.9;
-    var height = parseFloat(screen.height)*0.9;
-    console.log(width,height);
-    window.open(target,"", "width="+width+","+"height="+height);
+    var width = parseFloat(screen.width);
+    var height = parseFloat(screen.height);
+
+    viewerWindow = new BrowserWindow({show:false,minWidth:1200,width:width,height:height});
+    // viewerWindow.maximize();
+    viewerWindow.loadURL(url.format({
+        pathname: path.join(__dirname, target),
+        protocol: 'file:',
+        slashes:true
+    }));
+    viewerWindow.on("closed",function(){delete viewer[target]})
+    const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+    Menu.setApplicationMenu(falseMenu);
+    viewerWindow.show();
+    viewer[target] = viewerWindow
 };
 
 
@@ -331,7 +451,9 @@ function updateOnServer() {
         z_list.push(i[col.z]);
     };
     var s_data = [x_list, y_list, z_list];
-    localStorage.setItem("datal",JSON.stringify(s_data));
+    for (let w in viewer) viewer[w].webContents.send("sdata",s_data);
+    // viewerWindow.webContents.send("sdata",s_data);
+    // localStorage.setItem("datal",JSON.stringify(s_data));
 };
 
 

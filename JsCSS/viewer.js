@@ -1,4 +1,11 @@
 var figurecontainer = document.getElementById("figurecontainer"), data = [], cols=[0,1,2];
+const { remote, ipcRenderer } = require('electron');
+
+ipcRenderer.on("sdata", function(e,d){
+    console.log(e,d)
+    data = d;
+    updatePlot();
+})
 
 
 function transpose(m) {
@@ -59,14 +66,6 @@ function setZRange(lim, range=false) {
     Plotly.update(figurecontainer, {"cmin":cmin, "cmax":cmax}, {"scene.zaxis.range" : lim});
 };
 
-
-function storeUpdate(e){
-    if(e.storageArea===localStorage) {
-        data=localStorage.getItem("datal");
-        data=JSON.parse(data);
-        updatePlot()
-    };
-};
 
 
 

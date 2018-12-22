@@ -63,11 +63,10 @@
             }
 
             div.table_of_contents_item {
-                clear: left;
-                margin: 4px 0px 0px 150px;
 
+                margin:3px 3px 3px 3px;
                 background-color: #FFFFFF;
-
+                display: inline-block;
                 color: #000000;
                 text-align: left;
             }
@@ -75,17 +74,21 @@
             
 
             div.content_section {
-                margin: 3px 3px 3px 3px;
+                /*margin: 3px 3px 3px 3px;*/
+                display: inline-block;
 
-                background-color: #FFFFFF;
+                background-color: #FFFFFF; /*to be changed*/
+                margin:0 auto;
 
                 text-align: left;
+                /*align-items: center;*/
             }
 
 
 
             div.section_header {
                 padding: 3px 6px 3px 6px;
+                margin:3px 3px 3px 3px;
 
                 background-color: #515651;
 
@@ -117,9 +120,6 @@
 
 
             .footer {
-            /*   position:absolute;
-                 bottom:0;*/
-                 /*width:100%;*/
                  display: inline-block;
                  height:30px;
                  font-family: 'Lobster';
@@ -131,40 +131,47 @@
                 }
         </style>
         <script src="particles.js"></script>
-    <script src="C:\Users\Koushik Naskar\Desktop\app\JsCSS\jquery.min.js"></script>
     </head>
     <body>
         <div class="basediv" id="particle">
         <div class="container">
         <div class="main_page">
             <div class="section_header section_header_grey" style="font-size: 23px "><i>Interactive Data Editor</i></div>
-
+            <div class="section_header ">
+                TABLE OF CONTENTS
+            </div>
+            <div style="text-align: center;">
             <div class="content_section ">
-                <div class="section_header ">
-                    TABLE OF CONTENTS
-                </div>
                 <div class="table_of_contents_item ">
-                    <a href="HTML/GeneralPlotEditor.html" >General : </a>A general 2D and 3D data editor.
-                </div>
+                    <a href="HTML/GeneralPlotEditor.html" onclick="men();">General : </a>&ensp;A general 2D and 3D data editor.
+                </div><br>
                 <div class="table_of_contents_item ">
-                    <a href="HTML/Plotter.html" >3D Plot <span style="margin-left: 5px"></span>: </a>A general 3D plot viewer.
-                </div>
+                    <a href="HTML/Plotter.html" >3D Plot <span style="margin-left: 5px"></span>: </a>&ensp;A general 3D plot viewer.
+                </div><br>
                 <div class="table_of_contents_item ">
-                    <a href="HTML/H3_PlotEditor.html"> H3 <span style="margin-left: 49px"></span> : </a>A  plot editor for H3 in particular.
-                </div>
+                    <a href="HTML/H3_PlotEditor.html" onclick="men();"> H3 <span style="margin-left: 49px"></span> : </a>&ensp;A  plot editor for H3 in particular.
+                </div><br>
                 <div class="table_of_contents_item ">
                     <a href="data.html" style="margin-left: 3.5pc"> Sample Data</a>
                     <span style="margin-right: 5pc"></span>
                     <a href="help.html">Help </a>
-                </div>
+                </div><br>
             </div>
         </div>
-        <div class="footer"> <u>Created by <a href="mailto:koushik.naskar9@gmail.com">Koushik Naskar</a>.</u> &ensp;</div>
+        </div>
+        <div class="footer"> <u>Created by <a href="javascript:void(0)" onclick="op();">Koushik Naskar</a>.</u> &ensp;</div>
     </div>
         </div>
-        <script type="text/javascript">
-            particlesJS.load('particle', 'particles.json', function() {
-  console.log('callback - particles.js config loaded');});
+        <script >
+            particlesJS.load('particle', 'particles.json');
+            const { shell,ipcRenderer} = require('electron');
+            function op() {
+                shell.openExternal("https://facebook.com/koushik.naskar3");
+            }
+
+            function men(){
+                ipcRenderer.send("menu","full")
+            }
         </script>
     </body>
 </html>

@@ -22,7 +22,6 @@
 </div>
 <script src="../JsCSS/viewer.js"></script>
 <script>
-        window.addEventListener('storage', storeUpdate);
         Plotly.newPlot(figurecontainer, sIniData , layout, {displaylogo: false});
         function updatePlot() {
             Plotly.restyle(figurecontainer,  {"x" : [data[0]], "y" : [data[1]], "z": [data[2]]} )

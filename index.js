@@ -7,21 +7,16 @@ process.env.NODE_ENV = 'production';
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
-ipcMain.on("nameMsg",function(e,d){
-    win = new BrowserWindow({});
-    console.log(d)
-      win.loadURL(url.format({
-        pathname: d,
-        protocol: 'file:',
-        slashes:true
-      }));
+
+
+ipcMain.on("menu",function(e,d){
+    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    Menu.setApplicationMenu(mainMenu);
 })
 
 
-
 app.on('ready', function(){
-
-    mainWindow = new BrowserWindow({show:false,minWidth:1150});
+    mainWindow = new BrowserWindow({show:false,minWidth:1200});
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
@@ -29,15 +24,17 @@ app.on('ready', function(){
         slashes:true
     }));
 
-      mainWindow.on('closed', function(){
-        app.quit();
-      })
+    mainWindow.on('closed', function(){
+    app.quit();
+    })
 
-    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-    Menu.setApplicationMenu(mainMenu);
-
+    const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+    Menu.setApplicationMenu(falseMenu);
     mainWindow.show()
 });
+
+
+
 
 const mainMenuTemplate =  [
         {
@@ -65,9 +62,12 @@ const mainMenuTemplate =  [
                 mainWindow.loadURL(url.format({
                 pathname: path.join(__dirname, 'index.html'),
                 protocol: 'file:',
-                slashes:true
+                slashes:true,
                 }));
-            }
+                const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+                Menu.setApplicationMenu(falseMenu);
+            },
+
         },
             {
                 role: "reload"
@@ -104,6 +104,116 @@ const mainMenuTemplate =  [
         },
         {
             label: "Undo/Redo",
+            accelerator:process.platform =='darwin' ? 'Command+Z' : 'Ctrl+Z',
+            click(){
+                mainWindow.webContents.send("data","undo");
+            }
+        }
+        ]
+    },
+    {
+        label : "Help",
+        submenu:[
+        {
+            label: "Help",
+            click(){
+                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'icons/charts.ico')});
+                childWindow.loadURL(url.format({
+                pathname: path.join(__dirname, 'help.html'),
+                protocol: 'file:',
+                slashes:true
+                }));
+                childWindow.setMenu(null);
+                }
+        },
+        {
+            label: "About",
+            click(){
+                var childWindow = new BrowserWindow({width:500,height:500});
+                childWindow.loadURL(url.format({
+                pathname: path.join(__dirname, 'about.html'),
+                protocol: 'file:',
+                slashes:true
+                }));
+                childWindow.setMenu(null);
+                }
+        },
+        ]
+    }
+];
+
+
+const falseMenuTemplate =  [
+        {
+        label: 'File',
+        submenu:[
+            {
+                label : "Save",
+                enabled:false,
+                accelerator:process.platform == 'darwin' ? 'Command+S' : 'Ctrl+S',
+                click(){
+                    mainWindow.webContents.send("data","save");
+                }
+            },
+            {
+                label : "Save As",
+                enabled:false,
+                accelerator:process.platform =='darwin' ? 'Command+Ctrl+S' : 'Shift+Ctrl+S',
+                click(){
+                    mainWindow.webContents.send("data","saveas");
+                }
+            },
+            {type:'separator'},
+            {
+                label:'Go Home',
+                accelerator:process.platform == 'darwin' ? 'Command+H' : 'Ctrl+H',
+                click(){
+                    mainWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'index.html'),
+                    protocol: 'file:',
+                    slashes:true
+                    }));
+                }
+            },
+            {
+                role: "reload"
+            },
+            {type:'separator'},
+            {
+                role:"close",
+            }
+        ]
+    },
+    {
+        label: "Edit",
+        submenu:[
+        {
+            label: "CS somoothing",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'D' : 'D',
+            click(){
+                mainWindow.webContents.send("data","cs");
+            }
+        },
+        {
+            label: "MA Smoothing",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'M' : 'M',
+            click(){
+                mainWindow.webContents.send("data","ma");
+            }
+        },
+        {
+            label: "Change Sign",
+            enabled:false,
+            accelerator:process.platform =='darwin' ? 'C' : 'C',
+            click(){
+                mainWindow.webContents.send("data","csign");
+            }
+        },
+        {
+            label: "Undo/Redo",
+            enabled:false,
             accelerator:process.platform =='darwin' ? 'Command+Z' : 'Ctrl+Z',
             click(){
                 mainWindow.webContents.send("data","undo");
