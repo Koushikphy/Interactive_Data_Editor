@@ -10,10 +10,14 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 
 ipcMain.on("menu",function(e,d){
-    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-    Menu.setApplicationMenu(mainMenu);
+    // const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    // Menu.setApplicationMenu(mainMenu);
 })
 
+
+ipcMain.on("back", function(e,d){
+    mainWindow.webContents.send("back",d);
+})
 
 app.on('ready', function(){
     mainWindow = new BrowserWindow({show:false,minWidth:1200});
@@ -28,8 +32,8 @@ app.on('ready', function(){
     app.quit();
     })
 
-    const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
-    Menu.setApplicationMenu(falseMenu);
+    // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+    // Menu.setApplicationMenu(falseMenu);
     mainWindow.show()
 });
 
@@ -64,8 +68,8 @@ const mainMenuTemplate =  [
                 protocol: 'file:',
                 slashes:true,
                 }));
-                const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
-                Menu.setApplicationMenu(falseMenu);
+                // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+                // Menu.setApplicationMenu(falseMenu);
             },
 
         },

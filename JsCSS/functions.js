@@ -3,7 +3,7 @@ const { remote, ipcRenderer } = require('electron');
 const path = require('path');
 const {dialog, BrowserWindow,Menu} = remote;
 const url = require('url');
-
+var editorWindow;
 var viewer=[,,]
 const falseMenuTemplate =  [
         {
@@ -210,17 +210,52 @@ ipcRenderer.on("data",function(e,d){
 });
 
 
+ipcRenderer.on("back",function(e,d){
+    data = d.map(x=>transpose(x))
+    updatePlot(1);
+})
+
+
+
+function editor(){
+    var sl = $(".slidecontainer").find("input")[0] 
+    var tex = $(".slidecontainer").find("p")[1].innerHTML
+     editorWindow = new BrowserWindow({minWidth:1200,show:false});
+    editorWindow.maximize();
+    editorWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "handtable.html"),
+        protocol: 'file:',
+        slashes:true
+    }));   
+
+    // editorWindow.webContents.send("slider","efwu");
+    // // var tmpdata = [...data.map(x=>transpose(x))]
+    // editorWindow.once("ready-to-show",function(){
+    //     editorWindow.webContents.send("slider","ufgew");
+    // });
+    //     editorWindow.once("did-finish-load",function(){
+    //     editorWindow.webContents.send("slider","uffwefegew");
+    // })
+    editorWindow.show();
+    editorWindow.webContents.once("dom-ready",function(){
+        editorWindow.webContents.send("slider",[sl.min,sl.max,sl.step,tex,col.x,data]);
+    })
+
+    // editorWindow.once("ready-to-show",function(){
+    //     editorWindow.webContents.send("slider","ufgew");
+    // });
+}
+
+
 
 
 function openViewer(x){
     serve=1;
     var target = "3D_Viewer_Surface.html"
     if(x) target = "3D_Viewer_Lines.html"
-    var width = parseFloat(screen.width);
-    var height = parseFloat(screen.height);
 
-    viewerWindow = new BrowserWindow({show:false,minWidth:1200,width:width,height:height});
-    // viewerWindow.maximize();
+    viewerWindow = new BrowserWindow({show:false,minWidth:1200});
+    viewerWindow.maximize();
     viewerWindow.loadURL(url.format({
         pathname: path.join(__dirname, target),
         protocol: 'file:',

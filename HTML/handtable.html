@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Interactive Data Editor</title>
+	<style type="text/css">
+		.slider {
+		    -webkit-appearance: none;
+		    width: 100%;
+		    height: 15px;
+		    border-radius: 5px;   
+		    background: #d3d3d3;
+		    outline: none;
+		    opacity: 0.7;
+		    -webkit-transition: .2s;
+		    transition: opacity .2s;
+            visibility: hidden;
+            margin-bottom: 9px;
+		}
+
+		.slider:hover {
+		    opacity: 1;
+		}
+        label{
+            margin-bottom: 9px;
+        }
+		.slider::-webkit-slider-thumb {
+		    -webkit-appearance: none;
+		    appearance: none;
+		    width: 25px;
+		    height: 25px;
+		    border-radius: 50%; 
+		    background: #4CAF50;
+		    cursor: pointer;
+		}
+
+		.slider::-moz-range-thumb {
+		    width: 25px;
+		    height: 25px;
+		    border-radius: 50%;
+		    background: #4CAF50;
+		    cursor: pointer;
+		}
+	</style>
+	<script src="../node_modules/handsontable/dist/handsontable.full.min.js"></script>
+	<link href="../node_modules/handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div id ="container">
+<label id="full" style='float: left'>Spreadsheet is loading, please wait...</label>
+<input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
+<input class='slider' id='x_input' max='0' min='0' oninput='sliderChanged()' step='0' type='range' value='0'>
+<span id="vari"></span><span id='x_val' style="padding-right: 2pc"></span>
+</div>
+<div id="table"></div>
+<script >
+    const { remote, ipcRenderer } = require('electron');
+    const {dialog, BrowserWindow,Menu} = remote;
+	var slide = document.getElementById("x_input");
+	var val = document.getElementById("x_val");
+	var full = document.getElementById("full");
+	var vari = document.getElementById("vari");
+	var xcol =[],data=[], hot,columns=[];
+    var btn = document.getElementById("btn");
+    btn.style.visibility = "hidden";
+    var event;
+
+
+
+	ipcRenderer.on("slider",function (e,d) {
+        e.sender.send("test","2u3i")
+		var [a,b,c,t,_,_] = d;
+        xcol = d[4];
+		vari.innerHTML=t+" : ";
+		full.innerHTML=`Drag the slider to change "${t}" value:`
+
+		slide.min = a;
+		slide.max= b;
+		slide.step =c;
+        var height = window.innerHeight -
+                    document.getElementById("container").offsetTop-
+                    document.getElementById("table").offsetTop;
+
+		data = d[5].map(x=>transpose(x));
+		for (var i = data[0][0].length; i>0 ; i--) {
+			columns.push({type:"numeric"})
+		};
+		hot = new Handsontable(document.getElementById("table"), {
+			data: data[0],
+            height: height,
+			columns:columns,
+			rowHeaders: true,
+			colHeaders: true,
+			contextMenu:true,
+			columnSorting: true,
+            manualColumnResize: true,
+            manualRowResize: true,
+            afterChange : function change(e,d){if(d!="loadData")btn.style.visibility = "visible"}
+		});
+        val.innerHTML =data[0][0][xcol];
+        slide.style.visibility = "visible";
+	})
+
+
+
+
+	function sliderChanged() {
+		var th_in =slide.value;
+		val.innerHTML = data[th_in][0][xcol];
+		hot.updateSettings({data:data[th_in]})
+	};
+
+	function transpose(m) {
+    return m[0].map((_,i) => m.map(x => x[i]));
+    };
+
+    function updateData(){
+        btn.style.visibility = "hidden";
+            ipcRenderer.send("back",data);
+    }
+</script>
+
+
+</body>
+</html>
