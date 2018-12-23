@@ -17,7 +17,7 @@
 <input type="submit" value="Choose File" onclick="fileLoader();">
 <label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
 <div id="status">Load Data to plot. </div>
-<div style="float:right;"><i>View the 3D plot :</i> <a href="javascript:void(0)" onclick="openViewer(0);"> 3D_Surface_Viewer </a> or <a href="javascript:void(0)" onclick="openViewer(1);">3D_Line_Viewer   </a> </div>
+<div style="float:right;"><i>View the 3D plot as:</i> <a href="javascript:void(0)" onclick="openViewer(0);"> Wireframe </a> or <a href="javascript:void(0)" onclick="openViewer(1);">Surface </a> &ensp;</div>
 </div>
 
 
@@ -27,6 +27,7 @@
 <option>Phi</option>
 <option>Theta</option>
 </select> <label id="dummy2">for a particular Theta.</label>
+<div style="float: right;"> Open the <a href="javascript:void(0)" onclick="editor();">Spreadsheet Editor </a>&ensp;</div>
 </div>
 <div class="row" style="padding-top: 7px">
 <input type="submit" value="Choose File" onclick="compfileLoader();">
@@ -49,12 +50,13 @@
 <div class="slidecontainer">
 <p>Drag the slider to change theta value: </p>
 <input class="slider" id="x_input" max="90" min="0" oninput="sliderChanged()" step="1" type="range" value="0"/>
-<p style="display: inline-block">Theta : </p><span id="x_val"> 0 </span>
+<p style="display: inline-block">Theta</p> : <span id="x_val"> 0 </span>
 </div>
 <div id="figurecontainer"></div>
 <script src="../JsCSS/functions.js"></script>
 <script src="../JsCSS/plotSetup.js"></script>
 <script>
+
 
 
 
