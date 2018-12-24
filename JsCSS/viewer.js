@@ -1,5 +1,13 @@
 var figurecontainer = document.getElementById("figurecontainer"), data = [], cols=[0,1,2];
+
+        var ldata=[], data=[], lIniData=[], ranges=[], cols=[];
+
+const fs = require("fs");        
 const { remote, ipcRenderer } = require('electron');
+const path = require('path');
+const {dialog, BrowserWindow} = remote;
+const url = require('url');
+
 
 ipcRenderer.on("sdata", function(e,d){
     console.log(e,d)

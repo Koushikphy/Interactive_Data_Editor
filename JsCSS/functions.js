@@ -114,6 +114,7 @@ const falseMenuTemplate =  [
     }
 ];
 
+
 function fileLoader(){
     const fname = dialog.showOpenDialog({properties: ['openFile']})[0];
     var dirname = path.dirname(fname);
@@ -158,14 +159,14 @@ function parseData(strDps) {
 
 
 function saveAs(){
-    if(!data.length) return
+    if(!data.length) {alert("Nothing to save!"); return}
     save_name = dialog.showSaveDialog({title:"Save As:",defaultPath:save_name});
     saveData();
 }
 
 
 function saveData() { 
-    if(!data.length) return
+    if(!data.length) {alert("Nothing to save!"); return}
     var tmpData = data.map(x => transpose(x));
     if (swapped) tmpData = transpose(tmpData);
     var txt = "";
@@ -213,11 +214,13 @@ ipcRenderer.on("data",function(e,d){
 ipcRenderer.on("back",function(e,d){
     data = d.map(x=>transpose(x))
     updatePlot(1);
+    updateOnServer();
 })
 
 
 
 function editor(){
+    if(!data.length)  {alert("Nothing to show!"); return}
     var sl = $(".slidecontainer").find("input")[0] 
     var tex = $(".slidecontainer").find("p")[1].innerHTML
      editorWindow = new BrowserWindow({minWidth:1200,show:false});
@@ -227,7 +230,7 @@ function editor(){
         protocol: 'file:',
         slashes:true
     }));   
-
+    editorWindow.setMenu(null);
     // editorWindow.webContents.send("slider","efwu");
     // // var tmpdata = [...data.map(x=>transpose(x))]
     // editorWindow.once("ready-to-show",function(){
@@ -251,8 +254,8 @@ function editor(){
 
 function openViewer(x){
     serve=1;
-    var target = "3D_Viewer_Surface.html"
-    if(x) target = "3D_Viewer_Lines.html"
+    var target = "3D_Viewer_Lines.html"
+    if(x) target = "3D_Viewer_Surface.html"
 
     viewerWindow = new BrowserWindow({show:false,minWidth:1200});
     viewerWindow.maximize();
@@ -262,10 +265,13 @@ function openViewer(x){
         slashes:true
     }));
     viewerWindow.on("closed",function(){delete viewer[target]})
-    const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
-    Menu.setApplicationMenu(falseMenu);
+    // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+    viewerWindow.setMenu(null);
     viewerWindow.show();
-    viewer[target] = viewerWindow
+    viewer[target] = viewerWindow;
+    viewerWindow.webContents.once("dom-ready",function(){
+        updateOnServer()
+    })
 };
 
 

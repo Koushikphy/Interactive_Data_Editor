@@ -10,8 +10,8 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 
 ipcMain.on("menu",function(e,d){
-    // const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-    // Menu.setApplicationMenu(mainMenu);
+    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    mainWindow.setMenu(mainMenu);
 })
 
 
@@ -20,20 +20,20 @@ ipcMain.on("back", function(e,d){
 })
 
 app.on('ready', function(){
-    mainWindow = new BrowserWindow({show:false,minWidth:1200});
+    mainWindow = new BrowserWindow({show:false,minWidth:1200,icon:path.join(__dirname,"icons/charts.png")});
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes:true
     }));
-
+    // mainWindow.webContents.openDevTools();
     mainWindow.on('closed', function(){
     app.quit();
     })
 
-    // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
-    // Menu.setApplicationMenu(falseMenu);
+    const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+    mainWindow.setMenu(falseMenu);
     mainWindow.show()
 });
 
@@ -68,17 +68,26 @@ const mainMenuTemplate =  [
                 protocol: 'file:',
                 slashes:true,
                 }));
-                // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
-                // Menu.setApplicationMenu(falseMenu);
+                const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+                mainWindow.setMenu(falseMenu);
             },
 
         },
             {
-                role: "reload"
+            label:'Reload',
+            accelerator:process.platform == 'darwin' ? 'Command+R' : 'Ctrl+R',
+            click(){
+                mainWindow.reload();
+            }
+              
             },
             {type:'separator'},
             {
-                role:"close",
+            label:'Quit',
+            accelerator:process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+            click(){
+                app.quit();
+            },
             }
         ]
     },
@@ -180,11 +189,20 @@ const falseMenuTemplate =  [
                 }
             },
             {
-                role: "reload"
+            label:'Reload',
+            accelerator:process.platform == 'darwin' ? 'Command+R' : 'Ctrl+R',
+            click(){
+                mainWindow.reload();
+            }
+                
             },
             {type:'separator'},
             {
-                role:"close",
+            label:'Quit',
+            accelerator:process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+            click(){
+                app.quit();
+            },
             }
         ]
     },
