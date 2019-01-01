@@ -1,19 +1,53 @@
 {
-  "name": "myapp",
+  "name": "Interactive_Data_Editor",
   "version": "1.1.1",
-  "description": "A software to edit data Interactively",
   "main": "index.js",
+  "description":"A Software to interactively edit data in a graphical manner.",
+  "homepage":"https://github.com/Koushikphy/Interactive-Data-Editor",
+  "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
+  "copyright" :"Copyright © Dec,2018 Koushik Naskar",
+  "license": "MIT",
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
-    "package": "electron-packager . \"Interactive_Data_Editor\" --ignore=node_modules --ignore=GIT --prune=true --asar=true --overwrite --icon=icons/charts.png --app-copyright=\"Koushik Naskar\" --app-version=\"1.1.1\" --prune=true --version-string.CompanyName=\"Koushik Naskar\" --version-string.FileDescription=\"Interactive Data Editor\" --version-string.OriginalFilename=\"Interactive Data Editor\" --version-string.InternalName=\"Interactive Data Editor\"  --version-string.ProductName=\"Interactive Data Editor\"",
-    "build": "electron-packager . \"Interactive_Data_Editor\" --ignore=node_modules --ignore=GIT --prune=true --asar=true --overwrite --icon=icons/charts.ico --app-copyright=\"Koushik Naskar\" --app-version=\"1.1.1\" --prune=true --version-string.CompanyName=\"Koushik Naskar\" --version-string.FileDescription=\"Interactive Data Editor\" --version-string.OriginalFilename=\"Interactive Data Editor\" --version-string.InternalName=\"Interactive Data Editor\"  --version-string.ProductName=\"Interactive Data Editor\""
+    "dist": "build"
   },
-  "author": "Koushik Naskar",
-  "license": "ISC",
+  "license": "MIT",
+  "build": {
+    "appId": "com.ide.app",
+    "productName":"Interactive Data Editor",
+    "asar": true,
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office",
+    "desktop": {
+        "Encoding": "UTF-8"
+      }
+    },
+    "win": {
+      "target": "msi"
+    }
+  },
+  "files":["**/*","build/icon.*"],
   "devDependencies": {
-    "asar": "^0.14.6",
-    "electron": "^3.0.13",
-    "electron-packager": "^13.0.1",
-    "handsontable": "^6.2.2"
+    "electron": "^4.0.0",
+    "electron-builder": "^20.38.4"
   }
 }

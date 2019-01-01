@@ -188,7 +188,7 @@ ipcRenderer.on("data",function(e,d){
             saveData();
             break;
 
-        case "svaeas" :
+        case "saveas" :
             saveAs();
             break;
             

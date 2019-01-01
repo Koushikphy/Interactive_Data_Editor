@@ -20,7 +20,7 @@ ipcMain.on("back", function(e,d){
 })
 
 app.on('ready', function(){
-    mainWindow = new BrowserWindow({show:false,minWidth:1200,icon:path.join(__dirname,"icons/charts.png")});
+    mainWindow = new BrowserWindow({show:false,minWidth:1200,icon:path.join(__dirname,"charts.png")});
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
@@ -130,7 +130,7 @@ const mainMenuTemplate =  [
         {
             label: "Help",
             click(){
-                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'icons/charts.ico')});
+                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'charts.png')});
                 childWindow.loadURL(url.format({
                 pathname: path.join(__dirname, 'help.html'),
                 protocol: 'file:',
@@ -249,7 +249,7 @@ const falseMenuTemplate =  [
         {
             label: "Help",
             click(){
-                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'icons/charts.ico')});
+                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'charts.png')});
                 childWindow.loadURL(url.format({
                 pathname: path.join(__dirname, 'help.html'),
                 protocol: 'file:',
