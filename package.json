@@ -2,20 +2,19 @@
   "name": "Interactive_Data_Editor",
   "version": "1.1.1",
   "main": "index.js",
-  "description":"A Software to interactively edit data in a graphical manner.",
-  "homepage":"https://github.com/Koushikphy/Interactive-Data-Editor",
+  "description": "A Software to interactively edit data in a graphical manner.",
+  "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
   "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
-  "copyright" :"Copyright © Dec,2018 Koushik Naskar",
+  "copyright": "Copyright © Dec,2018 Koushik Naskar",
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
     "dist": "build"
   },
-  "license": "MIT",
   "build": {
     "appId": "com.ide.app",
-    "productName":"Interactive Data Editor",
+    "productName": "Interactive Data Editor",
     "asar": true,
     "dmg": {
       "contents": [
@@ -37,7 +36,7 @@
         "deb"
       ],
       "category": "Office",
-    "desktop": {
+      "desktop": {
         "Encoding": "UTF-8"
       }
     },
@@ -45,9 +44,13 @@
       "target": "msi"
     }
   },
-  "files":["**/*","build/icon.*"],
+  "files": [
+    "**/*",
+    "build/icon.*"
+  ],
   "devDependencies": {
     "electron": "^4.0.0",
-    "electron-builder": "^20.38.4"
+    "electron-builder": "^20.38.4",
+    "electron-reload": "^1.4.0"
   }
 }
