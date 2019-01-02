@@ -2,8 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Interactive Data Editor"
-#define MyAppVersion "1.1.1"
-#define MyAppPublisher "Koushik Naskar"
+#define MyAppVersion "1.1.2"
+#define MyAppPublisher "Koushik Naskar"   
+#define MyAppURL "https://github.com/Koushikphy/Interactive-Data-Editor"
 #define MyAppExeName "Interactive Data Editor.exe"
 
 [Setup]
@@ -20,9 +21,9 @@ DisableProgramGroupPage=no
 DisableDirPage=no
 DisableWelcomePage=no
 
-OutputDir=C:\Users\Koushik Naskar\Desktop\app
+OutputDir=C:\Users\Koushik Naskar\Desktop
 OutputBaseFilename=Interactive Data Editor
-SetupIconFile=C:\Users\Koushik Naskar\Desktop\app\icons\charts.ico
+SetupIconFile=C:\Users\Koushik Naskar\Desktop\interactive-data-editor\build\icon.ico
 Compression=lzma
 SolidCompression=yes
 VersionInfoDescription={#MyAppName}
@@ -38,8 +39,8 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Koushik Naskar\Desktop\app\Interactive Data Editor-win32-x64\Interactive Data Editor.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Koushik Naskar\Desktop\app\Interactive Data Editor-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Koushik Naskar\Desktop\interactive-data-editor\dist\win-unpacked\Interactive Data Editor.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Koushik Naskar\Desktop\interactive-data-editor\dist\win-unpacked\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
