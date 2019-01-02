@@ -1,11 +1,11 @@
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
-require('electron-reload')(__dirname);
+// require('electron-reload')(__dirname);
 var mainWindow,win;
 process.env.NODE_ENV = 'production';
 
-const {app, BrowserWindow, Menu, ipcMain} = electron;
+const {app, BrowserWindow, Menu, ipcMain,shell} = electron;
 
 
 
@@ -151,6 +151,12 @@ const mainMenuTemplate =  [
                 childWindow.setMenu(null);
                 }
         },
+        {
+            label: "Check for updates",
+            click(){
+                shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases");
+            }
+        }
         ]
     }
 ];
@@ -270,6 +276,12 @@ const falseMenuTemplate =  [
                 childWindow.setMenu(null);
                 }
         },
+        {
+            label: "Check for updates",
+            click(){
+                shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases");
+            }
+        }
         ]
     }
 ];

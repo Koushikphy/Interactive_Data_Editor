@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Interactive Data Editor"
-#define MyAppVersion "1.1.2"
+#define MyAppVersion "1.1.3"
 #define MyAppPublisher "Koushik Naskar"   
 #define MyAppURL "https://github.com/Koushikphy/Interactive-Data-Editor"
 #define MyAppExeName "Interactive Data Editor.exe"
@@ -28,7 +28,7 @@ Compression=lzma
 SolidCompression=yes
 VersionInfoDescription={#MyAppName}
 VersionInfoCopyright=Copyright © Koushik Naskar, December,2018.
-VersionInfoVersion=1.1.1.5
+VersionInfoVersion=1.1.3.0
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"

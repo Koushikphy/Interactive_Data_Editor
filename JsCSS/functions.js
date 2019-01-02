@@ -110,6 +110,12 @@ const falseMenuTemplate =  [
                 childWindow.setMenu(null);
                 }
         },
+        {
+            label: "Check for updates",
+            click(){
+                shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases");
+            }
+        }
         ]
     }
 ];
