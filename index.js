@@ -1,7 +1,7 @@
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
-require('electron-reload')(__dirname);
+// require('electron-reload')(__dirname);
 var mainWindow,win;
 process.env.NODE_ENV = 'production';
 
