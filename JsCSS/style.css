@@ -33,6 +33,18 @@ header {
     text-align: center;
 }
 
+
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #babdc1;
+   height: 18px;
+   font-size: 13px;
+}
+
+
 .basediv{
     position: relative;
     display: inline-block;

@@ -127,7 +127,9 @@ function fileLoader(){
     thisJobs();
     myDiv.innerHTML ='Data loaded ...';
     $("#file_name1").html(filename+extn);
+    // document.title = "Interactive Data Editor - "+filename+extn
 }
+
 
 function compfileLoader(){
     const fname = dialog.showOpenDialog({properties: ['openFile']})[0];
@@ -139,6 +141,7 @@ function compfileLoader(){
     $("#isMark, #dummy").toggle();
     updatePlot(1);
     $("#file_name2").html(filename);
+
 }
 
 function parseData(strDps) {

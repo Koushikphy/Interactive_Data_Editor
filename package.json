@@ -51,6 +51,7 @@
   "devDependencies": {
     "electron": "^4.0.0",
     "electron-builder": "^20.38.4",
-    "electron-reload": "^1.4.0"
+    "electron-reload": "^1.4.0",
+    "electron-statusbar": "^0.2.4"
   }
 }

@@ -14,9 +14,9 @@
     </header>
 <div class="row">
 <input type="submit" value="Choose File" onclick="fileLoader();">
-<label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+<label id="file_name1" style="display: inline-block;width: 10pc;overflow: hidden !important;text-overflow: ellipsis;"> No File Choosen.</label>
 <div id="status">Load Data to plot. </div>
-<div style="float:right;"><i>View the 3D plot as:</i> <a href="javascript:void(0)" onclick="openViewer(0);"> Wireframe </a> or <a href="javascript:void(0)" onclick="openViewer(1);">Surface </a> &ensp;</div>
+<div style="float:right;">View the 3D plot as: <a href="javascript:void(0)" onclick="openViewer(0);"> Wireframe </a> or <a href="javascript:void(0)" onclick="openViewer(1);">Surface </a> &ensp;</div>
 </div>
 
 
@@ -26,7 +26,7 @@
 <option>Y</option>
 <option>X</option>
 </select> <label id="dummy2">for a particular X.</label>
-<div style="float: right;"> Open the <a href="javascript:void(0)" onclick="editor();">Spreadsheet Editor </a>&ensp;</div>
+<div style="float: right;" class= "3D"> Open the <a href="javascript:void(0)" onclick="editor();">Spreadsheet Editor </a>&ensp;</div>
 
 </div>
 
@@ -37,14 +37,18 @@
 <label id="isMark">
 <input checked="" id="check" onclick="incRefData(this)" type="checkbox"/> Compare Data
         </label>
-<label style="float: right;">
-<input checked="" onclick="lockX(this)" type="checkbox"/> Points not movable horizontally. 
-        </label>
+<label style="float: right;" class="3D">
+<input checked="" onclick="lockX(this)" type="checkbox"/> Points not movable horizontally.&ensp;
+</label>
+<div style="float: right;" class="2D"> Open the <a href="javascript:void(0)" onclick="editor();">Spreadsheet Editor </a>&ensp;</div>
 </div>
 <div onchange="updateData();">
 <p style="padding-top: 5px; float: left;"></p>
         X Column :<select id="xCol"></select>  
         Y Column :<select id="yCol"></select>
+<label class ="2D" style="float: right;" >
+<input checked="" onclick="lockX(this)" type="checkbox"/> Points not movable horizontally.&ensp;
+</label>
 </div>
 <div class="row dummy" style="margin-top: 5px;">
         Z Column <span style="padding-left: 2px"></span>:<select id="zCol" onchange="colChanged(this.selectedIndex)"></select>
@@ -58,10 +62,35 @@
 <script src="../JsCSS/functions.js"></script>
 <script src="../JsCSS/plotSetup.js"></script>
 <script>
-        var col ={
-            x : 0, y:0, z:0
-        };
+    var col ={
+    x : 0, y:0, z:0
+};
+$(".2D").hide()
+    // const https = require('https');
 
+
+
+            // $(document).ready (function () {
+            //     $.getJSON("https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags").done(function (data) {
+            //         alert(data[0].name )
+            //     })
+            // });
+
+
+// https.get('https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags', (resp) => {
+//   let data = '';
+
+//   // A chunk of data has been recieved.
+//   resp.on('data', (chunk) => {
+//     data += chunk;
+//   });
+
+//   // The whole response has been received. Print out the result.
+//   resp.on('end', () => {
+//     console.log(data);
+//   });
+
+// })
 
         function isswap(key){
             swapped = key.selectedIndex;
@@ -99,6 +128,8 @@
             if (data.length==1){
                 $(".dummy,#iswap").hide();
                 serve =0;
+                $(".3D").hide()
+                $(".2D").show()
             };
             var op = "";
             for (var i = 1; i <= data[0].length; i++) {

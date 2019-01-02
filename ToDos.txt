@@ -1,0 +1,4 @@
+1. 2d spreadsheet
+2. long name conflict
+3. status bar
+4. title bar change on file load
