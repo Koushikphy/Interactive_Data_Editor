@@ -132,9 +132,17 @@ function fileLoader(){
     data = parseData(data);
     thisJobs();
     myDiv.innerHTML ='Data loaded ...';
-    $("#file_name1").html(filename+extn);
-    // document.title = "Interactive Data Editor - "+filename+extn
+
+    var disp_name = filename+extn;
+    if (filename.length>17){
+        disp_name = filename.slice(0,13)+"..."+filename.slice(-3)+extn;
+    };
+
+    $("#file_name1").html(disp_name);
+    document.title = "Interactive Data Editor - "+disp_name;
 }
+
+
 
 
 function compfileLoader(){

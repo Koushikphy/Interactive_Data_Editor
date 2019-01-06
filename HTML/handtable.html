@@ -70,17 +70,24 @@
         e.sender.send("test","2u3i")
 		var [a,b,c,t,_,_] = d;
         xcol = d[4];
-		vari.innerHTML=t+" : ";
-		full.innerHTML=`Drag the slider to change "${t}" value:`
+        data = d[5].map(x=>transpose(x));
+        if(data.length!=1){
+			vari.innerHTML=t+" : ";
+			full.innerHTML=`Drag the slider to change "${t}" value:`
 
-		slide.min = a;
-		slide.max= b;
-		slide.step =c;
+			slide.min = a;
+			slide.max= b;
+			slide.step =c;
+			val.innerHTML =data[0][0][xcol];
+        	slide.style.visibility = "visible";
+		} else {
+			full.style.display="none";
+		}
         var height = window.innerHeight -
                     document.getElementById("container").offsetTop-
                     document.getElementById("table").offsetTop;
 
-		data = d[5].map(x=>transpose(x));
+		
 		for (var i = data[0][0].length; i>0 ; i--) {
 			columns.push({type:"numeric"})
 		};
@@ -96,8 +103,7 @@
             manualRowResize: true,
             afterChange : function change(e,d){if(d!="loadData")btn.style.visibility = "visible"}
 		});
-        val.innerHTML =data[0][0][xcol];
-        slide.style.visibility = "visible";
+
 	})
 
 

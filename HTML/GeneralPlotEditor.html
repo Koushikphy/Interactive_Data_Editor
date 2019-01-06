@@ -10,13 +10,14 @@
 </head>
 <body>
 <header>
-        An interactive 2D and 3D plot editor
+        An interactive 2D and 3D data editor
     </header>
 <div class="row">
 <input type="submit" value="Choose File" onclick="fileLoader();">
-<label id="file_name1" style="display: inline-block;width: 10pc;overflow: hidden !important;text-overflow: ellipsis;"> No File Choosen.</label>
+<label id="file_name1" style="display: inline-block;width: 10pc;"> No File Choosen.</label>
 <div id="status">Load Data to plot. </div>
-<div style="float:right;">View the 3D plot as: <a href="javascript:void(0)" onclick="openViewer(0);"> Wireframe </a> or <a href="javascript:void(0)" onclick="openViewer(1);">Surface </a> &ensp;</div>
+
+
 </div>
 
 
@@ -62,12 +63,17 @@
 <script src="../JsCSS/functions.js"></script>
 <script src="../JsCSS/plotSetup.js"></script>
 <script>
+
     var col ={ x : 0, y:0, z:0};
     $(".2D").hide();
 
+            // var cur_ver = "v1.1.1"
             // $(document).ready (function () {
             //     $.getJSON("https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags").done(function (data) {
-            //         alert(data[0].name )
+            //         var new_ver =data[0].name
+            //         if(new_ver!=cur_ver){
+            //             alert(`New version ${new_ver} available.`)
+            //         }
             //     })
             // });
 
