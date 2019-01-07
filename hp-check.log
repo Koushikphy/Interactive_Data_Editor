@@ -1,0 +1,255 @@
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mHP Linux Imaging and Printing System (ver. 3.18.10)[0m
+hp-check[25943]: info: :[01mDependency/Version Check Utility ver. 15.1[0m
+hp-check[25943]: info: :
+hp-check[25943]: info: :Copyright (c) 2001-15 HP Development Company, LP
+hp-check[25943]: info: :This software comes with ABSOLUTELY NO WARRANTY.
+hp-check[25943]: info: :This is free software, and you are welcome to distribute it
+hp-check[25943]: info: :under certain conditions. See COPYING file for more details.
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mNote: hp-check can be run in three modes:[0m
+hp-check[25943]: info: :1. Compile-time check mode (-c or --compile): Use this mode before compiling the HPLIP supplied tarball (.tar.gz or .run) to determine if the proper dependencies are installed to successfully compile HPLIP.     
+hp-check[25943]: info: :2. Run-time check mode (-r or --run): Use this mode to determine if a distro supplied package (.deb, .rpm, etc) or an already built HPLIP supplied tarball has the proper dependencies installed to successfully   
+hp-check[25943]: info: :run.                                                                                                                                                                                                               
+hp-check[25943]: info: :3. Both compile- and run-time check mode (-b or --both) (Default): This mode will check both of the above cases (both compile- and run-time dependencies).                                                         
+hp-check[25943]: info: :
+hp-check[25943]: info: :Check types:                                                                                                                                                                                                       
+hp-check[25943]: info: :a. EXTERNALDEP - External Dependencies                                                                                                                                                                             
+hp-check[25943]: info: :b. GENERALDEP - General Dependencies (required both at compile and run time)                                                                                                                                       
+hp-check[25943]: info: :c. COMPILEDEP - Compile time Dependencies                                                                                                                                                                          
+hp-check[25943]: info: :d. [All are run-time checks]                                                                                                                                                                                       
+hp-check[25943]: info: :PYEXT SCANCONF QUEUES PERMISSION                                                                                                                                                                                   
+hp-check[25943]: info: :
+hp-check[25943]: info: :Status Types:
+hp-check[25943]: info: :    OK
+hp-check[25943]: info: :    MISSING       - Missing Dependency or Permission or Plug-in
+hp-check[25943]: info: :    INCOMPAT      - Incompatible dependency-version or Plugin-version
+hp-check[25943]: info: :
+hp-check[25943]: info: :
+hp-check[25943]: info: :---------------
+hp-check[25943]: info: :| SYSTEM INFO |
+hp-check[25943]: info: :---------------
+hp-check[25943]: info: :
+hp-check[25943]: info: : Kernel: 4.15.0-43-generic #46-Ubuntu SMP Thu Dec 6 14:45:28 UTC 2018 GNU/Linux
+ Host: koushik
+ Proc: 4.15.0-43-generic #46-Ubuntu SMP Thu Dec 6 14:45:28 UTC 2018 GNU/Linux
+ Distribution: 12 18.04
+hp-check[25943]: info: : Bitness: 64 bit
+
+hp-check[25943]: info: :
+hp-check[25943]: info: :-----------------------
+hp-check[25943]: info: :| HPLIP CONFIGURATION |
+hp-check[25943]: info: :-----------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: :HPLIP-Version: HPLIP 3.18.10
+hp-check[25943]: info: :HPLIP-Home: /usr/share/hplip
+hp-check[25943]: info: :HPLIP-Installation: Auto installation is supported for ubuntu distro  18.04 version 
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mCurrent contents of '/etc/hp/hplip.conf' file:[0m
+hp-check[25943]: info: :# hplip.conf.  Generated from hplip.conf.in by configure.
+
+[hplip]
+version=3.18.10
+
+[dirs]
+home=/usr/share/hplip
+run=/var/run
+ppd=/usr/share/ppd/HP
+ppdbase=/usr/share/ppd
+doc=/usr/share/doc/hplip-3.18.10
+html=/usr/share/doc/hplip-3.18.10
+icon=/usr/share/applications
+cupsbackend=/usr/lib/cups/backend
+cupsfilter=/usr/lib/cups/filter
+drv=/usr/share/cups/drv/hp
+bin=/usr/bin
+apparmor=/etc/apparmor.d
+# Following values are determined at configure time and cannot be changed.
+[configure]
+network-build=yes
+libusb01-build=no
+pp-build=no
+gui-build=yes
+scanner-build=yes
+fax-build=yes
+dbus-build=yes
+cups11-build=no
+doc-build=yes
+shadow-build=no
+hpijs-install=no
+foomatic-drv-install=no
+foomatic-ppd-install=no
+foomatic-rip-hplip-install=no
+hpcups-install=yes
+cups-drv-install=yes
+cups-ppd-install=no
+internal-tag=3.18.10
+restricted-build=no
+ui-toolkit=qt4
+qt3=no
+qt4=yes
+qt5=no
+policy-kit=no
+lite-build=no
+udev_sysfs_rules=no
+hpcups-only-build=no
+hpijs-only-build=no
+apparmor_build=yes
+class-driver=no
+
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mCurrent contents of '/var/lib/hp/hplip.state' file:[0m
+hp-check[25943]: info: :Plugins are not installed. Could not access file: No such file or directory
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mCurrent contents of '~/.hplip/hplip.conf' file:[0m
+hp-check[25943]: info: :[upgrade]
+notify_upgrade = true
+last_upgraded_time = 1543823861
+pending_upgrade_time = 0
+
+[last_used]
+device_uri = "hp:/net/HP_LaserJet_CP1525N?ip=192.168.31.123"
+printer_name = 
+working_dir = .
+
+[settings]
+systray_visible = 0
+systray_messages = 0
+
+[commands]
+scan = /usr/bin/xsane -V %SANE_URI%
+
+[refresh]
+rate = 30
+enable = false
+type = 1
+
+[polling]
+enable = false
+interval = 5
+device_list = 
+
+[fax]
+voice_phone = 
+email_address = 
+
+[installation]
+date_time = Monday 07 January 2019 16:46:08
+version = 3.18.10
+
+
+hp-check[25943]: info: : <Package-name>        <Package-Desc>      <Required/Optional> <Min-Version> <Installed-Version> <Status>   <Comment>
+hp-check[25943]: info: :
+hp-check[25943]: info: :--------------
+hp-check[25943]: info: :| COMPILEDEP |
+hp-check[25943]: info: :--------------
+hp-check[25943]: info: :
+hp-check[25943]: info: : gcc                  gcc - GNU Project C and C++ Compiler                         REQUIRED        -               7.3.0           OK         -
+hp-check[25943]: info: : make                 make - GNU make utility to maintain groups of programs       REQUIRED        3.0             4.1             OK         -
+hp-check[25943]: info: : libtool              libtool - Library building support services                  REQUIRED        -               2.4.6           OK         -
+hp-check[25943]: info: :
+hp-check[25943]: info: :------------------------
+hp-check[25943]: info: :| General Dependencies |
+hp-check[25943]: info: :------------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: : libcrypto            libcrypto - OpenSSL cryptographic library                    REQUIRED        -               1.1.0           OK         -
+hp-check[25943]: info: : python-xml           Python XML libraries                                         REQUIRED        -               2.2.5           OK         -
+hp-check[25943]: info: :[31;01m error: libnetsnmp-devel libnetsnmp-devel - SNMP networking library development files REQUIRED        5.0.9           -               MISSING    'libnetsnmp-devel needs to be installed'[0m
+hp-check[25943]: info: : sane-devel           SANE - Scanning library development files                    REQUIRED        -               -               OK         -
+hp-check[25943]: info: : pil                  PIL - Python Imaging Library (required for commandline scanning with hp-scan) OPTIONAL        -               1.1.7           OK         -
+hp-check[25943]: info: : pyqt4-dbus           PyQt 4 DBus - DBus Support for PyQt4                         REQUIRED        4.0             4.12.1          OK         -
+hp-check[25943]: info: : libpthread           libpthread - POSIX threads library                           REQUIRED        -               2.27            OK         -
+hp-check[25943]: info: : python-devel         Python devel - Python development files                      REQUIRED        2.2             2.7.15          OK         -
+hp-check[25943]: info: : cups-devel           CUPS devel- Common Unix Printing System development files    REQUIRED        -               2.2.7           OK         -
+hp-check[25943]: info: : python-dbus          Python DBus - Python bindings for DBus                       REQUIRED        0.80.0          1.2.6           OK         -
+hp-check[25943]: info: : cups-ddk             CUPS DDK - CUPS driver development kit                       OPTIONAL        -               -               OK         -
+hp-check[25943]: info: : reportlab            Reportlab - PDF library for Python                           OPTIONAL        2.0             3.4.0           OK         -
+hp-check[25943]: info: : pyqt4                PyQt 4- Qt interface for Python (for Qt version 4.x)         REQUIRED        4.0             4.12.1          OK         -
+hp-check[25943]: info: : libusb               libusb - USB library                                         REQUIRED        -               1.0             OK         -
+hp-check[25943]: info: : cups-image           CUPS image - CUPS image development files                    REQUIRED        -               2.2.7           OK         -
+hp-check[25943]: info: : python2X             Python 2.2 or greater - Python programming language          REQUIRED        2.2             2.7.15          OK         -
+hp-check[25943]: info: : python-notify        Python libnotify - Python bindings for the libnotify Desktop notifications OPTIONAL        -               -               OK         -
+hp-check[25943]: info: : libjpeg              libjpeg - JPEG library                                       REQUIRED        -               -               OK         -
+hp-check[25943]: info: : sane                 SANE - Scanning library                                      REQUIRED        -               -               OK         -
+hp-check[25943]: info: :
+hp-check[25943]: info: :----------------------
+hp-check[25943]: info: :| Scan Configuration |
+hp-check[25943]: info: :----------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: : scanext              Scan-SANE-Extension                                          REQUIRED        -               3.18.10         OK         -
+hp-check[25943]: info: : hpaio                HPLIP-SANE-Backend                                           REQUIRED        -               3.18.10         OK         'hpaio found in /etc/sane.d/dll.conf'
+hp-check[25943]: info: :
+hp-check[25943]: info: :-------------------------
+hp-check[25943]: info: :| External Dependencies |
+hp-check[25943]: info: :-------------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: : gs                   GhostScript - PostScript and PDF language interpreter and previewer REQUIRED        7.05            9.26            OK         -
+hp-check[25943]: info: : scanimage            scanimage - Shell scanning program                           OPTIONAL        1.0             1.0.27          OK         -
+hp-check[25943]: info: : cups                 CUPS - Common Unix Printing System                           REQUIRED        1.1             2.2.7           OK         'CUPS Scheduler is running'
+hp-check[25943]: info: : network              network -wget                                                OPTIONAL        -               1.19.4          OK         -
+hp-check[25943]: info: : policykit            PolicyKit - Administrative policy framework                  OPTIONAL        -               0.105           OK         -
+hp-check[25943]: info: : xsane                xsane - Graphical scanner frontend for SANE                  OPTIONAL        0.9             0.999           OK         -
+hp-check[25943]: info: : dbus                 DBus - Message bus system                                    REQUIRED        -               1.12.2          OK         -
+hp-check[25943]: info: : avahi-utils          avahi-utils                                                  OPTIONAL        -               0.7             OK         -
+hp-check[25943]: info: :
+hp-check[25943]: info: :---------------------
+hp-check[25943]: info: :| Python Extentions |
+hp-check[25943]: info: :---------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: : hpmudext             IO-Extension                                                 REQUIRED        -               3.18.10         OK         -
+hp-check[25943]: info: : cupsext              CUPS-Extension                                               REQUIRED        -               3.18.10         OK         -
+hp-check[25943]: info: :
+hp-check[25943]: info: :------------------------------
+hp-check[25943]: info: :| DISCOVERED SCANNER DEVICES |
+hp-check[25943]: info: :------------------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: :device `hpaio:/net/hp_laserjet_m1536dnf_mfp?ip=192.168.31.117&queue=false' is a Hewlett-Packard hp_laserjet_m1536dnf_mfp all-in-one
+device `hpaio:/net/hp_laserjet_pro_mfp_m126nw?ip=192.168.31.56&queue=false' is a Hewlett-Packard hp_laserjet_pro_mfp_m126nw all-in-one
+
+hp-check[25943]: info: :
+hp-check[25943]: info: :--------------------------
+hp-check[25943]: info: :| DISCOVERED USB DEVICES |
+hp-check[25943]: info: :--------------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: :No devices found.
+hp-check[25943]: info: :
+hp-check[25943]: info: :---------------------------------
+hp-check[25943]: info: :| INSTALLED CUPS PRINTER QUEUES |
+hp-check[25943]: info: :---------------------------------
+hp-check[25943]: info: :
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mHP_LaserJet_CP1525N[0m
+hp-check[25943]: info: :[01m-------------------[0m
+hp-check[25943]: info: :Type: Printer
+hp-check[25943]: info: :Device URI: hp:/net/HP_LaserJet_CP1525N?ip=192.168.31.123
+hp-check[25943]: info: :PPD: /etc/cups/ppd/HP_LaserJet_CP1525N.ppd
+warning: Failed to read /etc/cups/ppd/HP_LaserJet_CP1525N.ppd ppd file
+hp-check[25943]: info: :PPD Description: 
+hp-check[25943]: info: :Printer status: printer HP_LaserJet_CP1525N is idle.  enabled since Monday 07 January 2019 10:06:05 AM IST
+error: Communication status: Failed
+hp-check[25943]: info: :
+hp-check[25943]: info: :
+hp-check[25943]: info: :--------------
+hp-check[25943]: info: :| PERMISSION |
+hp-check[25943]: info: :--------------
+hp-check[25943]: info: :
+hp-check[25943]: info: :
+hp-check[25943]: info: :-----------
+hp-check[25943]: info: :| SUMMARY |
+hp-check[25943]: info: :-----------
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mMissing Required Dependencies[0m
+hp-check[25943]: info: :[01m-----------------------------[0m
+error: 'libsnmp-dev' package is missing/incompatible 
+error: 'snmp-mibs-downloader' package is missing/incompatible 
+hp-check[25943]: info: :
+hp-check[25943]: info: :[01mMissing Optional Dependencies[0m
+hp-check[25943]: info: :[01m-----------------------------[0m
+hp-check[25943]: info: :None
+
+hp-check[25943]: info: :
+hp-check[25943]: info: :Total Errors: 2
+hp-check[25943]: info: :Total Warnings: 0
+hp-check[25943]: info: :
+hp-check[25943]: info: :
+hp-check[25943]: info: :Done.
