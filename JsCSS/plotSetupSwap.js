@@ -24,6 +24,7 @@ var layout = {
     width: window.innerWidth - 17,
     plot_bgcolor: "#e8ebef",
     showlegend: false,
+    selectdirection: 'h',
     hovermode: "closest",
     margin: {
         t: 25,
@@ -42,7 +43,6 @@ var layout = {
         showline: true,
         tickformat: " ,.5g",
         hoverformat: " ,.6g",
-        fixedrange: true,
     },
     font: { size: 14 },
 };

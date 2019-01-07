@@ -170,16 +170,16 @@
 
         const {remote } = require('electron');
         const {dialog} = remote;
-
-            require("request")({
+        const req = require("request")
+            req({
                 'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
                 'headers':{'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1521.3 Safari/537.36});'}}, 
                 function (err, resp, body) {
                     var new_ver =JSON.parse(body)[0].name
-                    if(new_ver!="v1.1.1"){
+                    if(new_ver!="v1.3.0"){
                         var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
-                        var res = dialog.showMessageBox({type:"question",title:"dfhqf", message:txt,buttons:['OK', "Cancel"]})
-                        if(!res){shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor")}
+                        var res = dialog.showMessageBox({type:"question",title:"Update available!!!", message:txt,buttons:['OK', "Cancel"]})
+                        if(!res){shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases")}
                     }
             })
 
