@@ -231,6 +231,7 @@ ipcRenderer.on("data",function(e,d){
 ipcRenderer.on("back",function(e,d){
     data = d.map(x=>transpose(x))
     updatePlot(1);
+    startDragBehavior();
     updateOnServer();
 })
 
@@ -446,6 +447,7 @@ function sliderChanged() {
     xVal.innerHTML= data[th_in][col.x][0];
     myDiv.innerHTML=xName+" value updated";
     updatePlot(1);
+    startDragBehavior();
 };
 
 
@@ -455,6 +457,7 @@ function colChanged(value) {
     col.z    = value;
     updatePlot(1);
     updateOnServer();
+    startDragBehavior();
 };
 
 
@@ -600,7 +603,7 @@ function selectEvent(event){
     } else {
         for (let pt of event.points){
             ind = dpsx.findIndex(n => n==pt.x);
-            if (dpsy[ind]==pt.y){
+            if (dpsy[ind]==pt.y && ind!=dpsx.length-1){
                 index.push(ind);
                 del_dat.push(pt.x);
         };
