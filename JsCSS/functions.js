@@ -1,17 +1,51 @@
 const fs = require("fs");        
 const { remote, ipcRenderer } = require('electron');
 const path = require('path');
-const {dialog, BrowserWindow, Menu} = remote;
+const {dialog, BrowserWindow, Menu, MenuItem} = remote;
 const url = require('url');
 var editorWindow;
 var viewer=[,,];
-var recentLocation = '/home/';
+var recentLocation = '';
 var recentFiles = [];
+
+
+
+
+
+function recentMenu(){
+    var menu = [];
+    for(let i=recentFiles.length-1; i>=0; i-- ){
+        var fln = recentFiles[i];
+        if(fln.length>50) fln = "..."+fln.slice(-50);
+        var item = {
+            label : fln
+        };
+        menu.push(item);
+    }
+    console.log(menu);
+    Menu.getApplicationMenu().getMenuItemById("rf").submenu = menu;
+    localStorage.setItem("files",JSON.stringify(recentFiles));
+};
+
+
+var fl = JSON.parse(localStorage.getItem("files"));
+if (fl!==null){
+    recentFiles = fl;
+    recentMenu();
+}
+
 
 
 
 function fileLoader(){
     const fname = dialog.showOpenDialog({defaultPath:recentLocation, properties: ['openFile']})[0];
+    fileReader(fname);
+}
+
+
+
+
+function fileReader(fname){
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
@@ -27,16 +61,17 @@ function fileLoader(){
         disp_name = filename.slice(0,13)+"..."+filename.slice(-3)+extn;
     };
 
-    if(fname.length>50){
-        fname = "..."+fname.slice(-50);
-    }
+    $("#file_name1").html(disp_name);
+    document.title = "Interactive Data Editor - "+disp_name;
+
+
+    recentFiles = recentFiles.filter(x=>x!==fname);
     recentFiles.push(fname);
+
     if(recentFiles.length>10){
         recentFiles.splice(0,1);
     }
-    
-    $("#file_name1").html(disp_name);
-    document.title = "Interactive Data Editor - "+disp_name;
+    recentMenu();
 }
 
 
