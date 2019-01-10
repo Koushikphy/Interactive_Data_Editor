@@ -169,7 +169,7 @@
         <script >
 
         const {remote } = require('electron');
-        const {dialog} = remote;
+        const {dialog, Menu} = remote;
         const req = require("request")
             req({
                 'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
@@ -200,13 +200,18 @@
             }
 
             function men(){
-                ipcRenderer.send("menu","full")
+                var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un']
+                for (let i of mn){
+                    Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
+                }
             }
 
             function mens(){
-                ipcRenderer.send("menu","whatever");
+                var mn = ['save', 'saveas', 'un']
+                for (let i of mn){
+                    Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
+                }
             }
-
 
         </script>
     </body>

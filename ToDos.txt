@@ -1,5 +1,0 @@
-add a page for points and lines
-write the least square fit code
-get points and get the least square points
-editable least square fit 
-show coefficients

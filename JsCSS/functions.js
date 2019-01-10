@@ -1,133 +1,22 @@
 const fs = require("fs");        
 const { remote, ipcRenderer } = require('electron');
 const path = require('path');
-const {dialog, BrowserWindow,Menu} = remote;
+const {dialog, BrowserWindow, Menu} = remote;
 const url = require('url');
 var editorWindow;
-var viewer=[,,]
-const falseMenuTemplate =  [
-        {
-        label: 'File',
-        submenu:[
-            {
-                label : "Save",
-                enabled:false,
-                accelerator:process.platform == 'darwin' ? 'Command+S' : 'Ctrl+S',
-                click(){
-                    mainWindow.webContents.send("data","save");
-                }
-            },
-            {
-                label : "Save As",
-                enabled:false,
-                accelerator:process.platform =='darwin' ? 'Command+Ctrl+S' : 'Shift+Ctrl+S',
-                click(){
-                    mainWindow.webContents.send("data","saveas");
-                }
-            },
-            {type:'separator'},
-            {
-                label:'Go Home',
-                accelerator:process.platform == 'darwin' ? 'Command+H' : 'Ctrl+H',
-                click(){
-                    mainWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'index.html'),
-                    protocol: 'file:',
-                    slashes:true
-                    }));
-                }
-            },
-            {
-                role: "reload"
-            },
-            {type:'separator'},
-            {
-                role:"close",
-            }
-        ]
-    },
-    {
-        label: "Edit",
-        submenu:[
-        {
-            label: "CS somoothing",
-            enabled:false,
-            accelerator:process.platform =='darwin' ? 'D' : 'D',
-            click(){
-                mainWindow.webContents.send("data","cs");
-            }
-        },
-        {
-            label: "MA Smoothing",
-            enabled:false,
-            accelerator:process.platform =='darwin' ? 'M' : 'M',
-            click(){
-                mainWindow.webContents.send("data","ma");
-            }
-        },
-        {
-            label: "Change Sign",
-            enabled:false,
-            accelerator:process.platform =='darwin' ? 'C' : 'C',
-            click(){
-                mainWindow.webContents.send("data","csign");
-            }
-        },
-        {
-            label: "Undo/Redo",
-            enabled:false,
-            accelerator:process.platform =='darwin' ? 'Command+Z' : 'Ctrl+Z',
-            click(){
-                mainWindow.webContents.send("data","undo");
-            }
-        }
-        ]
-    },
-    {
-        label : "Help",
-        submenu:[
-        {
-            label: "Help",
-            click(){
-                var childWindow = new BrowserWindow({icon: path.join(__dirname, 'icons/charts.ico')});
-                childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'help.html'),
-                protocol: 'file:',
-                slashes:true
-                }));
-                childWindow.setMenu(null);
-                }
-        },
-        {
-            label: "About",
-            click(){
-                var childWindow = new BrowserWindow({width:500,height:500});
-                childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'about.html'),
-                protocol: 'file:',
-                slashes:true
-                }));
-                childWindow.setMenu(null);
-                }
-        },
-        {
-            label: "Check for updates",
-            click(){
-                shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases");
-            }
-        }
-        ]
-    }
-];
+var viewer=[,,];
+var recentLocation = '/home/';
+var recentFiles = [];
+
 
 
 function fileLoader(){
-    const fname = dialog.showOpenDialog({properties: ['openFile']})[0];
+    const fname = dialog.showOpenDialog({defaultPath:recentLocation, properties: ['openFile']})[0];
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
     save_name =path.join(dirname, filename + "_new" +extn);
-
+    recentLocation = dirname;
     data = fs.readFileSync(fname,"utf8");
     data = parseData(data);
     thisJobs();
@@ -138,6 +27,14 @@ function fileLoader(){
         disp_name = filename.slice(0,13)+"..."+filename.slice(-3)+extn;
     };
 
+    if(fname.length>50){
+        fname = "..."+fname.slice(-50);
+    }
+    recentFiles.push(fname);
+    if(recentFiles.length>10){
+        recentFiles.splice(0,1);
+    }
+    
     $("#file_name1").html(disp_name);
     document.title = "Interactive Data Editor - "+disp_name;
 }
@@ -249,22 +146,11 @@ function editor(){
         slashes:true
     }));   
     editorWindow.setMenu(null);
-    // editorWindow.webContents.send("slider","efwu");
-    // // var tmpdata = [...data.map(x=>transpose(x))]
-    // editorWindow.once("ready-to-show",function(){
-    //     editorWindow.webContents.send("slider","ufgew");
-    // });
-    //     editorWindow.once("did-finish-load",function(){
-    //     editorWindow.webContents.send("slider","uffwefegew");
-    // })
+
     editorWindow.show();
     editorWindow.webContents.once("dom-ready",function(){
         editorWindow.webContents.send("slider",[sl.min,sl.max,sl.step,tex,col.x,data]);
     })
-
-    // editorWindow.once("ready-to-show",function(){
-    //     editorWindow.webContents.send("slider","ufgew");
-    // });
 }
 
 
@@ -483,6 +369,7 @@ function yrangeChanged() {
 
 
 function saveOldData(){
+    if(!data.length) return;
     olddata = JSON.stringify([
         th_in, col.z, data[th_in][col.y],data[th_in][col.z]
         ]);
