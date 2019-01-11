@@ -107,41 +107,6 @@ function fileLoader(){
     $("#file_name1").html(filename);
 }
 
-
-        // function fileHandler() {
-        //     file = this.files[0];
-        //     var strDps = "", blocks=[];
-        //     data =[],ldata=[];
-        //     var reader = new FileReader();
-        //     reader.readAsText(file);
-        //     reader.onload = function() {  
-        //         strDps = reader.result.trim(); 
-        //         strDps = strDps.split(/\t\t\t\t\t|\n\n/);
-        //         col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
-        //         data = [...Array(col)].map(_ => Array());
-        //         for(var i = 0; i < strDps.length; i++) {
-        //             blocks = strDps[i].trim().split("\n");
-        //             for (var j = 0; j < blocks.length; j++) {
-        //                 blocks[j] = blocks[j].trim().split(/[\s\t]+/);
-        //             };
-        //             blocks = transpose(blocks);
-        //             for (var k = 0; k < col; k++) {
-        //                 data[k].push(blocks[k]);
-        //             };
-        //         };
-        //         selUpdate();
-        //         ldata = [...Array(col)].map(_ => Array());
-        //         for (var i = 0; i < col; ++i) {
-        //             ldata[i] = data[i].concat(transpose(data[i]));
-        //             let flat_dat = data[i].flat();
-        //             ranges.push([Math.min( ...flat_dat), Math.max( ...flat_dat)]);
-        //         };
-        //         lIniData = initData(ldata[0].length);
-        //         updatePlot();
-        //         $("#ssel")[0].disabled=false;
-        //     };
-        // };
-
     </script>
 </body>
 </html>

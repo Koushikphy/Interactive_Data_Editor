@@ -7,32 +7,39 @@ var editorWindow;
 var viewer=[,,];
 var recentLocation = '';
 var recentFiles = [];
-
+var home = process.env.HOME || process.env.USERPROFILE
 
 
 
 
 function recentMenu(){
-    var menu = [];
+    var rrf = Menu.getApplicationMenu().getMenuItemById("rf").submenu;
+    rrf.clear()
     for(let i=recentFiles.length-1; i>=0; i-- ){
         var fln = recentFiles[i];
-        if(fln.length>50) fln = "..."+fln.slice(-50);
+        if(fln.includes(home)){fln =  fln.replace(home,"~")}
         var item = {
             label : fln
         };
-        menu.push(item);
+        rrf.append(new MenuItem(item));
     }
-    console.log(menu);
-    Menu.getApplicationMenu().getMenuItemById("rf").submenu = menu;
     localStorage.setItem("files",JSON.stringify(recentFiles));
 };
 
 
+
+//// check from history
 var fl = JSON.parse(localStorage.getItem("files"));
 if (fl!==null){
     recentFiles = fl;
     recentMenu();
 }
+
+var fl = JSON.parse(localStorage.getItem("recent"));
+if (fl!==null){
+    recentLocation = fl;
+}
+
 
 
 
@@ -51,6 +58,7 @@ function fileReader(fname){
     var extn = path.extname(fname)
     save_name =path.join(dirname, filename + "_new" +extn);
     recentLocation = dirname;
+    localStorage.setItem("recent",JSON.stringify(recentLocation));
     data = fs.readFileSync(fname,"utf8");
     data = parseData(data);
     thisJobs();
@@ -60,14 +68,15 @@ function fileReader(fname){
     if (filename.length>17){
         disp_name = filename.slice(0,13)+"..."+filename.slice(-3)+extn;
     };
-
     $("#file_name1").html(disp_name);
-    document.title = "Interactive Data Editor - "+disp_name;
+
+    if(fname.includes(home)){fname =  fname.replace(home,"~")}
+    document.title = "Interactive Data Editor - "+fname;
+
 
 
     recentFiles = recentFiles.filter(x=>x!==fname);
     recentFiles.push(fname);
-
     if(recentFiles.length>10){
         recentFiles.splice(0,1);
     }
@@ -207,6 +216,7 @@ function openViewer(x){
     // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
     viewerWindow.setMenu(null);
     viewerWindow.show();
+    viewerWindow.webContents.openDevTools();
     viewer[target] = viewerWindow;
     viewerWindow.webContents.once("dom-ready",function(){
         updateOnServer()
@@ -284,16 +294,17 @@ function hotKeys(e){
             break;
         case "s":
             if(e.ctrlKey){
-                saveData();
+                // saveData();
+                break;
             } else {
                 Plotly.relayout(figurecontainer, {dragmode:"select"});
             }
             break;
-        case "S":
-            if(e.ctrlKey){
-                saveAs();
-            }
-            break;
+        // case "S":
+        //     if(e.ctrlKey){
+        //         saveAs();
+        //     }
+        //     break;
         case "z":
             if (e.ctrlKey) {
                 e.preventDefault();
@@ -513,7 +524,7 @@ function autoSmooth() {
             dpsy[i] = (dpsy[i-1]+dpsy[i]+dpsy[i+1])/3.0
         };
     data[th_in][col.z] = dpsy;
-    Plotly.restyle(figurecontainer,{"y":[dpsy]});
+    updatePlot();
 }
 
 

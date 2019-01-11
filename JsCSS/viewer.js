@@ -1,6 +1,6 @@
 var figurecontainer = document.getElementById("figurecontainer"), data = [], cols=[0,1,2];
 
-        var ldata=[], data=[], lIniData=[], ranges=[], cols=[];
+var ldata=[], lIniData=[], ranges=[];
 
 const fs = require("fs");        
 const { remote, ipcRenderer } = require('electron');
@@ -10,7 +10,7 @@ const url = require('url');
 
 
 ipcRenderer.on("sdata", function(e,d){
-    console.log(e,d)
+
     data = d;
     updatePlot();
 })
