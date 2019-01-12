@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Slider - Custom handle</title>
+  <link rel="stylesheet" href="../JQ/jquery-ui.min.css">
+  <style>
+  #custom-handle {
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;background: #4CAF50; 
+    color:#ffffff;
+  }
+  </style>
+  <script src="../JsCSS/jquery.min.js"></script>
+  <script src="../JQ/jquery-ui.min.js"></script>
+  <script>
+  $( function() {
+    var handle = $( "#custom-handle" );
+    $( "#slider" ).slider({
+      create: function() {
+        handle.text( $( this ).slider( "value" ) );
+      },
+      slide: function( event, ui ) {
+        handle.text( ui.value );
+      }
+    });
+  } );
+  </script>
+</head>
+<body>
+<div id="slider" style="background: #eaeaea">
+  <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
+</div>
+ 
+ 
+</body>
+</html>

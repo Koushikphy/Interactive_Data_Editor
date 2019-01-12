@@ -1,0 +1,18 @@
+spreadsheet slider
+spreadsheet editor slider value
+2d and 3d container
+2d and 3d boxes
+x name and yname
+swapping tactics
+set height for figurecontainer
+document.getElementsByTagName("header")[0].offsetTop 
+document.getElementsByTagName("header")[0].offsetHeight
+change name from drag the slider
+
+
+Well, my question may seem weird, but I'm trying to use this https://jqueryui.com/slider/ example to make a slider. But the slider thumb is getting outside the window like this
+
+[![enter image description here][1]][1]
+
+The text here is 'Y: 120' , but the '0' is hidden. Offcourse I can prevent this but increasing the right margin of the slider. But for some reason I don't want to use that if other method is available
+  [1]: https://i.stack.imgur.com/gEuiW.png

@@ -211,7 +211,7 @@ function hotKeys(e){
         case "c":
             changeSign();
             break;
-        case "q":
+        case "p":
             swapData();
             break;
     };

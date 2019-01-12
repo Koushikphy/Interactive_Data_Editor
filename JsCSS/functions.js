@@ -10,22 +10,30 @@ var recentFiles = [];
 var home = process.env.HOME || process.env.USERPROFILE
 
 
+function showStatus(msg){
+    $("#status").html(msg);
+    $("#status").delay("medium").fadeIn()
+    $("#status").delay(3000).fadeOut()
+
+}
 
 
 function recentMenu(){
     var rrf = Menu.getApplicationMenu().getMenuItemById("rf").submenu;
     rrf.clear()
     for(let i=recentFiles.length-1; i>=0; i-- ){
-        var fln = recentFiles[i];
+        var fln = recentFiles[i].slice();
         if(fln.includes(home)){fln =  fln.replace(home,"~")}
         var item = {
-            label : fln
+            label : fln,
+            click(){
+                ipcRenderer.send("rf",recentFiles[i]);
+            }
         };
         rrf.append(new MenuItem(item));
     }
     localStorage.setItem("files",JSON.stringify(recentFiles));
 };
-
 
 
 //// check from history
@@ -39,8 +47,6 @@ var fl = JSON.parse(localStorage.getItem("recent"));
 if (fl!==null){
     recentLocation = fl;
 }
-
-
 
 
 
@@ -62,15 +68,8 @@ function fileReader(fname){
     data = fs.readFileSync(fname,"utf8");
     data = parseData(data);
     thisJobs();
-    myDiv.innerHTML ='Data loaded ...';
+    showStatus('Data loaded ...')
 
-    var disp_name = filename+extn;
-    if (filename.length>17){
-        disp_name = filename.slice(0,13)+"..."+filename.slice(-3)+extn;
-    };
-    $("#file_name1").html(disp_name);
-
-    if(fname.includes(home)){fname =  fname.replace(home,"~")}
     document.title = "Interactive Data Editor - "+fname;
 
 
@@ -81,8 +80,12 @@ function fileReader(fname){
         recentFiles.splice(0,1);
     }
     recentMenu();
-}
+    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa']
+    for (let i of mn){
+        Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
+    }
 
+}
 
 
 
@@ -92,12 +95,17 @@ function compfileLoader(){
 
     compdata = fs.readFileSync(fname,"utf8");
     compdata = parseData(compdata);
-    myDiv.innerHTML='Data for comparison loaded ...';
-    $("#isMark, #dummy").toggle();
+    showStatus('Data for comparison loaded ...');
     updatePlot(1);
-    $("#file_name2").html(filename);
-
+    Menu.getApplicationMenu().getMenuItemById("compf").visible = true;
 }
+
+
+function transpose(m) {
+
+    return m[0].map((_,i) => m.map(x => x[i]));
+};
+
 
 function parseData(strDps) {
     var newdat=[], blocks=[];  
@@ -115,113 +123,6 @@ function parseData(strDps) {
     return newdat;
 };
 
-
-function saveAs(){
-    if(!data.length) {alert("Nothing to save!"); return}
-    save_name = dialog.showSaveDialog({title:"Save As:",defaultPath:save_name});
-    saveData();
-}
-
-
-function saveData() { 
-    if(!data.length) {alert("Nothing to save!"); return}
-    var tmpData = data.map(x => transpose(x));
-    if (swapped) tmpData = transpose(tmpData);
-    var txt = "";
-
-    for (let i of tmpData) {
-        for (let j of i) {
-            txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") +"\n";
-        };
-    txt += "\n";
-    };
-    fs.writeFileSync(save_name,txt);
-    myDiv.innerHTML="Data Saved as " + path.basename(save_name)+" on "+new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric',second:'numeric', hour12: true });
-};
-
-
-ipcRenderer.on("data",function(e,d){
-    switch(d){
-        case "save":
-            saveData();
-            break;
-
-        case "saveas" :
-            saveAs();
-            break;
-            
-        case "cs":
-            deleteInterpolate()
-            break;
-
-        case "ma" :
-            autoSmooth();
-            break;
-
-        case "csign":
-            changeSign();
-            break;
-
-        case "undo":
-            unDo();
-            break;
-    }
-});
-
-
-ipcRenderer.on("back",function(e,d){
-    data = d.map(x=>transpose(x))
-    updatePlot(1);
-    startDragBehavior();
-    updateOnServer();
-})
-
-
-
-function editor(){
-    if(!data.length)  {alert("Nothing to show!"); return}
-    var sl = $(".slidecontainer").find("input")[0] 
-    var tex = $(".slidecontainer").find("p")[1].innerHTML
-     editorWindow = new BrowserWindow({minWidth:1200,show:false});
-    editorWindow.maximize();
-    editorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "handtable.html"),
-        protocol: 'file:',
-        slashes:true
-    }));   
-    editorWindow.setMenu(null);
-
-    editorWindow.show();
-    editorWindow.webContents.once("dom-ready",function(){
-        editorWindow.webContents.send("slider",[sl.min,sl.max,sl.step,tex,col.x,data]);
-    })
-}
-
-
-
-
-function openViewer(x){
-    serve=1;
-    var target = "3D_Viewer_Lines.html"
-    if(x) target = "3D_Viewer_Surface.html"
-
-    viewerWindow = new BrowserWindow({show:false,minWidth:1200});
-    viewerWindow.maximize();
-    viewerWindow.loadURL(url.format({
-        pathname: path.join(__dirname, target),
-        protocol: 'file:',
-        slashes:true
-    }));
-    viewerWindow.on("closed",function(){delete viewer[target]})
-    // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
-    viewerWindow.setMenu(null);
-    viewerWindow.show();
-    viewerWindow.webContents.openDevTools();
-    viewer[target] = viewerWindow;
-    viewerWindow.webContents.once("dom-ready",function(){
-        updateOnServer()
-    })
-};
 
 
 function expRotate(tmpData){
@@ -273,6 +174,105 @@ function rotateData(){
 
 
 
+function saveAs(){
+    if(!data.length) {alert("Nothing to save!"); return}
+    save_name = dialog.showSaveDialog({title:"Save As:",defaultPath:save_name});
+    saveData();
+}
+
+
+function saveData() { 
+    if(!data.length) {alert("Nothing to save!"); return}
+    var tmpData = data.map(x => transpose(x));
+    if (swapped) tmpData = transpose(tmpData);
+    var txt = "";
+
+    for (let i of tmpData) {
+        for (let j of i) {
+            txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") +"\n";
+        };
+    txt += "\n";
+    };
+    fs.writeFileSync(save_name,txt);
+    showStatus("Data Saved as " + path.basename(save_name)+" on "+new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric',second:'numeric', hour12: true }))
+};
+
+
+ipcRenderer.on("rf",function(e,d){
+    fileReader(d);
+})
+
+
+ipcRenderer.on("back",function(e,d){
+    data = d.map(x=>transpose(x))
+    updatePlot(1);
+    startDragBehavior();
+    updateOnServer();
+})
+
+
+ipcRenderer.on("menuTrigger",function(e,d){
+    if (document.activeElement.type == "text"){
+        return false;
+    };
+    switch(d){
+        case "open":
+            fileLoader();
+            break;
+        case "save":
+            saveData();
+            break;
+
+        case "saveas" :
+            saveAs();
+            break;
+            
+        case "cs":
+            deleteInterpolate()
+            break;
+
+        case "ma" :
+            autoSmooth();
+            break;
+
+        case "csign":
+            changeSign();
+            break;
+        case "undo":
+            unDo();
+            break;
+        case "wire":
+            openViewer(0);
+            break;
+        case "surface":
+            openViewer(1);
+            break;
+        case "spread":
+            editor();
+            break;
+
+        case "openc":
+            compfileLoader();
+            break;
+
+        case "compf":
+            incRefData();
+            break;
+
+        case "pa":
+            isswap();
+            break;
+        case "pamh":
+            lockXc = Menu.getApplicationMenu().getMenuItemById("pamh").checked ? 1 : 0;
+            break;
+
+
+    }
+});
+
+
+
+
 function hotKeys(e){
     if (document.activeElement.type == "text"){
         return false;
@@ -285,11 +285,15 @@ function hotKeys(e){
             });
             break;
         case ",":
-            slider.stepDown();
+            if(th_in==0) break;
+            th_in = th_in-1
+            slider.slider("value",th_in)
             sliderChanged();
             break;
         case ".":
-            slider.stepUp();
+            if(th_in==data.length-1) break;
+            th_in = th_in+1
+            slider.slider("value",th_in)
             sliderChanged();
             break;
         case "s":
@@ -307,63 +311,86 @@ function hotKeys(e){
         //     break;
         case "z":
             if (e.ctrlKey) {
-                e.preventDefault();
-                unDo();
+                // e.preventDefault();
+                // unDo();
+                //break;
             } else {
                 Plotly.relayout(figurecontainer, {dragmode:"zoom"});
             };
             break;
-        case "c":
-            changeSign();
-            break;
-        case "d":
-            deleteInterpolate();
-            break;
-        case "m":
-            autoSmooth();
-            break;
-        case "1": case "2": case "3": 
-            if (e.ctrlKey){
-                e.preventDefault();
-                repeatData(e.keyCode);
-            };
-            break;
-        case "ArrowLeft": case "ArrowRight":
-            if (e.ctrlKey | e.shiftKey){
-                moveReflect(e.keyCode-37, e.shiftKey)
-            };
+        // case "c":
+        //     changeSign();
+        //     break;
+        // case "d":
+        //     deleteInterpolate();
+        //     break;
+        // case "m":
+        //     autoSmooth();
+        //     break;
     };
 };
 
 
 
 
-function transpose(m) {
+function editor(){
+    var sl = $(".slidecontainer").find("input")[0] 
+    var tex = $(".slidecontainer").find("p")[1].innerHTML
+    editorWindow = new BrowserWindow({minWidth:1200,show:false});
+    editorWindow.maximize();
+    editorWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "handtable.html"),
+        protocol: 'file:',
+        slashes:true
+    }));   
+    editorWindow.setMenu(null);
 
-    return m[0].map((_,i) => m.map(x => x[i]));
+    editorWindow.show();
+    editorWindow.webContents.once("dom-ready",function(){
+        editorWindow.webContents.send("slider",[sl.min,sl.max,sl.step,tex,col.x,data]);
+    })
+}
+
+
+
+
+function openViewer(x){
+    serve=1;
+    var target = "3D_Viewer_Lines.html"
+    if(x) target = "3D_Viewer_Surface.html"
+
+    viewerWindow = new BrowserWindow({show:false,minWidth:1200});
+    viewerWindow.maximize();
+    viewerWindow.loadURL(url.format({
+        pathname: path.join(__dirname, target),
+        protocol: 'file:',
+        slashes:true
+    }));
+    viewerWindow.on("closed",function(){delete viewer[target]})
+    // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+    viewerWindow.setMenu(null);
+    viewerWindow.show();
+    viewerWindow.webContents.openDevTools();
+    viewer[target] = viewerWindow;
+    viewerWindow.webContents.once("dom-ready",function(){
+        updateOnServer()
+    })
 };
 
 
 
-function lockX(mark){
 
-    lockXc = mark.checked ? 1 : 0;
-};
+// function lockX(){
 
-
-
-function checkFst() {
-    if (!data.length){
-        alert("First load the data you want to edit using the first file chooser !");
-        return false;
-    };
-    return true;
-};
+//     lockXc = Menu.getApplicationMenu().getMenuItemById("pamh").checked ? 1 : 0;
+// };
 
 
 
-function incRefData(mark){
-    if(mark.checked){
+
+function incRefData(){
+    var mark = Menu.getApplicationMenu().getMenuItemById("compf").checked;
+    if(mark){
         refdat = 1;
         updatePlot(1);
     } else {
@@ -374,10 +401,23 @@ function incRefData(mark){
 
 
 
+function isswap(){
+    swapped = Menu.getApplicationMenu().getMenuItemById("pax").checked;
+    var [n1,n2] = ["Y","X"];
+    if (swapped) [n1,n2] =[n2,n1];
+    xName = n2;
+    [xCol, yCol] = [yCol, xCol];
+    [col.x, col.y]= [col.y,col.x];
+    rotateData();
+    updateData();
+    th_in = 0;
+    slider.slider("value",0);
+    $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0])
+};
+
+
 function sliderChanged() {
-    th_in = slider.value;
-    xVal.innerHTML= data[th_in][col.x][0];
-    myDiv.innerHTML=xName+" value updated";
+    $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0])
     updatePlot(1);
     startDragBehavior();
 };
@@ -385,11 +425,11 @@ function sliderChanged() {
 
 
 function colChanged(value) {
-    myDiv.innerHTML = "Data column Changed.";
     col.z    = value;
     updatePlot(1);
     updateOnServer();
     startDragBehavior();
+    localStorage.setItem("cols",JSON.stringify(col));
 };
 
 
@@ -611,12 +651,12 @@ function deleteInterpolate(){
     updateOnServer();
     index=[]; del_dat = [];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-    myDiv.innerHTML="Selected data points interpolated."
 };
 
 
 
 function changeSign(){
+    console.log("chaning");
     saveOldData();
     for (let ind of index){
         data[th_in][col.z][ind] *= -1;
@@ -625,7 +665,6 @@ function changeSign(){
     updateOnServer();
     index=[]; del_dat = [];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-    myDiv.innerHTML= "Sign changed for selected data points.";
 };
 
 

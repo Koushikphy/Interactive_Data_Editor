@@ -10,7 +10,6 @@ const url = require('url');
 
 
 ipcRenderer.on("sdata", function(e,d){
-
     data = d;
     updatePlot();
 })
@@ -83,9 +82,9 @@ function initData(length) {
         pl_data.push({
             type: 'scatter3d',
             mode : "lines",
-            x: [1],
-            y: [1],
-            z: [1],
+            x: [1,2],
+            y: [1,2],
+            z: [1,2],
             marker : {
               size : 1.7,
               color : "#1f77b4"

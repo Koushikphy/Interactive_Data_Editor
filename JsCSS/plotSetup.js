@@ -6,8 +6,7 @@ var data=[], compdata=[], olddata="",
     lockXc = 1,
     swapped = 0,
     xName = "X",
-    myDiv           =document.getElementById("status"),
-    slider          =document.getElementById("x_input"),
+    slider = $( "#slider" );
     xCol            =document.getElementById("xCol"),
     yCol            =document.getElementById("yCol"),
     zCol            =document.getElementById("zCol"),
@@ -21,16 +20,15 @@ $("#isMark").hide();
 $(window).keydown(hotKeys);
 
 var layout = {
-    height: window.innerHeight - 100,
-    width: window.innerWidth - 17,
+    autosize:true,
     plot_bgcolor: "#e8ebef",
     showlegend: false,
     hovermode: "closest",
     margin: {
         t: 25,
         r: 0,
-        b: 20,
-        l: 65,
+        b: 25,
+        l: 10,
         pad: 0
     },
     xaxis: {
