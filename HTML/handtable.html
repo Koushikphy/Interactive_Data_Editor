@@ -2,89 +2,68 @@
 <html>
 <head>
 	<title>Interactive Data Editor</title>
-	<style type="text/css">
-		.slider {
-		    -webkit-appearance: none;
-		    width: 100%;
-		    height: 15px;
-		    border-radius: 5px;   
-		    background: #d3d3d3;
-		    outline: none;
-		    opacity: 0.7;
-		    -webkit-transition: .2s;
-		    transition: opacity .2s;
-            visibility: hidden;
-            margin-bottom: 9px;
-		}
-
-		.slider:hover {
-		    opacity: 1;
-		}
-        label{
-            margin-bottom: 9px;
-        }
-		.slider::-webkit-slider-thumb {
-		    -webkit-appearance: none;
-		    appearance: none;
-		    width: 25px;
-		    height: 25px;
-		    border-radius: 50%; 
-		    background: #4CAF50;
-		    cursor: pointer;
-		}
-
-		.slider::-moz-range-thumb {
-		    width: 25px;
-		    height: 25px;
-		    border-radius: 50%;
-		    background: #4CAF50;
-		    cursor: pointer;
-		}
-	</style>
+	<link href="../JsCSS/style.css" rel="stylesheet">
+	<link rel="stylesheet" href="../JsCSS/jquery-ui.min.css">
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+	<script src="../JsCSS/jquery.min.js"></script>
+	<script src="../JsCSS/jquery-ui.min.js"></script>
 	<script src="../handsontable/dist/handsontable.full.min.js"></script>
 	<link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
+
+
 <div id ="container">
-<label id="full" style='float: left'>Spreadsheet is loading, please wait...</label>
+<label id="full" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
 <input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
-<input class='slider' id='x_input' max='0' min='0' oninput='sliderChanged()' step='0' type='range' value='0'>
-<span id="vari"></span><span id='x_val' style="padding-right: 2pc"></span>
+<div id="slider" style="background: #eaeaea; display: none">
+  <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
+</div>
 </div>
 <div id="table"></div>
 <script >
     const { remote, ipcRenderer } = require('electron');
     const {dialog, BrowserWindow,Menu} = remote;
-	var slide = document.getElementById("x_input");
-	var val = document.getElementById("x_val");
 	var full = document.getElementById("full");
-	var vari = document.getElementById("vari");
-	var xcol =[],data=[], hot,columns=[];
+	var xcol =[],data=[], hot,columns=[],xName;
     var btn = document.getElementById("btn");
     btn.style.visibility = "hidden";
-    var event;
+    var event,th_in;
+
+
+
 
 
 
 	ipcRenderer.on("slider",function (e,d) {
         e.sender.send("test","2u3i")
 		var [a,b,c,t,_,_] = d;
+		xName = t;
         xcol = d[4];
         data = d[5].map(x=>transpose(x));
         if(data.length!=1){
-			vari.innerHTML=t+" : ";
-			full.innerHTML=`Drag the slider to change "${t}" value:`
+			full.innerHTML=`Drag the slider to change "${xName}" value:`
+			$("#slider").show()
+  $( function() {
+    var handle = $( "#custom-handle" );
+    $( "#slider" ).slider({min:a,max:b,step:c,
+      create: function() {
+        handle.text( t+': 0' );
+      },
+      slide: function( event, ui ) {
+        th_in = ui.value;
+        sliderChanged();
+      }
+    });
+  });
 
-			slide.min = a;
-			slide.max= b;
-			slide.step =c;
-			val.innerHTML =data[0][0][xcol];
-        	slide.style.visibility = "visible";
+
+
 		} else {
 			full.style.display="none";
 		}
         var height = window.innerHeight -
-                    document.getElementById("container").offsetTop-
+                    document.getElementById("container").offsetTop-2-
                     document.getElementById("table").offsetTop;
 
 		
@@ -107,11 +86,8 @@
 	})
 
 
-
-
 	function sliderChanged() {
-		var th_in =slide.value;
-		val.innerHTML = data[th_in][0][xcol];
+		 $( "#custom-handle" ).text(xName+': '+ data[th_in][0][xcol]);
 		hot.updateSettings({data:data[th_in]})
 	};
 

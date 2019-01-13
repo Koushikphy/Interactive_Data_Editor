@@ -15,9 +15,9 @@
 
 
 
-<header>
+<div id="header">
         An interactive 2D and 3D data editor
-</header>
+</div>
 
 
 <div class="borders" style="margin-top: 5px; width:100%" id="container">
@@ -33,7 +33,7 @@
 </div>
 </div>
 
-<div class="row" id="figurecontainer"></div>
+<div id="figurecontainer"></div>
 <div id = "status"></div>
 <script src="../JsCSS/functions.js"></script>
 <script src="../JsCSS/plotSetup.js"></script>
@@ -62,6 +62,8 @@
     }
 
 
+resizePlot();
+
 
 
         function updateData() {
@@ -71,8 +73,7 @@
             if (data.length!=1){ //3D
                 th_in= 0;
                 $( "#slider" ).slider({max:  data.length-1  })
-
-                $( "#custom-handle" ).text('X: '+ data[0][col.x][0])
+                $( "#custom-handle" ).text(xName+': '+ data[0][col.x][0])
             } else {    //2D
                 col.z = col.y;
                 col.y = col.x;

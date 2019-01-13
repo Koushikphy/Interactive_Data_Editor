@@ -21,7 +21,7 @@ app.on('ready', function(){
     mainWindow = new BrowserWindow({show:false,minWidth:1200,icon:path.join(__dirname,"charts.png"), webPreferences: {nodeIntegration: true}});
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: path.join(__dirname, 'HTML/all.html'),
         protocol: 'file:',
         slashes:true
     }));
@@ -41,7 +41,7 @@ const homeMenuTemplate =  [
         submenu:[
             {
                 label : "Open file",
-                accelerator:process.platform == 'darwin' ? 'Command+O' : 'Ctrl+O',
+                accelerator: 'CmdOrCtrl+O',
                 click(){
                     mainWindow.webContents.send("menuTrigger","open");
                 }
@@ -74,7 +74,7 @@ const homeMenuTemplate =  [
                 label : "Save",
                 enabled:false,
                 id:'save',
-                accelerator:process.platform == 'darwin' ? 'Command+S' : 'Ctrl+S',
+                accelerator: 'CmdOrCtrl++S',
                 click(){
                     mainWindow.webContents.send("menuTrigger","save");
                 }
@@ -83,7 +83,7 @@ const homeMenuTemplate =  [
                 label : "Save As",
                 enabled:false,
                 id:'saveas',
-                accelerator:process.platform =='darwin' ? 'Command+Ctrl+S' : 'Shift+Ctrl+S',
+                accelerator:'CmdOrCtrl+Shift+S',
                 click(){
                     mainWindow.webContents.send("menuTrigger","saveas");
                 }
@@ -92,7 +92,7 @@ const homeMenuTemplate =  [
             {type:'separator'},
             {
                 label:'Go Home',
-                accelerator:process.platform == 'darwin' ? 'Command+H' : 'Ctrl+H',
+                accelerator: 'CmdOrCtrl+H',
                 click(){
                     mainWindow.loadURL(url.format({
                     pathname: path.join(__dirname, 'index.html'),
@@ -105,18 +105,37 @@ const homeMenuTemplate =  [
             },
             {
                 label:'Reload',
-                accelerator:process.platform == 'darwin' ? 'Command+R' : 'Ctrl+R',
+                accelerator: 'CmdOrCtrl+R',
                 click(){
                     mainWindow.reload();
+                    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa']){
+                        Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
+                    }
+                    Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
                 }
             },
             {type:'separator'},
             {
                 label:'Quit',
-                accelerator:process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+                accelerator: 'CmdOrCtrl+Q',
                 click(){
                     app.quit();
                 },
+            }
+        ]
+    },
+    {
+        label : "Edit",
+        submenu:[
+            {
+                label:"Points not movable horaizontally",
+                enabled: false,
+                checked:true,
+                type: "checkbox",
+                id:"pamh",
+                click(){
+                    mainWindow.webContents.send("menuTrigger","pamh")
+                }
             }
         ]
     },
@@ -154,7 +173,7 @@ const homeMenuTemplate =  [
                 label: "CS somoothing",
                 id:'cs',
                 enabled:false,
-                accelerator:process.platform =='darwin' ? 'D' : 'D',
+                accelerator:'D',
                 click(){
                     mainWindow.webContents.send("menuTrigger","cs");
                 }
@@ -163,7 +182,7 @@ const homeMenuTemplate =  [
                 label: "MA Smoothing",
                 id:'ma',
                 enabled:false,
-                accelerator:process.platform =='darwin' ? 'M' : 'M',
+                accelerator:'M',
                 click(){
                     mainWindow.webContents.send("menuTrigger","ma");
                 }
@@ -172,7 +191,7 @@ const homeMenuTemplate =  [
                 label: "Change Sign",
                 enabled:false,
                 id:'cg',
-                accelerator:process.platform =='darwin' ? 'C' : 'C',
+                accelerator:'C',
                 click(){
                     mainWindow.webContents.send("menuTrigger","csign");
                 }
@@ -181,21 +200,12 @@ const homeMenuTemplate =  [
                 label: "Undo/Redo",
                 enabled:false,
                 id:'un',
-                accelerator:process.platform =='darwin' ? 'Command+Z' : 'Ctrl+Z',
+                accelerator: 'CmdOrCtrl+Z',
                 click(){
                     mainWindow.webContents.send("menuTrigger","undo");
                 }
             },
-            {
-                label:"Points not movable horaizontally",
-                enabled: false,
-                checked:true,
-                type: "checkbox",
-                id:"pamh",
-                click(){
-                    mainWindow.webContents.send("menuTrigger","pamh")
-                }
-            }
+
         ]
     },
     {
@@ -224,7 +234,33 @@ const homeMenuTemplate =  [
                 click(){
                     mainWindow.webContents.send("menuTrigger","spread")
                 }
+            },{
+                label:"Open Swapper",
+                enabled:false,
+                id:'swapen',
+                click(){
+                    mainWindow.webContents.send("menuTrigger","swapen")
+                }
+            },{
+                label :"Exit Swapper",
+                id:'swapex',
+                visible:false,
+                click(){
+                    mainWindow.webContents.send("menuTrigger","swapex")
+                }
             },
+            {
+                label : "Toggle Fullscreen",
+                accelerator: "F11",
+                click(){
+                    if (mainWindow.isFullScreen()) {
+                        mainWindow.setFullScreen(false);
+                    } else{
+                        mainWindow.setFullScreen(true);
+                    }
+                    mainWindow.webContents.send("menuTrigger","fullscreen")
+                }
+            }
         ]
     },
     {
@@ -255,9 +291,9 @@ const homeMenuTemplate =  [
                 }
             },
             {
-                label: "Check for updates",
+                label: "Homepage",
                 click(){
-                    shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases");
+                    shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor");
                 }
             }
         ]

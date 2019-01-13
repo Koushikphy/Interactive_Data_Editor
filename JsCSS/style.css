@@ -7,15 +7,8 @@ body {
     width: 98.5%;
     overflow-x: hidden;
 }
-a:link {
-    color: green; 
-    background-color: transparent; 
-    text-decoration: none;
-}
-a:hover {
-    color: red;
-    background-color: transparent;
-    text-decoration: underline;
+a{
+    margin: 5px;
 }
 select {
     width : 3pc;
@@ -27,7 +20,11 @@ input[type=text]{
     width: 7pc;
 }
 
-header {
+.scatterlayer .trace:first-of-type .points path {
+    pointer-events: all;
+}
+
+#header {
     font-style: italic;
     font-size: 25px; 
     color: #000000; 
@@ -60,12 +57,31 @@ header {
 }
 
 
-.basediv{
+/*.basediv{
     position: relative;
     display: inline-block;
+}*/
+
+.container{
+    display: table;
+     margin: 0 auto;
+    background: #ffffff
+
+}
+.parent{
+    position: absolute;
+    width: 100%;
+    background-color: transparent;
 }
 
+.basediv{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
 
+
+}
 .floatdiv {
     position: absolute;
     top: 0;
@@ -86,7 +102,6 @@ header {
 #figurecontainer {
     margin: 0px;
     width: 100%;
-    height: 553px;
     margin-right: 1pc;
     -webkit-touch-callout: none;
     -webkit-user-select: none;

@@ -1,6 +1,9 @@
 const fs = require("fs");        
 const { remote, ipcRenderer } = require('electron');
 const path = require('path');
+
+    const { shell} = require('electron');
+    const req = require("request")
 const {dialog, BrowserWindow, Menu, MenuItem} = remote;
 const url = require('url');
 var editorWindow;
@@ -50,6 +53,48 @@ if (fl!==null){
 
 
 
+function colsChanged(value){
+    col.s    = value;
+    updatePlot();
+
+};
+
+function initSwapper(){
+    $("#sCol").show()
+    refdat = 0; swapper = true;
+    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
+    Plotly.addTraces(figurecontainer, iniPointsC);
+    col.s = sCol.selectedIndex;
+    Plotly.relayout(figurecontainer, {selectdirection: 'h'});
+    updatePlot();
+    Menu.getApplicationMenu().getMenuItemById("swapen").visible = false;
+    Menu.getApplicationMenu().getMenuItemById("swapex").visible = true;
+}
+
+
+
+function delSwapper(){
+    $("#sCol").hide();
+    swapper = false;
+    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
+    Plotly.relayout(figurecontainer, {selectdirection: 'any'});
+    updatePlot();
+    Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
+    Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+
+}
+
+
+
+function swapData(){
+    if(!index.length) return;
+    saveOldData();
+    for (let ind of index){
+        [data[th_in][col.z][ind], data[th_in][col.s][ind]]= [data[th_in][col.s][ind], data[th_in][col.z][ind]]
+    }
+    updatePlot();
+}
+
 function fileLoader(){
     const fname = dialog.showOpenDialog({defaultPath:recentLocation, properties: ['openFile']})[0];
     fileReader(fname);
@@ -59,6 +104,7 @@ function fileLoader(){
 
 
 function fileReader(fname){
+    swapped = 0;
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
@@ -67,6 +113,7 @@ function fileReader(fname){
     localStorage.setItem("recent",JSON.stringify(recentLocation));
     data = fs.readFileSync(fname,"utf8");
     data = parseData(data);
+    ddd = data.length!=1;
     thisJobs();
     showStatus('Data loaded ...')
 
@@ -80,7 +127,13 @@ function fileReader(fname){
         recentFiles.splice(0,1);
     }
     recentMenu();
-    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa']
+    Menu.getApplicationMenu().getMenuItemById("pax").checked = false;
+    Menu.getApplicationMenu().getMenuItemById("pay").checked = true;
+    Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
+    Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
+    Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen']
+    if(ddd) mn.push("pa",'wire','surf')
     for (let i of mn){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
     }
@@ -265,12 +318,28 @@ ipcRenderer.on("menuTrigger",function(e,d){
         case "pamh":
             lockXc = Menu.getApplicationMenu().getMenuItemById("pamh").checked ? 1 : 0;
             break;
+        case "fullscreen":
+            resizePlot();
+            break;
 
+        case 'swapen':
+            initSwapper();
+            break;
+
+        case 'swapex':
+            delSwapper();
+            break;
 
     }
 });
 
 
+
+function resizePlot(){
+    var height = window.innerHeight -document.getElementById("header").offsetTop-document.getElementById("figurecontainer").offsetTop ;
+    $("#figurecontainer").height(height-2);
+    Plotly.relayout(figurecontainer, {autosize:true});
+}
 
 
 function hotKeys(e){
@@ -297,36 +366,19 @@ function hotKeys(e){
             sliderChanged();
             break;
         case "s":
-            if(e.ctrlKey){
-                // saveData();
-                break;
-            } else {
+            if(!e.ctrlKey){
                 Plotly.relayout(figurecontainer, {dragmode:"select"});
             }
             break;
-        // case "S":
-        //     if(e.ctrlKey){
-        //         saveAs();
-        //     }
-        //     break;
+
         case "z":
-            if (e.ctrlKey) {
-                // e.preventDefault();
-                // unDo();
-                //break;
-            } else {
+            if (!e.ctrlKey) {
                 Plotly.relayout(figurecontainer, {dragmode:"zoom"});
             };
             break;
-        // case "c":
-        //     changeSign();
-        //     break;
-        // case "d":
-        //     deleteInterpolate();
-        //     break;
-        // case "m":
-        //     autoSmooth();
-        //     break;
+        case "p":
+            swapData();
+            break;
     };
 };
 
@@ -334,8 +386,10 @@ function hotKeys(e){
 
 
 function editor(){
-    var sl = $(".slidecontainer").find("input")[0] 
-    var tex = $(".slidecontainer").find("p")[1].innerHTML
+    var min = slider.slider("option","min"),
+        max = slider.slider("option","max"),
+        step = slider.slider("option","step")
+
     editorWindow = new BrowserWindow({minWidth:1200,show:false});
     editorWindow.maximize();
     editorWindow.loadURL(url.format({
@@ -346,8 +400,9 @@ function editor(){
     editorWindow.setMenu(null);
 
     editorWindow.show();
+    editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready",function(){
-        editorWindow.webContents.send("slider",[sl.min,sl.max,sl.step,tex,col.x,data]);
+        editorWindow.webContents.send("slider",[min,max,step,xName,col.x,data]);
     })
 }
 
@@ -379,15 +434,6 @@ function openViewer(x){
 
 
 
-
-// function lockX(){
-
-//     lockXc = Menu.getApplicationMenu().getMenuItemById("pamh").checked ? 1 : 0;
-// };
-
-
-
-
 function incRefData(){
     var mark = Menu.getApplicationMenu().getMenuItemById("compf").checked;
     if(mark){
@@ -412,7 +458,8 @@ function isswap(){
     updateData();
     th_in = 0;
     slider.slider("value",0);
-    $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0])
+    $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0]);
+    $("#drag").html((_,html) => html.replace(n1,n2));
 };
 
 
@@ -420,6 +467,7 @@ function sliderChanged() {
     $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0])
     updatePlot(1);
     startDragBehavior();
+
 };
 
 
@@ -429,7 +477,7 @@ function colChanged(value) {
     updatePlot(1);
     updateOnServer();
     startDragBehavior();
-    localStorage.setItem("cols",JSON.stringify(col));
+    if(!swapped) localStorage.setItem("cols3d",JSON.stringify(col));
 };
 
 
@@ -456,15 +504,28 @@ function yrangeChanged() {
 
 function saveOldData(){
     if(!data.length) return;
-    olddata = JSON.stringify([
-        th_in, col.z, data[th_in][col.y],data[th_in][col.z]
-        ]);
+    if(swapper){
+        olddata = JSON.stringify([th_in, col.z,col.s, data[th_in][col.y],data[th_in][col.z], data[th_in][col.s]]);
+        return;
+    }
+    olddata = JSON.stringify([ th_in, col.z, data[th_in][col.y],data[th_in][col.z]]);
 };
 
 
 
 function unDo() {
     if(!ma) ma=1;
+    if(swapper){
+        var [th, y1,y2, arrX, arrY1, arrY2] = JSON.parse(olddata);
+        if ((th != th_in) || (y1 != col.z) || (y2!=col.s)) return false;
+        saveOldData();
+        data[th_in][col.y] = arrX;
+        data[th_in][col.z] = arrY1;
+        data[th_in][col.s] = arrY2;
+        updatePlot();
+        updateOnServer();
+        return
+    }
     var [th, dc, arrX, arrY] = JSON.parse(olddata);
     if ((th != th_in) || (dc != col.z)) return false;
     saveOldData();
@@ -747,6 +808,13 @@ function startDragBehavior() {
 function updatePlot(both=0) {
     dpsy   = data[th_in][col.z];
     dpsx   = data[th_in][col.y];
+
+    if(swapper){
+        dpsy2   = data[th_in][col.s];
+        Plotly.restyle(figurecontainer, {"x": [dpsx, dpsx], "y": [dpsy, dpsy2 ]});
+        return
+    }
+
 
     if (both && refdat && compdata.length){
         if (figurecontainer.data.length==1){

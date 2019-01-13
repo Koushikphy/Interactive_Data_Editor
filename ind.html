@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Data Editor</title>
+    <link href="JsCSS/style.css" rel="stylesheet">
+<link rel="stylesheet" href="JsCSS/jquery-ui.min.css">
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="JsCSS/plotly-latest.min.js"></script>
+<script src="JsCSS/jquery.min.js"></script>
+<script src="JsCSS/jquery-ui.min.js"></script>
+
+    <style type="text/css">
+
+    </style>
+    <script src="particles.js"></script>
+</head>
+<body>
+<div class="basediv" id="particle">
+<div class="parent">
+<div class="container">
+    <img src="charts.png" width="75" height="75">
+    <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
+    <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:600">A Software to interactively edit data in a graphical manner</div>
+    <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:550">Developed by Koushik Naskar</div>
+    <div style="font-size: large;margin-top: 7px">Version 1.3.0 </div>
+    <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">Copyright &copy; Dec,2018 Koushik Naskar</div>
+    <a href="javascript:void(0)" onclick="op('https://www.facebook.com/koushik.naskar3');"><img src="facebook.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy');"><img src="github.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="op('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="gmail.png" width="30" height="30"></a>
+
+</div>
+</div>
+</div>
+
+<div id="full" style="display: none;">
+	
+<div id="header">
+        An interactive 2D and 3D data editor
+</div>
+
+
+<div class="borders" style="margin-top: 5px; width:100%" id="container">
+        &nbsp;Data Column ⇒ &ensp;
+        X :<select id="xCol" onchange="updateData();"></select>&ensp;
+        Y :<select id="yCol" onchange="updateData();"></select>&ensp;
+        <span class="3D">Z :<select id="zCol" onchange="colChanged(this.selectedIndex)"></select> &ensp;   </span>
+
+
+<div id="drag" class='3D'>&nbsp;Drag the slider to change 'X' value:</div>
+<div id="slider" class='3D' style="background: #eaeaea">
+  <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
+</div>
+</div>
+
+<div id="figurecontainer"></div>
+<div id="status"></div>
+
+</div>
+
+
+
+
+<script src="JsCSS/functions.js"></script>
+<script src="JsCSS/plotSetup.js"></script>
+<script>
+
+    particlesJS.load('particle', 'particles.json');
+
+    function op(link) {
+        shell.openExternal(link);
+    }
+
+    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa']){
+        Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
+    }
+    Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
+
+    req({
+        'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
+        'headers':{'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1521.3 Safari/537.36});'}}, 
+        function (err, resp, body) {
+            var new_ver =JSON.parse(body)[0].name
+            if(new_ver!="v1.3.0"){
+                var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
+                var res = dialog.showMessageBox({type:"question",title:"Update available!!!", message:txt,buttons:['OK', "Cancel"]})
+                if(!res){shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases")}
+            }
+    })
+
+
+
+
+
+
+
+  $( function() {
+    var handle = $( "#custom-handle" );
+    $( "#slider" ).slider({min:0,max:0,step:1,
+      create: function() {
+        handle.text( xName+': '+ $(this).slider( "value" ) );
+      },
+      slide: function( event, ui ) {
+        th_in = ui.value;
+        sliderChanged();
+      }
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+        function updateData() {
+            col.x = xCol.selectedIndex;
+            col.y = yCol.selectedIndex;
+            col.z = zCol.selectedIndex;
+            th_in= 0;
+            if (ddd){ //3D
+                $( "#slider" ).slider({max:  data.length-1  })
+                $( "#custom-handle" ).text(xName+': '+ data[0][col.x][0])
+
+            } else {    //2D
+                col.z = col.y;
+                col.y = col.x;
+                col.x =0
+            };
+            updatePlot(1);
+            startDragBehavior();
+            updateOnServer();
+            if(!swapped){
+            if(ddd){
+            	localStorage.setItem("cols3d",JSON.stringify(col));
+            } else {
+            	var tmp={x:col.y,y:col.z,z:0}
+            	localStorage.setItem("cols2d",JSON.stringify(tmp));
+            }
+        }
+
+        };
+
+
+
+
+        function thisJobs() {
+            $("#particle").remove()
+            $("#full").show()
+            if(ddd){//3d
+                $(".3D").show()
+                var fl = JSON.parse(localStorage.getItem("cols3d"));
+			    if (fl!==null){
+			        col = fl;
+			    }
+
+            }else{             //2d
+            	console.log("2d")
+                serve = 0;
+                $(".3D").hide()
+                var fl = JSON.parse(localStorage.getItem("cols2d"));
+			    if (fl!==null){
+			        col = fl;
+			    }
+            }
+
+            var op = "";
+            for (var i = 1; i <= data[0].length; i++) {
+                op += '<option>' + i + '</option>';
+            };
+            var tmp = $("select");
+            for (var i = 0; i < tmp.length; i++) {
+                tmp[i].innerHTML = op;
+            };
+            resizePlot();
+            xCol.selectedIndex=col.x;
+            yCol.selectedIndex=col.y;
+            zCol.selectedIndex=col.z;
+            updateData();
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

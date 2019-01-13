@@ -263,9 +263,7 @@ function sliderChanged() {
 
 
 function saveOldData(){
-    olddata = JSON.stringify([
-        th_in, col.z1,col.z2, data[th_in][col.y],data[th_in][col.z1], data[th_in][col.z2]
-        ]);
+    olddata = JSON.stringify([th_in, col.z1,col.z2, data[th_in][col.y],data[th_in][col.z1], data[th_in][col.z2]]);
 };
 
 

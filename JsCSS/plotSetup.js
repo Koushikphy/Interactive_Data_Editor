@@ -1,15 +1,17 @@
 var data=[], compdata=[], olddata="",
-    dpsx = [], dpsy=[], index=[], del_dat=[],
+    dpsx = [], dpsy=[],dpsy2=[], index=[], del_dat=[],
     th_in = 0, refdat=1, ma =1,
     file, points, pointscontainer,
     serve = 0,
     lockXc = 1,
-    swapped = 0,
+    swapped = 0,swapper =false,
+    ddd = false,col ={ x : 0, y:0, z:0, s:0},
     xName = "X",
     slider = $( "#slider" );
     xCol            =document.getElementById("xCol"),
     yCol            =document.getElementById("yCol"),
     zCol            =document.getElementById("zCol"),
+    sCol            =document.getElementById("sCol"),
     xVal            =document.getElementById("x_val"),
     figurecontainer =document.getElementById("figurecontainer");
 
@@ -27,7 +29,7 @@ var layout = {
     margin: {
         t: 25,
         r: 0,
-        b: 25,
+        b: 19,
         l: 10,
         pad: 0
     },
