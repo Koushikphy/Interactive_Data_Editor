@@ -400,7 +400,6 @@ function editor(){
     editorWindow.setMenu(null);
 
     editorWindow.show();
-    editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready",function(){
         editorWindow.webContents.send("slider",[min,max,step,xName,col.x,data]);
     })
@@ -422,10 +421,10 @@ function openViewer(x){
         slashes:true
     }));
     viewerWindow.on("closed",function(){delete viewer[target]})
-    // const falseMenu = Menu.buildFromTemplate(falseMenuTemplate);
+
     viewerWindow.setMenu(null);
     viewerWindow.show();
-    viewerWindow.webContents.openDevTools();
+
     viewer[target] = viewerWindow;
     viewerWindow.webContents.once("dom-ready",function(){
         updateOnServer()

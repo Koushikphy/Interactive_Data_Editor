@@ -16,9 +16,6 @@ var data=[], compdata=[], olddata="",
     figurecontainer =document.getElementById("figurecontainer");
 
 
-
-
-$("#isMark").hide();
 $(window).keydown(hotKeys);
 
 var layout = {

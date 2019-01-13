@@ -37,11 +37,10 @@ input[type=text]{
     bottom: 0; 
     left: 0; 
     text-align: left; 
-    background: #efeaea; 
-    font-size:medium; 
+    background: #ffffff; 
+    font-size:large; 
     border-top-right-radius: 5px; 
     box-shadow: 0 0 10px #000;
-    display: none;
 }
 
 
