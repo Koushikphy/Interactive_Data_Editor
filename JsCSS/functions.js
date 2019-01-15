@@ -102,7 +102,7 @@ function fileLoader(){
 
 
 function fileReader(fname){
-    swapped = 0;
+    swapped = 0;refdat = 0;
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
@@ -146,7 +146,7 @@ function fileReader(fname){
 
 
 function compfileLoader(){
-    const fname = dialog.showOpenDialog({properties: ['openFile']})[0];
+    const fname = dialog.showOpenDialog({defaultPath:recentLocation,properties: ['openFile']})[0];
     var filename = path.basename(fname);
 
     compdata = fs.readFileSync(fname,"utf8");
@@ -663,6 +663,7 @@ function selectEvent(event){
 // };
 
 
+
 // function repeatData(p) {
 //     saveOldData();
 //     var bar = (dpsx.length-1)/3;
@@ -684,10 +685,39 @@ function selectEvent(event){
 // };
 
 
-//repeat or mirror
-function extend(){
+//repeat or mirror using ==>times,end
+// function repeat(){
 
-}
+// var cols_wo_y = []
+// var tmp = data[0][0].length
+
+// for (let i=0; i<tmp;i++){
+//     if(i!=col.y) cols_wo_y.push(i)
+// }
+
+// var newy = data[0][col.y].slice()
+// tmp = newy.slice()
+// tmp.splice(0,1)
+
+
+// for(let time=1; time<=times; time++){
+//     for
+// }
+
+
+
+// for (var i = 0; i < data.length; i++) {
+//     var block = data[i]
+//     for(let j=0; j< block.length; j++){
+//         if(j==col.x){
+//             let tmp = block[j]
+//             tmp.splice(tmp.length-1,1)
+
+//         }
+
+//     }
+// }
+// }
 
 
 function deleteInterpolate(){
