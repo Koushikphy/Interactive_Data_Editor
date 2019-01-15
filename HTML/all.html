@@ -48,6 +48,18 @@
   <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
 </div>
 </div>
+<div class="borders" style="width: 100%;display: none;" id="extend">
+    Extend from : <span style="font-family: sans-serif;"> 0</span> to <input type="text" id ="einp" style="width: 46px"> <br>
+    Extend times: <input type="text" id = "etime" style="width: 76px;">    
+    <input type="submit" value="OK" onclick="repeatMirror()" style="width: 5pc;height: 1.9pc">    
+    <input type="submit" value="Cancel" onclick="hhh();" style="width: 5pc;height: 1.9pc">
+    <br> 
+    Extend by:
+    <select style="width: 5pc;margin-left: 18px;" id="repSel">
+        <option>Repeat</option>
+        <option>Mirror</option>
+    </select><br>
+</div>
 
 <div id="figurecontainer"></div>
 
@@ -81,7 +93,7 @@
         shell.openExternal(link);
     }
 
-    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa']){
+    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat"]){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
     }
     Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
@@ -180,7 +192,7 @@
             for (var i = 1; i <= data[0].length; i++) {
                 op += '<option>' + i + '</option>';
             };
-            var tmp = $("select");
+            var tmp = $("select:not(:last)");
             for (var i = 0; i < tmp.length; i++) {
                 tmp[i].innerHTML = op;
             };
@@ -196,7 +208,7 @@
 
 
 
-
+function hhh(){$('#extend').hide()}
 
 
 

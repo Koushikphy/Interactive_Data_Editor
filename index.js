@@ -91,6 +91,19 @@ const homeMenuTemplate =  [
 
             {type:'separator'},
             {
+                label : "3D plotter",
+                click(){
+                    var childWindow = new BrowserWindow();
+                    childWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'HTML/Plotter.html'),
+                    protocol: 'file:',
+                    slashes:true
+                    }));
+                    childWindow.maximize();
+                    childWindow.setMenu(null);  
+                }
+            },
+            {
                 label:'Go Home',
                 accelerator: 'CmdOrCtrl+H',
                 click(){
@@ -168,6 +181,13 @@ const homeMenuTemplate =  [
                     }
                 }
                 ]
+            },{
+                label : "Extend Data",
+                id : "edat",
+                enabled : "false",
+                click(){
+                    mainWindow.webContents.send("menuTrigger","edat")
+                }
             },{
                 label:"Open Swapper",
                 enabled:false,
@@ -247,19 +267,6 @@ const homeMenuTemplate =  [
                 id:"spr",
                 click(){
                     mainWindow.webContents.send("menuTrigger","spread")
-                }
-            },
-            {
-                label : "3D plotter",
-                click(){
-                    var childWindow = new BrowserWindow();
-                    childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'HTML/Plotter.html'),
-                    protocol: 'file:',
-                    slashes:true
-                    }));
-                    childWindow.maximize();
-                    childWindow.setMenu(null);  
                 }
             },
             {

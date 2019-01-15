@@ -119,7 +119,7 @@ function fileReader(fname){
 
 
 
-    recentFiles = recentFiles.filter(x=>x!==fname);
+    recentFiles = recentFiles.filter(x=>x!=fname);
     recentFiles.push(fname);
     if(recentFiles.length>10){
         recentFiles.splice(0,1);
@@ -135,7 +135,7 @@ function fileReader(fname){
     if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
     Plotly.relayout(figurecontainer, {selectdirection: 'any'});
 
-    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen']
+    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen',"edat"]
     if(ddd) mn.push("pa",'wire','surf')
     for (let i of mn){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
@@ -333,9 +333,63 @@ ipcRenderer.on("menuTrigger",function(e,d){
             delSwapper();
             break;
 
+        case "edat":
+            initExtend();
+            break;
+
     }
 });
 
+
+
+function initExtend(){
+    $("#extend").show();
+    $("#einp").val(dpsx[dpsx.length-1])
+}
+
+
+
+
+function repeatMirror(){
+    var last   = parseFloat($("#einp").val());
+    var times  = parseFloat($("#etime").val());
+    var mirror = $("#repSel")[0].selectedIndex;
+
+
+    var cols_wo_y = []
+    var tmp = data[0].length
+
+    for (let i=0; i<tmp; i++){
+        if(i!=col.y) cols_wo_y.push(i)
+    }
+    data = data.map(dat=>{
+
+    var ind  = dat[col.y].indexOf(last)+1
+    var newy = dat[col.y].slice(0,ind)
+    var tmp  = newy.slice()
+    tmp.splice(0,1)
+
+    for(let time=0; time<times-1; time++){
+        for(let i=0; i<tmp.length;i++){
+            newy.push(tmp[i]+last*(1+time));
+        }
+    }
+
+    for(let i of cols_wo_y){
+        var new_dat = dat[i].slice(0,ind)
+        var tmp = new_dat.slice()
+        tmp.splice(0,1)
+        for(let time=0; time<times-1; time++){
+            if(mirror) tmp.reverse()
+            new_dat.push(...tmp)
+        }
+        dat[i] = new_dat;
+    }
+    dat[col.y] = newy;
+    return dat 
+    })
+    $("#extend").hide();
+}
 
 
 function resizePlot(){
@@ -347,7 +401,7 @@ function resizePlot(){
 
 function hotKeys(e){
     if (document.activeElement.type == "text"){
-        return false;
+        return;
     };
     switch (e.key){
         case " " :
@@ -457,7 +511,7 @@ function isswap(){
     rotateData();
     updateData();
     th_in = 0;
-    slider.slider("value",0);
+    $slider.slider("value",0);
     $ch.text(xName+': '+ data[th_in][col.x][0]);
     $("#drag").html((_,html) => html.replace(n1,n2));
 };
@@ -646,78 +700,6 @@ function selectEvent(event){
     index = [... new Set(index)];
     };
 };
-
-
-
-// function moveReflect(key, mod){
-//     saveOldData();
-//     var ind = index[index.length-1]+1;
-//     var tmp = dpsy.slice(index[0], ind);
-//     if(!key) ind=index[0]-index.length;
-//     if(mod) tmp.reverse();
-//     dpsy.splice(ind, tmp.length, ...tmp);
-//     updatePlot();
-//     updateOnServer();
-//     index=[]; del_dat = [];
-//     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-// };
-
-
-
-// function repeatData(p) {
-//     saveOldData();
-//     var bar = (dpsx.length-1)/3;
-//     if(index.length){
-//         for (let i of index){
-//             dpsy[(i+bar)%360] = dpsy[(bar*2+i)%360] = dpsy[i];
-//         };
-//     } else {
-//         p =p-49;
-//         var tmp = dpsy.slice(bar*p,bar*(p+1)+1);
-//         for (let i of [0,bar,bar*2]){
-//             dpsy.splice(i, tmp.length, ...tmp);
-//         };   
-//     };
-//     updatePlot();
-//     updateOnServer();
-//     index=[]; del_dat = [];
-//     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-// };
-
-
-//repeat or mirror using ==>times,end
-// function repeat(){
-
-// var cols_wo_y = []
-// var tmp = data[0][0].length
-
-// for (let i=0; i<tmp;i++){
-//     if(i!=col.y) cols_wo_y.push(i)
-// }
-
-// var newy = data[0][col.y].slice()
-// tmp = newy.slice()
-// tmp.splice(0,1)
-
-
-// for(let time=1; time<=times; time++){
-//     for
-// }
-
-
-
-// for (var i = 0; i < data.length; i++) {
-//     var block = data[i]
-//     for(let j=0; j< block.length; j++){
-//         if(j==col.x){
-//             let tmp = block[j]
-//             tmp.splice(tmp.length-1,1)
-
-//         }
-
-//     }
-// }
-// }
 
 
 function deleteInterpolate(){
