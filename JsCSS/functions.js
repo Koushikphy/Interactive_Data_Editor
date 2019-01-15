@@ -389,6 +389,7 @@ function repeatMirror(){
     return dat 
     })
     $("#extend").hide();
+    updatePlot();
 }
 
 
@@ -481,6 +482,7 @@ function openViewer(x){
     viewerWindow.show();
 
     viewer[target] = viewerWindow;
+    // viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready",function(){
         updateOnServer()
     })

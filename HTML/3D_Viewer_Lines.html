@@ -42,9 +42,9 @@
                 return;
             };
             
-            var tmpData0 = [].concat(...data[0]).filter(Boolean),
-                tmpData1 = [].concat(...data[1]).filter(Boolean),
-                tmpData2 = [].concat(...data[2]).filter(Boolean);
+            var tmpData0 = [].concat(...data[0]).filter(x=>x!==undefined),
+                tmpData1 = [].concat(...data[1]).filter(x=>x!==undefined),
+                tmpData2 = [].concat(...data[2]).filter(x=>x!==undefined);
 
             var tmp = [...new Set(tmpData1)].sort((a, b) => a - b);
 
