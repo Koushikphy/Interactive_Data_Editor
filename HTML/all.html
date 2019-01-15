@@ -74,6 +74,7 @@
         'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
         'headers':{'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1521.3 Safari/537.36});'}}, 
         function (err, resp, body) {
+            console.log(err,resp,body)
             var new_ver =JSON.parse(body)[0].name
             if(new_ver!="v1.3.0"){
                 var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
@@ -89,10 +90,9 @@
 
 
   $( function() {
-    var handle = $( "#custom-handle" );
-    $( "#slider" ).slider({min:0,max:0,step:1,
+    $slider.slider({min:0,max:0,step:1,
       create: function() {
-        handle.text( xName+': 0' );
+        $ch.text( xName+'=0' );
       },
       slide: function( event, ui ) {
         th_in = ui.value;
@@ -107,7 +107,7 @@
 
 
 
-
+        var em2px = $ch.width()/3
 
 
         function updateData() {
@@ -116,8 +116,8 @@
             col.z = zCol.selectedIndex;
             th_in= 0;
             if (ddd){ //3D
-                $( "#slider" ).slider({max:  data.length-1  })
-                $( "#custom-handle" ).text(xName+': '+ data[0][col.x][0])
+                $slider.slider({max:  data.length-1, value:0  })
+                $ch.text(xName+'='+ data[0][col.x][0])
 
             } else {    //2D
                 col.z = col.y;
@@ -135,6 +135,11 @@
             	localStorage.setItem("cols2d",JSON.stringify(tmp));
             }
         }
+        var tmpl = []
+        for (let i of data) {
+            tmpl.push(i[col.x][0].toString().length);
+        }
+        $ch.width(Math.floor((Math.max(...tmpl)/2)+2)*em2px);
 
         };
 

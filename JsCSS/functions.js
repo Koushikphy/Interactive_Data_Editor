@@ -1,16 +1,14 @@
-const fs = require("fs");        
-const { remote, ipcRenderer } = require('electron');
+const fs = require("fs");
 const path = require('path');
-
-    const { shell} = require('electron');
-    const req = require("request")
+const req = require("request");
+const url = require('url');        
+const {remote, ipcRenderer, shell } = require('electron');
 const {dialog, BrowserWindow, Menu, MenuItem} = remote;
-const url = require('url');
-var editorWindow;
-var viewer=[,,];
-var recentLocation = '';
-var recentFiles = [];
-var home = process.env.HOME || process.env.USERPROFILE
+
+var editorWindow,viewer=[,,],recentLocation = '',recentFiles = [];
+var home = process.env.HOME || process.env.USERPROFILE;
+
+
 
 
 function showStatus(msg){
@@ -132,6 +130,11 @@ function fileReader(fname){
     Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
     Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
     Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+    $("#sCol").hide();
+    swapper = false;
+    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
+    Plotly.relayout(figurecontainer, {selectdirection: 'any'});
+
     var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen']
     if(ddd) mn.push("pa",'wire','surf')
     for (let i of mn){
@@ -144,7 +147,7 @@ function fileReader(fname){
 
 function compfileLoader(){
     const fname = dialog.showOpenDialog({properties: ['openFile']})[0];
-    var filename = path.basename(fname)
+    var filename = path.basename(fname);
 
     compdata = fs.readFileSync(fname,"utf8");
     compdata = parseData(compdata);
@@ -356,13 +359,13 @@ function hotKeys(e){
         case ",":
             if(th_in==0) break;
             th_in = th_in-1
-            slider.slider("value",th_in)
+            $slider.slider("value",th_in)
             sliderChanged();
             break;
         case ".":
             if(th_in==data.length-1) break;
             th_in = th_in+1
-            slider.slider("value",th_in)
+            $slider.slider("value",th_in)
             sliderChanged();
             break;
         case "s":
@@ -384,11 +387,10 @@ function hotKeys(e){
 
 
 
-
 function editor(){
-    var min = slider.slider("option","min"),
-        max = slider.slider("option","max"),
-        step = slider.slider("option","step")
+    var min = $slider.slider("option","min"),
+        max = $slider.slider("option","max"),
+        step= $slider.slider("option","step");
 
     editorWindow = new BrowserWindow({minWidth:1200,show:false});
     editorWindow.maximize();
@@ -404,7 +406,6 @@ function editor(){
         editorWindow.webContents.send("slider",[min,max,step,xName,col.x,data]);
     })
 }
-
 
 
 
@@ -457,13 +458,13 @@ function isswap(){
     updateData();
     th_in = 0;
     slider.slider("value",0);
-    $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0]);
+    $ch.text(xName+': '+ data[th_in][col.x][0]);
     $("#drag").html((_,html) => html.replace(n1,n2));
 };
 
 
 function sliderChanged() {
-    $( "#custom-handle" ).text(xName+': '+ data[th_in][col.x][0])
+    $ch.text(xName+'='+ data[th_in][col.x][0])
     updatePlot(1);
     startDragBehavior();
 
@@ -648,40 +649,45 @@ function selectEvent(event){
 
 
 
-function moveReflect(key, mod){
-    saveOldData();
-    var ind = index[index.length-1]+1;
-    var tmp = dpsy.slice(index[0], ind);
-    if(!key) ind=index[0]-index.length;
-    if(mod) tmp.reverse();
-    dpsy.splice(ind, tmp.length, ...tmp);
-    updatePlot();
-    updateOnServer();
-    index=[]; del_dat = [];
-    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-};
+// function moveReflect(key, mod){
+//     saveOldData();
+//     var ind = index[index.length-1]+1;
+//     var tmp = dpsy.slice(index[0], ind);
+//     if(!key) ind=index[0]-index.length;
+//     if(mod) tmp.reverse();
+//     dpsy.splice(ind, tmp.length, ...tmp);
+//     updatePlot();
+//     updateOnServer();
+//     index=[]; del_dat = [];
+//     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+// };
 
 
-function repeatData(p) {
-    saveOldData();
-    var bar = (dpsx.length-1)/3;
-    if(index.length){
-        for (let i of index){
-            dpsy[(i+bar)%360] = dpsy[(bar*2+i)%360] = dpsy[i];
-        };
-    } else {
-        p =p-49;
-        var tmp = dpsy.slice(bar*p,bar*(p+1)+1);
-        for (let i of [0,bar,bar*2]){
-            dpsy.splice(i, tmp.length, ...tmp);
-        };   
-    };
-    updatePlot();
-    updateOnServer();
-    index=[]; del_dat = [];
-    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-};
+// function repeatData(p) {
+//     saveOldData();
+//     var bar = (dpsx.length-1)/3;
+//     if(index.length){
+//         for (let i of index){
+//             dpsy[(i+bar)%360] = dpsy[(bar*2+i)%360] = dpsy[i];
+//         };
+//     } else {
+//         p =p-49;
+//         var tmp = dpsy.slice(bar*p,bar*(p+1)+1);
+//         for (let i of [0,bar,bar*2]){
+//             dpsy.splice(i, tmp.length, ...tmp);
+//         };   
+//     };
+//     updatePlot();
+//     updateOnServer();
+//     index=[]; del_dat = [];
+//     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+// };
 
+
+//repeat or mirror
+function extend(){
+
+}
 
 
 function deleteInterpolate(){

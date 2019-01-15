@@ -168,6 +168,20 @@ const homeMenuTemplate =  [
                     }
                 }
                 ]
+            },{
+                label:"Open Swapper",
+                enabled:false,
+                id:'swapen',
+                click(){
+                    mainWindow.webContents.send("menuTrigger","swapen")
+                }
+            },{
+                label :"Exit Swapper",
+                id:'swapex',
+                visible:false,
+                click(){
+                    mainWindow.webContents.send("menuTrigger","swapex")
+                }
             },
             {
                 label: "CS somoothing",
@@ -234,19 +248,18 @@ const homeMenuTemplate =  [
                 click(){
                     mainWindow.webContents.send("menuTrigger","spread")
                 }
-            },{
-                label:"Open Swapper",
-                enabled:false,
-                id:'swapen',
+            },
+            {
+                label : "3D plotter",
                 click(){
-                    mainWindow.webContents.send("menuTrigger","swapen")
-                }
-            },{
-                label :"Exit Swapper",
-                id:'swapex',
-                visible:false,
-                click(){
-                    mainWindow.webContents.send("menuTrigger","swapex")
+                    var childWindow = new BrowserWindow();
+                    childWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'HTML/Plotter.html'),
+                    protocol: 'file:',
+                    slashes:true
+                    }));
+                    childWindow.maximize();
+                    childWindow.setMenu(null);  
                 }
             },
             {

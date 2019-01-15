@@ -33,6 +33,7 @@ input[type=text]{
 }
 
 #status{
+    font-size: 19px;
     position: fixed;
     bottom: 0; 
     left: 0; 
