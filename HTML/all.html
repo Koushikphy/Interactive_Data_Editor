@@ -52,7 +52,7 @@
     Extend from : <span style="font-family: sans-serif;"> 0</span> to <input type="text" id ="einp" style="width: 46px"> <br>
     Extend times: <input type="text" id = "etime" style="width: 76px;">    
     <input type="submit" value="OK" onclick="repeatMirror()" style="width: 5pc;height: 1.9pc">    
-    <input type="submit" value="Cancel" onclick="hhh();" style="width: 5pc;height: 1.9pc">
+    <input type="submit" value="Cancel" onclick="$('#extend').slideUp();" style="width: 5pc;height: 1.9pc">
     <br> 
     Extend by:
     <select style="width: 5pc;margin-left: 18px;" id="repSel">
@@ -203,37 +203,6 @@
             sCol.selectedIndex=col.s;
             updateData();
         };
-
-
-
-
-
-function hhh(){$('#extend').hide()}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </script>

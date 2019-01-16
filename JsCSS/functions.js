@@ -343,7 +343,7 @@ ipcRenderer.on("menuTrigger",function(e,d){
 
 
 function initExtend(){
-    $("#extend").show();
+    $("#extend").slideDown();
     $("#einp").val(dpsx[dpsx.length-1])
 }
 
@@ -388,8 +388,10 @@ function repeatMirror(){
     dat[col.y] = newy;
     return dat 
     })
-    $("#extend").hide();
+    $("#extend").slideUp();
     updatePlot();
+    var tmp = mirror ? 'mirrored' : 'repeated'
+    showStatus(`Data ${tmp} ${times} times...`)
 }
 
 
