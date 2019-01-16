@@ -141,6 +141,42 @@ const homeMenuTemplate =  [
         label : "Edit",
         submenu:[
             {
+                label: "CS somoothing",
+                id:'cs',
+                enabled:false,
+                accelerator:'D',
+                click(){
+                    mainWindow.webContents.send("menuTrigger","cs");
+                }
+            },
+            {
+                label: "MA Smoothing",
+                id:'ma',
+                enabled:false,
+                accelerator:'M',
+                click(){
+                    mainWindow.webContents.send("menuTrigger","ma");
+                }
+            },
+            {
+                label: "Change Sign",
+                enabled:false,
+                id:'cg',
+                accelerator:'C',
+                click(){
+                    mainWindow.webContents.send("menuTrigger","csign");
+                }
+            },
+            {
+                label: "Undo/Redo",
+                enabled:false,
+                id:'un',
+                accelerator: 'CmdOrCtrl+Z',
+                click(){
+                    mainWindow.webContents.send("menuTrigger","undo");
+                }
+            },
+            {
                 label:"Points not movable horaizontally",
                 enabled: false,
                 checked:true,
@@ -182,6 +218,13 @@ const homeMenuTemplate =  [
                 }
                 ]
             },{
+                label : "Fill Missing Values",
+                enabled : false,
+                id: "fill",
+                click(){
+                    mainWindow.webContents.send("menuTrigger","fill")
+                }
+            },{
                 label : "Extend Data",
                 id : "edat",
                 enabled : "false",
@@ -201,42 +244,6 @@ const homeMenuTemplate =  [
                 visible:false,
                 click(){
                     mainWindow.webContents.send("menuTrigger","swapex")
-                }
-            },
-            {
-                label: "CS somoothing",
-                id:'cs',
-                enabled:false,
-                accelerator:'D',
-                click(){
-                    mainWindow.webContents.send("menuTrigger","cs");
-                }
-            },
-            {
-                label: "MA Smoothing",
-                id:'ma',
-                enabled:false,
-                accelerator:'M',
-                click(){
-                    mainWindow.webContents.send("menuTrigger","ma");
-                }
-            },
-            {
-                label: "Change Sign",
-                enabled:false,
-                id:'cg',
-                accelerator:'C',
-                click(){
-                    mainWindow.webContents.send("menuTrigger","csign");
-                }
-            },
-            {
-                label: "Undo/Redo",
-                enabled:false,
-                id:'un',
-                accelerator: 'CmdOrCtrl+Z',
-                click(){
-                    mainWindow.webContents.send("menuTrigger","undo");
                 }
             },
 
@@ -278,7 +285,7 @@ const homeMenuTemplate =  [
                     } else{
                         mainWindow.setFullScreen(true);
                     }
-                    mainWindow.webContents.send("menuTrigger","fullscreen")
+                    setTimeout(function(){mainWindow.webContents.send("menuTrigger","fullscreen")},100)
                 }
             }
         ]
@@ -301,7 +308,7 @@ const homeMenuTemplate =  [
             {
                 label: "About",
                 click(){
-                    var childWindow = new BrowserWindow({width:500,height:500});
+                    var childWindow = new BrowserWindow();
                     childWindow.loadURL(url.format({
                     pathname: path.join(__dirname, 'about.html'),
                     protocol: 'file:',

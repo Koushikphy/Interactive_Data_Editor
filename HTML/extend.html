@@ -10,17 +10,12 @@
 	Extend(Move/Mirror) Data
 </div>
 
-Data section : From
-<div class="borders" style="width: 100%;" id="extend">
-    Extend from : <span style="font-family: sans-serif;"> 0</span> to <input type="text" id ="einp" style="width: 46px"> <br>
-    Extend times: <input type="text" id = "etime" style="width: 76px;">    
-    <input type="submit" value="OK" onclick="repeatMirror()" style="width: 5pc;height: 1.9pc">
-    <br> 
-    Extend by:
-    <select style="width: 5pc;margin-left: 18px;" id="repSel">
-        <option>Repeat</option>
-        <option>Mirror</option>
-    </select><br>
+<div class="borders" style="width: 100%;" id="filler">
+    Start : <input type="text" id ="fstart" style="width: 5pc"> <br>
+    End &nbsp;: <input type="text" id = "fend" style="width: 5pc;">    
+    <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.9pc">    
+    <input type="submit" value="Cancel" onclick="$('#filler').slideUp();" style="width: 5pc;height: 1.9pc"><br> 
+    Step : <input type="text" id = "fstep" style="width: 5pc;"> 
 </div>
 
 

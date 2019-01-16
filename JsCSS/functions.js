@@ -38,16 +38,7 @@ function recentMenu(){
 
 
 //// check from history
-var fl = JSON.parse(localStorage.getItem("files"));
-if (fl!==null){
-    recentFiles = fl;
-    recentMenu();
-}
 
-var fl = JSON.parse(localStorage.getItem("recent"));
-if (fl!==null){
-    recentLocation = fl;
-}
 
 
 
@@ -101,8 +92,10 @@ function fileLoader(){
 
 
 
+
+
 function fileReader(fname){
-    swapped = 0;refdat = 0;
+    swapped = 0;refdat = 0;xName = "X";
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
@@ -135,7 +128,7 @@ function fileReader(fname){
     if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
     Plotly.relayout(figurecontainer, {selectdirection: 'any'});
 
-    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen',"edat"]
+    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen',"edat","fill"]
     if(ddd) mn.push("pa",'wire','surf')
     for (let i of mn){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
@@ -146,6 +139,7 @@ function fileReader(fname){
 
 
 function compfileLoader(){
+    refdat = 1;
     const fname = dialog.showOpenDialog({defaultPath:recentLocation,properties: ['openFile']})[0];
     var filename = path.basename(fname);
 
@@ -336,7 +330,9 @@ ipcRenderer.on("menuTrigger",function(e,d){
         case "edat":
             initExtend();
             break;
-
+        case 'fill':
+            $("#filler").slideDown();
+            break;
     }
 });
 
@@ -397,9 +393,74 @@ function repeatMirror(){
 }
 
 
+
+function dataFiller(){
+    var start = parseFloat($("#fstart").val());
+    var stop  = parseFloat($("#fend").val());
+    var step  = parseFloat($("#fstep").val());
+    var cols_wo_y = []
+    var tmp = data[0].length
+
+    for (let i=0; i<tmp; i++){
+        if(i!=col.y) cols_wo_y.push(i)
+    }
+
+    var fullArr = []
+    for (let i=start; i<=stop; i=i+step){
+        fullArr.push(i)
+    }
+
+    data = data.map(dat=>{
+        if(fullArr.length==dat[0].length) return dat;
+        var xs = dat[col.y].slice()
+        var lInd = dat[col.y].length - 1;
+        for(let tc of cols_wo_y){
+            newArr = [];
+            var ys = dat[tc].slice()
+            ks = getNaturalKs(xs, ys);
+
+            function spline(x) {
+                var i = 1;
+                while(xs[i]<x) i++;
+                var t = (x - xs[i-1]) / (xs[i] - xs[i-1]);
+                var a =  ks[i-1]*(xs[i]-xs[i-1]) - (ys[i]-ys[i-1]);
+                var b = -ks[i]*(xs[i]-xs[i-1]) + (ys[i]-ys[i-1]);
+                var q = (1-t)*ys[i-1] + t*ys[i] + t*(1-t)*(a*(1-t)+b*t);
+                return q;
+            };
+
+            for(let val of fullArr){
+                ind = dat[col.y].indexOf(val)
+                if(ind!=-1){
+                    newArr.push(dat[tc][ind])
+                } else{
+                    if(val<=dat[col.y][0]){
+                        newArr.push(dat[tc][0])
+                    } else if(val>=dat[col.y][lInd]){
+                        newArr.push(dat[tc][lInd])
+                    }else{
+                        newArr.push(spline(val))
+                    }
+                }
+            }
+            dat[tc] = newArr;
+        }
+        dat[col.y] = fullArr;
+        return dat;
+    })
+
+    $("#filler").slideUp();
+    updatePlot();
+    showStatus('Missing values are filled...')
+    updateOnServer();
+}
+
+
+
 function resizePlot(){
     var height = window.innerHeight -document.getElementById("header").offsetTop-document.getElementById("figurecontainer").offsetTop ;
     $("#figurecontainer").height(height-2);
+
     Plotly.relayout(figurecontainer, {autosize:true});
 }
 

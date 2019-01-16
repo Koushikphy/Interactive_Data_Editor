@@ -80,7 +80,3 @@ var iniPointsC = {
 };
 
 
-Plotly.newPlot(figurecontainer, [iniPointsD], layout, {displaylogo: false, modeBarButtonsToRemove: ['sendDataToCloud']});
-pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-points = pointscontainer.getElementsByTagName("path");
-figurecontainer.on("plotly_selected",selectEvent);

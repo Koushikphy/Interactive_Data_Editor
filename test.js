@@ -13,11 +13,12 @@
 
     data = data.map(dat=>{
         if(fullArr.length==dat[0].length) return dat;
+        console.log(dat);
         var xs = dat[col.y].slice()
-        dat[col.y] = fullArr;
-        for(let col of cols_wo_y){
-            var newArr = []
-            var ys = dat[col].slice()
+        var lInd = dat[col.y].length - 1;
+        for(let tc of cols_wo_y){
+            newArr = [];
+            var ys = dat[tc].slice()
             ks = getNaturalKs(xs, ys);
 
             function spline(x) {
@@ -31,16 +32,25 @@
             };
 
             for(let val of fullArr){
-                ind = dat[col].indexOf(val)
+                ind = dat[col.y].indexOf(val)
                 if(ind!=-1){
-                    newArr.push(dat[col][ind])
+                    newArr.push(dat[tc][ind])
                 } else{
-                    newArr.push(spline(val))
+                    if(val<=dat[col.y][0]){
+                        newArr.push(dat[tc][0])
+                    } else if(val>=dat[col.y][lInd]){
+                        newArr.push(dat[tc][lInd])
+                    }else{
+                        newArr.push(spline(val))
+                    }
                 }
-            dat[col] = newArr;
             }
+            dat[tc] = newArr;
         }
+        dat[col.y] = fullArr;
         return dat;
     })
+
+
 
 

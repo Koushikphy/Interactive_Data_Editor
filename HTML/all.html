@@ -3,12 +3,8 @@
 <head>
     <title>Interactive Data Editor</title>
     <link href="../JsCSS/style.css" rel="stylesheet">
-<link rel="stylesheet" href="../JsCSS/jquery-ui.min.css">
+    <link rel="stylesheet" href="../JsCSS/jquery-ui.min.css">
 <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-<script src="../JsCSS/plotly-latest.min.js"></script>
-<script src="../JsCSS/jquery.min.js"></script>
-<script src="../JsCSS/jquery-ui.min.js"></script>
-<script src="../particles.js"></script>
 
 </head>
 <body>
@@ -17,13 +13,13 @@
 <div class="container">
     <img src="../icons/charts.png" width="75" height="75">
     <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
-    <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:600">A Software to interactively edit data in a graphical manner</div>
-    <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:550">Developed by Koushik Naskar</div>
-    <div style="font-size: large;margin-top: 7px">Version 1.3.0 </div>
-    <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">Copyright &copy; Dec,2018 Koushik Naskar</div>
-    <a href="javascript:void(0)" onclick="op('https://www.facebook.com/koushik.naskar3');"><img src="../icons/facebook.png" width="30" height="30"></a>
-    <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy');"><img src="../icons/github.png" width="30" height="30"></a>
-    <a href="javascript:void(0)" onclick="op('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../icons/gmail.png" width="30" height="30"></a>
+    <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">A Software to interactively edit data in a graphical manner</div>
+    <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">Developed by Koushik Naskar</div>
+    <div style="font-size: large;margin-top: 7px">Version 2.1.0 </div>
+    <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">Copyright &copy; Jan, 2019 Koushik Naskar</div>
+    <a href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../icons/facebook.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../icons/github.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../icons/gmail.png" width="30" height="30"></a>
 
 </div>
 </div>
@@ -61,17 +57,34 @@
     </select><br>
 </div>
 
+
+<div class="borders" style="width: 100%;display: none;" id="filler">
+    Start : <input type="text" id ="fstart" style="width: 5pc"> <br>
+    End &nbsp;: <input type="text" id = "fend" style="width: 5pc;">    
+    <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.9pc">    
+    <input type="submit" value="Cancel" onclick="$('#filler').slideUp();" style="width: 5pc;height: 1.9pc"><br> 
+    Step : <input type="text" id = "fstep" style="width: 5pc;">
+</div>
+
 <div id="figurecontainer"></div>
 
 
 </div>
 <div id="status">Load your data to get started...</div>
+<script src="../particles.js"></script>
 
+<script src="../JsCSS/plotly-latest.min.js"></script>
+<script src="../JsCSS/jquery.min.js"></script>
+<script src="../JsCSS/jquery-ui.min.js"></script>
 <script src="../JsCSS/functions.js"></script>
 <script src="../JsCSS/plotSetup.js"></script>
 <script>
 
 
+
+
+
+    particlesJS.load('particle', '../particles.json');
 
     req({
         'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
@@ -86,14 +99,29 @@
             }
     })
 
+    Plotly.newPlot(figurecontainer, [iniPointsD], layout, {displaylogo: false, modeBarButtonsToRemove: ['sendDataToCloud']});
+    pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
+    points = pointscontainer.getElementsByTagName("path");
+    figurecontainer.on("plotly_selected",selectEvent);
+        
 
-    particlesJS.load('particle', '../particles.json');
+    var fl = JSON.parse(localStorage.getItem("files"));
+    if (fl!==null){
+        recentFiles = fl;
+        recentMenu();
+    }
+
+    var fl = JSON.parse(localStorage.getItem("recent"));
+    if (fl!==null){
+        recentLocation = fl;
+    }
+
 
     function op(link) {
         shell.openExternal(link);
     }
 
-    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat"]){
+    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat", "fill"]){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
     }
     Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
@@ -101,11 +129,11 @@
 
 
 
-  $( function() {
+
+
+
+  $(function() {
     $slider.slider({min:0,max:0,step:1,
-      create: function() {
-        $ch.text( xName+'=0' );
-      },
       slide: function( event, ui ) {
         th_in = ui.value;
         sliderChanged();
