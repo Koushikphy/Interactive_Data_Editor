@@ -198,7 +198,7 @@ function expRotate(tmpData){
     };
 
 
-    tmpData = [].concat(...tmpData).filter(Boolean);
+    tmpData = [].concat(...tmpData).filter(x=>x!==undefined);
 
     var tmp = new Set();
     for(let a of tmpData){
@@ -364,34 +364,36 @@ function repeatMirror(){
     }
     data = data.map(dat=>{
 
-    var ind  = dat[col.y].indexOf(last)+1
-    var newy = dat[col.y].slice(0,ind)
-    var tmp  = newy.slice()
-    tmp.splice(0,1)
-
-    for(let time=0; time<times-1; time++){
-        for(let i=0; i<tmp.length;i++){
-            newy.push(tmp[i]+last*(1+time));
-        }
-    }
-
-    for(let i of cols_wo_y){
-        var new_dat = dat[i].slice(0,ind)
-        var tmp = new_dat.slice()
+        var ind  = dat[col.y].indexOf(last)+1
+        if(!ind) alert("Endpoint must exist !!!")
+        var newy = dat[col.y].slice(0,ind)
+        var tmp  = newy.slice()
         tmp.splice(0,1)
+
         for(let time=0; time<times-1; time++){
-            if(mirror) tmp.reverse()
-            new_dat.push(...tmp)
+            for(let i=0; i<tmp.length;i++){
+                newy.push(tmp[i]+last*(1+time));
+            }
         }
-        dat[i] = new_dat;
-    }
-    dat[col.y] = newy;
-    return dat 
+
+        for(let i of cols_wo_y){
+            var new_dat = dat[i].slice(0,ind)
+            var tmp = new_dat.slice()
+            tmp.splice(0,1)
+            for(let time=0; time<times-1; time++){
+                if(mirror) tmp.reverse()
+                new_dat.push(...tmp)
+            }
+            dat[i] = new_dat;
+        }
+        dat[col.y] = newy;
+        return dat 
     })
     $("#extend").slideUp();
     updatePlot();
     var tmp = mirror ? 'mirrored' : 'repeated'
     showStatus(`Data ${tmp} ${times} times...`)
+    updateOnServer();
 }
 
 
@@ -695,12 +697,10 @@ function selectEvent(event){
     } else {
         for (let pt of event.points){
             ind = dpsx.findIndex(n => n==pt.x);
-            if (dpsy[ind]==pt.y && ind!=dpsx.length-1){
+            if (dpsy[ind]==pt.y){
                 index.push(ind);
-                del_dat.push(pt.x);
         };
     };
-    del_dat = [... new Set(del_dat)];
     index = [... new Set(index)];
     };
 };
@@ -710,11 +710,13 @@ function deleteInterpolate(){
     if(!index.length) return;
     var xs=dpsx.slice();
     var ys=dpsy.slice();
-    for (let dat of del_dat) {
-        ind = xs.findIndex(n => n==dat);
-        xs.splice(ind,1);
-        ys.splice(ind,1);
-    };
+    //check for endpoints
+    if(index[0]==0) index.splice(0,1)
+    if(index[index.length-1] == dpsx.length-1) index.splice(-1,1)
+    for (var i = index.length - 1; i >= 0; i--) {
+        xs.splice(index[i],1);
+        ys.splice(index[i],1);
+    }
     ks = getNaturalKs(xs, ys);
     function spline(x) {
         var i = 1;
@@ -731,7 +733,7 @@ function deleteInterpolate(){
     };
     updatePlot();
     updateOnServer();
-    index=[]; del_dat = [];
+    index=[];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 };
 
@@ -745,7 +747,7 @@ function changeSign(){
     };
     updatePlot();
     updateOnServer();
-    index=[]; del_dat = [];
+    index=[];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 };
 
