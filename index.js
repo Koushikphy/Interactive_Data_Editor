@@ -232,6 +232,13 @@ const homeMenuTemplate =  [
                     mainWindow.webContents.send("menuTrigger","edat")
                 }
             },{
+                label: "Filter Data",
+                id:'filter',
+                enabled:false,
+                click(){
+                    mainWindow.webContents.send('menuTrigger','filter')
+                }
+            },{
                 label:"Open Swapper",
                 enabled:false,
                 id:'swapen',
@@ -245,14 +252,7 @@ const homeMenuTemplate =  [
                 click(){
                     mainWindow.webContents.send("menuTrigger","swapex")
                 }
-            },{
-                label: "Filter Data",
-                id:'filter',
-                enabled:false,
-                click(){
-                    mainWindow.webContents.send('menuTrigger','filter')
-                }
-            }
+            },,
 
         ]
     },
@@ -311,6 +311,24 @@ const homeMenuTemplate =  [
                     }));
                     childWindow.setMenu(null);
                 }
+            },{
+                label: "Sample Data",
+                click(){
+                    var childWindow = new BrowserWindow();
+                    childWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'data.html'),
+                    protocol: 'file:',
+                    slashes:true
+                    }));
+                    childWindow.setMenu(null);
+                }      
+            },
+
+            {
+                label: "Homepage",
+                click(){
+                    shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor");
+                }
             },
             {
                 label: "About",
@@ -324,12 +342,6 @@ const homeMenuTemplate =  [
                     childWindow.setMenu(null);
                 }
             },
-            {
-                label: "Homepage",
-                click(){
-                    shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor");
-                }
-            }
         ]
     }
 ];
