@@ -10,14 +10,18 @@
 	Extend(Move/Mirror) Data
 </div>
 
-<div class="borders" style="width: 100%;" id="filler">
-    Start : <input type="text" id ="fstart" style="width: 5pc"> <br>
-    End &nbsp;: <input type="text" id = "fend" style="width: 5pc;">    
+<div class="borders"; style="width: 100%;" id="filter">
+    Condition:<select style=" font-weight: bolder; font-size: medium; width: 2pc;" id="flSel">
+        <option>&lt;</option>
+        <option>></option>
+        <option>=</option>
+    </select> 
+    <input type="text" id ="flc" style="width: 40px;margin: 0"> <br>
+    Fill with &nbsp;: <input type="text" id = "flf" style="width: 5pc;">    
     <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.9pc">    
-    <input type="submit" value="Cancel" onclick="$('#filler').slideUp();" style="width: 5pc;height: 1.9pc"><br> 
-    Step : <input type="text" id = "fstep" style="width: 5pc;"> 
+    <input type="submit" value="Cancel" onclick="$('#filter').slideUp();" style="width: 5pc;height: 1.9pc"><br> 
+    Columns : <input type="text" id = "flcl" style="width: 5pc;">
 </div>
-
 
 </body>
 </html>

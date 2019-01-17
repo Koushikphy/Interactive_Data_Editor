@@ -245,7 +245,14 @@ const homeMenuTemplate =  [
                 click(){
                     mainWindow.webContents.send("menuTrigger","swapex")
                 }
-            },
+            },{
+                label: "Filter Data",
+                id:'filter',
+                enabled:false,
+                click(){
+                    mainWindow.webContents.send('menuTrigger','filter')
+                }
+            }
 
         ]
     },

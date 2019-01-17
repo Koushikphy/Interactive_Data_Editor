@@ -457,6 +457,49 @@ function dataFiller(){
 
 
 
+function filterData(){
+    var condition = $("#flSel")[0].selectedIndex;
+    var thrsh =  parseFloat($("#flc").val());
+    var fillVal = parseFloat($("#flf").val());
+    var colmn = $("#flcl").val().split(',').map(x=>parseFloat(x)-1);
+
+    console.log(condition, thrsh, fillVal, colmn)
+    if(condition==0){
+        data = data.map(dat =>{
+            for (let tc of colmn){
+                dat[tc] = dat[tc].map(x=>{
+                    if(x<thrsh) return fillVal;
+                    return x;
+                })
+            }
+            return dat;
+        })
+    }else if(condition==1){
+        data = data.map(dat =>{
+            for (let tc of colmn){
+                dat[tc] = dat[tc].map(x=>{
+                    if(x>thrsh) return fillVal;
+                    return x;
+                })
+            }
+            return dat;
+        })
+    } else if(condition==2){
+        data = data.map(dat =>{
+            for (let tc of colmn){
+                dat[tc] = dat[tc].map(x=>{
+                    if(x==thrsh) return fillVal;
+                    return x;
+                })
+            }
+            return dat;
+        })
+
+    }
+}
+
+
+
 function resizePlot(){
     var height = window.innerHeight -document.getElementById("header").offsetTop-document.getElementById("figurecontainer").offsetTop ;
     $("#figurecontainer").height(height-2);
