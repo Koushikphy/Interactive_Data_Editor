@@ -10,6 +10,25 @@ var home = process.env.HOME || process.env.USERPROFILE;
 
 
 
+function versionCheck(){
+    var today = new Date()
+    var today = today.getDate() +''+ today.getMonth()
+    if(today == JSON.parse(localStorage.getItem("today"))) return
+    localStorage.setItem("today",JSON.stringify(today))
+    req({
+        'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
+        'headers':{'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1521.3 Safari/537.36});'}}, 
+        function (err, resp, body) {
+            var new_ver =JSON.parse(body)[0].name
+            console.log(new_ver)
+            if(new_ver!="v2.1.0"){
+                var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
+                var res = dialog.showMessageBox({type:"question",title:"Update available!!!", message:txt,buttons:['OK', "Cancel"]})
+                if(!res){shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases")}
+            }
+    })
+};
+
 
 function showStatus(msg){
     $("#status").html(msg);
@@ -37,60 +56,94 @@ function recentMenu(){
 };
 
 
-//// check from history
 
+function updateData() {
+    col.x = xCol.selectedIndex;
+    col.y = yCol.selectedIndex;
+    col.z = zCol.selectedIndex;
+    th_in= 0;
+    if (ddd){ //3D
+        $slider.slider({max:  data.length-1, value:0  })
+        $ch.text(xName+'='+ data[0][col.x][0])
 
-
-
-function colsChanged(value){
-    col.s    = value;
-    updatePlot();
-
+    } else {    //2D
+        col.z = col.y;
+        col.y = col.x;
+        col.x =0
+    };
+    updatePlot(1);
+    startDragBehavior();
+    updateOnServer();
+    if(!swapped){
+        if(ddd){
+            localStorage.setItem("cols3d",JSON.stringify(col));
+        } else {
+            var tmp={x:col.y,y:col.z,z:0,s:0}
+            localStorage.setItem("cols2d",JSON.stringify(tmp));
+        }
+    }
+    var tmpl = []
+    for (let i of data) {
+        tmpl.push(i[col.x][0].toString().length);
+    }
+    $ch.width(Math.floor((Math.max(...tmpl)/2)+2)*em2px);
 };
 
-function initSwapper(){
-    $("#sCol").show()
-    refdat = 0; swapper = true;
-    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
-    Plotly.addTraces(figurecontainer, iniPointsC);
-    col.s = sCol.selectedIndex;
-    Plotly.relayout(figurecontainer, {selectdirection: 'h'});
-    updatePlot();
-    Menu.getApplicationMenu().getMenuItemById("swapen").visible = false;
-    Menu.getApplicationMenu().getMenuItemById("swapex").visible = true;
-}
 
 
 
-function delSwapper(){
-    $("#sCol").hide();
-    swapper = false;
-    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
-    Plotly.relayout(figurecontainer, {selectdirection: 'any'});
-    updatePlot();
-    Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
-    Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+function thisJobs() {
+    $("#particle").remove()
+    $("#full").show()
+    xCol            =document.getElementById("xCol");
+    yCol            =document.getElementById("yCol");
+    if(ddd){//3
+        $(".3D").show()
+        var fl = JSON.parse(localStorage.getItem("cols3d"));
+        if (fl!==null){
+            col = fl;
+        }
 
-}
+        var mn = ["pa",'wire','surf']
+        for (let i of mn){
+            Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
+        }
 
-
-
-function swapData(){
-    if(!index.length) return;
-    saveOldData();
-    for (let ind of index){
-        [data[th_in][col.z][ind], data[th_in][col.s][ind]]= [data[th_in][col.s][ind], data[th_in][col.z][ind]]
+    }else{             //2d
+        serve = 0;
+        $(".3D").hide()
+        var fl = JSON.parse(localStorage.getItem("cols2d"));
+        if (fl!==null){
+            col = fl;
+        }
+        var mn = ["pa",'wire','surf']
+        for (let i of mn){
+            Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
+        }
     }
-    updatePlot();
-}
+
+    var op = "";
+    for (var i = 1; i <= data[0].length; i++) {
+        op += '<option>' + i + '</option>';
+    };
+    var tmp = $("#xCol, #yCol, #zCol, #sCol");
+    for (var i = 0; i < tmp.length; i++) {
+        tmp[i].innerHTML = op;
+    };
+    resizePlot();
+    xCol.selectedIndex=col.x;
+    yCol.selectedIndex=col.y;
+    zCol.selectedIndex=col.z;
+    sCol.selectedIndex=col.s;
+    updateData();
+};
+
+
 
 function fileLoader(){
     const fname = dialog.showOpenDialog({defaultPath:recentLocation, properties: ['openFile']})[0];
     fileReader(fname);
 }
-
-
-
 
 
 
@@ -262,9 +315,6 @@ ipcRenderer.on("back",function(e,d){
 
 
 ipcRenderer.on("menuTrigger",function(e,d){
-    if (document.activeElement.type == "text"){
-        return false;
-    };
     switch(d){
         case "open":
             fileLoader();
@@ -328,7 +378,8 @@ ipcRenderer.on("menuTrigger",function(e,d){
             break;
 
         case "edat":
-            initExtend();
+            $("#extend").slideDown();
+            $("#einp").val(dpsx[dpsx.length-1]);
             break;
         case 'fill':
             $("#filler").slideDown();
@@ -341,9 +392,195 @@ ipcRenderer.on("menuTrigger",function(e,d){
 
 
 
-function initExtend(){
-    $("#extend").slideDown();
-    $("#einp").val(dpsx[dpsx.length-1])
+
+
+
+function hotKeys(e){
+    if (document.activeElement.type == "text"){
+        return;
+    };
+    switch (e.key){
+        case " " :
+            Plotly.relayout( figurecontainer, {
+                "xaxis.autorange": true,
+                "yaxis.autorange": true
+            });
+            break;
+        case ",":
+            if(th_in==0) break;
+            th_in = th_in-1
+            $slider.slider("value",th_in)
+            sliderChanged();
+            break;
+        case ".":
+            if(th_in==data.length-1) break;
+            th_in = th_in+1
+            $slider.slider("value",th_in)
+            sliderChanged();
+            break;
+        case "s":
+            if(!e.ctrlKey){
+                Plotly.relayout(figurecontainer, {dragmode:"select"});
+            }
+            break;
+
+        case "z":
+            if (!e.ctrlKey) {
+                Plotly.relayout(figurecontainer, {dragmode:"zoom"});
+            };
+            break;
+        case "p":
+            swapData();
+            break;
+    };
+};
+
+
+
+function editor(){
+    var min = $slider.slider("option","min"),
+        max = $slider.slider("option","max"),
+        step= $slider.slider("option","step");
+
+    editorWindow = new BrowserWindow({minWidth:1200,show:false});
+    editorWindow.maximize();
+    editorWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "handtable.html"),
+        protocol: 'file:',
+        slashes:true
+    }));   
+    editorWindow.setMenu(null);
+
+    editorWindow.show();
+    editorWindow.webContents.once("dom-ready",function(){
+        editorWindow.webContents.send("slider",[min,max,step,xName,col.x,data]);
+    })
+}
+
+
+
+function openViewer(x){
+    serve=1;
+    var target = "3D_Viewer_Lines.html"
+    if(x) target = "3D_Viewer_Surface.html"
+
+    viewerWindow = new BrowserWindow({show:false,minWidth:1200});
+    viewerWindow.maximize();
+    viewerWindow.loadURL(url.format({
+        pathname: path.join(__dirname, target),
+        protocol: 'file:',
+        slashes:true
+    }));
+    viewerWindow.on("closed",function(){delete viewer[target]})
+
+
+    viewerWindow.show();
+    viewerWindow.setMenu(null);
+    viewer[target] = viewerWindow;
+    // viewerWindow.webContents.openDevTools();
+    viewerWindow.webContents.once("dom-ready",function(){
+        updateOnServer()
+    })
+};
+
+
+
+function incRefData(){
+    var mark = Menu.getApplicationMenu().getMenuItemById("compf").checked;
+    if(mark){
+        refdat = 1;
+        updatePlot(1);
+    } else {
+        refdat = 0;
+        Plotly.deleteTraces(figurecontainer,1);
+    };
+};
+
+
+
+function isswap(){
+    swapped = Menu.getApplicationMenu().getMenuItemById("pax").checked;
+    var [n1,n2] = ["Y","X"];
+    if (swapped) [n1,n2] =[n2,n1];
+    xName = n2;
+    [xCol, yCol] = [yCol, xCol];
+    [col.x, col.y]= [col.y,col.x];
+    rotateData();
+    updateData();
+    th_in = 0;
+    $slider.slider("value",0);
+    $ch.text(xName+': '+ data[th_in][col.x][0]);
+    $("#drag").html((_,html) => html.replace(n1,n2));
+};
+
+
+function sliderChanged() {
+    $ch.text(xName+'='+ data[th_in][col.x][0])
+    updatePlot(1);
+    startDragBehavior();
+};
+
+
+
+function colsChanged(value){
+    col.s    = value;
+    updatePlot();
+};
+
+
+
+function colChanged(value) {
+    col.z    = value;
+    updatePlot(1);
+    updateOnServer();
+    startDragBehavior();
+    if(!swapped) localStorage.setItem("cols3d",JSON.stringify(col));
+};
+
+
+
+function resizePlot(){
+    var height = window.innerHeight -document.getElementById("header").offsetTop-document.getElementById("figurecontainer").offsetTop ;
+    $("#figurecontainer").height(height-2);
+
+    Plotly.relayout(figurecontainer, {autosize:true});
+}
+
+
+
+function initSwapper(){
+    $("#sCol").show()
+    refdat = 0; swapper = true;
+    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
+    Plotly.addTraces(figurecontainer, iniPointsC);
+    col.s = sCol.selectedIndex;
+    Plotly.relayout(figurecontainer, {selectdirection: 'h'});
+    updatePlot();
+    Menu.getApplicationMenu().getMenuItemById("swapen").visible = false;
+    Menu.getApplicationMenu().getMenuItemById("swapex").visible = true;
+}
+
+
+
+function delSwapper(){
+    $("#sCol").hide();
+    swapper = false;
+    if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
+    Plotly.relayout(figurecontainer, {selectdirection: 'any'});
+    updatePlot();
+    Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
+    Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+}
+
+
+
+function swapData(){
+    if(!index.length) return;
+    saveOldData();
+    for (let ind of index){
+        [data[th_in][col.z][ind], data[th_in][col.s][ind]]= [data[th_in][col.s][ind], data[th_in][col.z][ind]]
+    }
+    updatePlot();
 }
 
 
@@ -506,222 +743,6 @@ function filterData(){
 
 
 
-function resizePlot(){
-    var height = window.innerHeight -document.getElementById("header").offsetTop-document.getElementById("figurecontainer").offsetTop ;
-    $("#figurecontainer").height(height-2);
-
-    Plotly.relayout(figurecontainer, {autosize:true});
-}
-
-
-function hotKeys(e){
-    if (document.activeElement.type == "text"){
-        return;
-    };
-    switch (e.key){
-        case " " :
-            Plotly.relayout( figurecontainer, {
-                "xaxis.autorange": true,
-                "yaxis.autorange": true
-            });
-            break;
-        case ",":
-            if(th_in==0) break;
-            th_in = th_in-1
-            $slider.slider("value",th_in)
-            sliderChanged();
-            break;
-        case ".":
-            if(th_in==data.length-1) break;
-            th_in = th_in+1
-            $slider.slider("value",th_in)
-            sliderChanged();
-            break;
-        case "s":
-            if(!e.ctrlKey){
-                Plotly.relayout(figurecontainer, {dragmode:"select"});
-            }
-            break;
-
-        case "z":
-            if (!e.ctrlKey) {
-                Plotly.relayout(figurecontainer, {dragmode:"zoom"});
-            };
-            break;
-        case "p":
-            swapData();
-            break;
-    };
-};
-
-
-
-function editor(){
-    var min = $slider.slider("option","min"),
-        max = $slider.slider("option","max"),
-        step= $slider.slider("option","step");
-
-    editorWindow = new BrowserWindow({minWidth:1200,show:false});
-    editorWindow.maximize();
-    editorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "handtable.html"),
-        protocol: 'file:',
-        slashes:true
-    }));   
-    editorWindow.setMenu(null);
-
-    editorWindow.show();
-    editorWindow.webContents.once("dom-ready",function(){
-        editorWindow.webContents.send("slider",[min,max,step,xName,col.x,data]);
-    })
-}
-
-
-
-function openViewer(x){
-    serve=1;
-    var target = "3D_Viewer_Lines.html"
-    if(x) target = "3D_Viewer_Surface.html"
-
-    viewerWindow = new BrowserWindow({show:false,minWidth:1200});
-    viewerWindow.maximize();
-    viewerWindow.loadURL(url.format({
-        pathname: path.join(__dirname, target),
-        protocol: 'file:',
-        slashes:true
-    }));
-    viewerWindow.on("closed",function(){delete viewer[target]})
-
-
-    viewerWindow.show();
-    viewerWindow.setMenu(null);
-    viewer[target] = viewerWindow;
-    // viewerWindow.webContents.openDevTools();
-    viewerWindow.webContents.once("dom-ready",function(){
-        updateOnServer()
-    })
-};
-
-
-
-function incRefData(){
-    var mark = Menu.getApplicationMenu().getMenuItemById("compf").checked;
-    if(mark){
-        refdat = 1;
-        updatePlot(1);
-    } else {
-        refdat = 0;
-        Plotly.deleteTraces(figurecontainer,1);
-    };
-};
-
-
-
-function isswap(){
-    swapped = Menu.getApplicationMenu().getMenuItemById("pax").checked;
-    var [n1,n2] = ["Y","X"];
-    if (swapped) [n1,n2] =[n2,n1];
-    xName = n2;
-    [xCol, yCol] = [yCol, xCol];
-    [col.x, col.y]= [col.y,col.x];
-    rotateData();
-    updateData();
-    th_in = 0;
-    $slider.slider("value",0);
-    $ch.text(xName+': '+ data[th_in][col.x][0]);
-    $("#drag").html((_,html) => html.replace(n1,n2));
-};
-
-
-function sliderChanged() {
-    $ch.text(xName+'='+ data[th_in][col.x][0])
-    updatePlot(1);
-    startDragBehavior();
-
-};
-
-
-
-function colChanged(value) {
-    col.z    = value;
-    updatePlot(1);
-    updateOnServer();
-    startDragBehavior();
-    if(!swapped) localStorage.setItem("cols3d",JSON.stringify(col));
-};
-
-
-
-function yrangeChanged() {
-    var lim=this.value;
-    if (lim == ""){
-        Plotly.relayout(figurecontainer, {"yaxis.autorange": true});
-    } else {
-        lim=this.value.split(",");
-        lim=lim.map( x => parseFloat(x));
-        if (isNaN(lim[0])) {
-            lim[0] = Math.min( ...dpsy);
-        } else if (isNaN(lim[1])) {
-            lim[1] = Math.max( ...dpsy);
-        };
-        Plotly.relayout(figurecontainer, {"yaxis.range" : lim});
-    }; 
-};
-
-
-
-
-
-function saveOldData(){
-    if(!data.length) return;
-    if(swapper){
-        olddata = JSON.stringify([th_in, col.z,col.s, data[th_in][col.y],data[th_in][col.z], data[th_in][col.s]]);
-        return;
-    }
-    olddata = JSON.stringify([ th_in, col.z, data[th_in][col.y],data[th_in][col.z]]);
-};
-
-
-
-function unDo() {
-    if(!ma) ma=1;
-    if(swapper){
-        var [th, y1,y2, arrX, arrY1, arrY2] = JSON.parse(olddata);
-        if ((th != th_in) || (y1 != col.z) || (y2!=col.s)) return false;
-        saveOldData();
-        data[th_in][col.y] = arrX;
-        data[th_in][col.z] = arrY1;
-        data[th_in][col.s] = arrY2;
-        updatePlot();
-        updateOnServer();
-        return
-    }
-    var [th, dc, arrX, arrY] = JSON.parse(olddata);
-    if ((th != th_in) || (dc != col.z)) return false;
-    saveOldData();
-    data[th_in][col.y] = arrX;
-    data[th_in][col.z] = arrY;
-    updatePlot();
-    updateOnServer();
-};
-
-
-
-function updateOnServer() {
-    if (!serve) return;
-    var x_list=[], y_list=[] , z_list=[];
-    for (let i of data) {
-        x_list.push(i[col.x]);
-        y_list.push(i[col.y]); 
-        z_list.push(i[col.z]);
-    };
-    var s_data = [x_list, y_list, z_list];
-    for (let w in viewer) viewer[w].webContents.send("sdata",s_data);
-    // viewerWindow.webContents.send("sdata",s_data);
-    // localStorage.setItem("datal",JSON.stringify(s_data));
-};
-
-
 function getNaturalKs (xs, ys) {
     var ks = new Array(xs.length).fill(0);
     var n = xs.length-1;
@@ -787,34 +808,6 @@ function solve (A, ks) {
 };
 
 
-function autoSmooth() {
-    if(ma){saveOldData();ma=0;}
-    if(!index.length)return;
-    for(let i of index)
-        { 
-            dpsy[i] = (dpsy[i-1]+dpsy[i]+dpsy[i+1])/3.0
-        };
-    data[th_in][col.z] = dpsy;
-    updatePlot();
-}
-
-
-function selectEvent(event){
-    index=[]; del_dat = [];
-    if (event==undefined){
-        Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-        ma=1;
-    } else {
-        for (let pt of event.points){
-            ind = dpsx.findIndex(n => n==pt.x);
-            if (dpsy[ind]==pt.y){
-                index.push(ind);
-        };
-    };
-    index = [... new Set(index)];
-    };
-};
-
 
 function deleteInterpolate(){
     if(!index.length) return;
@@ -849,6 +842,19 @@ function deleteInterpolate(){
 
 
 
+function autoSmooth() {
+    if(ma){saveOldData();ma=0;}
+    if(!index.length)return;
+    for(let i of index)
+        { 
+            dpsy[i] = (dpsy[i-1]+dpsy[i]+dpsy[i+1])/3.0
+        };
+    data[th_in][col.z] = dpsy;
+    updatePlot();
+};
+
+
+
 function changeSign(){
     console.log("chaning");
     saveOldData();
@@ -860,6 +866,27 @@ function changeSign(){
     index=[];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 };
+
+
+
+function selectEvent(event){
+    index=[]; del_dat = [];
+    if (event==undefined){
+        Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+        ma=1;
+    } else {
+        for (let pt of event.points){
+            ind = dpsx.findIndex(n => n==pt.x);
+            if (dpsy[ind]==pt.y){
+                index.push(ind);
+        };
+    };
+    index = [... new Set(index)];
+    };
+};
+
+
+
 
 
 
@@ -938,6 +965,55 @@ function startDragBehavior() {
 
 
 
+function saveOldData(){
+    if(!data.length) return;
+    if(swapper){
+        olddata = JSON.stringify([th_in, col.z,col.s, data[th_in][col.y],data[th_in][col.z], data[th_in][col.s]]);
+        return;
+    }
+    olddata = JSON.stringify([ th_in, col.z, data[th_in][col.y],data[th_in][col.z]]);
+};
+
+
+
+function unDo() {
+    if(!ma) ma=1;
+    if(swapper){
+        var [th, y1,y2, arrX, arrY1, arrY2] = JSON.parse(olddata);
+        if ((th != th_in) || (y1 != col.z) || (y2!=col.s)) return false;
+        saveOldData();
+        data[th_in][col.y] = arrX;
+        data[th_in][col.z] = arrY1;
+        data[th_in][col.s] = arrY2;
+        updatePlot();
+        updateOnServer();
+        return
+    }
+    var [th, dc, arrX, arrY] = JSON.parse(olddata);
+    if ((th != th_in) || (dc != col.z)) return false;
+    saveOldData();
+    data[th_in][col.y] = arrX;
+    data[th_in][col.z] = arrY;
+    updatePlot();
+    updateOnServer();
+};
+
+
+
+
+function updateOnServer() {
+    if (!serve) return;
+    var x_list=[], y_list=[] , z_list=[];
+    for (let i of data) {
+        x_list.push(i[col.x]);
+        y_list.push(i[col.y]); 
+        z_list.push(i[col.z]);
+    };
+    var s_data = [x_list, y_list, z_list];
+    for (let w in viewer) viewer[w].webContents.send("sdata",s_data);
+    // viewerWindow.webContents.send("sdata",s_data);
+    // localStorage.setItem("datal",JSON.stringify(s_data));
+};
 
 
 function updatePlot(both=0) {

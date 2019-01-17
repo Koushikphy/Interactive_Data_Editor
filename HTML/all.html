@@ -26,7 +26,7 @@
 </div>
 
 <div id="full" style="display: none;">
-	
+    
 <div id="header">
         An interactive 2D and 3D data editor
 </div>
@@ -96,28 +96,10 @@
 <script>
 
 
-
-
-
     particlesJS.load('particle', '../particles.json');
+    versionCheck();
 
-    req({
-        'url':"https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/tags",
-        'headers':{'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1521.3 Safari/537.36});'}}, 
-        function (err, resp, body) {
-            var new_ver =JSON.parse(body)[0].name
-            console.log(new_ver)
-            if(new_ver!="v1.3.0"){
-                var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
-                var res = dialog.showMessageBox({type:"question",title:"Update available!!!", message:txt,buttons:['OK', "Cancel"]})
-                if(!res){shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases")}
-            }
-    })
 
-    Plotly.newPlot(figurecontainer, [iniPointsD], layout, {displaylogo: false, modeBarButtonsToRemove: ['sendDataToCloud']});
-    pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-    points = pointscontainer.getElementsByTagName("path");
-    figurecontainer.on("plotly_selected",selectEvent);
         
 
     var fl = JSON.parse(localStorage.getItem("files"));
@@ -132,9 +114,6 @@
     }
 
 
-    function op(link) {
-        shell.openExternal(link);
-    }
 
     for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat", "fill","filter"]){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
@@ -143,109 +122,25 @@
 
 
 
+    Plotly.newPlot(figurecontainer, [iniPointsD], layout, {displaylogo: false, modeBarButtonsToRemove: ['sendDataToCloud']});
+    pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
+    points = pointscontainer.getElementsByTagName("path");
+    figurecontainer.on("plotly_selected",selectEvent);
 
 
 
 
-  $(function() {
-    $slider.slider({min:0,max:0,step:1,
-      slide: function( event, ui ) {
-        th_in = ui.value;
-        sliderChanged();
-      }
+
+    $(function() {
+        $slider.slider({
+            min:0,max:0,step:1,
+            slide: function( event, ui ) {
+                th_in = ui.value;
+                sliderChanged();
+            }
+        });
     });
-  });
-
-
-
-
-
-
-
-        var em2px = $ch.width()/3
-
-
-        function updateData() {
-            col.x = xCol.selectedIndex;
-            col.y = yCol.selectedIndex;
-            col.z = zCol.selectedIndex;
-            th_in= 0;
-            if (ddd){ //3D
-                $slider.slider({max:  data.length-1, value:0  })
-                $ch.text(xName+'='+ data[0][col.x][0])
-
-            } else {    //2D
-                col.z = col.y;
-                col.y = col.x;
-                col.x =0
-            };
-            updatePlot(1);
-            startDragBehavior();
-            updateOnServer();
-            if(!swapped){
-            if(ddd){
-            	localStorage.setItem("cols3d",JSON.stringify(col));
-            } else {
-            	var tmp={x:col.y,y:col.z,z:0,s:0}
-            	localStorage.setItem("cols2d",JSON.stringify(tmp));
-            }
-        }
-        var tmpl = []
-        for (let i of data) {
-            tmpl.push(i[col.x][0].toString().length);
-        }
-        $ch.width(Math.floor((Math.max(...tmpl)/2)+2)*em2px);
-
-        };
-
-
-
-
-        function thisJobs() {
-            $("#particle").remove()
-            $("#full").show()
-            xCol            =document.getElementById("xCol");
-            yCol            =document.getElementById("yCol");
-            if(ddd){//3
-                $(".3D").show()
-                var fl = JSON.parse(localStorage.getItem("cols3d"));
-			    if (fl!==null){
-			        col = fl;
-			    }
-
-                var mn = ["pa",'wire','surf']
-                for (let i of mn){
-                    Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
-                }
-
-            }else{             //2d
-                serve = 0;
-                $(".3D").hide()
-                var fl = JSON.parse(localStorage.getItem("cols2d"));
-			    if (fl!==null){
-			        col = fl;
-			    }
-                var mn = ["pa",'wire','surf']
-                for (let i of mn){
-                    Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
-                }
-            }
-
-            var op = "";
-            for (var i = 1; i <= data[0].length; i++) {
-                op += '<option>' + i + '</option>';
-            };
-            var tmp = $("#xCol, #yCol, #zCol, #sCol");
-            for (var i = 0; i < tmp.length; i++) {
-                tmp[i].innerHTML = op;
-            };
-            resizePlot();
-            xCol.selectedIndex=col.x;
-            yCol.selectedIndex=col.y;
-            zCol.selectedIndex=col.z;
-            sCol.selectedIndex=col.s;
-            updateData();
-        };
+    var em2px = $ch.width()/3
 
 
 </script>
