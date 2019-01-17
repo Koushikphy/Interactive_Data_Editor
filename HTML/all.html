@@ -11,15 +11,15 @@
 <div class="basediv" id="particle">
 <div class="parent">
 <div class="container">
-    <img src="../icons/charts.png" width="75" height="75">
+    <img src="../figs/charts.png" width="75" height="75">
     <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
     <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">A Software to interactively edit data in a graphical manner</div>
     <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">Developed by Koushik Naskar</div>
     <div style="font-size: large;margin-top: 7px">Version 2.1.0 </div>
     <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">Copyright &copy; Jan, 2019 Koushik Naskar</div>
-    <a href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../icons/facebook.png" width="30" height="30"></a>
-    <a href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../icons/github.png" width="30" height="30"></a>
-    <a href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../icons/gmail.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../figs/facebook.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../figs/github.png" width="30" height="30"></a>
+    <a href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../figs/gmail.png" width="30" height="30"></a>
 
 </div>
 </div>
@@ -67,7 +67,7 @@
 </div>
 
 
-<div class="borders"; style="width: 100%;" id="filter">
+<div class="borders"; style="width: 100%;display: none;" id="filter">
     Condition:<select style=" font-weight: bolder; font-size: medium; width: 2pc;" id="flSel">
         <option>&lt;</option>
         <option>></option>
@@ -136,7 +136,7 @@
         shell.openExternal(link);
     }
 
-    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat", "fill"]){
+    for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat", "fill","filter"]){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
     }
     Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
@@ -235,7 +235,7 @@
             for (var i = 1; i <= data[0].length; i++) {
                 op += '<option>' + i + '</option>';
             };
-            var tmp = $("select:not(:last)");
+            var tmp = $("#xCol, #yCol, #zCol, #sCol");
             for (var i = 0; i < tmp.length; i++) {
                 tmp[i].innerHTML = op;
             };

@@ -128,7 +128,7 @@ function fileReader(fname){
     if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
     Plotly.relayout(figurecontainer, {selectdirection: 'any'});
 
-    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen',"edat","fill"]
+    var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen',"edat","fill","filter"]
     if(ddd) mn.push("pa",'wire','surf')
     for (let i of mn){
         Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
@@ -333,6 +333,9 @@ ipcRenderer.on("menuTrigger",function(e,d){
         case 'fill':
             $("#filler").slideDown();
             break;
+        case 'filter':
+            $('#filter').slideDown();
+            break;
     }
 });
 
@@ -496,6 +499,10 @@ function filterData(){
         })
 
     }
+    $("#filter").slideUp();
+    updatePlot();
+    showStatus('Missing values are filled...')
+    updateOnServer();
 }
 
 
@@ -586,9 +593,9 @@ function openViewer(x){
     }));
     viewerWindow.on("closed",function(){delete viewer[target]})
 
-    viewerWindow.setMenu(null);
-    viewerWindow.show();
 
+    viewerWindow.show();
+    viewerWindow.setMenu(null);
     viewer[target] = viewerWindow;
     // viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready",function(){
