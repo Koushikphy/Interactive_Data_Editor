@@ -466,7 +466,6 @@ function filterData(){
     var fillVal = parseFloat($("#flf").val());
     var colmn = $("#flcl").val().split(',').map(x=>parseFloat(x)-1);
 
-    console.log(condition, thrsh, fillVal, colmn)
     if(condition==0){
         data = data.map(dat =>{
             for (let tc of colmn){
@@ -501,7 +500,7 @@ function filterData(){
     }
     $("#filter").slideUp();
     updatePlot();
-    showStatus('Missing values are filled...')
+    showStatus('Data filtered...')
     updateOnServer();
 }
 
@@ -939,6 +938,8 @@ function startDragBehavior() {
 
 
 
+
+
 function updatePlot(both=0) {
     dpsy   = data[th_in][col.z];
     dpsx   = data[th_in][col.y];
@@ -946,11 +947,7 @@ function updatePlot(both=0) {
     if(swapper){
         dpsy2   = data[th_in][col.s];
         Plotly.restyle(figurecontainer, {"x": [dpsx, dpsx], "y": [dpsy, dpsy2 ]});
-        return
-    }
-
-
-    if (both && refdat && compdata.length){
+    } else if (both && refdat && compdata.length){
         if (figurecontainer.data.length==1){
             Plotly.addTraces(figurecontainer, iniPointsC);
         };
