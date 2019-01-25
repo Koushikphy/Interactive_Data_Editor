@@ -39,7 +39,7 @@ function showStatus(msg){
 
 
 function recentMenu(){
-    var rrf = Menu.getApplicationMenu().getMenuItemById("rf").submenu;
+    var rrf = menu.getMenuItemById("rf").submenu;
     rrf.clear()
     for(let i=recentFiles.length-1; i>=0; i-- ){
         var fln = recentFiles[i].slice();
@@ -106,7 +106,7 @@ function thisJobs() {
 
         var mn = ["pa",'wire','surf']
         for (let i of mn){
-            Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
+            menu.getMenuItemById(i).enabled = true;
         }
 
     }else{             //2d
@@ -118,7 +118,7 @@ function thisJobs() {
         }
         var mn = ["pa",'wire','surf']
         for (let i of mn){
-            Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
+            menu.getMenuItemById(i).enabled = false;
         }
     }
 
@@ -171,11 +171,13 @@ function fileReader(fname){
         recentFiles.splice(0,1);
     }
     recentMenu();
-    Menu.getApplicationMenu().getMenuItemById("pax").checked = false;
-    Menu.getApplicationMenu().getMenuItemById("pay").checked = true;
-    Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
-    Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
-    Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+
+
+    menu.getMenuItemById("pax").checked = false;
+    menu.getMenuItemById("pay").checked = true;
+    menu.getMenuItemById("compf").visible = false;
+    menu.getMenuItemById("swapen").visible = true;
+    menu.getMenuItemById("swapex").visible = false;
     $("#sCol").hide();
     swapper = false;
     if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
@@ -184,7 +186,7 @@ function fileReader(fname){
     var mn = ['save', 'saveas', 'cs', 'ma', 'cg', 'un', "spr",'openc','pamh', 'swapen',"edat","fill","filter"]
     if(ddd) mn.push("pa",'wire','surf')
     for (let i of mn){
-        Menu.getApplicationMenu().getMenuItemById(i).enabled = true;
+        menu.getMenuItemById(i).enabled = true;
     }
 
 }
@@ -200,7 +202,7 @@ function compfileLoader(){
     compdata = parseData(compdata);
     showStatus('Data for comparison loaded ...');
     updatePlot(1);
-    Menu.getApplicationMenu().getMenuItemById("compf").visible = true;
+    menu.getMenuItemById("compf").visible = true;
 }
 
 
@@ -363,7 +365,7 @@ ipcRenderer.on("menuTrigger",function(e,d){
             isswap();
             break;
         case "pamh":
-            lockXc = Menu.getApplicationMenu().getMenuItemById("pamh").checked ? 1 : 0;
+            lockXc = menu.getMenuItemById("pamh").checked ? 1 : 0;
             break;
         case "fullscreen":
             resizePlot();
@@ -486,7 +488,7 @@ function openViewer(x){
 
 
 function incRefData(){
-    var mark = Menu.getApplicationMenu().getMenuItemById("compf").checked;
+    var mark = menu.getMenuItemById("compf").checked;
     if(mark){
         refdat = 1;
         updatePlot(1);
@@ -499,7 +501,7 @@ function incRefData(){
 
 
 function isswap(){
-    swapped = Menu.getApplicationMenu().getMenuItemById("pax").checked;
+    swapped = menu.getMenuItemById("pax").checked;
     var [n1,n2] = ["Y","X"];
     if (swapped) [n1,n2] =[n2,n1];
     xName = n2;
@@ -556,8 +558,8 @@ function initSwapper(){
     col.s = sCol.selectedIndex;
     Plotly.relayout(figurecontainer, {selectdirection: 'h'});
     updatePlot();
-    Menu.getApplicationMenu().getMenuItemById("swapen").visible = false;
-    Menu.getApplicationMenu().getMenuItemById("swapex").visible = true;
+    menu.getMenuItemById("swapen").visible = false;
+    menu.getMenuItemById("swapex").visible = true;
 }
 
 
@@ -568,8 +570,8 @@ function delSwapper(){
     if(figurecontainer.data.length==2) Plotly.deleteTraces(figurecontainer,1);
     Plotly.relayout(figurecontainer, {selectdirection: 'any'});
     updatePlot();
-    Menu.getApplicationMenu().getMenuItemById("swapen").visible = true;
-    Menu.getApplicationMenu().getMenuItemById("swapex").visible = false;
+    menu.getMenuItemById("swapen").visible = true;
+    menu.getMenuItemById("swapex").visible = false;
 }
 
 

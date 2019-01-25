@@ -95,7 +95,7 @@
 <script src="../JsCSS/plotSetup.js"></script>
 <script>
 
-
+    var menu = Menu.getApplicationMenu();
     particlesJS.load('particle', '../particles.json');
     versionCheck();
 
@@ -116,9 +116,9 @@
 
 
     for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un','wire','surf', "spr",'openc','pamh','pa','swapen',"edat", "fill","filter"]){
-        Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
+        menu.getMenuItemById(i).enabled = false;
     }
-    Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
+    menu.getMenuItemById("compf").visible = false;
 
 
 
