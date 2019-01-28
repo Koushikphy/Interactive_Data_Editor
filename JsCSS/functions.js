@@ -239,9 +239,10 @@ function expRotate(tmpData){
         };
     }; 
     
-    tmpData = transpose(tmpData);
+    
 
     if(issame){
+        tmpData = transpose(tmpData);
         tmpData = tmpData.map(x => transpose(x));
         return tmpData;
     };
