@@ -618,10 +618,14 @@ function repeatMirror(){
         for(let i of cols_wo_y){
             var new_dat = dat[i].slice(0,ind)
             var tmp = new_dat.slice()
-            tmp.splice(0,1)
             for(let time=0; time<times-1; time++){
-                if(mirror) tmp.reverse()
-                new_dat.push(...tmp)
+                if(mirror){
+                    ptmp = tmp.reverse().slice()
+                } else{
+                    ptmp = tmp.slice()
+                }
+                ptmp.splice(0,1)
+                new_dat.push(...ptmp)
             }
             dat[i] = new_dat;
         }
