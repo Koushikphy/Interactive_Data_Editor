@@ -456,7 +456,7 @@ function editor(){
         protocol: 'file:',
         slashes:true
     }));   
-    editorWindow.setMenu(null);
+    editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
     editorWindow.webContents.openDevTools();
@@ -483,7 +483,7 @@ function openViewer(x){
 
 
     viewerWindow.show();
-    viewerWindow.setMenu(null);
+    viewerWindow.setMenuBarVisibility(false);
     viewer[target] = viewerWindow;
     // viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready",function(){

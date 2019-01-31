@@ -309,7 +309,7 @@ const homeMenuTemplate =  [
                     protocol: 'file:',
                     slashes:true
                     }));
-                    childWindow.setMenu(null);
+                    childWindow.setMenuBarVisibility(false);;
                 }
             },{
                 label: "Sample Data",
@@ -320,7 +320,7 @@ const homeMenuTemplate =  [
                     protocol: 'file:',
                     slashes:true
                     }));
-                    childWindow.setMenu(null);
+                    childWindow.setMenuBarVisibility(false);;
                 }      
             },
 
@@ -339,7 +339,7 @@ const homeMenuTemplate =  [
                     protocol: 'file:',
                     slashes:true
                     }));
-                    childWindow.setMenu(null);
+                    childWindow.setMenuBarVisibility(false);;
                 }
             },
         ]
