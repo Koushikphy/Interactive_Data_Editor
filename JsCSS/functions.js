@@ -207,6 +207,7 @@ function compfileLoader(){
 
     compdata = fs.readFileSync(fname,"utf8");
     compdata = parseData(compdata);
+    if(swapped) compdata = expRotate(compdata)
     showStatus('Data for comparison loaded ...');
     updatePlot(1);
     menu.getMenuItemById("compf").visible = true;
@@ -228,10 +229,10 @@ function parseData(strDps) {
             blocks[j] = blocks[j].trim().split(/[\s\t]+/);
             blocks[j] = blocks[j].map( x => parseFloat(x));
         };
-        newdat.push(blocks);
+        newdat.push(transpose(blocks));
     };
-    if (swapped) newdat = transpose(newdat);
-    newdat = newdat.map(x => transpose(x));
+    // if (swapped) newdat = transpose(newdat);
+    // newdat = newdat.map(x => transpose(x));
     return newdat;
 };
 
