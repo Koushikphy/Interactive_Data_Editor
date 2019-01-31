@@ -933,7 +933,11 @@ function startDragBehavior() {
         var transform = d3.select(this).attr("transform");
         var translate = transform.substring(10, transform.length-1).split(/,| /);
         if(index.length){
-            [_,_,oldX,oldCord] = JSON.parse(olddata);
+            if(!swapper) {
+                [_,_,oldX,oldCord] = JSON.parse(olddata);
+            }else{
+                [_,_,_,oldX,oldCord,_] = JSON.parse(olddata);
+            }
             indd = oldX.indexOf(this.handle.x);  
         };
         return {x: translate[0], y: translate[1]};
@@ -977,7 +981,7 @@ function saveOldData(){
     if(swapper){
         olddata = JSON.stringify([th_in, col.z,col.s, data[th_in][col.y],data[th_in][col.z], data[th_in][col.s]]);
         return;
-    }
+    };
     olddata = JSON.stringify([ th_in, col.z, data[th_in][col.y],data[th_in][col.z]]);
 };
 
