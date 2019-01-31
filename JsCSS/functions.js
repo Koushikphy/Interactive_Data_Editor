@@ -42,8 +42,7 @@ function recentMenu(){
     var rrf = menu.getMenuItemById("rf").submenu;
     rrf.clear()
     for(let i=recentFiles.length-1; i>=0; i-- ){
-        var fln = recentFiles[i].slice();
-        if(fln.includes(home)){fln =  fln.replace(home,"~")}
+        var fln = replaceWithHome(recentFiles[i].slice())
         var item = {
             label : fln,
             click(){
@@ -146,6 +145,15 @@ function fileLoader(){
 }
 
 
+function replaceWithHome(name){
+    if(name.includes(home)){
+        return name.replace(home,"~")
+    } else {
+        return name 
+    }     
+};
+
+
 
 function fileReader(fname){
     swapped = 0;refdat = 0;xName = "X";
@@ -160,8 +168,7 @@ function fileReader(fname){
     ddd = data.length!=1;
     thisJobs();
     showStatus('Data loaded ...')
-
-    document.title = "Interactive Data Editor - "+fname;
+    document.title = "Interactive Data Editor - "+ replaceWithHome(fname);
 
 
 
@@ -300,7 +307,7 @@ function saveData() {
     txt += "\n";
     };
     fs.writeFileSync(save_name,txt);
-    showStatus("Data Saved as " + path.basename(save_name)+" on "+new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric',second:'numeric', hour12: true }))
+    showStatus("Data Saved as " + replaceWithHome(save_name))//+" on "+new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric',second:'numeric', hour12: true }))
 };
 
 
