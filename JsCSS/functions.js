@@ -448,10 +448,6 @@ function hotKeys(e){
 
 
 function editor(){
-    var min = $slider.slider("option","min"),
-        max = $slider.slider("option","max"),
-        step= $slider.slider("option","step");
-
     editorWindow = new BrowserWindow({minWidth:1200,show:false});
     editorWindow.maximize();
     editorWindow.loadURL(url.format({
@@ -462,8 +458,9 @@ function editor(){
     editorWindow.setMenu(null);
 
     editorWindow.show();
+    editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready",function(){
-        editorWindow.webContents.send("slider",[min,max,step,xName,col.x,data]);
+        editorWindow.webContents.send("slider",[xName,col.x,data]);
     })
 }
 
