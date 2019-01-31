@@ -588,7 +588,7 @@ function swapData(){
 
 
 
-//just a check to close issue from commit
+
 function repeatMirror(){
     var last   = parseFloat($("#einp").val());
     var times  = parseFloat($("#etime").val());
