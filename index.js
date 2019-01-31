@@ -303,7 +303,7 @@ const homeMenuTemplate =  [
             {
                 label: "Help",
                 click(){
-                    var childWindow = new BrowserWindow({icon: path.join(__dirname, 'charts.png')});
+                    var childWindow = new BrowserWindow({icon: path.join(__dirname, 'charts.png'), webPreferences: {nodeIntegration: true}});
                     childWindow.loadURL(url.format({
                     pathname: path.join(__dirname, 'help.html'),
                     protocol: 'file:',

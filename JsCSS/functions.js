@@ -449,7 +449,7 @@ function hotKeys(e){
 
 
 function editor(){
-    editorWindow = new BrowserWindow({minWidth:1200,show:false});
+    editorWindow = new BrowserWindow({minWidth:1200,show:false,webPreferences: {nodeIntegration: true}});
     editorWindow.maximize();
     editorWindow.loadURL(url.format({
         pathname: path.join(__dirname, "handtable.html"),
@@ -472,7 +472,7 @@ function openViewer(x){
     var target = "3D_Viewer_Lines.html"
     if(x) target = "3D_Viewer_Surface.html"
 
-    viewerWindow = new BrowserWindow({show:false,minWidth:1200});
+    viewerWindow = new BrowserWindow({show:false,minWidth:1200,webPreferences: {nodeIntegration: true}});
     viewerWindow.maximize();
     viewerWindow.loadURL(url.format({
         pathname: path.join(__dirname, target),
