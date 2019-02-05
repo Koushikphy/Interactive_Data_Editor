@@ -7,6 +7,13 @@ process.env.NODE_ENV = 'production';
 const {app, BrowserWindow, Menu, ipcMain,shell} = electron;
 
 
+function isDev(){
+    const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
+    const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
+    return isEnvSet ? getFromEnv : !app.isPackaged
+}
+
+
 
 ipcMain.on("back", function(e,d){
     mainWindow.webContents.send("back",d);
@@ -25,7 +32,7 @@ app.on('ready', function(){
         protocol: 'file:',
         slashes:true
     }));
-    mainWindow.webContents.openDevTools();
+    if(isDev()) mainWindow.webContents.openDevTools();
     mainWindow.on('closed', function(){
     app.quit();
     })

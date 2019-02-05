@@ -3,10 +3,18 @@ const path = require('path');
 const req = require("request");
 const url = require('url');        
 const {remote, ipcRenderer, shell } = require('electron');
-const {dialog, BrowserWindow, Menu, MenuItem} = remote;
+const {dialog, BrowserWindow, Menu, MenuItem, app} = remote;
 
 var editorWindow,viewer=[,,],recentLocation = '',recentFiles = [];
 var home = process.env.HOME || process.env.USERPROFILE;
+
+
+
+function isDev(){
+    const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
+    const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
+    return isEnvSet ? getFromEnv : !app.isPackaged
+}
 
 
 
@@ -459,7 +467,7 @@ function editor(){
     editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
-    editorWindow.webContents.openDevTools();
+    if(isDev()) editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready",function(){
         editorWindow.webContents.send("slider",[xName,col.x,data]);
     })
@@ -485,7 +493,7 @@ function openViewer(x){
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
     viewer[target] = viewerWindow;
-    // viewerWindow.webContents.openDevTools();
+    if(isDev()) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready",function(){
         updateOnServer()
     })
