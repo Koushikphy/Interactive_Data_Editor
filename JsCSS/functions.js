@@ -398,7 +398,7 @@ ipcRenderer.on("menuTrigger",function(e,d){
 
         case "edat":
             $("#extend").slideDown();
-            $("#einp").val(dpsx[dpsx.length-1]);
+            // $("#einp").val(dpsx[dpsx.length-1]);
             break;
         case 'fill':
             $("#filler").slideDown();
@@ -648,7 +648,8 @@ function repeatMirror(){
     $("#extend").slideUp();
     updatePlot();
     var tmp = mirror ? 'mirrored' : 'repeated'
-    showStatus(`Data ${tmp} ${times} times...`)
+    showStatus(`Data ${tmp} ${times} times...`);
+    startDragBehavior();
     updateOnServer();
 }
 
@@ -711,7 +712,8 @@ function dataFiller(){
 
     $("#filler").slideUp();
     updatePlot();
-    showStatus('Missing values are filled...')
+    showStatus('Missing values are filled...');
+    startDragBehavior();
     updateOnServer();
 }
 
@@ -757,7 +759,8 @@ function filterData(){
     }
     $("#filter").slideUp();
     updatePlot();
-    showStatus('Data filtered...')
+    showStatus('Data filtered...');
+    startDragBehavior();
     updateOnServer();
 }
 
