@@ -868,6 +868,8 @@ function deleteInterpolate(){
 function autoSmooth() {
     if(ma){saveOldData();ma=0;}
     if(!index.length)return;
+    if(index[0]==0) index.splice(0,1)
+    if(index[index.length-1] == dpsx.length-1) index.splice(-1,1)
     for(let i of index)
         { 
             dpsy[i] = (dpsy[i-1]+dpsy[i]+dpsy[i+1])/3.0
