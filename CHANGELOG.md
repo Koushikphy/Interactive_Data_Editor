@@ -1,6 +1,6 @@
 ## v2.3.0
 ### NEW:
-1. 
+1. Warning on closing the software with unsaved data.
 
 ### FIXED:
 1. Wrong result on repeat/mirror
