@@ -7,7 +7,7 @@ const {dialog, BrowserWindow, Menu, MenuItem, app} = remote;
 
 var editorWindow,viewer=[,,],recentLocation = '',recentFiles = [];
 var home = process.env.HOME || process.env.USERPROFILE;
-
+var show = false;
 
 
 function isDev(){
@@ -334,6 +334,7 @@ ipcRenderer.on("back",function(e,d){
 
 
 ipcRenderer.on("menuTrigger",function(e,d){
+    if(show) console.log(e,d);
     switch(d){
         case "open":
             fileLoader();
@@ -482,11 +483,13 @@ function openViewer(x){
 
     viewerWindow = new BrowserWindow({show:false,minWidth:1200,webPreferences: {nodeIntegration: true}});
     viewerWindow.maximize();
+    setTimeout(function(){
     viewerWindow.loadURL(url.format({
         pathname: path.join(__dirname, target),
         protocol: 'file:',
         slashes:true
     }));
+    },50)
     viewerWindow.on("closed",function(){delete viewer[target]})
 
 
@@ -881,7 +884,7 @@ function autoSmooth() {
 
 
 function changeSign(){
-    console.log("chaning");
+    if(!index.length)return;
     saveOldData();
     for (let ind of index){
         data[th_in][col.z][ind] *= -1;
