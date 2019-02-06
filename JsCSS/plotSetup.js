@@ -18,6 +18,7 @@ var data=[], compdata=[], olddata="",
 
 
 $(window).keydown(hotKeys);
+$(window).keyup(hotDKeys);
 
 var layout = {
     autosize:true,

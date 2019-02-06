@@ -1,6 +1,6 @@
 ## v2.3.0
 ### NEW:
-1. Warning on closing the software with unsaved data.
+1. Warning on quit with unsaved data.
 
 ### FIXED:
 1. Wrong result on repeat/mirror
@@ -11,11 +11,10 @@
 6. Menu from all windows excent the main window is removed
 7. 3D viewer doesn't open on full screen sometimes.
 8. Problem with moving average smoothing on endpoints data.
+9. Severeal minor bug fixes and improves
 
-Severeal minor bug fixes and improves
 
-
-## v2.1.0
+## v2.1.0 - v1.3.0
  Several UI changes and a new layout with a lot of new & useful features. 
 ### NEW: 
 1. Fill Missing Data.

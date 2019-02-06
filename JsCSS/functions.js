@@ -425,6 +425,12 @@ ipcRenderer.on("menuTrigger",function(e,d){
 
 
 
+function hotDKeys(e){
+    if (document.activeElement.type == "text"){
+        return;
+    };
+    if (e.key=='m') updateOnServer();
+}
 
 
 
