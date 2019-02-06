@@ -1,17 +1,19 @@
 ## v2.3.0
 ### NEW:
 1. Warning on quit with unsaved data.
+2. Quickly change between column in swapper mode.
 
 ### FIXED:
-1. Wrong result on repeat/mirror
+1. Wrong result on repeat/mirror.
 2. Dragging not working after mirror/repeat. 
-3. Plotting along X axis doesn't work properly when a lot of points are missing 
+3. Plotting along X axis doesn't work properly when a lot of points are missing .
 4. Dragging doesn't work properly when plot for swap is open.
 5. Loading file for compare doesn't work properly sometime.
-6. Menu from all windows excent the main window is removed
+6. Menu from all windows excent the main window is removed.
 7. 3D viewer doesn't open on full screen sometimes.
 8. Problem with moving average smoothing on endpoints data.
-9. Severeal minor bug fixes and improves
+9. 'Plot along' layout changed.
+9. Severeal minor bug fixes and improves.
 
 
 ## v2.1.0 - v1.3.0
