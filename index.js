@@ -1,10 +1,10 @@
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
-var mainWindow,win;
+var mainWindow;
 process.env.NODE_ENV = 'production';
 
-const {app, BrowserWindow, Menu, ipcMain,shell} = electron;
+const {app, BrowserWindow, Menu, ipcMain,shell, dialog} = electron;
 
 
 function isDev(){
@@ -24,6 +24,12 @@ ipcMain.on("rf",function(e,d){
 })
 
 
+ipcMain.on('checkClose', function(eg,d){
+    mainWindow.destroy();
+    app.quit();
+})
+
+
 app.on('ready', function(){
     mainWindow = new BrowserWindow({show:false,minWidth:1200,icon:path.join(__dirname,"charts.png"), webPreferences: {nodeIntegration: true}});
     mainWindow.maximize();
@@ -33,8 +39,12 @@ app.on('ready', function(){
         slashes:true
     }));
     if(isDev()) mainWindow.webContents.openDevTools();
-    mainWindow.on('closed', function(){
-    app.quit();
+    // mainWindow.on('closed', function(){
+    // app.quit();
+    // })
+    mainWindow.on('close', function(e){
+        e.preventDefault();
+        mainWindow.webContents.send('checkClose','isCloseAble');
     })
     Menu.setApplicationMenu(homeMenu);
     mainWindow.show()

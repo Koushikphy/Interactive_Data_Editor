@@ -7,7 +7,7 @@ const {dialog, BrowserWindow, Menu, MenuItem, app} = remote;
 
 var editorWindow,viewer=[,,],recentLocation = '',recentFiles = [];
 var home = process.env.HOME || process.env.USERPROFILE;
-var show = false;
+var show = false, saved = true;
 
 
 function isDev(){
@@ -317,6 +317,7 @@ function saveData() {
     };
     fs.writeFileSync(save_name,txt);
     showStatus("Data Saved as " + replaceWithHome(save_name))//+" on "+new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric',second:'numeric', hour12: true }))
+    saved = true;
 };
 
 
@@ -331,6 +332,18 @@ ipcRenderer.on("back",function(e,d){
     startDragBehavior();
     updateOnServer();
 })
+
+
+ipcRenderer.on('checkClose', function(e,d){
+    if(!saved)var res = dialog.showMessageBox({
+            type:"warning",
+            title:"Warning!!!",
+            message:"There are some modified data, that you haven't saved yet.\n Are you sure to quit without saving?",
+            buttons:['Yes', "No"]});
+    if(!res) ipcRenderer.send('checkClose','closeIt');
+})
+
+
 
 
 ipcRenderer.on("menuTrigger",function(e,d){
@@ -654,6 +667,7 @@ function repeatMirror(){
     showStatus(`Data ${tmp} ${times} times...`);
     startDragBehavior();
     updateOnServer();
+    saved = false;
 }
 
 
@@ -718,6 +732,7 @@ function dataFiller(){
     showStatus('Missing values are filled...');
     startDragBehavior();
     updateOnServer();
+    saved = false;
 }
 
 
@@ -765,6 +780,7 @@ function filterData(){
     showStatus('Data filtered...');
     startDragBehavior();
     updateOnServer();
+    saved = false;
 }
 
 
@@ -864,6 +880,7 @@ function deleteInterpolate(){
     updateOnServer();
     index=[];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+    saved = false;
 };
 
 
@@ -879,6 +896,7 @@ function autoSmooth() {
         };
     data[th_in][col.z] = dpsy;
     updatePlot();
+    saved = false;
 };
 
 
@@ -893,6 +911,7 @@ function changeSign(){
     updateOnServer();
     index=[];
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+    saved = false;
 };
 
 
@@ -990,6 +1009,7 @@ function startDragBehavior() {
     drag.on("dragend", function() {
         updateFigure();
         updateOnServer();
+        saved = false;
         d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
     });
     d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
@@ -1028,6 +1048,7 @@ function unDo() {
     data[th_in][col.z] = arrY;
     updatePlot();
     updateOnServer();
+    saved = false;
 };
 
 
@@ -1067,4 +1088,5 @@ function updatePlot(both=0) {
     for (var i=0; i<dpsx.length; i++) {
         points[i].handle = {x:dpsx[i], y:dpsy[i] };
     };
+    
 };
