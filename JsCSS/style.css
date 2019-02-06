@@ -7,15 +7,18 @@ body {
     width: 98.5%;
     overflow-x: hidden;
 }
-a{
+
+a {
     margin: 5px;
 }
+
 select {
-    width : 3pc;
+    width: 3pc;
     margin-right: 3px;
     margin-left: 3px;
 }
-input[type=text]{
+
+input[type=text] {
     margin-right: 10px;
     width: 7pc;
 }
@@ -26,34 +29,34 @@ input[type=text]{
 
 #header {
     font-style: italic;
-    font-size: 25px; 
-    color: #000000; 
-    background-color: #d2e0ea; 
+    font-size: 25px;
+    color: #000000;
+    background-color: #d2e0ea;
     text-align: center;
 }
 
-#status{
+#status {
     font-size: 19px;
     position: fixed;
-    bottom: 0; 
-    left: 0; 
-    text-align: left; 
-    background: #e2e2e2; 
-    font-size:large; 
-    border-top-right-radius: 5px; 
+    bottom: 0;
+    left: 0;
+    text-align: left;
+    background: #e2e2e2;
+    font-size: large;
+    border-top-right-radius: 5px;
     box-shadow: 0 0 10px #000;
 }
 
 
 
 .footer {
-   position: fixed;
-   left: 0;
-   bottom: 0;
-   width: 100%;
-   background-color: #babdc1;
-   height: 18px;
-   font-size: 13px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #babdc1;
+    height: 18px;
+    font-size: 13px;
 }
 
 
@@ -62,19 +65,19 @@ input[type=text]{
     display: inline-block;
 }*/
 
-.container{
+.container {
     display: table;
-     margin: 0 auto;
+    margin: 0 auto;
     background: #ffffff
-
 }
-.parent{
+
+.parent {
     position: absolute;
     width: 100%;
     background-color: transparent;
 }
 
-.basediv{
+.basediv {
     position: relative;
     width: 100%;
     height: 100%;
@@ -82,6 +85,7 @@ input[type=text]{
 
 
 }
+
 .floatdiv {
     position: absolute;
     top: 0;
@@ -93,12 +97,13 @@ input[type=text]{
 
 .borders {
     padding-top: 1.5px;
-    padding-bottom : 1.5px;
+    padding-bottom: 1.5px;
 
     border: 1px solid black;
     margin-bottom: 5px;
     width: 37pc;
 }
+
 #figurecontainer {
     margin: 0px;
     width: 100%;
@@ -112,9 +117,7 @@ input[type=text]{
 }
 
 
-
-
-#drag{
+#drag {
     margin-top: 10px;
 }
 
@@ -126,12 +129,12 @@ input[type=text]{
     margin-top: -.8em;
     text-align: center;
     line-height: 1.6em;
-    background: #4CAF50; 
-    color:#ffffff;
+    background: #4CAF50;
+    color: #ffffff;
 }
 
 
-#slider{
+#slider {
     margin-top: 15px;
     margin-bottom: 5px;
     margin-right: 1.5pc;
