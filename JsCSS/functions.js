@@ -7,10 +7,9 @@ const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
 
 var editorWindow, viewer = [, ,],
     recentLocation = '',
-    recentFiles = [];
-var home = process.env.HOME || process.env.USERPROFILE;
-var show = false,
-    saved = true, compFName;
+    recentFiles = [], show = false,
+    saved = true, compFName,
+    home = process.env.HOME || process.env.USERPROFILE;
 
 
 function isDev() {
@@ -18,7 +17,6 @@ function isDev() {
     const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
     return isEnvSet ? getFromEnv : !app.isPackaged
 }
-
 
 
 function versionCheck() {
@@ -386,8 +384,6 @@ ipcRenderer.on('checkClose', function (e, d) {
     });
     if (!res) ipcRenderer.send('checkClose', 'closeIt');
 })
-
-
 
 
 ipcRenderer.on("menuTrigger", function (e, d) {
@@ -1033,9 +1029,6 @@ function selectEvent(event) {
 
 
 
-
-
-
 function updateFigure() {
     var y = [],
         x = [];
@@ -1160,8 +1153,6 @@ function unDo() {
     updateOnServer();
     saved = false;
 };
-
-
 
 
 function updateOnServer() {

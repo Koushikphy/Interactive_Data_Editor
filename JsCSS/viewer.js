@@ -1,12 +1,8 @@
 var figurecontainer = document.getElementById("figurecontainer"), data = [], cols=[0,1,2];
 
 var ldata=[], lIniData=[], ranges=[];
-
-const fs = require("fs");        
-const { remote, ipcRenderer } = require('electron');
-const path = require('path');
-const {dialog, BrowserWindow} = remote;
-const url = require('url');
+      
+const { ipcRenderer } = require('electron');
 
 
 ipcRenderer.on("sdata", function(e,d){

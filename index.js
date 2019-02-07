@@ -127,6 +127,7 @@ const homeMenuTemplate = [{
             }));
             childWindow.maximize();
             childWindow.setMenu(null);
+            if (isDev()) childWindow.webContents.openDevTools();
         }
     },
     {

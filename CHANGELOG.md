@@ -12,8 +12,9 @@
 6. Menu from all windows excent the main window is removed.
 7. 3D viewer doesn't open on full screen sometimes.
 8. Problem with moving average smoothing on endpoints data.
-9. 'Plot along' layout changed.
-9. Severeal minor bug fixes and improves.
+9. 3D viewer not updating after using Moving Average.
+10. 'Plot along' layout changed.
+11. Severeal minor bug fixes and improves.
 
 
 ## v2.1.0 - v1.3.0
