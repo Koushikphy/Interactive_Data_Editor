@@ -5,6 +5,9 @@ const url = require('url');
 const { remote, ipcRenderer, shell } = require('electron');
 const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
 
+
+var undoStack=[], redoStack=[];
+
 var editorWindow, viewer = [, ,],
     recentLocation = '',
     recentFiles = [], show = false,
@@ -411,9 +414,9 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         case "csign":
             changeSign();
             break;
-        case "undo":
-            unDo();
-            break;
+        // case "undo":
+        //     unDo();
+        //     break;
         case "wire":
             openViewer(0);
             break;
@@ -488,13 +491,11 @@ function hotKeys(e) {
         case ",":
             if (th_in == 0) break;
             th_in = th_in - 1
-            $slider.slider("value", th_in)
             sliderChanged();
             break;
         case ".":
             if (th_in == data.length - 1) break;
             th_in = th_in + 1
-            $slider.slider("value", th_in)
             sliderChanged();
             break;
         case "s":
@@ -506,11 +507,18 @@ function hotKeys(e) {
             break;
 
         case "z":
-            if (!e.ctrlKey) {
+            if (e.ctrlKey) {
+                unDo();
+            } else{
                 Plotly.relayout(figurecontainer, {
                     dragmode: "zoom"
                 });
             };
+            break;
+        case 'Z': 
+            if (e.ctrlKey) {
+                reDo();
+            } 
             break;
         case "p":
             swapData();
@@ -615,8 +623,9 @@ function isswap() {
 
 
 
-
+ 
 function sliderChanged() {
+    $slider.slider("value", th_in)
     $ch.text(xName + '=' + data[th_in][col.x][0])
     updatePlot(1);
     startDragBehavior();
@@ -1120,39 +1129,77 @@ function startDragBehavior() {
 
 
 
-function saveOldData() {
-    if (!data.length) return;
-    if (swapper) {
-        olddata = JSON.stringify([th_in, col.z, col.s, data[th_in][col.y], data[th_in][col.z], data[th_in][col.s]]);
-        return;
-    };
-    olddata = JSON.stringify([th_in, col.z, data[th_in][col.y], data[th_in][col.z]]);
-};
+// function saveOldData() {
+//     if (!data.length) return;
+//     if (swapper) {
+//         olddata = JSON.stringify([th_in, col.z, col.s, data[th_in][col.y], data[th_in][col.z], data[th_in][col.s]]);
+//         return;
+//     };
+//     olddata = JSON.stringify([th_in, col.z, data[th_in][col.y], data[th_in][col.z]]);
+// };
 
 
+// function unDo() {
+//     if (!ma) ma = 1;
+//     if (swapper) {
+//         var [th, y1, y2, arrX, arrY1, arrY2] = JSON.parse(olddata);
+//         if ((th != th_in) || (y1 != col.z) || (y2 != col.s)) return false;
+//         saveOldData();
+//         data[th_in][col.y] = arrX;
+//         data[th_in][col.z] = arrY1;
+//         data[th_in][col.s] = arrY2;
+//         updatePlot();
+//         updateOnServer();
+//         return
+//     }
+//     var [th, dc, arrX, arrY] = JSON.parse(olddata);
+//     if ((th != th_in) || (dc != col.z)) return false;
+//     saveOldData();
+//     data[th_in][col.y] = arrX;
+//     data[th_in][col.z] = arrY;
+//     updatePlot();
+//     updateOnServer();
+//     saved = false;
+// };
+//###################################################
+//no swap implimentation
+function saveOldData(){
+    if(!data.length) return;
+    redoStack = [];
+    olddata = JSON.stringify([th_in, col, data[th_in]]);
+    if (undoStack.length==5) undoStack.splice(0,1);
+    undoStack.push(olddata);
+}
 
-function unDo() {
-    if (!ma) ma = 1;
-    if (swapper) {
-        var [th, y1, y2, arrX, arrY1, arrY2] = JSON.parse(olddata);
-        if ((th != th_in) || (y1 != col.z) || (y2 != col.s)) return false;
-        saveOldData();
-        data[th_in][col.y] = arrX;
-        data[th_in][col.z] = arrY1;
-        data[th_in][col.s] = arrY2;
-        updatePlot();
-        updateOnServer();
-        return
-    }
-    var [th, dc, arrX, arrY] = JSON.parse(olddata);
-    if ((th != th_in) || (dc != col.z)) return false;
-    saveOldData();
-    data[th_in][col.y] = arrX;
-    data[th_in][col.z] = arrY;
-    updatePlot();
+
+function reDo(){
+    if (!redoStack.length) return;
+    olddata = redoStack.pop();
+    undoStack.push(JSON.stringify([th_in, col, data[th_in]]));
+    doIt();
+}
+
+function unDo(){
+    if (!ma) ma=1;
+    if (!undoStack.length) return;
+    olddata = undoStack.pop()
+    redoStack.push(JSON.stringify([th_in, col, data[th_in]]));
+    doIt();
+}
+
+
+function doIt(){
+    var arr;
+    var tmp= th_in;
+    [th_in, col, arr] = JSON.parse(olddata);
+    zCol.selectedIndex = col.z;
+    data[th_in] = arr;
+    updatePlot(1);
+    startDragBehavior();
     updateOnServer();
     saved = false;
-};
+}
+//#################################################################
 
 
 function updateOnServer() {
