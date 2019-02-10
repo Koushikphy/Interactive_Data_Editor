@@ -109,11 +109,7 @@
     <script src="../JsCSS/plotSetup.min.js"></script>
     <script>
         var menu = Menu.getApplicationMenu();
-        particlesJS.load('particle', '../particles.json');
         versionCheck();
-
-
-
 
         var fl = JSON.parse(localStorage.getItem("files"));
         if (fl !== null) {
@@ -145,8 +141,6 @@
         pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
         points = pointscontainer.getElementsByTagName("path");
         figurecontainer.on("plotly_selected", selectEvent);
-
-
 
         $(function () {
             $slider.slider({
