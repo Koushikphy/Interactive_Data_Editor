@@ -148,7 +148,7 @@ const homeMenuTemplate = [{
         accelerator: 'CmdOrCtrl+R',
         click() {
             mainWindow.reload();
-            for (let i of ['save', 'saveas', 'cs', 'ma', 'cg', 'un', 'wire', 'surf', "spr", 'openc', 'pamh', 'pax']) {
+            for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'openc', 'pamh', 'pax']) {
                 Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
             }
             Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
