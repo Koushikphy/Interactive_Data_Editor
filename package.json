@@ -1,5 +1,5 @@
 {
-  "name": "Interactive_Data_Editor",
+  "name": "interactive_data_editor",
   "version": "2.1.0",
   "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
@@ -46,11 +46,17 @@
   },
   "files": [
     "**/*",
-    "build/icon.*"
+    "build/icon.*",
+    "!JsCSS/functions.js",
+    "!jsCSS/plotSetup.js",
+    "!jsCSS/style.css",
+    "!jsCSS/viewer.js"
   ],
   "devDependencies": {
     "electron": "^4.0.0",
     "electron-builder": "^20.38.4"
   },
-  "dependencies":{"request": "^2.88.0"}
+  "dependencies": {
+    "request": "^2.88.0"
+  }
 }

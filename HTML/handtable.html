@@ -1,128 +1,132 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Interactive Data Editor</title>
-	<link href="../JsCSS/style.css" rel="stylesheet">
-	<link rel="stylesheet" href="../JsCSS/jquery-ui.min.css">
-	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-	<script src="../JsCSS/jquery.min.js"></script>
-	<script src="../JsCSS/jquery-ui.min.js"></script>
-	<script src="../handsontable/dist/handsontable.full.min.js"></script>
-	<link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+    <title>Interactive Data Editor</title>
+    <link href="../JsCSS/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../JsCSS/jquery-ui.min.css">
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="../JsCSS/jquery.min.js"></script>
+    <script src="../JsCSS/jquery-ui.min.js"></script>
+    <script src="../handsontable/dist/handsontable.full.min.js"></script>
+    <link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
 </head>
+
 <body>
 
 
-<div id ="container">
-<label id="full" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
-<input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
-<div id="slider" style="background: #eaeaea; display: none">
-  <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
-</div>
-</div>
-<div id="table"></div>
-<script >
-    const { remote, ipcRenderer } = require('electron');
-    const {dialog, BrowserWindow,Menu} = remote;
-	var full = document.getElementById("full");
-	var xcol =[],data=[], hot,columns=[],xName;
-    var btn = document.getElementById("btn");
-    btn.style.visibility = "hidden";
-    var event,th_in=0,
-        $ch = $("#custom-handle"),
-        $slider = $( "#slider" );
-
-
-
-
-
-
-	ipcRenderer.on("slider",function (e,d) {
-        e.sender.send("test","2u3i")
-		var [t,_,_] = d;
-		xName = t;
-        xcol = d[1];
-        data = d[2].map(x=>transpose(x));
-        if(data.length!=1){
-			full.innerHTML=`Drag the slider to change "${xName}" value:`
-			$slider.show()
-              $( function() {
-                $slider.slider({min:0,max:data.length-1,step:1,
-                    slide: function( event, ui ) {
-                        th_in = ui.value;
-                        sliderChanged();
-                  }
-                });
-              });
-
-
-
-		} else {
-			full.style.display="none";
-		}
-        var height = window.innerHeight -
-                    document.getElementById("container").offsetTop-2-
-                    document.getElementById("table").offsetTop;
-
-		
-		for (var i = data[0][0].length; i>0 ; i--) {
-			columns.push({type:"numeric"})
-		};
-        $ch.text(xName+'='+ data[0][0][xcol]);
-		hot = new Handsontable(document.getElementById("table"), {
-			data: data[0],
-            height: height,
-			columns:columns,
-			rowHeaders: true,
-			colHeaders: true,
-			contextMenu:true,
-			columnSorting: true,
-            manualColumnResize: true,
-            manualRowResize: true,
-            afterChange : function change(e,d){if(d!="loadData")btn.style.visibility = "visible"}
-		});
-
-	})
-
-
-	function sliderChanged() {
-		$ch.text(xName+'='+ data[th_in][0][xcol]);
-		hot.updateSettings({data:data[th_in]})
-	};
-
-	function transpose(m) {
-    return m[0].map((_,i) => m.map(x => x[i]));
-    };
-
-    function updateData(){
+    <div id="container">
+        <label id="full" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
+        <input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
+        <div id="slider" style="background: #eaeaea; display: none">
+            <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
+        </div>
+    </div>
+    <div id="table"></div>
+    <script>
+        const { remote, ipcRenderer } = require('electron');
+        const { dialog, BrowserWindow, Menu } = remote;
+        var full = document.getElementById("full");
+        var xcol = [], data = [], hot, columns = [], xName;
+        var btn = document.getElementById("btn");
         btn.style.visibility = "hidden";
-            ipcRenderer.send("back",data);
-    }
+        var event, th_in = 0,
+            $ch = $("#custom-handle"),
+            $slider = $("#slider");
 
 
-function hotKeys(e){
-    if (document.activeElement.type == "text"){
-        return;
-    };
-    switch (e.key){
-        case ",":
-            if(th_in==0) break;
-            th_in = th_in-1
-            $slider.slider("value",th_in)
-            sliderChanged();
-            break;
-        case ".":
-            if(th_in==data.length-1) break;
-            th_in = th_in+1
-            $slider.slider("value",th_in)
-            sliderChanged();
-            break;
-    };
-};
-$(window).keydown(hotKeys);
 
-</script>
+
+
+
+        ipcRenderer.on("slider", function (e, d) {
+            e.sender.send("test", "2u3i")
+            var [t, _, _] = d;
+            xName = t;
+            xcol = d[1];
+            data = d[2].map(x => transpose(x));
+            if (data.length != 1) {
+                full.innerHTML = `Drag the slider to change "${xName}" value:`
+                $slider.show()
+                $(function () {
+                    $slider.slider({
+                        min: 0, max: data.length - 1, step: 1,
+                        slide: function (event, ui) {
+                            th_in = ui.value;
+                            sliderChanged();
+                        }
+                    });
+                });
+
+
+
+            } else {
+                full.style.display = "none";
+            }
+            var height = window.innerHeight -
+                document.getElementById("container").offsetTop - 2 -
+                document.getElementById("table").offsetTop;
+
+
+            for (var i = data[0][0].length; i > 0; i--) {
+                columns.push({ type: "numeric" })
+            };
+            $ch.text(xName + '=' + data[0][0][xcol]);
+            hot = new Handsontable(document.getElementById("table"), {
+                data: data[0],
+                height: height,
+                columns: columns,
+                rowHeaders: true,
+                colHeaders: true,
+                contextMenu: true,
+                columnSorting: true,
+                manualColumnResize: true,
+                manualRowResize: true,
+                afterChange: function change(e, d) { if (d != "loadData") btn.style.visibility = "visible" }
+            });
+
+        })
+
+
+        function sliderChanged() {
+            $ch.text(xName + '=' + data[th_in][0][xcol]);
+            hot.updateSettings({ data: data[th_in] })
+        };
+
+        function transpose(m) {
+            return m[0].map((_, i) => m.map(x => x[i]));
+        };
+
+        function updateData() {
+            btn.style.visibility = "hidden";
+            ipcRenderer.send("back", data);
+        }
+
+
+        function hotKeys(e) {
+            if (document.activeElement.type == "text") {
+                return;
+            };
+            switch (e.key) {
+                case ",":
+                    if (th_in == 0) break;
+                    th_in = th_in - 1
+                    $slider.slider("value", th_in)
+                    sliderChanged();
+                    break;
+                case ".":
+                    if (th_in == data.length - 1) break;
+                    th_in = th_in + 1
+                    $slider.slider("value", th_in)
+                    sliderChanged();
+                    break;
+            };
+        };
+        $(window).keydown(hotKeys);
+
+    </script>
 
 
 </body>
+
 </html>
