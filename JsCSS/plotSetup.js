@@ -17,8 +17,7 @@ var data = [], compdata = [], olddata = "",
 $ch = $("#custom-handle")
 
 
-$(window).keydown(hotKeys);
-$(window).keyup(hotDKeys);
+
 
 var layout = {
     autosize: true,

@@ -47,10 +47,8 @@
   "files": [
     "**/*",
     "build/icon.*",
-    "!JsCSS/functions.js",
-    "!jsCSS/plotSetup.js",
-    "!jsCSS/style.css",
-    "!jsCSS/viewer.js"
+    "!JsCSS/*.*",
+    "JsCSS/*.min.js"
   ],
   "devDependencies": {
     "electron": "^4.0.0",

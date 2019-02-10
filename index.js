@@ -168,52 +168,17 @@ const homeMenuTemplate = [{
 },
 {
     label: "Edit",
-    submenu: [{
-        label: "CS somoothing",
-        id: 'cs',
-        enabled: false,
-        accelerator: 'D',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "cs");
+    submenu: [
+        {
+            label: "Points not movable horaizontally",
+            enabled: false,
+            checked: true,
+            type: "checkbox",
+            id: "pamh",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "pamh")
+            }
         }
-    },
-    {
-        label: "MA Smoothing",
-        id: 'ma',
-        enabled: false,
-        accelerator: 'M',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "ma");
-        }
-    },
-    {
-        label: "Change Sign",
-        enabled: false,
-        id: 'cg',
-        accelerator: 'C',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "csign");
-        }
-    },
-    {
-        label: "Undo/Redo",
-        enabled: false,
-        id: 'un',
-        accelerator: 'CmdOrCtrl+Z',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "undo");
-        }
-    },
-    {
-        label: "Points not movable horaizontally",
-        enabled: false,
-        checked: true,
-        type: "checkbox",
-        id: "pamh",
-        click() {
-            mainWindow.webContents.send("menuTrigger", "pamh")
-        }
-    }
     ]
 },
 {
