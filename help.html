@@ -1,159 +1,184 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Help</title>
-        <style type="text/css" media="screen">
-            *{
-                margin: 0px 0px 0px 0px;
-                padding: 0px 0px 0px 0px;
-            }
+    <title>Help</title>
+    <style type="text/css" media="screen">
+        * {
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+        }
 
-            body, html {
-                padding: 3px 3px 3px 3px;
+        body,
+        html {
+            padding: 3px 3px 3px 3px;
 
-                background-color: #D8DBE2;
+            background-color: #D8DBE2;
 
-                font-family: Verdana, sans-serif;
-                font-size: 13pt;
-                text-align: center;
-            }
-            .main_page {
-                position: relative;
-                display: table;
+            font-family: Verdana, sans-serif;
+            font-size: 13pt;
+            text-align: center;
+        }
 
-                width: 800px;
+        .main_page {
+            position: relative;
+            display: table;
 
-                margin-bottom: 3px;
-                margin-left: auto;
-                margin-right: auto;
-                padding: 0px 0px 0px 0px;
+            width: 800px;
 
-                border-width: 2px;
-                border-color: #212738;
-                border-style: solid;
+            margin-bottom: 3px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0px 0px 0px 0px;
 
-                background-color: #FFFFFF;
+            border-width: 2px;
+            border-color: #212738;
+            border-style: solid;
 
-                text-align: left;
-            }
-            .content_section {
-                margin: 3px 3px 3px 3px;
+            background-color: #FFFFFF;
 
-                background-color: #FFFFFF;
+            text-align: left;
+        }
 
-                text-align: left;
-            }
-            .section_header {
-                padding: 3px 6px 3px 5px;
+        .content_section {
+            margin: 3px 3px 3px 3px;
 
-                background-color: #515651;
+            background-color: #FFFFFF;
 
-                color: #FFFFFF;
-                font-weight: bold;
-                font-size: 111%;
-                text-align: left;
-            }
+            text-align: left;
+        }
 
-            .section_header_grey {
-                background-color: #5d5a00;
-                text-align: center;
-            }
+        .section_header {
+            padding: 3px 6px 3px 5px;
 
-            .footer {
-                 width:100%;
-                 height:30px;
-                 font-family: 'Lobster';
-                 font-style: italic; 
-                 font-size: 21px; 
-            }
+            background-color: #515651;
 
-            .points{
-                 width:100%;
-                 font-style: italic; 
-                 font-size: 16px; 
-                 color: #db4437;
-                 font-weight: bold;
-                margin : 2px 0px 2px 5px;
-                text-decoration: underline;
-            }
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 111%;
+            text-align: left;
+        }
 
-            .info {
-                margin: 0px 2px 5px 13px;
-                font-size: 15px;
-                text-align: justify;
-            }
+        .section_header_grey {
+            background-color: #5d5a00;
+            text-align: center;
+        }
 
-            .header {
-                margin : 10px 9px 13px 5px;
-                text-align: justify;
-            }
-            .short{
-                display: inline-block;
-                width:17pc  ;
-                font-style: italic; 
-                font-size: 15px; 
-                color: #db4437;
-                font-weight: bold;
-                margin : 3px 0px 2px 5px;
-                text-decoration: underline;
-            }
+        .footer {
+            width: 100%;
+            height: 30px;
+            font-family: 'Lobster';
+            font-style: italic;
+            font-size: 21px;
+        }
 
-            .dom{
+        .points {
+            width: 100%;
+            font-style: italic;
+            font-size: 16px;
+            color: #db4437;
+            font-weight: bold;
+            margin: 2px 0px 2px 5px;
+            text-decoration: underline;
+        }
 
-                font-family: "Courier New";
-                font-weight: bold;
-            }
-        </style>
+        .info {
+            margin: 0px 2px 5px 13px;
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .header {
+            margin: 10px 9px 13px 5px;
+            text-align: justify;
+        }
+
+        .short {
+            display: inline-block;
+            width: 17pc;
+            font-style: italic;
+            font-size: 15px;
+            color: #db4437;
+            font-weight: bold;
+            margin: 3px 0px 2px 5px;
+            text-decoration: underline;
+        }
+
+        .dom {
+
+            font-family: "Courier New";
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-        <div class="main_page">
-            <div class="section_header section_header_grey" style="font-size: 23px "><i>Interactive Data Editor</i></div>
-<p class="header">This Software can be used to interactively edit and plot any 2D or gridded 3D data. In case of editing a gridded 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your choice. While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D viewer windows. While saving, by default edited data will be saved in the same location with a added '_new' suffix or you can save in your desired location and name through <label class="dom" style="font-size: 16px">Save As</label>. Editing scattered 3D data is not supported as of now. <br> 
-</label></p>
-            <div class="content_section ">
+    <div class="main_page">
+        <div class="section_header section_header_grey" style="font-size: 23px "><i>Interactive Data Editor</i></div>
+        <p class="header">This Software can be used to interactively edit and plot any 2D or gridded 3D data. In case of
+            editing a gridded 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your
+            choice. While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D viewer
+            windows. While saving, by default edited data will be saved in the same location with a added '_new' suffix
+            or you can save in your desired location and name through <label class="dom" style="font-size: 16px">Save
+                As</label>. Editing scattered 3D data is not supported as of now. <br>
+            </label></p>
+        <div class="content_section ">
 
-            <div >
+            <div>
                 <div class="section_header ">
                     Features:
                 </div>
-                
-                    <div class="points">1. Dragging by mouse :</div> 
-                    <p class="info">Any one or multiple points can be moved by dragging it with mouse. By default dragging by mouse will move the point only along Y axis, X coordinate will be locked. Uncheck the <label class="dom">Points not movable horizontally</label> to move it freely along any direction. If multiple points is selected, then dragging any selected points will move all of them.</p>
+
+                <div class="points">1. Dragging by mouse :</div>
+                <p class="info">Any one or multiple points can be moved by dragging it with mouse. By default dragging
+                    by mouse will move the point only along Y axis, X coordinate will be locked. Uncheck the <label
+                        class="dom">Points not movable horizontally</label> to move it freely along any direction. If
+                    multiple points is selected, then dragging any selected points will move all of them.</p>
 
 
-                    <div class="points">2. Smooth out : </div>
-                    <p class="info">You can smooth out a fluctuating/spiky portion of the data using two methods here : Spline Interpolation and Moving Average method by pressing the assigned keys. Choose either one of them depending on what kind of irregularities you want to smooth out.</p>
+                <div class="points">2. Smooth out : </div>
+                <p class="info">You can smooth out a fluctuating/spiky portion of the data using two methods here :
+                    Spline Interpolation and Moving Average method by pressing the assigned keys. Choose either one of
+                    them depending on what kind of irregularities you want to smooth out.</p>
 
 
-                    <div class="points">3. Change Sign: </div>
-                    <p class="info">This will change the Y coordinate sign of the selected points.</p>
+                <div class="points">3. Change Sign: </div>
+                <p class="info">This will change the Y coordinate sign of the selected points.</p>
 
 
-                    <div class="points">3. Fill Missing Values: </div>
-                    <p class="info">Any Missing points on the grid can be filled with a interpolator.</p>                    
+                <div class="points">3. Fill Missing Values: </div>
+                <p class="info">Any Missing points on the grid can be filled with a interpolator.</p>
 
-                    <div class="points">4. Extend Data : </div>
-                    <p class="info">Data on the existing grid can be extended by repeat or mirror any desired number of times.</p>
+                <div class="points">4. Extend Data : </div>
+                <p class="info">Data on the existing grid can be extended by repeat or mirror any desired number of
+                    times.</p>
 
 
-                    <div class="points">5. Filter Data: </div>
-                    <p class="info">You can filter the data i.e replace data values with a given condition.</p>
+                <div class="points">5. Filter Data: </div>
+                <p class="info">You can filter the data i.e replace data values with a given condition.</p>
 
-                    <div class="points">6. Swap Data: </div>
-                    <p class="info">You can swap data between two lines or surfaces.</p>
+                <div class="points">6. Swap Data: </div>
+                <p class="info">You can swap data between two lines or surfaces.</p>
 
-                    <div class="points">7. Edit in spreadsheet: </div>
-                    <p class="info">Along with the graphical manipulation, this software also house a powerful spreadsheet like editor with basic features similar to that of MS Excel and others. This is very useful for things like copying, inserting, sorting etc. Load the spreadsheet from the main plot window and update the data after editing.</p>
+                <div class="points">7. Edit in spreadsheet: </div>
+                <p class="info">Along with the graphical manipulation, this software also house a powerful spreadsheet
+                    like editor with basic features similar to that of MS Excel and others. This is very useful for
+                    things like copying, inserting, sorting etc. Load the spreadsheet from the main plot window and
+                    update the data after editing.</p>
 
-                    <div class="points">8. Undo: </div>
-                    <p class="info">Any immediate changes to the plot can be undone/redone. At present only one step undo is provided.</p>
+                <div class="points">8. Undo/Redo: </div>
+                <p class="info">Any immediate changes to the plot can be undone/redone. You can undo/redo upto 5 steps.
+                </p>
 
-                    <div class="points">9. Data comparison: </div>
-                    <p class="info">A second data/plot can be added for comparing the edits made to the first plot. Load the data for this through the specified button and check/uncheck the <label class="dom">Compare Date</label> to show/hide the plot. This second plot is not editable.</p>
+                <div class="points">9. Data comparison: </div>
+                <p class="info">A second data/plot can be added for comparing the edits made to the first plot. Load the
+                    data for this through the specified option in file menu and check/uncheck the <label class="dom">
+                        Show compare date
+                    </label> to show/hide the plot. This second plot is not editable.</p>
 
-                    <div class="points">10. 3D Plotter: </div>
-                    <p class="info">A direct 3D plotter for data file is also provided with this software.</p>
+                <div class="points">10. 3D Plotter: </div>
+                <p class="info">A direct 3D plotter for data file is also provided with this software.</p>
 
 
 
@@ -162,23 +187,26 @@
                 </div>
 
                 <div style="font-size: 15px">
-                <label class="short">1. "&lt;space>" :</label> Auto-scale both axes.<br>
-                <label class="short">2. "z" :</label> Zoom mode.<br>
-                <label class="short">3. "s" :</label> Selection mode.<br>
-                <label class="short">4. "d" :</label> Smooth Out using Spline Interpolation.<br>
-                <label class="short">5. "m"</label> Smooth Out the selected part of the data using Moving <label class="short"> </label> Average method. Press & hold the button to apply the method <label class="short"> </label> repeatedly to make the data more smoother.
-                <label class="short">6. "c" :</label> Change Sign.<br>
-                <label class="short">7. "ctrl+z":</label> Undo/Redo.<br>
-                <label class="short">8. "&lt;dot>":</label> Move slider up.<br>
-                <label class="short">9. "&lt;comma>":</label> Move slider down.<br>
-                <label class="short">10. "p":</label> Swap data between two lines or surface.<br>
+                    <label class="short">1. "&lt;space>" :</label> Auto-scale both axes.<br>
+                    <label class="short">2. "z" :</label> Zoom mode.<br>
+                    <label class="short">3. "s" :</label> Selection mode.<br>
+                    <label class="short">4. "d" :</label> Smooth Out using Spline Interpolation.<br>
+                    <label class="short">5. "m"</label> Smooth Out the selected part of the data using Moving <label
+                        class="short"> </label> Average method. Press & hold the button to apply the method <label
+                        class="short"> </label> repeatedly to make the data more smoother.
+                    <label class="short">6. "c" :</label> Change Sign.<br>
+                    <label class="short">7. "ctrl+z":</label> Undo<br>
+                    <label class="short">"shift+ctrl+z"</label> Redo<br>
+                    <label class="short">8. "&lt;dot>":</label> Move slider up.<br>
+                    <label class="short">9. "&lt;comma>":</label> Move slider down.<br>
+                    <label class="short">10. "p":</label> Swap data between two lines or surface.<br>
 
-</div>
+                </div>
 
 
-            </div>
             </div>
         </div>
+    </div>
 
 
 
@@ -186,4 +214,5 @@
 
 
 </body>
+
 </html>

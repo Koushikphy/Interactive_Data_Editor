@@ -6,9 +6,7 @@ const { remote, ipcRenderer, shell } = require('electron');
 const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
 
 
-var undoStack=[], redoStack=[];
-
-var editorWindow, viewer = [, ,],
+var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     recentLocation = '',
     recentFiles = [], show = false,
     saved = true, compFName,
@@ -509,16 +507,16 @@ function hotKeys(e) {
         case "z":
             if (e.ctrlKey) {
                 unDo();
-            } else{
+            } else {
                 Plotly.relayout(figurecontainer, {
                     dragmode: "zoom"
                 });
             };
             break;
-        case 'Z': 
+        case 'Z':
             if (e.ctrlKey) {
                 reDo();
-            } 
+            }
             break;
         case "p":
             swapData();
@@ -623,7 +621,7 @@ function isswap() {
 
 
 
- 
+
 function sliderChanged() {
     $slider.slider("value", th_in)
     $ch.text(xName + '=' + data[th_in][col.x][0])
@@ -1163,24 +1161,24 @@ function startDragBehavior() {
 // };
 //###################################################
 //no swap implimentation
-function saveOldData(){
-    if(!data.length) return;
+function saveOldData() {
+    if (!data.length) return;
     redoStack = [];
     olddata = JSON.stringify([th_in, col, data[th_in]]);
-    if (undoStack.length==5) undoStack.splice(0,1);
+    if (undoStack.length == 5) undoStack.splice(0, 1);
     undoStack.push(olddata);
 }
 
 
-function reDo(){
+function reDo() {
     if (!redoStack.length) return;
     olddata = redoStack.pop();
     undoStack.push(JSON.stringify([th_in, col, data[th_in]]));
     doIt();
 }
 
-function unDo(){
-    if (!ma) ma=1;
+function unDo() {
+    if (!ma) ma = 1;
     if (!undoStack.length) return;
     olddata = undoStack.pop()
     redoStack.push(JSON.stringify([th_in, col, data[th_in]]));
@@ -1188,9 +1186,9 @@ function unDo(){
 }
 
 
-function doIt(){
+function doIt() {
     var arr;
-    var tmp= th_in;
+    var tmp = th_in;
     [th_in, col, arr] = JSON.parse(olddata);
     zCol.selectedIndex = col.z;
     data[th_in] = arr;
