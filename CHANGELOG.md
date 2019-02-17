@@ -2,21 +2,22 @@
 ### NEW:
 1. Warning on quit with unsaved data.
 2. Quickly change between column in swapper mode.
-3. Undo/Redo support is increased upto 5 stps. Also different keyboard shorcuts are assigned for undo/redo.
+3. Undo/Redo support is increased up-to 5 steps. Also different keyboard shortcuts are assigned for undo/redo.
 4. Copy & Paste previous/next X or Y value.
 
 ### FIXED:
 1. Wrong result on repeat/mirror.
 2. Dragging not working after mirror/repeat. 
-3. Plotting along X axis doesn't work properly when a lot of points are missing .
-4. Dragging doesn't work properly when plot for swap is open.
+3. Plotting along X axis doesn't work properly with missing data.
+4. Dragging doesn't work properly when swapper is open.
 5. Loading file for compare doesn't work properly sometime.
-6. Menu from all windows excent the main window is removed.
+6. Menu from all windows except the main window is removed.
 7. 3D viewer doesn't open on full screen sometimes.
 8. Problem with moving average smoothing on endpoints data.
 9. 3D viewer not updating after using Moving Average.
 10. 'Plot along' layout changed.
-11. Severeal minor bug fixes and improves.
+11. Several minor bug fixes and improves.
+
 
 
 ## v2.1.0 - v1.3.0
