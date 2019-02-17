@@ -2,7 +2,8 @@
 ### NEW:
 1. Warning on quit with unsaved data.
 2. Quickly change between column in swapper mode.
-3. Undo/Redo support is increased upto 5 stps and is seperated to different keyboard shorcuts.
+3. Undo/Redo support is increased upto 5 stps. Also different keyboard shorcuts are assigned for undo/redo.
+4. Copy & Paste previous/next X or Y value.
 
 ### FIXED:
 1. Wrong result on repeat/mirror.
