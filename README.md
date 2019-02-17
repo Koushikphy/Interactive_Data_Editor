@@ -1,4 +1,6 @@
-<img src="./charts.png" align="center" alt="Interactive Data Editor" width="100" height='100'> <span style='font-size:2pc;'>Interactive Data Editor</span>
+<!-- <img src="./charts.png" align="center" alt="Interactive Data Editor" width="100" height='100'>  -->
+
+# Interactive Data Editor
 ### <i>A Software to interactively edit data in a graphical manner.</i>
 
 
@@ -10,9 +12,12 @@
 
 We all work with data every day. Depending on the source, your data may not always be regular, smooth and uniform. Obviously you cant just change your result as you desire, but sometimes you can smooth out that spiky or irregular portion. This software lets you do those editing very easily in a graphical way including many others useful data operation.
 
+
+
+
 ## Table of Contents:
   - [Main Features](#main-features)
-  - [Download](#download)
+  - [Download & Installation](#download-&-installation)
   - [Feedback](#feedback)
   - [Copyright and license](#copyright-and-license)
 
@@ -33,7 +38,7 @@ We all work with data every day. Depending on the source, your data may not alwa
 13. *__And many more...__*
 
 
-## Download:
+## Download & Installation:
 Download the latest version of the sofware appropriate for your system from the [Release Section](https://github.com/Koushikphy/Interactive-Data-Editor/releases).  Windows users download the msi (preffered) or exe installer. If you are on any Linux distro, download the AppImage, make it executable and run it, no installation required. Ubuntu users can install the debian installer too. 
 
 ## Feedback:
