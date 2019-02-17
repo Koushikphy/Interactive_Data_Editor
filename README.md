@@ -1,22 +1,20 @@
-<img src="./charts.png" align="center" alt="Interactive Data Editor" width="100" height='100'>
-
-# Interactive-Data-Editor
+<img src="./charts.png" align="center" alt="Interactive Data Editor" width="100" height='100'> <span style='font-size:2pc;'>Interactive Data Editor</span>
 ### <i>A Software to interactively edit data in a graphical manner.</i>
 
-<img src="" align="center" alt="Interactive Data Editor">
 
 [![Version](https://img.shields.io/badge/version-2.3.0-brightgreen.svg)]()
 [![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Koushikphy/Interactive-Data-Editor/blob/master/LICENSE)
 
+<img src="" align="center" alt="Interactive Data Editor">
+
+
 We all work with data every day. Depending on the source, your data may not always be regular, smooth and uniform. Obviously you cant just change your result as you desire, but sometimes you can smooth out that spiky or irregular portion. This software lets you do those editing very easily in a graphical way including many others useful data operation.
 
-
-- [Interactive-Data-Editor](#interactive-data-editor)
-    - [<i>A Software to interactively edit data in a graphical manner.</i>](#ia-software-to-interactively-edit-data-in-a-graphical-manneri)
-  - [Main Features:](#main-features)
-  - [Download:](#download)
-  - [Feedback:](#feedback)
-  - [Copyright and license:](#copyright-and-license)
+## Table of Contents:
+  - [Main Features](#main-features)
+  - [Download](#download)
+  - [Feedback](#feedback)
+  - [Copyright and license](#copyright-and-license)
 
 ## Main Features:
 
