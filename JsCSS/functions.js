@@ -6,6 +6,7 @@ const { remote, ipcRenderer, shell } = require('electron');
 const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
 
 
+
 var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     recentLocation = '',
     recentFiles = [], show = false,

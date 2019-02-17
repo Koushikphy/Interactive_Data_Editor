@@ -1,3 +1,21 @@
+var copyVar;
+
+function copyThis() {
+    copyVar = JSON.stringify(data[th_in]);
+}
+
+function pasteThis() {
+    saveOldData();
+    data[th_in] = JSON.parse(copyVar);
+    updatePlot(1);
+    updateOnServer();
+    saved = false;
+    startDragBehavior();
+}
+
+
+
+
 
 function swapData() {
     if (!index.length) return;
