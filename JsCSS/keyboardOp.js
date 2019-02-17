@@ -152,7 +152,16 @@ function hotKeys(e) {
             break;
 
         case "c":
-            changeSign();
+            if (e.ctrlKey) {
+                copyThis();
+            } else {
+                changeSign();
+            }
+            break;
+        case 'v':
+            if (e.ctrlKey) {
+                pasteThis();
+            }
             break;
     };
 };
