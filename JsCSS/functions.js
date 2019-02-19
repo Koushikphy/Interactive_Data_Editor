@@ -589,7 +589,7 @@ function clamp(x, lower, upper) {
 };
 
 
-var oldX, oldCord, innd;
+var oldX, oldCord, indd;
 
 function startDragBehavior() {
     var d3 = Plotly.d3;
@@ -599,11 +599,9 @@ function startDragBehavior() {
         var transform = d3.select(this).attr("transform");
         var translate = transform.substring(10, transform.length - 1).split(/,| /);
         if (index.length) {
-            if (!swapper) {
-                [_, _, oldX, oldCord] = JSON.parse(olddata);
-            } else {
-                [_, _, _, oldX, oldCord, _] = JSON.parse(olddata);
-            }
+            // var [_, _, dat] = JSON.parse(olddata);
+            oldX = dpsx;
+            oldCord = dpsy;
             indd = oldX.indexOf(this.handle.x);
         };
         return {
