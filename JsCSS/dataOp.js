@@ -6,7 +6,12 @@ function copyThis() {
 
 function pasteThis() {
     saveOldData();
-    data[th_in] = JSON.parse(copyVar);
+    var tmp = JSON.parse(copyVar);
+    for (let i = 0; i < tmp.length; i++) {
+        if(i != col.x){
+            data[th_in][i] = tmp[i];
+        }
+    }
     updatePlot(1);
     updateOnServer();
     saved = false;
