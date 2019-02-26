@@ -29,6 +29,7 @@ function swapData() {
         [data[th_in][col.z][ind], data[th_in][col.s][ind]] = [data[th_in][col.s][ind], data[th_in][col.z][ind]]
     }
     updatePlot();
+    updateOnServer();
 }
 
 
