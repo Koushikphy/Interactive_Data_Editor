@@ -120,8 +120,9 @@ function fileLoader() {
     const fname = dialog.showOpenDialog({
         defaultPath: recentLocation,
         properties: ['openFile']
-    })[0];
-    fileReader(fname);
+    });
+
+    if(fname !== undefined) fileReader(fname[0]);
 }
 
 
@@ -181,11 +182,13 @@ function fileReader(fname) {
 
 function compfileLoader() {
     refdat = 1;
-    const fname = dialog.showOpenDialog({
+    var fname = dialog.showOpenDialog({
         defaultPath: recentLocation,
         properties: ['openFile']
-    })[0];
+    });
 
+    if(fname === undefined) return;
+    fname = fname[0];
     compdata = fs.readFileSync(fname, "utf8");
     compdata = parseData(compdata);
     if (swapped) compdata = expRotate(compdata);
@@ -276,11 +279,14 @@ function saveAs() {
         alert("Nothing to save!");
         return
     }
-    save_name = dialog.showSaveDialog({
+    var tmp_name = dialog.showSaveDialog({
         title: "Save As:",
         defaultPath: save_name
     });
-    saveData();
+    if(tmp_name !== undefined){
+        save_name = tmp_name;
+        saveData();
+    }
 }
 
 
