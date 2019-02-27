@@ -80,3 +80,25 @@ var iniPointsC = {
 };
 
 
+Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
+    displaylogo: false,
+    modeBarButtonsToRemove: ['sendDataToCloud']
+});
+pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
+points = pointscontainer.getElementsByTagName("path");
+figurecontainer.on("plotly_selected", selectEvent);
+
+
+
+$(function () {
+    $slider.slider({
+        min: 0,
+        max: 0,
+        step: 1,
+        slide: function (event, ui) {
+            th_in = ui.value;
+            sliderChanged();
+        }
+    });
+});
+var em2px = $ch.width() / 3

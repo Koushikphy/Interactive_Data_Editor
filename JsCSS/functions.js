@@ -213,8 +213,8 @@ function fileReader(fname) {
     recentMenu();
 
 
-    menu.getMenuItemById("pax").checked = false;
-    menu.getMenuItemById("pay").checked = true;
+    menu.getMenuItemById("pax").visible = true;
+    menu.getMenuItemById("pay").visible = false;
     menu.getMenuItemById("compf").visible = false;
     menu.getMenuItemById("swapen").visible = true;
     menu.getMenuItemById("swapex").visible = false;
@@ -230,7 +230,9 @@ function fileReader(fname) {
     for (let i of mn) {
         menu.getMenuItemById(i).enabled = true;
     }
-
+    var [n1, n2] = ["Y", "X"];
+    $ch.text(xName + '=' + data[th_in][col.x][0]);
+    $("#drag").html((_, html) => html.replace(n1, n2));
 }
 
 

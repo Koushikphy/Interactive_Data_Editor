@@ -148,10 +148,13 @@ const homeMenuTemplate = [{
         accelerator: 'CmdOrCtrl+R',
         click() {
             mainWindow.reload();
-            for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'openc', 'pamh', 'pax']) {
-                Menu.getApplicationMenu().getMenuItemById(i).enabled = false;
+            var men = Menu.getApplicationMenu();
+            for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'openc', 'pamh', 'pax','swapen',"edat", "fill", "filter"]) {
+                men.getMenuItemById(i).enabled = false;
             }
-            Menu.getApplicationMenu().getMenuItemById("compf").visible = false;
+            men.getMenuItemById("compf").visible = false;
+            men.getMenuItemById("pax").visible = true;
+            men.getMenuItemById('pay').visible = false;
         }
     },
     {
