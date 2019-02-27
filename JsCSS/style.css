@@ -16,10 +16,19 @@ a {
     margin: 5px;
 }
 
+#slider{
+    cursor: pointer; 
+}
+
+#custom-handle{
+    cursor: move;
+}
+
 select {
     width: 3pc;
     margin-right: 3px;
     margin-left: 3px;
+    cursor: pointer; 
 }
 
 input[type=text] {
