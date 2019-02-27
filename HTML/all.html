@@ -107,44 +107,14 @@
     </div>
     <div id="status">Load your data to get started...</div>
     <script src="../particles.min.js"></script>
-    <script src="../JsCSS/plotly-latest.min.js"></script>
-    <script src="../JsCSS/jquery.min.js"></script>
-    <script src="../JsCSS/jquery-ui.min.js"></script>
-    <script src="../JsCSS/functions.min.js"></script>
-    <script src="../JsCSS/dataOp.min.js"></script>
-    <script src="../JsCSS/keyboardOp.min.js"></script>
-    <script src="../JsCSS/plotSetup.min.js"></script>
-    <script>
-        var menu = Menu.getApplicationMenu();
-        versionCheck();
-
-        var fl = JSON.parse(localStorage.getItem("files"));
-        if (fl !== null) {
-            recentFiles = fl;
-            recentMenu();
-        }
-
-        var fl = JSON.parse(localStorage.getItem("recent"));
-        if (fl !== null) {
-            recentLocation = fl;
-        }
-
-
-
-        // for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'openc', 'pamh', 'pax',
-        //     'swapen',
-        //     "edat", "fill", "filter"
-        // ]) {
-        //     menu.getMenuItemById(i).enabled = false;
-        // }
-        // menu.getMenuItemById("compf").visible = false;
-
-
-
-
-
-
-    </script>
+    <script src='../JsCSS/init.min.js'></script>
+    <script defer src="../JsCSS/plotly-latest.min.js"></script>
+    <script defer src="../JsCSS/jquery.min.js"></script>
+    <script defer src="../JsCSS/jquery-ui.min.js"></script>
+    <script defer src="../JsCSS/functions.min.js"></script>
+    <script defer src="../JsCSS/dataOp.min.js"></script>
+    <script defer src="../JsCSS/keyboardOp.min.js"></script>
+    <script defer src="../JsCSS/plotSetup.min.js"></script>
 </body>
 
 </html>

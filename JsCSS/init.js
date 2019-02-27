@@ -1,3 +1,11 @@
+const req = require("request");
+const { remote, ipcRenderer, shell } = require('electron');
+const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
+var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
+    recentLocation = '',
+    recentFiles = [], show = false,
+    saved = true, compFName;
+
 
 function versionCheck() {
     var today = new Date()
@@ -29,3 +37,45 @@ function versionCheck() {
 };
 
 
+function replaceWithHome(name) {
+    var home = process.env.HOME || process.env.USERPROFILE;
+    if (name.includes(home)) {
+        return name.replace(home, "~")
+    } else {
+        return name
+    }
+};
+
+
+
+function recentMenu() {
+    var rrf = menu.getMenuItemById("rf").submenu;
+    rrf.clear();
+    for (let i = recentFiles.length - 1; i >= 0; i--) {
+        var fln = replaceWithHome(recentFiles[i].slice())
+        var item = {
+            label: fln,
+            click() {
+                ipcRenderer.send("rf", recentFiles[i]);
+            }
+        };
+        rrf.append(new MenuItem(item));
+    }
+    localStorage.setItem("files", JSON.stringify(recentFiles));
+};
+
+
+
+var menu = Menu.getApplicationMenu();
+versionCheck();
+
+var fl = JSON.parse(localStorage.getItem("files"));
+if (fl !== null) {
+    recentFiles = fl;
+    recentMenu();
+}
+
+var fl = JSON.parse(localStorage.getItem("recent"));
+if (fl !== null) {
+    recentLocation = fl;
+}
