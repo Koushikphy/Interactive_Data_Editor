@@ -1,3 +1,10 @@
+
+
+dragging with up/down keys
+wrong copy
+dragging error?
+update after swap
+
 ## v2.3.0
 ### NEW:
 1. Warning on quit with unsaved data.

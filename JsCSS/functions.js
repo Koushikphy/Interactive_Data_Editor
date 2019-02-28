@@ -493,7 +493,6 @@ function selectEvent(event) {
         Plotly.restyle(figurecontainer, {
             selectedpoints: [null]
         });
-        ma = 1;
     } else {
         for (let pt of event.points) {
             ind = dpsx.findIndex(n => n == pt.x);
@@ -601,6 +600,10 @@ function startDragBehavior() {
 
 function keyBoardDrag(inp) {
     if (!index.length) return;
+    if (ma) {
+        saveOldData();
+        ma = 0;
+    }
     var yaxis = figurecontainer._fullLayout.yaxis;
     var add = yaxis.p2l(1) - yaxis.p2l(0);
     if (inp) add = -add;

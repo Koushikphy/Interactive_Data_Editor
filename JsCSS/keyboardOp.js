@@ -91,7 +91,13 @@ function hotDKeys(e) {
     if (document.activeElement.type == "text") {
         return;
     };
-    if (e.key == 'm') updateOnServer();
+    switch (e.key){
+        case 'm':
+        case 'ArrowDown':
+        case 'ArrowUp':
+            ma = 1;
+            updateOnServer();
+    }
 }
 
 
