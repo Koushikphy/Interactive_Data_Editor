@@ -163,6 +163,12 @@ function hotKeys(e) {
                 pasteThis();
             }
             break;
+        case 'ArrowDown':
+            keyBoardDrag(0);
+            break;
+        case 'ArrowUp':
+            keyBoardDrag(1);
+            break
     };
 };
 

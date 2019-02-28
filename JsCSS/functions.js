@@ -408,6 +408,7 @@ function isswap() {
 
 
 function sliderChanged() {
+    $("#custom-handle").blur()
     $slider.slider("value", th_in)
     $ch.text(xName + '=' + data[th_in][col.x][0])
     updatePlot(1);
@@ -594,6 +595,20 @@ function startDragBehavior() {
     });
     d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
 };
+
+
+
+
+function keyBoardDrag(inp) {
+    if (!index.length) return;
+    var yaxis = figurecontainer._fullLayout.yaxis;
+    var add = yaxis.p2l(1) - yaxis.p2l(0);
+    if (inp) add = -add;
+    for (let ind of index) {
+        points[ind].handle.y += add;
+    }
+    updateFigure();
+}
 
 
 function saveOldData() {
