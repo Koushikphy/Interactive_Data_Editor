@@ -6,9 +6,8 @@ dragging error?
 update after swap
 
 ## v2.3.0
-### NEW:
 1. Warning on quit with unsaved data.
-2. Quickly change between column in swapper mode.
+2. Dragging selected points now also be done with Up/Down arrow keys of keyboard, along with mouse.
 3. Undo/Redo support is increased up-to 5 steps. Also different keyboard shortcuts are assigned for undo/redo.
 4. Copy & Paste previous/next X or Y value.
 
@@ -23,7 +22,10 @@ update after swap
 8. Problem with moving average smoothing on endpoints data.
 9. 3D viewer not updating after using Moving Average.
 10. 'Plot along' layout changed.
-11. Several minor bug fixes and improves.
+11. 3D viewer not updating after swap.
+12. File opener location getting reset.
+13. Several minor bug fixes and improves.
+
 
 
 

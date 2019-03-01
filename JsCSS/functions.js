@@ -610,6 +610,7 @@ function keyBoardDrag(inp) {
     for (let ind of index) {
         points[ind].handle.y += add;
     }
+    saved=false
     updateFigure();
 }
 
