@@ -21,8 +21,13 @@ a {
 }
 
 #custom-handle{
-    cursor: move;
+    cursor: grab;
 }
+
+#custom-handle:active{
+    cursor: grabbing;
+}
+
 
 select {
     width: 3pc;
