@@ -589,7 +589,6 @@ function startDragBehavior() {
     drag.on("dragend", function () {
         updateFigure();
         updateOnServer();
-        saved = false;
         d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
     });
     d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
@@ -610,7 +609,6 @@ function keyBoardDrag(inp) {
     for (let ind of index) {
         points[ind].handle.y += add;
     }
-    saved=false
     updateFigure();
 }
 
@@ -621,6 +619,7 @@ function saveOldData() {
     olddata = JSON.stringify([th_in, col, data[th_in]]);
     if (undoStack.length == 5) undoStack.splice(0, 1);
     undoStack.push(olddata);
+    saved=false;
 }
 
 
