@@ -425,6 +425,7 @@ function colsChanged(value) {
 
 
 function colChanged(value) {
+    $("select").blur();
     col.z = value;
     updatePlot(1);
     updateOnServer();
@@ -449,6 +450,7 @@ function sSwapper() {
     sCol.selectedIndex = col.s;
     zCol.selectedIndex = col.z;
     updatePlot();
+    updateOnServer();
 
 }
 
