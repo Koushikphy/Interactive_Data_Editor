@@ -131,19 +131,6 @@ const homeMenuTemplate = [{
         }
     },
     {
-        label: 'Go Home',
-        accelerator: 'CmdOrCtrl+H',
-        click() {
-            mainWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'index.html'),
-                protocol: 'file:',
-                slashes: true
-            }));
-            var homeMenu = Menu.buildFromTemplate(homeMenuTemplate);
-            Menu.setApplicationMenu(homeMenu);
-        }
-    },
-    {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
@@ -288,7 +275,26 @@ const homeMenuTemplate = [{
 {
     label: "Help",
     submenu: [{
-        label: "Help",
+        label: "Documentation",
+        click() {
+            var childWindow = new BrowserWindow({
+                show: false,
+                icon: path.join(__dirname, 'charts.png'),
+                webPreferences: {
+                    nodeIntegration: true
+                }
+            });
+            childWindow.loadURL(url.format({
+                pathname: path.join(__dirname, 'doc.html'),
+                protocol: 'file:',
+                slashes: true
+            }));
+            childWindow.maximize();
+            childWindow.setMenuBarVisibility(false);
+            childWindow.show();
+        }
+    }, {
+        label: "Sample Data",
         click() {
             var childWindow = new BrowserWindow({
                 icon: path.join(__dirname, 'charts.png'),
@@ -296,17 +302,6 @@ const homeMenuTemplate = [{
                     nodeIntegration: true
                 }
             });
-            childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'help.html'),
-                protocol: 'file:',
-                slashes: true
-            }));
-            childWindow.setMenuBarVisibility(false);;
-        }
-    }, {
-        label: "Sample Data",
-        click() {
-            var childWindow = new BrowserWindow();
             childWindow.loadURL(url.format({
                 pathname: path.join(__dirname, 'data.html'),
                 protocol: 'file:',
@@ -325,13 +320,17 @@ const homeMenuTemplate = [{
     {
         label: "About",
         click() {
-            var childWindow = new BrowserWindow();
+            var childWindow = new BrowserWindow({
+                icon: path.join(__dirname, 'charts.png'),
+                webPreferences: {
+                    nodeIntegration: true
+                }});
             childWindow.loadURL(url.format({
                 pathname: path.join(__dirname, 'about.html'),
                 protocol: 'file:',
                 slashes: true
             }));
-            childWindow.setMenuBarVisibility(false);;
+            childWindow.setMenuBarVisibility(false);
         }
     },
     ]

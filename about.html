@@ -8,8 +8,10 @@
             margin: 5px;
         }
     </style>
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
 </head>
 
+<script src='./JsCSS/jquery.min.js'></script>
 <body>
     <div style="text-align: center;">
         <img src="figs/charts.png" width="75" height="75">
@@ -65,6 +67,7 @@
         function op(link) {
             shell.openExternal(link);
         }
+        console.log($('img'))
     </script>
 </body>
 

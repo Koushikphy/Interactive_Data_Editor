@@ -619,7 +619,7 @@ function saveOldData() {
     if (!data.length) return;
     redoStack = [];
     olddata = JSON.stringify([th_in, col, data[th_in]]);
-    if (undoStack.length == 5) undoStack.splice(0, 1);
+    if (undoStack.length == 10) undoStack.splice(0, 1);
     undoStack.push(olddata);
     saved=false;
 }
