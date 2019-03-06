@@ -175,8 +175,10 @@ const homeMenuTemplate = [{
     label: "Data",
     submenu: [{
         label: "Plot along X",
+        accelerator: 'A',
         id: 'pax',
         visible: true,
+        enabled: false,
         click() {
             Menu.getApplicationMenu().getMenuItemById("pax").visible = false;
             Menu.getApplicationMenu().getMenuItemById("pay").visible = true;
@@ -184,6 +186,7 @@ const homeMenuTemplate = [{
         }
     }, {
         label: 'Plot along Y',
+        accelerator: 'A',
         id: 'pay',
         visible: false,
         click() {
