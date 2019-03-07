@@ -282,6 +282,7 @@ function saveAs() {
         save_name = tmp_name;
         saveData();
     }
+    firstSave = false;
 }
 
 
