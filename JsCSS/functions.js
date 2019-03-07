@@ -128,6 +128,8 @@ function fileReader(fname) {
     swapped = 0;
     refdat = 0;
     xName = "X";
+    firstSave = false;
+    swapper = false;
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
@@ -157,7 +159,6 @@ function fileReader(fname) {
     menu.getMenuItemById("swapen").visible = true;
     menu.getMenuItemById("swapex").visible = false;
     $("#sCol, #sColInp").hide();
-    swapper = false;
     if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
     Plotly.relayout(figurecontainer, {
         selectdirection: 'any'
@@ -278,10 +279,9 @@ function saveAs() {
         title: "Save As:",
         defaultPath: save_name
     });
-    if(tmp_name !== undefined){
-        save_name = tmp_name;
-        saveData();
-    }
+    if(tmp_name === undefined) return
+    save_name = tmp_name;
+    saveData();
     firstSave = false;
 }
 
