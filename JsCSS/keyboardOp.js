@@ -124,6 +124,7 @@ function hotKeys(e) {
             sliderChanged();
             break;
         case "s":
+        case "S":
             if (!e.ctrlKey) {
                 Plotly.relayout(figurecontainer, {
                     dragmode: "select"
@@ -132,32 +133,34 @@ function hotKeys(e) {
             break;
 
         case "z":
-            if (e.ctrlKey) {
+        case "Z":
+            if (e.ctrlKey & !e.shiftKey) {
                 unDo();
-            } else {
+            } else if (e.ctrlKey & e.shiftKey) {
+                reDo();
+            }else {
                 Plotly.relayout(figurecontainer, {
                     dragmode: "zoom"
                 });
             };
             break;
-        case 'Z':
-            if (e.ctrlKey) {
-                reDo();
-            }
-            break;
         case "p":
+        case "P":
             swapData();
             break;
 
         case "d":
+        case "D":
             deleteInterpolate()
             break;
 
         case "m":
+        case "M":
             autoSmooth();
             break;
 
         case "c":
+        case "C":
             if (e.ctrlKey) {
                 copyThis();
             } else {
@@ -165,6 +168,7 @@ function hotKeys(e) {
             }
             break;
         case 'v':
+        case "V":
             if (e.ctrlKey) {
                 pasteThis();
             }
