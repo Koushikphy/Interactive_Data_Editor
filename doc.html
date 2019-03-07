@@ -119,19 +119,19 @@ var allText=[
 
 `    <div class="title">Getting Started</div>
 <div class="text">
-    <p> This Software is developed for making data editing easy and can be used to interactively edit and plot any 2D or gridded 3D data, along with many useful data opertaions. On openning the software you are greeted with the home screen. To get started from here just load your data (ASCII/utf formatted) file through <label class="dom"> File > Open file</label>. Files can also be opened quickly from <label for="" class="dom">File > Recent Files </label> which saves up to last 10 used files in descending order. In case of 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in the 3D data file. On start the data will be plotted along the 'Y' values. To plot along 'X' values go to <label for="" class="dom">Data > Plot along X</label> and vice versa.</p>
+    <p> This Software is developed for making data editing easy and can be used to interactively edit and plot any 2D or gridded 3D data, along with many useful data operations. On opening the software you are greeted with the home screen. To get started from here just load your data (ASCII/utf formatted) file through <label class="dom"> File > Open file</label>. Files can also be opened quickly from <label for="" class="dom">File > Recent Files </label> which saves up to last 10 used files in descending order. In case of 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in the 3D data file. On start the data will be plotted along the 'Y' values. To plot along 'X' values go to <label for="" class="dom">Data > Plot along X</label> and vice versa.</p>
     
     <p> The main window has basically 3 parts, Menu bar, Tool bar and the Plot area. Most of the menubar options are self-explanatory and are detailed in the next section. Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. The slider, available only when working with 3D data, can be used to change the X/Y value for which the 2D line is plotted.</p>
 
-    <p>The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become visible when the mouse is over this area. Hover over the buttons to view theirs functions. These buttons includes features like Saving plot as image, Panning, Zoom, Free/box select, Showing spike lines etc.</p>
+    <p>The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become visible when the mouse is over this area. Hover over them to view theirs functions. These buttons includes features like Saving plot as image, Panning, Zoom, Free/box select, Showing spike lines etc.</p>
 
      
-    <p>While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D wireframe/surface viewer windows from <label for="" class="dom">Windows</label> menu in real time i.e. all the edits made will be refelected there instanteously. These windows supports setting axis ranges for the plots.</p>
+    <p>While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D wireframe/surface viewer windows from <label for="" class="dom">Windows</label> menu in real time i.e. all the edits made will be reflected there instantaneously. These windows supports setting axis ranges for the plots.</p>
      
 
-    <p>After edits you can save your modified data by <label  class="dom">File > Save</label>. By default data will be saved in the same location with a added '_new' suffix or use the <label class="dom">File > Save As</label> to save in your desired location and name. If you save file using the <label for="" class="dom">Save As</label> option, the consquetive saves will save the file with that same name and location. The application will show a warning if you try to close the application without saving the edited data and you can either save the data or quit the application.</p> 
+    <p>After edits you can save your modified data from <label  class="dom">File > Save</label>. When saving for first time, the application will ask for name and location of the file to save the data, with default being the same location and name with an added '_new' suffix. Any consecutive saves will save the data in that same file. Use <label class="dom">File > Save As</label> to save with a different name and location. The application will show a warning if you try to close the application without saving the edited data and you can either save the data or quit the application.</p> 
 
-    <p>This software comes with a auto update checker and periodically checks for updates. If a newer version of this software is avaialble it notifies you immediately.</p>
+    <p>This software comes with a auto update checker and periodically checks for updates. If a newer version of this software is available to download, it notifies you immediately.</p>
 
 </div>`,
 `
@@ -139,29 +139,29 @@ var allText=[
 <div class="text">
     This software has a lot of features for various useful data operations including,
     <ol>
-    <li><b><i> Dragging data points.</i></b> You can edit a single or multiple data points by dragging it with mouse or using the keyboard Up/Down navigation keys. To drag multiple points select the points and just drag any of them. By default data points are movable only along vertical direction. If you want to move the data points along horaizontal direction too, then uncheck <label for="" class="dom">Edit > Points not movable horaizontally</label>. <p></p> </li>
+    <li><b><i> Dragging data points.</i></b> You can edit a single or multiple data points by dragging it with mouse or using the keyboard Up/Down navigation keys. To drag multiple points select the points and just drag any of them. By default data points are movable only along vertical direction. If you want to move the data points along horizontal direction too, then uncheck <label for="" class="dom">Edit > Points not movable horizontally</label>. <p></p> </li>
 
     <li><b><i>2D and 3D support.</i></b> This software supports both 2D and 3D data editing, but for 3D editing  data must be on a rectangular grid and data file must in blocks for 'X' values. Data file can have missing grid points<p></p></li>
 
     <li><b><i>Smooth out.</i></b> Automatically smooth out data using spline and linear kernel(Moving Average) smoother. To smooth out select the portion of the data and press <label class="dom">D</label> or <label class="dom">M</label> to smooth out using spline and moving average respectively. Press and hold <label for="" class="dom">M</label> to apply moving average multiple times.<p></p></li>
 
-    <li><b><i>Fill missing values.</i></b> Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start, stop and step values to fill the missing values in the data. Intermidiate points will be filled using a Cubic spline and outside values will just be copied from the nearest available value. No complicated extrapolation method is used to fill outside values as that can be very uncertain depending on the data.<p></p></li>
+    <li><b><i>Fill missing values.</i></b> Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start, stop and step values to fill the missing values in the data. Intermediate points will be filled using a Cubic spline and outside values will just be copied from the nearest available value. No complicated extrapolation method is used to fill outside values as that can be very uncertain depending on the data.<p></p></li>
 
     <li><b><i>Repeat & mirror.</i></b> Go to <label for="" class="dom">Data > Extend Data</label> and fill the range, method and number of times to repeat/mirror and press OK. The start and end values must exist to use this feature.<p></p></li>
 
-    <li><b><i>Filter data.</i></b> You can apply basic filter/cut off to the data. <label for="" class="dom">Data > Filter Data</label> and fill values and fill the column numbers seperated by comma to apply the filter. <p></p></li>
+    <li><b><i>Filter data.</i></b> You can apply basic filter/cut off to the data. <label for="" class="dom">Data > Filter Data</label> and fill values and fill the column numbers separated by comma to apply the filter. <p></p></li>
 
-    <li><b><i>Swap data.</i></b> Go to <label for="" class="dom">Data > Open Swapper</label> to open the swapper mode. This will add a second line to swap with the first one. Select the portion and press <label for="" class="dom">P</label> to swap values. All other features like dragging, smoothing out etc. are still usable in this mode but aplicable only to the first line. After you are done close this mode by <label for="" class="dom">Data > Exit Swaper </label>. <p></p></li>
+    <li><b><i>Swap data.</i></b> Go to <label for="" class="dom">Data > Open Swapper</label> to open the swapper mode. This will add a second line to swap with the first one. Select the portion and press <label for="" class="dom">P</label> to swap values. All other features like dragging, smoothing out etc. are still usable in this mode but applicable only to the first line. After you are done close this mode by <label for="" class="dom">Data > Exit Swapper </label>. <p></p></li>
 
-    <li><b><i>Comapre data.</i></b> As you edit you can compare your edits with the initial one or other values. Go to <label for="" class="dom">File > Open File for Compare</label> to load data for comparison. Check/Uncheck <label for="" class="dom">Show Compare data </label> to show/hide the line<p></p></li>
+    <li><b><i>Compare data.</i></b> As you edit you can compare your edits with the initial one or other values. Go to <label for="" class="dom">File > Open File for Compare</label> to load data for comparison. Check/Uncheck <label for="" class="dom">Show Compare data </label> to show/hide the line<p></p></li>
 
-    <li><b><i>Undo/Redo.</i></b> Any immediate modification can be undone by pressing <label for="" class="dom">Ctrl+Z</label> or can be redone by <label for="" class="dom">Shift+Ctrl+Z</label>. At this moment unde/redo only supports upto 10 steps<p></p></li>
+    <li><b><i>Undo/Redo.</i></b> Any immediate modification can be undone by pressing <label for="" class="dom">Ctrl+Z</label> or can be redone by <label for="" class="dom">Shift+Ctrl+Z</label>. At this moment undo/redo only supports up to 10 steps<p></p></li>
 
     <li><b><i>Change sign.</i></b> Select data points and press <label for="" class="dom">C</label> to change sign of the selected points.<p></p></li>
 
     <li><b><i>Copy/Paste.</i></b> You can copy all data for a particular projection and paste to others.<p></p></li>
 
-    <li><b><i>General 3D plotter.</i></b> A general plotter to plot 3D data is provied and can be accessed through <label for="" class="dom">File > 3D Plotter</label><p></p></li>
+    <li><b><i>General 3D plotter.</i></b> A general plotter to plot 3D data is provided and can be accessed through <label for="" class="dom">File > 3D Plotter</label><p></p></li>
 
     <li><b><i>Spreadsheet.</i></b> This software includes spreadsheet editor and can be opened through <label for="" class="dom">Windows > Spreadsheet</label> with most of basic features like that of MS Excel. This can be used to view, edit, copy-paste data directly. <p></p></li>
 
@@ -175,7 +175,7 @@ var allText=[
     <ol>
     <li><label class="key">Ctrl+O</label> Open file.</li>
     <li><label class="key">Ctrl+S</label> Save file.</li>
-    <li><label class="key">Shfit+Ctrl+S</label> Save file at desired location and name.</li>
+    <li><label class="key">Shfit+Ctrl+S</label> Save in a different file.</li>
     <li><label class="key">Ctrl+R</label> Reload the window.</li>
     <li><label class="key">Ctrl+Q</label> Quit the application.</li>
     <li><label class="key">F11</label> Toggle fullscreen.</li>
@@ -192,13 +192,13 @@ var allText=[
     <li><label class="key">&lt;dot></dot></label> Move slider up.</li>
     <li><label class="key">&lt;comma></label> Move slider down.</li>
     <li><label class="key">P</label> Swap data between two lines or surface.</li>
-    <li><label class="key">Ctrl+C</label> Copy values from current 2D projection</li>
+    <li><label class="key">Ctrl+C</label> Copy values from current 2D projection.</li>
     <li><label class="key">Ctrl+V</label> Paste copied values.</li>
     </ol>
 </div>`,
 `    <div class="title">Feedback</div>
 <div class="text">
-    Thank you for using my software. I would really like to hear your in general experience on using this software. Found a bug or want a new feature to include, contact me directly or open an <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor/issues');">issue</a>  in the project <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor');">homepage</a>. You can reach me here,
+    Thank you for using my software. I would really like to hear your experience of using this software. Found a bug or want a new feature to include, contact me directly or open an <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor/issues');">issue</a>  in the project <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor');">homepage</a>. You can reach me here,
     <div style="text-align:center; margin-top:21px">
     <a href="javascript:void(0)" onclick="op('https://www.facebook.com/koushik.naskar3');"><img src="figs/facebook.png" width="30" height="30"></a>
     <a style="margin-right:15px; margin-left:15px" href="javascript:void(0)" onclick="op('https://github.com/Koushikphy');"><img src="figs/github.png"            width="30" height="30"></a>

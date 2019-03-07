@@ -1,11 +1,6 @@
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
-// const { remote, ipcRenderer, shell } = require('electron');
-// const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
-
-
-
 
 
 

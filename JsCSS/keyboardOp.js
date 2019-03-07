@@ -29,7 +29,11 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             fileLoader();
             break;
         case "save":
-            saveData();
+            if(firstSave){
+                saveAs()
+            }else{
+                saveData()
+            }
             break;
 
         case "saveas":

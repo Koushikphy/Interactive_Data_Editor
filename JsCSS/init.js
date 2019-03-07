@@ -4,7 +4,7 @@ const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
 var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     recentLocation = '',
     recentFiles = [], show = false,
-    saved = true, compFName;
+    saved = true, compFName, firstSave = true;
 
 
 function versionCheck() {
