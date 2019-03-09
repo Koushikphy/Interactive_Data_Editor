@@ -50,7 +50,7 @@ function repeatMirror() {
     data = data.map(dat => {
 
         var ind = dat[col.y].indexOf(last) + 1
-        if (!ind) alert("Endpoint must exist !!!")
+        if (!ind) {alert("Endpoint must exist !!!"); return dat}
         var newy = dat[col.y].slice(0, ind)
         var tmp = newy.slice()
         tmp.splice(0, 1)

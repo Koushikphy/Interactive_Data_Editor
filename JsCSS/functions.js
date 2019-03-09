@@ -128,7 +128,7 @@ function fileReader(fname) {
     swapped = 0;
     refdat = 0;
     xName = "X";
-    firstSave = false;
+    firstSave = true;
     swapper = false;
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
