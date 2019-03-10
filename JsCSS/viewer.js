@@ -1,12 +1,11 @@
-var figurecontainer = document.getElementById("figurecontainer"), data = [], cols=[0,1,2];
-
-var ldata=[], lIniData=[], ranges=[];
+var figurecontainer = document.getElementById("figurecontainer"), 
+data = [], cols=[0,1,2], ldata=[], lIniData=[], ranges=[], swapped=false;
       
 const { ipcRenderer } = require('electron');
 
 
 ipcRenderer.on("sdata", function(e,d){
-    data = d;
+    [data, swapped] = d;
     updatePlot();
 })
 

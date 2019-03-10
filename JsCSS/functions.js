@@ -55,6 +55,8 @@ function updateData() {
             localStorage.setItem("cols2d", JSON.stringify(tmp));
         }
     }
+
+    //set custom handler length
     var tmpl = []
     for (let i of data) {
         tmpl.push(i[col.x][0].toString().length);
@@ -63,51 +65,6 @@ function updateData() {
 };
 
 
-function thisJobs() {
-    $("#particle").remove()
-    $("#full").show()
-    xCol = document.getElementById("xCol");
-    yCol = document.getElementById("yCol");
-    if (ddd) { //3
-        $(".3D").show()
-        var fl = JSON.parse(localStorage.getItem("cols3d"));
-        if (fl !== null) {
-            col = fl;
-        }
-
-        var mn = ["pax", 'wire', 'surf']
-        for (let i of mn) {
-            menu.getMenuItemById(i).enabled = true;
-        }
-
-    } else { //2d
-        serve = 0;
-        $(".3D").hide()
-        var fl = JSON.parse(localStorage.getItem("cols2d"));
-        if (fl !== null) {
-            col = fl;
-        }
-        var mn = ["pax", 'wire', 'surf']
-        for (let i of mn) {
-            menu.getMenuItemById(i).enabled = false;
-        }
-    }
-
-    var op = "";
-    for (var i = 1; i <= data[0].length; i++) {
-        op += '<option>' + i + '</option>';
-    };
-    var tmp = $("#xCol, #yCol, #zCol, #sCol");
-    for (var i = 0; i < tmp.length; i++) {
-        tmp[i].innerHTML = op;
-    };
-    resizePlot();
-    xCol.selectedIndex = col.x;
-    yCol.selectedIndex = col.y;
-    zCol.selectedIndex = col.z;
-    sCol.selectedIndex = col.s;
-    updateData();
-};
 
 
 
@@ -116,20 +73,43 @@ function fileLoader() {
         defaultPath: recentLocation,
         properties: ['openFile']
     });
-
     if(fname !== undefined) fileReader(fname[0]);
 }
 
 
 
 
-
 function fileReader(fname) {
+
+    //reset everything....
     swapped = 0;
     refdat = 0;
     xName = "X";
     firstSave = true;
     swapper = false;
+    $("#sCol, #sColInp").hide();
+    $("#particle").remove();
+    $("#full").show();
+    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
+    Plotly.relayout(figurecontainer, {
+        selectdirection: 'any'
+    });
+    xCol = document.getElementById("xCol");
+    yCol = document.getElementById("yCol");
+
+    //reset menus
+    menu.getMenuItemById("pax").visible = true;
+    menu.getMenuItemById("pay").visible = false;
+    menu.getMenuItemById("compf").visible = false;
+    menu.getMenuItemById("swapen").visible = true;
+    menu.getMenuItemById("swapex").visible = false;
+
+    for (let i of ["pax", 'wire', 'surf']) {
+        menu.getMenuItemById(i).enabled = false;
+    }
+    
+    
+    // parse the file and data
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
     var extn = path.extname(fname)
@@ -139,40 +119,60 @@ function fileReader(fname) {
     data = fs.readFileSync(fname, "utf8");
     data = parseData(data);
     ddd = data.length != 1;
-    thisJobs();
-    showStatus('Data loaded ...')
+    showStatus('Data loaded ...');
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
 
 
+    //setup the column selector and menu.
+    var enableMenu = ['save', 'saveas', "spr", 'openc', 'pamh', 'swapen', "edat", "fill", "filter"]
+    if (ddd) { //3
+        $(".3D").show()
+        var fl = JSON.parse(localStorage.getItem("cols3d"));
+        if (fl !== null) {
+            col = fl;
+        }
+        enableMenu.push('pax', 'wire', 'surf');
 
+    } else { //2d
+        serve = 0;
+        $(".3D").hide()
+        var fl = JSON.parse(localStorage.getItem("cols2d"));
+        if (fl !== null) {
+            col = fl;
+        }
+    }
+
+    var op = "";
+    for (var i = 1; i <= data[0].length; i++) {
+        op += '<option>' + i + '</option>';
+    };
+    for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
+    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
+
+    xCol.selectedIndex = col.x;
+    yCol.selectedIndex = col.y;
+    zCol.selectedIndex = col.z;
+    sCol.selectedIndex = col.s;
+    
+
+    // plot here
+    updateData();
+
+    
+    //update recent menu
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
     if (recentFiles.length > 10) {
         recentFiles.splice(0, 1);
     }
     recentMenu();
-
-
-    menu.getMenuItemById("pax").visible = true;
-    menu.getMenuItemById("pay").visible = false;
-    menu.getMenuItemById("compf").visible = false;
-    menu.getMenuItemById("swapen").visible = true;
-    menu.getMenuItemById("swapex").visible = false;
-    $("#sCol, #sColInp").hide();
-    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
-    Plotly.relayout(figurecontainer, {
-        selectdirection: 'any'
-    });
-
-    var mn = ['save', 'saveas', "spr", 'openc', 'pamh', 'swapen', "edat", "fill", "filter"]
-    if (ddd) mn.push('pax', 'wire', 'surf')
-    for (let i of mn) {
-        menu.getMenuItemById(i).enabled = true;
-    }
-    var [n1, n2] = ["Y", "X"];
+ 
     $ch.text(xName + '=' + data[th_in][col.x][0]);
-    $("#drag").html((_, html) => html.replace(n1, n2));
+    $("#drag").html((_, html) => html.replace("Y", "X"));
+    resizePlot();
 }
+
+
 
 
 
@@ -230,7 +230,6 @@ function expRotate(tmpData) {
     };
 
 
-
     if (issame) {
         tmpData = transpose(tmpData);
         tmpData = tmpData.map(x => transpose(x));
@@ -271,10 +270,10 @@ function rotateData() {
 
 
 function saveAs() {
-    if (!data.length) {
-        alert("Nothing to save!");
-        return
-    }
+    // if (!data.length) {
+    //     alert("Nothing to save!");
+    //     return
+    // }
     var tmp_name = dialog.showSaveDialog({
         title: "Save As:",
         defaultPath: save_name
@@ -287,10 +286,10 @@ function saveAs() {
 
 
 function saveData() {
-    if (!data.length) {
-        alert("Nothing to save!");
-        return
-    }
+    // if (!data.length) {
+    //     alert("Nothing to save!");
+    //     return
+    // }
     var tmpData = data.map(x => transpose(x));
     if (swapped) tmpData = transpose(tmpData);
     var txt = "";
@@ -302,7 +301,7 @@ function saveData() {
         txt += "\n";
     };
     fs.writeFileSync(save_name, txt);
-    showStatus("Data Saved as " + replaceWithHome(save_name)) //+" on "+new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric',second:'numeric', hour12: true }))
+    showStatus("Data Saved as " + replaceWithHome(save_name)) 
     saved = true;
 };
 
@@ -639,7 +638,6 @@ function unDo() {
 
 function doIt() {
     var arr;
-    var tmp = th_in;
     [th_in, col, arr] = JSON.parse(olddata);
     zCol.selectedIndex = col.z;
     data[th_in] = arr;
@@ -661,10 +659,8 @@ function updateOnServer() {
         z_list.push(i[col.z]);
     };
     var s_data = [x_list, y_list, z_list];
-    for (let w in viewer) viewer[w].webContents.send("sdata", s_data);
-    // viewerWindow.webContents.send("sdata",s_data);
-    // localStorage.setItem("datal",JSON.stringify(s_data));
-};
+    for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped]);
+}; 
 
 
 function updatePlot(both = 0) {

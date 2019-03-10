@@ -25,7 +25,7 @@
     </div>
     <script src="../JsCSS/viewer.min.js"></script>
     <script>
-        var xxx = [], yyy = [], zzz = [];
+        var xxx = [], yyy = [], zzz = [], check=true;
         Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
 
 
@@ -76,7 +76,11 @@
             if (figurecontainer.data.length != xxx.length) {
                 Plotly.newPlot(figurecontainer, initData(xxx.length), layout);
             };
-            Plotly.restyle(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz });
+            if (swapped) {
+                Plotly.restyle(figurecontainer, { 'y': xxx, 'x': yyy, 'z': zzz });
+            } else {
+                Plotly.restyle(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz });
+            }
             $("#status").html("<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>");
         };
     </script>
