@@ -10,7 +10,7 @@ var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
 function versionCheck() {
     var today = new Date()
     var today = today.getDate() + '' + today.getMonth()
-    if (today == JSON.parse(localStorage.getItem("today"))) return
+    if (today == JSON.parse(localStorage.getItem("today"))) return;
     localStorage.setItem("today", JSON.stringify(today))
     req({
         'url': "https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/releases/latest",
@@ -66,8 +66,9 @@ function recentMenu() {
 
 
 
+window.particlesJS.load('particle', '../particles.json');
 var menu = Menu.getApplicationMenu();
-versionCheck();
+if(process.env.NODE_ENV!='production') versionCheck();
 
 var fl = JSON.parse(localStorage.getItem("files"));
 if (fl !== null) {

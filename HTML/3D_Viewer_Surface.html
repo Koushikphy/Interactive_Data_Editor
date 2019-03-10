@@ -27,7 +27,11 @@
     <script>
         Plotly.newPlot(figurecontainer, sIniData, layout, { displaylogo: false });
         function updatePlot() {
-            Plotly.restyle(figurecontainer, { "x": [data[0]], "y": [data[1]], "z": [data[2]] })
+            if (swapped) {
+                Plotly.restyle(figurecontainer, { 'y': [data[0]], 'x': [data[1]], 'z': [data[2]] });
+            } else {
+                Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[2]] });
+            }
             $("#status").html("<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>");
         };
     </script>

@@ -52,8 +52,7 @@
   ],
   "devDependencies": {
     "electron": "^4.0.0",
-    "electron-builder": "^20.38.4",
-    "uglify-js": "^3.4.9"
+    "electron-builder": "^20.38.4"
   },
   "dependencies": {
     "request": "^2.88.0"
