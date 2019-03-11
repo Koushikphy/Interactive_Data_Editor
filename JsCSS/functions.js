@@ -73,7 +73,7 @@ function fileLoader() {
         defaultPath: recentLocation,
         properties: ['openFile']
     });
-    if(fname !== undefined) fileReader(fname[0]);
+    if (fname !== undefined) fileReader(fname[0]);
 }
 
 
@@ -89,6 +89,7 @@ function fileReader(fname) {
     swapper = false;
     $("#sCol, #sColInp").hide();
     $("#particle").remove();
+    if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $("#full").show();
     if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
     Plotly.relayout(figurecontainer, {
@@ -107,8 +108,8 @@ function fileReader(fname) {
     for (let i of ["pax", 'wire', 'surf']) {
         menu.getMenuItemById(i).enabled = false;
     }
-    
-    
+
+
     // parse the file and data
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname))
@@ -153,12 +154,12 @@ function fileReader(fname) {
     yCol.selectedIndex = col.y;
     zCol.selectedIndex = col.z;
     sCol.selectedIndex = col.s;
-    
+
 
     // plot here
     updateData();
 
-    
+
     //update recent menu
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
@@ -166,7 +167,7 @@ function fileReader(fname) {
         recentFiles.splice(0, 1);
     }
     recentMenu();
- 
+
     $ch.text(xName + '=' + data[th_in][col.x][0]);
     $("#drag").html((_, html) => html.replace("Y", "X"));
     resizePlot();
@@ -183,7 +184,7 @@ function compfileLoader() {
         properties: ['openFile']
     });
 
-    if(fname === undefined) return;
+    if (fname === undefined) return;
     fname = fname[0];
     compdata = fs.readFileSync(fname, "utf8");
     compdata = parseData(compdata);
@@ -278,7 +279,7 @@ function saveAs() {
         title: "Save As:",
         defaultPath: save_name
     });
-    if(tmp_name === undefined) return
+    if (tmp_name === undefined) return
     save_name = tmp_name;
     saveData();
     firstSave = false;
@@ -301,7 +302,7 @@ function saveData() {
         txt += "\n";
     };
     fs.writeFileSync(save_name, txt);
-    showStatus("Data Saved as " + replaceWithHome(save_name)) 
+    showStatus("Data Saved as " + replaceWithHome(save_name))
     saved = true;
 };
 
@@ -616,7 +617,7 @@ function saveOldData() {
     olddata = JSON.stringify([th_in, col, data[th_in]]);
     if (undoStack.length == 10) undoStack.splice(0, 1);
     undoStack.push(olddata);
-    saved=false;
+    saved = false;
 }
 
 
@@ -660,7 +661,7 @@ function updateOnServer() {
     };
     var s_data = [x_list, y_list, z_list];
     for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped]);
-}; 
+};
 
 
 function updatePlot(both = 0) {
