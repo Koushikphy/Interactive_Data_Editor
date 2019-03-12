@@ -78,6 +78,15 @@ function fileLoader() {
 
 
 
+function getMinMax() {
+    tmpDat = transpose(data);
+    var ranges = [];
+    for (let i of tmpDat) {
+        var dat = i.flat()
+        ranges.push([Math.min(...dat), Math.max(...dat)])
+    }
+}
+
 
 function fileReader(fname) {
 
@@ -221,8 +230,7 @@ function parseData(strDps) {
 
 function expRotate(tmpData) {
     tmpData = tmpData.map(x => transpose(x));
-    var issame = true,
-        b = tmpData[0].length;
+    var issame = true, b = tmpData[0].length;
     for (let a of tmpData) {
         if (a.length != b) {
             issame = false;
@@ -271,10 +279,6 @@ function rotateData() {
 
 
 function saveAs() {
-    // if (!data.length) {
-    //     alert("Nothing to save!");
-    //     return
-    // }
     var tmp_name = dialog.showSaveDialog({
         title: "Save As:",
         defaultPath: save_name
@@ -287,23 +291,23 @@ function saveAs() {
 
 
 function saveData() {
-    // if (!data.length) {
-    //     alert("Nothing to save!");
-    //     return
-    // }
     var tmpData = data.map(x => transpose(x));
     if (swapped) tmpData = transpose(tmpData);
     var txt = "";
-
-    for (let i of tmpData) {
-        for (let j of i) {
-            txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
+    try {
+        for (let i of tmpData) {
+            for (let j of i) {
+                txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
+            };
+            txt += "\n";
         };
-        txt += "\n";
-    };
-    fs.writeFileSync(save_name, txt);
-    showStatus("Data Saved as " + replaceWithHome(save_name))
-    saved = true;
+        fs.writeFileSync(save_name, txt);
+        showStatus("Data Saved as " + replaceWithHome(save_name))
+        saved = true;
+    } catch (error) {
+        return false;
+    }
+
 };
 
 
