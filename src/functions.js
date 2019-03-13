@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
-var undoStack = [], redoStack = [], editorWindow, viewer = [, ,], show = false, saved = true, compFName, firstSave = true;
+var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
+    show = false, saved = true, compFName, firstSave = true, issame = false;
 
 function isDev() {
     const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
@@ -75,22 +76,24 @@ function fileLoader() {
 
 
 
-function getMinMax() {
-    tmpDat = transpose(data);
-    var ranges = [];
-    for (let i of tmpDat) {
-        var dat = i.flat()
-        ranges.push([Math.min(...dat), Math.max(...dat)])
-    }
-}
-
 
 function fileReader(fname) {
+
+
+    //check if other file is open
+    if (!saved) var res = dialog.showMessageBox({
+        type: "warning",
+        title: "Unsaved data found!!!",
+        message: "There are some modified data, that you haven't saved yet.\n Are you sure to open a new file without saving?",
+        buttons: ['Yes', "No"]
+    });
+    if (res) return;
 
     //reset everything....
     swapped = 0;
     refdat = 0;
     xName = "X";
+    issame = false;
     firstSave = true;
     swapper = false;
     $("#sCol, #sColInp").hide();
@@ -227,13 +230,16 @@ function parseData(strDps) {
 
 function expRotate(tmpData) {
     tmpData = tmpData.map(x => transpose(x));
-    var issame = true, b = tmpData[0].length;
-    for (let a of tmpData) {
-        if (a.length != b) {
-            issame = false;
-            break;
+    if (!issame) {
+        issame = true;
+        var b = tmpData[0].length;
+        for (let a of tmpData) {
+            if (a.length != b) {
+                issame = false;
+                break;
+            };
         };
-    };
+    }
 
 
     if (issame) {
@@ -661,7 +667,8 @@ function updateOnServer() {
         z_list.push(i[col.z]);
     };
     var s_data = [x_list, y_list, z_list];
-    for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped]);
+    var c2s = []
+    for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
 };
 
 

@@ -17,16 +17,16 @@
         <form><input id="is_mark" onclick="mark_clicked(this)" type="checkbox" /> Markers </form>
         <div class="borders">
             Axes Ranges ⇒
-            X : <input onchange="setXRange(this.value)" type="text" />
-            Y : <input onchange="setYRange(this.value)" type="text" />
-            Z : <input onchange="setZRange(this.value)" type="text" />
+            X : <input onchange="setXRange(this.value)" type="text" id='xInp' />
+            Y : <input onchange="setYRange(this.value)" type="text" id='yInp' />
+            Z : <input onchange="setZRange(this.value)" type="text" id='zInp' />
         </div>
     </div>
     <script src="../lib/viewer.min.js"></script>
     <script>
-        var xxx = [], yyy = [], zzz = [], check=true;
+        var xxx = [], yyy = [], zzz = [], check = true;
         Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
-        
+
         function updatePlot() {
             makeRotation();
             xxx = data[0].concat(xxx),

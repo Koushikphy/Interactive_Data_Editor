@@ -10,9 +10,10 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "gulp default && electron .",
+    "startwatch": "gulp default && electron . | gulp watch",
     "dist": "gulp default && build",
     "watch": "gulp watch",
-    "uplib":"gulp default"
+    "uplib": "gulp default"
   },
   "build": {
     "appId": "com.ide.app",
@@ -51,8 +52,8 @@
     "build/icon.*",
     "!src/*",
     "!gulpFile.js",
-    "!CHANGELOG.md",
-    "!app.iss"
+    "!app.iss",
+    "!yarn.lock"
   ],
   "devDependencies": {
     "electron": "^4.0.0",
