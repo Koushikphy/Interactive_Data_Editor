@@ -18,11 +18,6 @@ function showStatus(msg) {
 
 }
 
-if(!app.isPackaged) { 
-    $("#particle").remove();
-    $("#full").show();
-}
-
 
 function updateData() {
     col.x = xCol.selectedIndex;

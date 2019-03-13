@@ -30,7 +30,7 @@ gulp.task('compressCSS', function () {
         .pipe(gulp.dest('./lib'))
 });
 
-gulp.task('default', gulp.parallel('compressCombineJS','compressJS', 'compressCSS'));
+gulp.task('default', gulp.parallel('compressJS', 'compressCSS','compressCombineJS'));
 
 gulp.task('watch', function(){
     gulp.watch('./src/*.*', gulp.series('default')); 

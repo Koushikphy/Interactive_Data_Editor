@@ -66,6 +66,9 @@ if(app.isPackaged) {
     const particlesJS = require('particles.js');
     window.particlesJS.load('particle', '../lib/particles.json');
     versionCheck();
+} else{
+    document.getElementById('particle').remove();
+    document.getElementById('full').style.display = 'block';
 }
 
 
