@@ -3,11 +3,11 @@
 
 <head>
     <title>Interactive Data Editor</title>
-    <link href="../JsCSS/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../JsCSS/jquery-ui.min.css">
+    <link href="../lib/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/jquery-ui.min.css">
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
-    <script src="../JsCSS/jquery.min.js"></script>
-    <script src="../JsCSS/jquery-ui.min.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <script src="../lib/jquery-ui.min.js"></script>
     <script src="../handsontable/dist/handsontable.full.min.js"></script>
     <link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
 </head>
@@ -33,11 +33,6 @@
         var event, th_in = 0,
             $ch = $("#custom-handle"),
             $slider = $("#slider");
-
-
-
-
-
 
         ipcRenderer.on("slider", function (e, d) {
             e.sender.send("test", "2u3i")

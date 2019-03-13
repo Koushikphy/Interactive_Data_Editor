@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
-
-
+var undoStack = [], redoStack = [], editorWindow, viewer = [, ,], show = false, saved = true, compFName, firstSave = true;
 
 function isDev() {
     const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
@@ -302,7 +301,7 @@ function saveData() {
             txt += "\n";
         };
         fs.writeFileSync(save_name, txt);
-        showStatus("Data Saved as " + replaceWithHome(save_name))
+        showStatus("Data Saved as " + replaceWithHome(save_name));
         saved = true;
     } catch (error) {
         return false;

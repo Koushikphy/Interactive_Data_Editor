@@ -1,10 +1,7 @@
 const req = require("request");
 const { remote, ipcRenderer, shell } = require('electron');
 const { dialog, BrowserWindow, Menu, MenuItem, app } = remote;
-var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
-    recentLocation = '',
-    recentFiles = [], show = false,
-    saved = true, compFName, firstSave = true;
+var recentLocation, recentFiles = [];
 
 
 function versionCheck() {
@@ -65,8 +62,8 @@ function recentMenu() {
 };
 
 
-
-window.particlesJS.load('particle', '../particles.json');
+const particlesJS = require('particles.js');
+window.particlesJS.load('particle', '../lib/particles.json');
 var menu = Menu.getApplicationMenu();
 if(process.env.NODE_ENV!='production') versionCheck();
 

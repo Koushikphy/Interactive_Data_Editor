@@ -79,7 +79,7 @@ var iniPointsC = {
     hoverinfo: 'x+y',
 };
 
-
+const Plotly = require('plotly.js-gl3d-dist');
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
     displaylogo: false,
     modeBarButtonsToRemove: ['sendDataToCloud']

@@ -34,14 +34,14 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         show: false,
         minWidth: 1200,
-        icon: path.join(__dirname, "charts.png"),
+        icon: path.join(__dirname, "figs/charts.png"),
         webPreferences: {
             nodeIntegration: true
         }
     });
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'HTML/all.html'),
+        pathname: path.join(__dirname, 'html/index.html'),
         protocol: 'file:',
         slashes: true
     }));
@@ -121,7 +121,7 @@ const homeMenuTemplate = [{
         click() {
             var childWindow = new BrowserWindow();
             childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'HTML/Plotter.html'),
+                pathname: path.join(__dirname, 'html/Plotter.html'),
                 protocol: 'file:',
                 slashes: true
             }));
@@ -282,13 +282,13 @@ const homeMenuTemplate = [{
         click() {
             var childWindow = new BrowserWindow({
                 show: false,
-                icon: path.join(__dirname, 'charts.png'),
+                icon: path.join(__dirname, 'figs/charts.png'),
                 webPreferences: {
                     nodeIntegration: true
                 }
             });
             childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'doc.html'),
+                pathname: path.join(__dirname, 'html/doc.html'),
                 protocol: 'file:',
                 slashes: true
             }));
@@ -300,13 +300,13 @@ const homeMenuTemplate = [{
         label: "Sample Data",
         click() {
             var childWindow = new BrowserWindow({
-                icon: path.join(__dirname, 'charts.png'),
+                icon: path.join(__dirname, 'figs/charts.png'),
                 webPreferences: {
                     nodeIntegration: true
                 }
             });
             childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'data.html'),
+                pathname: path.join(__dirname, 'html/data.html'),
                 protocol: 'file:',
                 slashes: true
             }));
@@ -324,12 +324,12 @@ const homeMenuTemplate = [{
         label: "About",
         click() {
             var childWindow = new BrowserWindow({
-                icon: path.join(__dirname, 'charts.png'),
+                icon: path.join(__dirname, 'figs/charts.png'),
                 webPreferences: {
                     nodeIntegration: true
                 }});
             childWindow.loadURL(url.format({
-                pathname: path.join(__dirname, 'about.html'),
+                pathname: path.join(__dirname, 'html/about.html'),
                 protocol: 'file:',
                 slashes: true
             }));

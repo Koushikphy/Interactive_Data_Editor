@@ -4,10 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title>3D Plotter</title>
-    <link href="../JsCSS/style.min.css" rel="stylesheet" />
+    <link href="../lib/style.min.css" rel="stylesheet" />
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
-    <script src="../JsCSS/plotly-latest.min.js"></script>
-    <script src="../JsCSS/jquery.min.js"></script>
+    <script src="../lib/jquery.min.js"></script>
 </head>
 
 <body>
@@ -34,16 +33,14 @@
             Z : <input onchange="setZRange(this.value, ranges[cols[2]])" type="text" />
         </div><br />
     </div>
-    <script src="../JsCSS/viewer.min.js"></script>
+    <script src="../lib/viewer.min.js"></script>
     <script>
 
-
+        const Plotly = require('plotly.js-gl3d-dist');
         const fs = require("fs");
         const { remote } = require('electron');
         const path = require('path');
         const { dialog } = remote;
-
-
         Plotly.newPlot(figurecontainer, sIniData, layout);
 
 

@@ -2,7 +2,7 @@ var figurecontainer = document.getElementById("figurecontainer"),
 data = [], cols=[0,1,2], ldata=[], lIniData=[], ranges=[], swapped=false;
       
 const { ipcRenderer } = require('electron');
-
+const Plotly = require('plotly.js-gl3d-dist');
 
 ipcRenderer.on("sdata", function(e,d){
     [data, swapped] = d;
@@ -68,6 +68,44 @@ function setZRange(lim, range=false) {
     Plotly.update(figurecontainer, {"cmin":cmin, "cmax":cmax}, {"scene.zaxis.range" : lim});
 };
 
+
+
+function makeRotation() {
+    var issame = true, b = data[0][0].length;
+    for (let a of data[0]) {
+        if (a.length != b) {
+            issame = false; break;
+        };
+    };
+
+    if (issame) {
+        xxx = transpose(data[0]);
+        yyy = transpose(data[1]);
+        zzz = transpose(data[2]);
+        return;
+    };
+
+    var tmpData0 = [].concat(...data[0]).filter(x => x !== undefined),
+        tmpData1 = [].concat(...data[1]).filter(x => x !== undefined),
+        tmpData2 = [].concat(...data[2]).filter(x => x !== undefined);
+
+    var tmp = [...new Set(tmpData1)].sort((a, b) => a - b);
+
+    xxx = [], yyy = [], zzz = [];
+    for (let x of tmp) {
+        var tmp0 = [], tmp1 = [], tmp2 = [];
+        for (let i = 0; i < tmpData0.length; i++) {
+            if (tmpData1[i] == x) {
+                tmp0.push(tmpData0[i]);
+                tmp1.push(tmpData1[i]);
+                tmp2.push(tmpData2[i]);
+            };
+        };
+        xxx.push(tmp0);
+        yyy.push(tmp1);
+        zzz.push(tmp2);
+    };
+};
 
 
 

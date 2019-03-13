@@ -9,8 +9,10 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "start": "electron .",
-    "dist": "build"
+    "start": "gulp default && electron .",
+    "dist": "build",
+    "watch": "gulp watch",
+    "uplib":"gulp default"
   },
   "build": {
     "appId": "com.ide.app",
@@ -47,14 +49,24 @@
   "files": [
     "**/*",
     "build/icon.*",
-    "!JsCSS/*.*",
-    "JsCSS/*.min.js"
+    "!src/*",
+    "!gulpFile.js",
+    "!CHANGELOG.md",
+    "!app.iss"
   ],
   "devDependencies": {
     "electron": "^4.0.0",
-    "electron-builder": "^20.38.4"
+    "electron-builder": "^20.38.4",
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.2",
+    "uglify-es": "^3.3.9"
   },
   "dependencies": {
+    "particles.js": "^2.0.0",
+    "plotly.js-gl3d-dist": "^1.45.2",
     "request": "^2.88.0"
   }
 }

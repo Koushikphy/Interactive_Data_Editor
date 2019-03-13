@@ -3,11 +3,10 @@
 
 <head>
     <meta charset="utf-8" />
-    <link href="../JsCSS/style.min.css" rel="stylesheet" />
+    <link href="../lib/style.min.css" rel="stylesheet" />
     <title>Interactive Data Editor</title>
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
-    <script src="../JsCSS/plotly-gl3d-latest.min.js"></script>
-    <script src="../JsCSS/jquery.min.js"></script>
+    <script src="../lib/jquery.min.js"></script>
 </head>
 
 <body>
@@ -23,7 +22,7 @@
             Z : <input onchange="setZRange(this.value)" type="text" />
         </div>
     </div>
-    <script src="../JsCSS/viewer.min.js"></script>
+    <script src="../lib/viewer.min.js"></script>
     <script>
         Plotly.newPlot(figurecontainer, sIniData, layout, { displaylogo: false });
         function updatePlot() {
