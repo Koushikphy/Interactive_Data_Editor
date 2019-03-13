@@ -87,7 +87,7 @@ Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
 pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
 points = pointscontainer.getElementsByTagName("path");
 figurecontainer.on("plotly_selected", selectEvent);
-
+resizePlot();
 
 
 $(function () {

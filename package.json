@@ -10,7 +10,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "gulp default && electron .",
-    "dist": "build",
+    "dist": "gulp default && build",
     "watch": "gulp watch",
     "uplib":"gulp default"
   },

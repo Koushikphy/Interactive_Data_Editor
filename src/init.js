@@ -61,11 +61,15 @@ function recentMenu() {
     localStorage.setItem("files", JSON.stringify(recentFiles));
 };
 
+//in dev mode don't load animation directly go to plot
+if(app.isPackaged) {
+    const particlesJS = require('particles.js');
+    window.particlesJS.load('particle', '../lib/particles.json');
+    versionCheck();
+}
 
-const particlesJS = require('particles.js');
-window.particlesJS.load('particle', '../lib/particles.json');
+
 var menu = Menu.getApplicationMenu();
-if(process.env.NODE_ENV!='production') versionCheck();
 
 var fl = JSON.parse(localStorage.getItem("files"));
 if (fl !== null) {
