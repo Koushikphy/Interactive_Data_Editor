@@ -4,12 +4,6 @@ const url = require('url');
 var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     show = false, saved = true, compFName, firstSave = true, issame = false;
 
-function isDev() {
-    const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
-    const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
-    return isEnvSet ? getFromEnv : !app.isPackaged
-}
-
 
 
 function showStatus(msg) {
@@ -333,7 +327,7 @@ function editor() {
     editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
-    if (isDev()) editorWindow.webContents.openDevTools();
+    if (!app.isPackaged) editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready", function () {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
     })
@@ -369,7 +363,7 @@ function openViewer(x) {
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
     viewer[target] = viewerWindow;
-    if (isDev()) viewerWindow.webContents.openDevTools();
+    if (!app.isPackaged) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready", function () {
         updateOnServer()
     })

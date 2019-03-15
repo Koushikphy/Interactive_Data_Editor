@@ -7,14 +7,6 @@ process.env.NODE_ENV = 'production';
 const { app, BrowserWindow, Menu, ipcMain, shell } = electron;
 
 
-function isDev() {
-    const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
-    const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
-    return isEnvSet ? getFromEnv : !app.isPackaged
-}
-
-
-
 ipcMain.on("back", function (e, d) {
     mainWindow.webContents.send("back", d);
 })
@@ -45,7 +37,7 @@ app.on('ready', function () {
         protocol: 'file:',
         slashes: true
     }));
-    if (isDev()) mainWindow.webContents.openDevTools();
+    if (!app.isPackaged) mainWindow.webContents.openDevTools();
     // mainWindow.on('closed', function(){
     // app.quit();
     // })
@@ -127,7 +119,7 @@ const homeMenuTemplate = [{
             }));
             childWindow.maximize();
             childWindow.setMenu(null);
-            if (isDev()) childWindow.webContents.openDevTools();
+            if (!app.isPackaged) childWindow.webContents.openDevTools();
         }
     },
     {
@@ -175,7 +167,7 @@ const homeMenuTemplate = [{
     label: "Data",
     submenu: [{
         label: "Plot along X",
-        accelerator: 'A',
+        accelerator: !app.isPackaged? 'A': "",
         id: 'pax',
         visible: true,
         enabled: false,
@@ -186,7 +178,7 @@ const homeMenuTemplate = [{
         }
     }, {
         label: 'Plot along Y',
-        accelerator: 'A',
+        accelerator: !app.isPackaged? 'A': "",
         id: 'pay',
         visible: false,
         click() {
