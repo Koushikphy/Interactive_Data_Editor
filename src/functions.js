@@ -291,6 +291,7 @@ function saveData() {
     try {
         for (let i of tmpData) {
             for (let j of i) {
+                if(j==undefined) console.log(i)
                 txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
             };
             txt += "\n";
