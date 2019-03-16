@@ -5,14 +5,11 @@ var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     show = false, saved = true, compFName, firstSave = true, issame = false;
 
 
-
 function showStatus(msg) {
     $("#status").html(msg);
-    $("#status").delay("medium").fadeIn()
-    $("#status").delay(3000).fadeOut()
+    $("#status").slideToggle().delay(3000).slideToggle();
 
 }
-
 
 function updateData() {
     col.x = xCol.selectedIndex;
@@ -123,7 +120,6 @@ function fileReader(fname) {
     data = fs.readFileSync(fname, "utf8");
     data = parseData(data);
     ddd = data.length != 1;
-    showStatus('Data loaded ...');
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
 
 
@@ -174,6 +170,7 @@ function fileReader(fname) {
     $ch.text(xName + '=' + data[th_in][col.x][0]);
     $("#drag").html((_, html) => html.replace("Y", "X"));
     resizePlot();
+    showStatus('Data file loaded ...');
 }
 
 
@@ -299,9 +296,10 @@ function saveData() {
             txt += "\n";
         };
         fs.writeFileSync(save_name, txt);
-        showStatus("Data Saved as " + replaceWithHome(save_name));
+        showStatus("Data Saved in file " + replaceWithHome(save_name));
         saved = true;
     } catch (error) {
+        showStatus("Something went wrong! Couldn't save the data...")
         return false;
     }
 
