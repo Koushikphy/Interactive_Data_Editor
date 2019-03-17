@@ -167,7 +167,7 @@ const homeMenuTemplate = [{
     label: "Data",
     submenu: [{
         label: "Plot along X",
-        accelerator: !app.isPackaged? 'A': "",
+        accelerator: !app.isPackaged? 'Q': "",
         id: 'pax',
         visible: true,
         enabled: false,
@@ -178,7 +178,7 @@ const homeMenuTemplate = [{
         }
     }, {
         label: 'Plot along Y',
-        accelerator: !app.isPackaged? 'A': "",
+        accelerator: !app.isPackaged? 'Q': "",
         id: 'pay',
         visible: false,
         click() {

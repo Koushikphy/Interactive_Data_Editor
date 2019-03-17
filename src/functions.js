@@ -7,8 +7,9 @@ var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
 
 function showStatus(msg) {
     $("#status").html(msg);
-    $("#status").slideToggle().delay(3000).slideToggle();
-
+    $("#status").toggle('slide', {direction:'left'}, 500)
+                .delay(3000)
+                .toggle('slide', {direction:'left'}, 500);
 }
 
 function updateData() {
@@ -219,7 +220,8 @@ function parseData(strDps) {
 
 
 
-function expRotate(tmpData) {
+function expRotate(tmpData, i, j) {
+    //Bunch up on i-th column and sort along j-th column
     tmpData = tmpData.map(x => transpose(x));
     if (!issame) {
         issame = true;
@@ -244,18 +246,18 @@ function expRotate(tmpData) {
 
     var tmp = new Set();
     for (let a of tmpData) {
-        tmp.add(a[col.x]);
+        tmp.add(a[i]);
     };
     tmp = [...tmp].sort((a, b) => a - b);
     var newdat = [];
     for (let x of tmp) {
         var tmpdat = [];
         for (let line of tmpData) {
-            if (x == line[col.x]) {
+            if (x == line[i]) {
                 tmpdat.push(line)
             };
         };
-        tmpdat = tmpdat.sort((m, n) => m[col.y] - n[col.y]);
+        tmpdat = tmpdat.sort((m, n) => m[j] - n[j]);
         newdat.push(transpose(tmpdat));
     };
     return newdat;
@@ -265,9 +267,9 @@ function expRotate(tmpData) {
 
 function rotateData() {
     if (!data.length) return;
-    data = expRotate(data);
+    data = expRotate(data, col.x, col.y);
     if (!compdata.length) return;
-    compdata = expRotate(compdata);
+    compdata = expRotate(compdata, col.x, col.y);
 };
 
 
@@ -285,8 +287,9 @@ function saveAs() {
 
 
 function saveData() {
-    var tmpData = data.map(x => transpose(x));
-    if (swapped) tmpData = transpose(tmpData);
+    tmpData = data
+    if(swapped) tmpData = expRotate(tmpData, col.y, col.x) 
+    var tmpData = tmpData.map(x => transpose(x));
     var txt = "";
     try {
         for (let i of tmpData) {
