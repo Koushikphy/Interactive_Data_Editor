@@ -183,6 +183,10 @@ function hotKeys(e) {
         case 'ArrowUp':
             keyBoardDrag(1);
             break
+        case 'o':
+        case 'O':
+            if(!app.isPackaged) sSwapper();
+            break
     };
 };
 
