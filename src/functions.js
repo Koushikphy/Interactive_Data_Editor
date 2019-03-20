@@ -617,7 +617,7 @@ function keyBoardDrag(inp) {
 function saveOldData() {
     if (!data.length) return;
     redoStack = [];
-    olddata = JSON.stringify([th_in, col, data[th_in]]);
+    olddata = JSON.stringify([th_in, col, swapped, data[th_in]]);
     if (undoStack.length == 10) undoStack.splice(0, 1);
     undoStack.push(olddata);
     saved = false;
@@ -627,7 +627,7 @@ function saveOldData() {
 function reDo() {
     if (!redoStack.length) return;
     olddata = redoStack.pop();
-    undoStack.push(JSON.stringify([th_in, col, data[th_in]]));
+    undoStack.push(JSON.stringify([th_in, col, swapped, data[th_in]]));
     doIt();
 }
 
@@ -635,15 +635,17 @@ function unDo() {
     if (!ma) ma = 1;
     if (!undoStack.length) return;
     olddata = undoStack.pop()
-    redoStack.push(JSON.stringify([th_in, col, data[th_in]]));
+    redoStack.push(JSON.stringify([th_in, col, swapped, data[th_in]]));
     doIt();
 }
 
 
 function doIt() {
-    var arr;
-    [th_in, col, arr] = JSON.parse(olddata);
+    var arr, tmpSwapped;
+    [th_in, col, tmpSwapped, arr] = JSON.parse(olddata);
+    if (tmpSwapped != swapped) isswap();
     zCol.selectedIndex = col.z;
+    sCol.selectedIndex = col.s;
     data[th_in] = arr;
     updatePlot(1);
     startDragBehavior();
