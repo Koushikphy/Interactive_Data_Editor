@@ -88,6 +88,8 @@ function fileReader(fname) {
     issame = false;
     firstSave = true;
     swapper = false;
+    undoStack = [];
+    redoStack = [];
     $("#sCol, #sColInp").hide();
     $("#particle").remove();
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
