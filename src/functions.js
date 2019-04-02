@@ -56,6 +56,15 @@ function updateData() {
 
 
 
+document.ondragover = document.ondrop = (ev) => {
+    ev.preventDefault()
+  }
+  
+  document.body.ondrop = (ev) => {
+    const fname = ev.dataTransfer.files[0].path;
+    if (fname !== undefined) fileReader(fname);
+    ev.preventDefault()
+  }
 
 
 function fileLoader() {
@@ -65,8 +74,6 @@ function fileLoader() {
     });
     if (fname !== undefined) fileReader(fname[0]);
 }
-
-
 
 
 function fileReader(fname) {
