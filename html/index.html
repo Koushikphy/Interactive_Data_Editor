@@ -101,11 +101,75 @@
         <div id="figurecontainer"></div>
     </div>
     <div id="status"></div>
-
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    </div>
     <script src='../lib/init.min.js'></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
     <script src="../lib/funcs.min.js"></script>
+    <script>
+
+
+
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("full").style.marginLeft = "250px";
+        }
+        openNav();
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("full").style.marginLeft = "0";
+        }
+
+
+        function addRow(name) {
+            var div = document.createElement('div');
+
+            div.className = 'row';
+
+            div.innerHTML =
+                `<div class=lines onclick='ind(this)'>
+        <label class='filename'>${name}</label>
+        <input type="button" value="X" onclick="removeRow(this)">
+        <div>`;
+            document.getElementById('mySidebar').appendChild(div);
+        }
+
+        function ind(input) {
+            var element = input.parentNode
+            index = Array.from(element.parentNode.children).indexOf(element) - 1
+            console.log(index)
+        }
+
+
+        addRow(); addRow(); addRow(); addRow(); addRow();
+
+
+        function removeRow(input) {
+            document.getElementById('mySidebar').removeChild(input.parentNode.parentNode);
+        }
+
+
+
+        `
+1. for now just concentrate on same columns and try to add multiple files.
+2. 'ADD Files' to a global global array od data
+3. This will make the 'add file for compare' obsolite 
+4. open swapper will be a complete different scenario and that will be handled later
+5.      i. load file
+        ii. add/push to the global array
+        iii. a. update the list
+             b. update plot with new traces
+                b.i. trace color select
+        iv delete from list
+            a. remove childe
+            b .update plot with new traces
+6. also a nice way to drag the side bar
+7. drag to open
+    `    
+    </script>
 </body>
 
 </html>
