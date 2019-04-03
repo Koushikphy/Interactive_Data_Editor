@@ -4,12 +4,13 @@ const url = require('url');
 var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     show = false, saved = true, compFName, firstSave = true, issame = false;
 
+var fullData = [], fullDataCols = [];
 
 function showStatus(msg) {
     $("#status").html(msg);
-    $("#status").toggle('slide', {direction:'left'}, 500)
-                .delay(3000)
-                .toggle('slide', {direction:'left'}, 500);
+    $("#status").toggle('slide', { direction: 'left' }, 500)
+        .delay(3000)
+        .toggle('slide', { direction: 'left' }, 500);
 }
 
 function updateData() {
@@ -58,13 +59,13 @@ function updateData() {
 
 document.ondragover = document.ondrop = (ev) => {
     ev.preventDefault()
-  }
-  
-  document.body.ondrop = (ev) => {
+}
+
+document.body.ondrop = (ev) => {
     const fname = ev.dataTransfer.files[0].path;
     if (fname !== undefined) fileReader(fname);
     ev.preventDefault()
-  }
+}
 
 
 function fileLoader() {
@@ -181,9 +182,49 @@ function fileReader(fname) {
     $("#drag").html((_, html) => html.replace("Y", "X"));
     resizePlot();
     showStatus('Data file loaded ...');
+    fullDataCols.push(col);
 }
 
 
+function addFile() {
+    var fname = dialog.showOpenDialog({
+        defaultPath: recentLocation,
+        properties: ['openFile']
+    });
+    if (fname === undefined) return
+    fname = fname[0]
+    var filename = path.basename(fname, path.extname(fname))
+    dat = parseData(fs.readFileSync(fname, "utf8"))
+    addRow(filename);
+    fullData.push(dat);
+    fullDataCols.push(col);
+}
+
+
+
+function addNewPlot() {
+    Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
+        displaylogo: false,
+        modeBarButtonsToRemove: ['sendDataToCloud']
+    });
+    for (let i = 0; i < fullData.length - 1; i++) {
+        Plotly.addTraces(figurecontainer, iniPointsC)
+    };
+
+    updateNewPlot()
+}
+
+function updateNewPlot() {
+    var xl = [], yl = [];
+    for (let i = 0; i < fullData.length; i++) {
+        xl.push(fullData[i][th_in][fullDataCols[i].y])
+        yl.push(fullData[i][th_in][fullDataCols[i].z])
+    }
+    Plotly.restyle(figurecontainer, {
+        'x': xl,
+        'y': yl
+    })
+}
 
 
 
@@ -297,13 +338,13 @@ function saveAs() {
 
 function saveData() {
     tmpData = data
-    if(swapped) tmpData = expRotate(tmpData, col.y, col.x) 
+    if (swapped) tmpData = expRotate(tmpData, col.y, col.x)
     var tmpData = tmpData.map(x => transpose(x));
     var txt = "";
     try {
         for (let i of tmpData) {
             for (let j of i) {
-                if(j==undefined) console.log(i)
+                if (j == undefined) console.log(i)
                 txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
             };
             txt += "\n";
