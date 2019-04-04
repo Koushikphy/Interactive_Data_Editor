@@ -118,7 +118,6 @@ input[type=text] {
 .borders {
     padding-top: 1.5px;
     padding-bottom: 1.5px;
-
     border: 1px solid black;
     margin-bottom: 5px;
     width: 37pc;
@@ -192,9 +191,9 @@ input[type=text] {
 .sidebar .closebtn {
   position: absolute;
   top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
+  /* right: 25px; */
+  font-size: 30px;
+  /* margin-left: 50px; */
 }
 
 .openbtn {

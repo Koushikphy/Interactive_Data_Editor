@@ -1,10 +1,28 @@
+//NOTES:
+// make a fullData array that holds allthe data for all the files 
+// and also keep the data array that stores the data that is being edited currently
+// now make changes like earlier and like the data to the full data
+//
+// trigger legend only when multiple files are present
+//
+
+
+
+
+
+
+
+
+
+
+
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
 var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
     show = false, saved = true, compFName, firstSave = true, issame = false;
 
-var fullData = [], fullDataCols = [];
+var fullData = [], fullDataCols = [], fileNames=[];
 
 function showStatus(msg) {
     $("#status").html(msg);
@@ -183,26 +201,55 @@ function fileReader(fname) {
     resizePlot();
     showStatus('Data file loaded ...');
     fullDataCols.push(col);
+    fullData.push(data);
+    fileNames.push(filename)
 }
 
 
-function addFile() {
+function makeRows(){
+    // iterate this over filenames
+    var fileContainer = document.getElementById('fileContainer')
+    while (fileContainer.firstChild) {
+        fileContainer.removeChild(fileContainer.firstChild);
+    }
+    var div = document.createElement('div');
+
+    div.className = 'file';
+    div.onclick = ind(this);
+    div.innerHTML=''
+    for(let name of fileNames){
+        div.innerHTML +=    `<div class=lines onclick='ind(this)'>
+        <label class='filename'>${name}</label>
+        <input type="button" value="X" onclick="removeRow(this)">
+        <div>`;
+    }
+    document.getElementById('mySidebar').appendChild(div);
+}
+
+
+function addNewFileDialog(){
     var fname = dialog.showOpenDialog({
         defaultPath: recentLocation,
         properties: ['openFile']
     });
-    if (fname === undefined) return
-    fname = fname[0]
+    if (fname !== undefined) addNewFile(fname[0])
+}
+
+
+// provide an option to load from the recent file
+function addNewFile(fname) {
     var filename = path.basename(fname, path.extname(fname))
     dat = parseData(fs.readFileSync(fname, "utf8"))
     addRow(filename);
     fullData.push(dat);
     fullDataCols.push(col);
+    fileNames.push(filename);
+    updatePlotTraces();
 }
 
 
 
-function addNewPlot() {
+function updatePlotTraces() {
     Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
         displaylogo: false,
         modeBarButtonsToRemove: ['sendDataToCloud']
@@ -210,20 +257,34 @@ function addNewPlot() {
     for (let i = 0; i < fullData.length - 1; i++) {
         Plotly.addTraces(figurecontainer, iniPointsC)
     };
-
     updateNewPlot()
 }
 
+
+// this will be the new update plot function
 function updateNewPlot() {
-    var xl = [], yl = [];
+    var xl = [], yl = [], names=[];
     for (let i = 0; i < fullData.length; i++) {
-        xl.push(fullData[i][th_in][fullDataCols[i].y])
-        yl.push(fullData[i][th_in][fullDataCols[i].z])
+        xl.push(fullData[i][th_in][fullDataCols[i].y]);
+        yl.push(fullData[i][th_in][fullDataCols[i].z]);
+        names.push( fileNames[i] + ` ${fullDataCols[i].y}:${fullDataCols[i].z}`);
     }
+    //remove showlegend from the iniPoints and add it here.
     Plotly.restyle(figurecontainer, {
         'x': xl,
-        'y': yl
+        'y': yl,
+        name:names
     })
+}
+
+
+function selectEditable(index){
+    // move the file name in dash board to top
+    // change the title to editable file name
+    [fullData[0],fullData[index] ]= [fullData[index], fullData[0] ];
+    [fullDataCols[0],fullDataCols[index] ]= [fullDataCols[index], fullDataCols[0] ];
+    [fileNames[0],fileNames[index] ]= [fileNames[index], fileNames[0] ];
+    updatePlotTraces()
 }
 
 

@@ -40,6 +40,8 @@
     <div id="full" style="display: none;">
 
         <div id="header">
+            <button onclick="openNav()">|||</button>
+            <button onclick="closeNav()">X</button>
             An interactive 2D and 3D data editor
         </div>
 
@@ -116,7 +118,7 @@
             document.getElementById("mySidebar").style.width = "250px";
             document.getElementById("full").style.marginLeft = "250px";
         }
-        openNav();
+        
 
         function closeNav() {
             document.getElementById("mySidebar").style.width = "0";
