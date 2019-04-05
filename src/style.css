@@ -209,6 +209,16 @@ transition: width .5s;
 }
 
 #files{
-    text-align: center;
-    font-size: 18px
+    text-align: left;
+    font-size: 15px;
+}
+
+.fff{
+    margin: 3px;
+    width: 200 ;
+}
+
+.fff :hover{
+    background-color: #b9b9b9;
+    cursor: pointer;
 }

@@ -116,6 +116,9 @@ function fileReader(fname) {
     swapper = false;
     undoStack = [];
     redoStack = [];
+    fullData = [];
+    fullDataCols = [];
+    fileNames = []
     $("#sCol, #sColInp").hide();
     $("#particle").remove();
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
@@ -186,12 +189,12 @@ function fileReader(fname) {
 
     fullDataCols.push(col);
     fullData.push(data);
-    fileNames.push(filename);
+    fileNames.push(fname);
 
     // plot here
     updateData();
-    makeEditable()
-
+    makeEditable();
+    makeRows();
 
     //update recent menu
 
@@ -211,16 +214,27 @@ function ind(input) {
     selectEditable(ind)
 }
 
+//handle case when removing the same  and when there is only one 
+function removeRow(row) {
+    if (fullData.length == 1) return
+    index = $('.closefile').index(row)
+    fullData.splice(index, 1);
+    fullDataCols.splice(index, 1);
+    fileNames.splice(index, 1);
+    updatePlotTrace()
+
+}
 
 function makeRows() {
     // iterate this over filenames
     tmp = ''
     for (let name of fileNames) {
-        tmp += `<label class='filename' onclick='ind(this)'>${name}</label>
-        <input type="button" value="X" onclick="removeRow(this)">`;
-        console.log(tmp)
+        name = path.basename(name, path.extname(name))
+        tmp += `<div class='fff'>
+        <input type="button" class = 'closefile' value="X" onclick="removeRow(this)">
+        <label class='filename' onclick='ind(this)'>${name}</label>
+        </div>`;
     }
-    console.log(tmp)
     $('#files').html(tmp)
 }
 
@@ -239,16 +253,14 @@ function addNewFileDialog() {
 
 // provide an option to load from the recent file
 function addNewFile(fname) {
-    var filename = fname;
     layout.showlegend = true
-    dat = parseData(fs.readFileSync(fname, "utf8"))
-    // addRow(path.basename(fname, path.extname(fname)));
-    fullData.push(dat);
-    fullDataCols.push(col);
-    fileNames.push(filename);
+    data = parseData(fs.readFileSync(fname, "utf8"))
+    fullData.unshift(data); //add at the beggining i.e instantly editable
+    fullDataCols.unshift(JSON.parse(JSON.stringify(col)));
+    fileNames.unshift(fname);
     updatePlotTrace();
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
-    // makeRows();
+
 }
 
 
@@ -261,8 +273,15 @@ function updatePlotTrace() {
     for (let i = 0; i < fullData.length - 1; i++) {
         Plotly.addTraces(figurecontainer, iniPointsC)
     };
+    if (fullData.length > 1) {
+        layout.showlegend = true;
+    } else {
+        layout.showlegend = false;
+    }
+    Plotly.relayout(figurecontainer, layout)
     updatMultiPlot();
     makeEditable();
+    makeRows()
     figurecontainer.on("plotly_selected", selectEvent);
 }
 
@@ -278,15 +297,14 @@ function updatMultiPlot() {
         names.push(fnm + ` ${fullDataCols[i].y}:${fullDataCols[i].z}`);
     };
     //remove showlegend from the iniPoints and add it here.
-    Plotly.update(figurecontainer, {
+    Plotly.restyle(figurecontainer, {
         'x': xl,
         'y': yl,
         name: names
-    }, layout)
+    })
 
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-
     for (var i = 0; i < dpsx.length; i++) {
         points[i].handle = {
             x: dpsx[i],
@@ -312,7 +330,8 @@ function selectEditable(index) {
     //! reorder filenames here
     updatMultiPlot()
     makeEditable()
-    document.title = fileNames[0]
+    makeRows()
+    document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[0]);
 }
 
 function makeEditable() {
@@ -323,7 +342,7 @@ function makeEditable() {
 }
 
 function updateEditablePlot() {
-    fullData[0] = data
+    // data = fullData[0]
     Plotly.restyle(figurecontainer, {
         "x": [dpsx],
         "y": [dpsy]
@@ -584,7 +603,7 @@ function colsChanged(value) {
 
 function colChanged(value) {
     $("select").blur();
-    col.z = value;
+    fullDataCols[0].z = value;
     updatePlot(1);
     updateOnServer();
     startDragBehavior();
@@ -832,7 +851,7 @@ updatePlot = updatMultiPlot
 // function updatePlot(both = 0) {
 //     dpsy = data[th_in][col.z];
 //     dpsx = data[th_in][col.y];
-
+//     console.log(points)
 //     if (swapper) {
 //         dpsy2 = data[th_in][col.s];
 //         Plotly.restyle(figurecontainer, {
