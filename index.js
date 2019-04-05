@@ -16,6 +16,12 @@ ipcMain.on("rf", function (e, d) {
 })
 
 
+ipcMain.on("adrf", function (e, d) {
+    mainWindow.webContents.send("adrf", d);
+})
+
+
+
 ipcMain.on('checkClose', function (eg, d) {
     mainWindow.destroy();
     app.quit();
@@ -66,22 +72,20 @@ const homeMenuTemplate = [{
         submenu: [],
     },
     {
-        label: "Open file for compare",
-        enabled: false,
-        id: "openc",
+        type: 'separator'
+    },
+    {
+        label: "Add file",
+        accelerator: 'CmdOrCtrl+O',
+        id: 'af',
         click() {
-            mainWindow.webContents.send("menuTrigger", "openc")
+            mainWindow.webContents.send("menuTrigger", "add");
         }
     },
     {
-        label: "Show compare data",
-        id: 'compf',
-        type: "checkbox",
-        checked: true,
-        visible: false,
-        click() {
-            mainWindow.webContents.send("menuTrigger", "compf")
-        }
+        label: 'Add Recent Files',
+        id: 'arf',
+        submenu: [],
     },
     {
         type: 'separator'
@@ -128,10 +132,9 @@ const homeMenuTemplate = [{
         click() {
             mainWindow.reload();
             var men = Menu.getApplicationMenu();
-            for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'openc', 'pamh', 'pax','swapen',"edat", "fill", "filter"]) {
+            for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'af', 'arf', 'pamh', 'pax', 'swapen', "edat", "fill", "filter"]) {
                 men.getMenuItemById(i).enabled = false;
             }
-            men.getMenuItemById("compf").visible = false;
             men.getMenuItemById("pax").visible = true;
             men.getMenuItemById('pay').visible = false;
         }
@@ -167,7 +170,7 @@ const homeMenuTemplate = [{
     label: "Data",
     submenu: [{
         label: "Plot along X",
-        accelerator: !app.isPackaged? 'Q': "",
+        accelerator: !app.isPackaged ? 'Q' : "",
         id: 'pax',
         visible: true,
         enabled: false,
@@ -178,7 +181,7 @@ const homeMenuTemplate = [{
         }
     }, {
         label: 'Plot along Y',
-        accelerator: !app.isPackaged? 'Q': "",
+        accelerator: !app.isPackaged ? 'Q' : "",
         id: 'pay',
         visible: false,
         click() {
@@ -319,7 +322,8 @@ const homeMenuTemplate = [{
                 icon: path.join(__dirname, 'figs/charts.png'),
                 webPreferences: {
                     nodeIntegration: true
-                }});
+                }
+            });
             childWindow.loadURL(url.format({
                 pathname: path.join(__dirname, 'html/about.html'),
                 protocol: 'file:',

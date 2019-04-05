@@ -24,7 +24,7 @@ var layout = {
     plot_bgcolor: "#e8ebef",
     showlegend: false,
     hovermode: "closest",
-    title:'',
+    title: '',
     margin: {
         t: 25,
         r: 0,
@@ -33,12 +33,12 @@ var layout = {
         pad: 0
     },
     xaxis: {
-        title:'',
+        title: '',
         zeroline: false,
         showline: true,
     },
     yaxis: {
-        title:'',
+        title: '',
         automargin: true,
         zeroline: false,
         showline: true,
@@ -46,11 +46,11 @@ var layout = {
         hoverformat: " ,.6g",
     },
     font: { size: 14 },
-    showlegend : true,
+    showlegend: false,
     legend: {
         x: 0,
         y: 1
-      }
+    }
 };
 
 
@@ -88,7 +88,7 @@ var iniPointsC = {
 const Plotly = require('plotly.js-gl3d-dist');
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
     displaylogo: false,
-    modeBarButtonsToRemove: ['sendDataToCloud'], editable:true
+    modeBarButtonsToRemove: ['sendDataToCloud'], editable: true
 });
 pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
 points = pointscontainer.getElementsByTagName("path");

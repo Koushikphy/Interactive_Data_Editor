@@ -37,11 +37,19 @@
         </div>
     </div>
 
-    <div id="full" style="display: none;">
 
+    <div id="sidebar">
+        <div id="split-bar"></div>
+        <div class="closebtn" onclick="closeNav()">X</div>
+        <div class="sideheader">
+            Files Dashboard
+        </div>
+        <div id="files"></div>
+    </div>
+    <div id="full" style="display: none;">
+        <button onclick="openNav()" class="ham">|||</button>
         <div id="header">
-            <button onclick="openNav()">|||</button>
-            <button onclick="closeNav()">X</button>
+
             An interactive 2D and 3D data editor
         </div>
 
@@ -103,57 +111,49 @@
         <div id="figurecontainer"></div>
     </div>
     <div id="status"></div>
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-    </div>
+
+
     <script src='../lib/init.min.js'></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
     <script src="../lib/funcs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.5.9/split.min.js"></script>
+
     <script>
 
 
+        $('#split-bar').mousedown(function (e) {
+            e.preventDefault();
+            $(document).mousemove(function (e) {
+                e.preventDefault();
+                var x = e.pageX - $('#sidebar').offset().left;
+                if (x > 200 && x < window.innerWidth / 2.5) {
+                    $('#sidebar').css("width", x - 2);
+                    $('#full').css("margin-left", x);
+                }
+            })
+        });
+        $(document).mouseup(function (e) {
+            $(document).unbind('mousemove');
+        });
+
 
         function openNav() {
-            document.getElementById("mySidebar").style.width = "250px";
-            document.getElementById("full").style.marginLeft = "250px";
+            $('#split-bar').css("width", 5);
+            $('#sidebar').css("width", 200);
+            $('#full').css("margin-left", 206);
+            $('.ham').toggle()
         }
-        
+
 
         function closeNav() {
-            document.getElementById("mySidebar").style.width = "0";
-            document.getElementById("full").style.marginLeft = "0";
+
+            $('#split-bar').css("width", 0);
+            $('#sidebar').css("width", 0);
+            $('#full').css("margin-left", 0);
+            $('.ham').toggle()
+
         }
-
-
-        function addRow(name) {
-            var div = document.createElement('div');
-
-            div.className = 'row';
-
-            div.innerHTML =
-                `<div class=lines onclick='ind(this)'>
-        <label class='filename'>${name}</label>
-        <input type="button" value="X" onclick="removeRow(this)">
-        <div>`;
-            document.getElementById('mySidebar').appendChild(div);
-        }
-
-        function ind(input) {
-            var element = input.parentNode
-            index = Array.from(element.parentNode.children).indexOf(element) - 1
-            console.log(index)
-        }
-
-
-        addRow(); addRow(); addRow(); addRow(); addRow();
-
-
-        function removeRow(input) {
-            document.getElementById('mySidebar').removeChild(input.parentNode.parentNode);
-        }
-
-
 
         `
 1. for now just concentrate on same columns and try to add multiple files.

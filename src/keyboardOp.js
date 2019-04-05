@@ -2,6 +2,9 @@ ipcRenderer.on("rf", function (e, d) {
     fileReader(d);
 })
 
+ipcRenderer.on("adrf", function (e, d) {
+    addNewFile(d);
+})
 
 ipcRenderer.on("back", function (e, d) {
     data = d.map(x => transpose(x))
@@ -28,10 +31,13 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         case "open":
             fileLoader();
             break;
+        case 'add':
+            addNewFileDialog();
+            break;
         case "save":
-            if(firstSave){
+            if (firstSave) {
                 saveAs()
-            }else{
+            } else {
                 saveData()
             }
             break;
@@ -95,7 +101,7 @@ function hotDKeys(e) {
     if (document.activeElement.type == "text") {
         return;
     };
-    switch (e.key){
+    switch (e.key) {
         case 'm':
         case 'ArrowDown':
         case 'ArrowUp':
@@ -142,7 +148,7 @@ function hotKeys(e) {
                 unDo();
             } else if (e.ctrlKey & e.shiftKey) {
                 reDo();
-            }else {
+            } else {
                 Plotly.relayout(figurecontainer, {
                     dragmode: "zoom"
                 });
@@ -185,8 +191,17 @@ function hotKeys(e) {
             break
         case 'o':
         case 'O':
-            if(!app.isPackaged) sSwapper();
+            if (!app.isPackaged) sSwapper();
             break
+        case 'Tab':
+            if (e.ctrlKey) {
+                keepTrackIndex += 1
+                if (keepTrackIndex == fullData.length) {
+                    console.log(keepTrackIndex)
+                    keepTrackIndex = 1
+                }
+                selectEditable(keepTrackIndex)
+            }
     };
 };
 

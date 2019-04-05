@@ -44,10 +44,13 @@ function replaceWithHome(name) {
 };
 
 
-
 function recentMenu() {
     var rrf = menu.getMenuItemById("rf").submenu;
-    rrf.clear();
+    var arf = menu.getMenuItemById("arf").submenu;
+    if (recentFiles.length > 10) {
+        recentFiles.splice(0, 1);
+    }
+    rrf.clear(); arf.clear();
     for (let i = recentFiles.length - 1; i >= 0; i--) {
         var fln = replaceWithHome(recentFiles[i].slice())
         var item = {
@@ -56,17 +59,25 @@ function recentMenu() {
                 ipcRenderer.send("rf", recentFiles[i]);
             }
         };
+        var item2 = {
+            label: fln,
+            click() {
+                ipcRenderer.send("adrf", recentFiles[i]);
+            }
+        };
         rrf.append(new MenuItem(item));
+        arf.append(new MenuItem(item2));
+
     }
     localStorage.setItem("files", JSON.stringify(recentFiles));
 };
 
 //in dev mode don't load animation directly go to plot
-if(app.isPackaged) {
+if (app.isPackaged) {
     const particlesJS = require('particles.js');
     window.particlesJS.load('particle', '../lib/particles.json');
     versionCheck();
-} else{
+} else {
     document.getElementById('particle').remove();
     document.getElementById('full').style.display = 'block';
 }
