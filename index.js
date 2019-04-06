@@ -77,6 +77,7 @@ const homeMenuTemplate = [{
     {
         label: "Add file",
         accelerator: 'CmdOrCtrl+O',
+        enabled : false,
         id: 'af',
         click() {
             mainWindow.webContents.send("menuTrigger", "add");
@@ -84,6 +85,7 @@ const homeMenuTemplate = [{
     },
     {
         label: 'Add Recent Files',
+        enabled : false,
         id: 'arf',
         submenu: [],
     },

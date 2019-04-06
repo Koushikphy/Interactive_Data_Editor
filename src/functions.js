@@ -210,9 +210,7 @@ function fileReader(fname) {
 }
 
 function ind(input) {
-    console.log(input)
     var ind = $('li').index(input)
-    console.log(ind)
     selectEditable(ind)
 }
 
@@ -291,7 +289,6 @@ function updatePlotTrace() {
     makeRows()
     figurecontainer.on("plotly_selected", selectEvent);
 }
-
 
 
 // this will be the new update plot function

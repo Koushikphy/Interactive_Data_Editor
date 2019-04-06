@@ -5,6 +5,8 @@
     <title>Interactive Data Editor</title>
     <link href="../lib/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../lib/jquery-ui.min.css">
+    <link rel="stylesheet" href="../lib/jsoneditor.min.css">
+
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
 
 </head>
@@ -112,12 +114,13 @@
     </div>
     <div id="status"></div>
 
+    <div id = 'jsoneditor'></div>
 
     <script src='../lib/init.min.js'></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
     <script src="../lib/funcs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.5.9/split.min.js"></script>
+    <script src="../lib/jsoneditor.min.js"></script>
 
     <script>
 
@@ -147,7 +150,6 @@
 
 
         function closeNav() {
-
             $('#split-bar').css("width", 0);
             $('#sidebar').css("width", 0);
             $('#full').css("margin-left", 0);
@@ -155,24 +157,70 @@
 
         }
 
-        `
-1. for now just concentrate on same columns and try to add multiple files.
-2. 'ADD Files' to a global global array od data
-3. This will make the 'add file for compare' obsolite 
-4. open swapper will be a complete different scenario and that will be handled later
-5.      i. load file
-        ii. add/push to the global array
-        iii. a. update the list
-             b. update plot with new traces
-                b.i. trace color select
-        iv delete from list
-            a. remove childe
-            b .update plot with new traces
-6. also a nice way to drag the side bar
-7. drag to open
-8. add legends to easily understand
-9. add color/color pallete  to easily recognise the line from file list
-    `    
+
+function updateJSON(){
+    var Title = []
+    var Markers = []
+    var Line   = []
+    for(let trace of figurecontainer.data){
+    Title.push(trace.name)
+    Markers.push(trace.marker)
+    Line.push(trace.line)
+}
+lines = { Title, Markers, Line}
+layout = figurecontainer.layout
+editor.update({lines, layout})
+}
+
+
+
+
+var options = {
+    onChangeJSON: function (json) {
+        Plotly.update(figurecontainer, {
+                        name : json.lines.Title,
+                        marker: json.lines.Markers,
+                        line : json.lines.Line
+                    }, 
+                    json.layout )
+    },
+    onColorPicker: function (parent, color, onChange) {
+        new JSONEditor.VanillaPicker({
+        parent: parent,
+        color: color,
+        popup: 'bottom',
+        onChange: function (color) {
+            console.log('onChange', color)
+            var alpha = color.rgba[3]
+            var hex = (alpha === 1)
+                ? color.hex.substr(0, 7)  // return #RRGGBB
+                : color.hex               // return #RRGGBBAA
+            onChange(hex)
+        },
+    //   onDone: function (color) {
+    //     console.log('onDone', color)
+    //   },
+    //   onClose: function (color) {
+    //     console.log('onClose', color)
+    //   }
+        }).show();
+    },
+    mode: 'form',
+  // mainMenuBar:false,
+//   enableSort :false,
+//   enableTransform : false
+};
+
+var editor = new JSONEditor(
+        document.getElementById('jsoneditor'),
+        options, 
+        {
+            "lines": '',
+            "layout": ''
+        });
+
+
+
     </script>
 </body>
 

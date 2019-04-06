@@ -242,3 +242,8 @@ transition: width .5s;
 ol{
     padding-left: 1pc
 }
+
+#jsoneditor {
+    width: 500px;
+    height: 500px;
+  }
