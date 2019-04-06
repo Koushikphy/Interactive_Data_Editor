@@ -213,12 +213,32 @@ transition: width .5s;
     font-size: 15px;
 }
 
-.fff{
+/* .fff{
     margin: 3px;
     width: 200 ;
+    display: inline-block;
 }
 
 .fff :hover{
     background-color: #b9b9b9;
     cursor: pointer;
+} */
+
+.filename{
+    display: inline-block;
+}
+
+.key{
+    display: inline-block;
+  }
+  
+  li { background: rgb(243, 243, 243); padding-left: 5px; }
+  /* li:nth-child(odd) { background: #f1f1f2; } */
+  li:hover{background: #dadada}
+  
+  li{
+      padding-top: 5px
+  }
+ol{
+    padding-left: 1pc
 }

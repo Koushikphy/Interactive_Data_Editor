@@ -210,7 +210,9 @@ function fileReader(fname) {
 }
 
 function ind(input) {
-    var ind = $('.filename').index(input)
+    console.log(input)
+    var ind = $('li').index(input)
+    console.log(ind)
     selectEditable(ind)
 }
 
@@ -227,15 +229,20 @@ function removeRow(row) {
 
 function makeRows() {
     // iterate this over filenames
-    tmp = ''
+    tmp = '<ol>'
     for (let name of fileNames) {
         name = path.basename(name, path.extname(name))
-        tmp += `<div class='fff'>
-        <input type="button" class = 'closefile' value="X" onclick="removeRow(this)">
-        <label class='filename' onclick='ind(this)'>${name}</label>
-        </div>`;
+        tmp += `<li onclick='ind(this)'>
+        <input type="button" class = 'closefile' value="X">
+        <label class='filename' >${name}</label>
+        </li>`;
     }
+    tmp+='</ol>'
     $('#files').html(tmp)
+    $("li .closefile").click(function(e) {
+        removeRow(this)
+        e.stopPropagation();
+     });
 }
 
 function addNewFileDialog() {
@@ -294,7 +301,7 @@ function updatMultiPlot() {
         xl.push(fullData[i][th_in][fullDataCols[i].y]);
         yl.push(fullData[i][th_in][fullDataCols[i].z]);
         fnm = path.basename(fileNames[i], path.extname(fileNames[i]))
-        names.push(fnm + ` ${fullDataCols[i].y}:${fullDataCols[i].z}`);
+        names.push(fnm + ` ${fullDataCols[i].y+1}:${fullDataCols[i].z+1}`);
     };
     //remove showlegend from the iniPoints and add it here.
     Plotly.restyle(figurecontainer, {
