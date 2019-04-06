@@ -77,7 +77,7 @@ const homeMenuTemplate = [{
     {
         label: "Add file",
         accelerator: 'CmdOrCtrl+O',
-        enabled : false,
+        enabled: false,
         id: 'af',
         click() {
             mainWindow.webContents.send("menuTrigger", "add");
@@ -85,7 +85,7 @@ const homeMenuTemplate = [{
     },
     {
         label: 'Add Recent Files',
-        enabled : false,
+        enabled: false,
         id: 'arf',
         submenu: [],
     },
@@ -265,9 +265,8 @@ const homeMenuTemplate = [{
             } else {
                 mainWindow.setFullScreen(true);
             }
-            setTimeout(function () {
-                mainWindow.webContents.send("menuTrigger", "fullscreen")
-            }, 100)
+            mainWindow.webContents.send("menuTrigger", "fullscreen")
+
         }
     }
     ]

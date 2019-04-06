@@ -171,7 +171,7 @@ background-color: rgb(219, 55, 55);
 }
 
 
-#sidebar {
+#sidebar, #sidebar2 {
 background-color: rgb(243, 243, 243);
 width: 0px;
 float: left;
@@ -181,20 +181,20 @@ overflow: hidden;
 white-space:nowrap;
 }
 
-.sideheader{
+.sideheader, .sideheader2{
     width: 100%;
     text-align: center;
     font-size: 21px;
     margin-bottom: 21px
 }
 
-.closebtn{
+.closebtn, .closebtn2{
     text-align: right;
     font-size: 25px;
     padding-right: 10px;
 }
 
-#split-bar {
+#split-bar, #split-bar2 {
 background-color: black;
 height: 100%;
 float: right;
@@ -210,7 +210,7 @@ transition: width .5s;
 
 #files{
     text-align: left;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 /* .fff{
@@ -244,6 +244,7 @@ ol{
 }
 
 #jsoneditor {
-    width: 500px;
-    height: 500px;
+    width: 200px;
+    height: 100vh;
+transition: width .5s;
   }

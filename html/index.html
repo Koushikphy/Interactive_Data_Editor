@@ -48,6 +48,15 @@
         </div>
         <div id="files"></div>
     </div>
+    <div id="sidebar2">
+        <div id="split-bar2"></div>
+        <div class="closebtn" onclick="closeNav2()">X</div>
+        <div class="sideheader">
+            Settings
+        </div>
+        <div id="jsoneditor"></div>
+    </div>
+
     <div id="full" style="display: none;">
         <button onclick="openNav()" class="ham">|||</button>
         <div id="header">
@@ -114,110 +123,16 @@
     </div>
     <div id="status"></div>
 
-    <div id = 'jsoneditor'></div>
+    <!-- <div id='jsoneditor'></div> -->
 
     <script src='../lib/init.min.js'></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
-    <script src="../lib/funcs.min.js"></script>
     <script src="../lib/jsoneditor.min.js"></script>
+    <script src="../lib/funcs.min.js"></script>
 
     <script>
 
-
-        $('#split-bar').mousedown(function (e) {
-            e.preventDefault();
-            $(document).mousemove(function (e) {
-                e.preventDefault();
-                var x = e.pageX - $('#sidebar').offset().left;
-                if (x > 200 && x < window.innerWidth / 2.5) {
-                    $('#sidebar').css("width", x - 2);
-                    $('#full').css("margin-left", x);
-                }
-            })
-        });
-        $(document).mouseup(function (e) {
-            $(document).unbind('mousemove');
-        });
-
-
-        function openNav() {
-            $('#split-bar').css("width", 5);
-            $('#sidebar').css("width", 200);
-            $('#full').css("margin-left", 206);
-            $('.ham').toggle()
-        }
-
-
-        function closeNav() {
-            $('#split-bar').css("width", 0);
-            $('#sidebar').css("width", 0);
-            $('#full').css("margin-left", 0);
-            $('.ham').toggle()
-
-        }
-
-
-function updateJSON(){
-    var Title = []
-    var Markers = []
-    var Line   = []
-    for(let trace of figurecontainer.data){
-    Title.push(trace.name)
-    Markers.push(trace.marker)
-    Line.push(trace.line)
-}
-lines = { Title, Markers, Line}
-layout = figurecontainer.layout
-editor.update({lines, layout})
-}
-
-
-
-
-var options = {
-    onChangeJSON: function (json) {
-        Plotly.update(figurecontainer, {
-                        name : json.lines.Title,
-                        marker: json.lines.Markers,
-                        line : json.lines.Line
-                    }, 
-                    json.layout )
-    },
-    onColorPicker: function (parent, color, onChange) {
-        new JSONEditor.VanillaPicker({
-        parent: parent,
-        color: color,
-        popup: 'bottom',
-        onChange: function (color) {
-            console.log('onChange', color)
-            var alpha = color.rgba[3]
-            var hex = (alpha === 1)
-                ? color.hex.substr(0, 7)  // return #RRGGBB
-                : color.hex               // return #RRGGBBAA
-            onChange(hex)
-        },
-    //   onDone: function (color) {
-    //     console.log('onDone', color)
-    //   },
-    //   onClose: function (color) {
-    //     console.log('onClose', color)
-    //   }
-        }).show();
-    },
-    mode: 'form',
-  // mainMenuBar:false,
-//   enableSort :false,
-//   enableTransform : false
-};
-
-var editor = new JSONEditor(
-        document.getElementById('jsoneditor'),
-        options, 
-        {
-            "lines": '',
-            "layout": ''
-        });
 
 
 

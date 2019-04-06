@@ -9,13 +9,6 @@
 
 
 
-
-
-
-
-
-
-
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
@@ -209,39 +202,6 @@ function fileReader(fname) {
 
 }
 
-function ind(input) {
-    var ind = $('li').index(input)
-    selectEditable(ind)
-}
-
-//handle case when removing the same  and when there is only one 
-function removeRow(row) {
-    if (fullData.length == 1) return
-    index = $('.closefile').index(row)
-    fullData.splice(index, 1);
-    fullDataCols.splice(index, 1);
-    fileNames.splice(index, 1);
-    updatePlotTrace()
-
-}
-
-function makeRows() {
-    // iterate this over filenames
-    tmp = '<ol>'
-    for (let name of fileNames) {
-        name = path.basename(name, path.extname(name))
-        tmp += `<li onclick='ind(this)'>
-        <input type="button" class = 'closefile' value="X">
-        <label class='filename' >${name}</label>
-        </li>`;
-    }
-    tmp+='</ol>'
-    $('#files').html(tmp)
-    $("li .closefile").click(function(e) {
-        removeRow(this)
-        e.stopPropagation();
-     });
-}
 
 function addNewFileDialog() {
     var fname = dialog.showOpenDialog({
@@ -298,7 +258,7 @@ function updatMultiPlot() {
         xl.push(fullData[i][th_in][fullDataCols[i].y]);
         yl.push(fullData[i][th_in][fullDataCols[i].z]);
         fnm = path.basename(fileNames[i], path.extname(fileNames[i]))
-        names.push(fnm + ` ${fullDataCols[i].y+1}:${fullDataCols[i].z+1}`);
+        names.push(fnm + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`);
     };
     //remove showlegend from the iniPoints and add it here.
     Plotly.restyle(figurecontainer, {
@@ -617,12 +577,14 @@ function colChanged(value) {
 
 
 function resizePlot() {
-    var height = window.innerHeight - document.getElementById("header").offsetTop - document.getElementById("figurecontainer").offsetTop;
-    $("#figurecontainer").height(height - 2);
+    setTimeout(function () {
+        var height = window.innerHeight - document.getElementById("header").offsetTop - document.getElementById("figurecontainer").offsetTop;
+        $("#figurecontainer").height(height - 2);
 
-    Plotly.relayout(figurecontainer, {
-        autosize: true
-    });
+        Plotly.relayout(figurecontainer, {
+            autosize: true
+        });
+    }, 330)
 }
 
 
