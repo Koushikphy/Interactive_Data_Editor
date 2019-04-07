@@ -53,15 +53,7 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             openViewer(1);
             break;
         case "spread":
-            editor();
-            break;
-
-        case "openc":
-            compfileLoader();
-            break;
-
-        case "compf":
-            incRefData();
+            spreadsheet();
             break;
 
         case "pa":
@@ -91,6 +83,20 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             break;
         case 'filter':
             $('#filter').slideDown();
+            break;
+        case 'pdash':
+            if ($('#sidebar2').width()) {
+                closeNav2();
+            } else {
+                openNav2();
+            }
+            break;
+        case 'fdash':
+            if ($('#sidebar').width()) {
+                closeNav();
+            } else {
+                openNav();
+            }
             break;
     }
 });

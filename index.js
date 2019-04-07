@@ -76,7 +76,7 @@ const homeMenuTemplate = [{
     },
     {
         label: "Add file",
-        accelerator: 'CmdOrCtrl+O',
+        accelerator: 'CmdOrCtrl+Shift+O',
         enabled: false,
         id: 'af',
         click() {
@@ -96,7 +96,7 @@ const homeMenuTemplate = [{
         label: "Save",
         enabled: false,
         id: 'save',
-        accelerator: 'CmdOrCtrl++S',
+        accelerator: 'CmdOrCtrl+S',
         click() {
             mainWindow.webContents.send("menuTrigger", "save");
         }
@@ -154,22 +154,7 @@ const homeMenuTemplate = [{
     ]
 },
 {
-    label: "Edit",
-    submenu: [
-        {
-            label: "Points not movable horaizontally",
-            enabled: false,
-            checked: true,
-            type: "checkbox",
-            id: "pamh",
-            click() {
-                mainWindow.webContents.send("menuTrigger", "pamh")
-            }
-        }
-    ]
-},
-{
-    label: "Data",
+    label: "View",
     submenu: [{
         label: "Plot along X",
         accelerator: !app.isPackaged ? 'Q' : "",
@@ -205,31 +190,78 @@ const homeMenuTemplate = [{
         click() {
             mainWindow.webContents.send("menuTrigger", "swapex")
         }
-    }, {
-        label: "Fill Missing Values",
-        enabled: false,
-        id: "fill",
+    },
+    {
+        label: 'Toggle File dashboard',
+        accelerator: 'CmdOrCtrl+B',
         click() {
-            mainWindow.webContents.send("menuTrigger", "fill")
+            mainWindow.webContents.send("menuTrigger", "fdash")
         }
-    }, {
-        label: "Extend Data",
-        id: "edat",
-        enabled: "false",
+    },
+    {
+        label: 'Toggle Plot Settings',
+        accelerator: 'CmdOrCtrl+K',
         click() {
-            mainWindow.webContents.send("menuTrigger", "edat")
+            mainWindow.webContents.send("menuTrigger", "pdash")
         }
-    }, {
-        label: "Filter Data",
-        id: 'filter',
-        enabled: false,
+    },
+    {
+        label: "Toggle Fullscreen",
+        accelerator: "F11",
         click() {
-            mainWindow.webContents.send('menuTrigger', 'filter')
+            if (mainWindow.isFullScreen()) {
+                mainWindow.setFullScreen(false);
+            } else {
+                mainWindow.setFullScreen(true);
+            }
+            mainWindow.webContents.send("menuTrigger", "fullscreen")
+
         }
     }
-
     ]
 },
+{
+    label: "Edit",
+    submenu: [
+        {
+            label: "Fill Missing Values",
+            enabled: false,
+            id: "fill",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "fill")
+            }
+        }, {
+            label: "Extend Data",
+            id: "edat",
+            enabled: "false",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "edat")
+            }
+        }, {
+            label: "Filter Data",
+            id: 'filter',
+            enabled: false,
+            click() {
+                mainWindow.webContents.send('menuTrigger', 'filter')
+            }
+        }, {
+            label: "Points not movable horaizontally",
+            enabled: false,
+            checked: true,
+            type: "checkbox",
+            id: "pamh",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "pamh")
+            }
+        },
+    ]
+},
+// {
+//     label: "Data",
+//     submenu: [
+
+//     ]
+// },
 {
     label: "Window",
     submenu: [{
@@ -256,19 +288,6 @@ const homeMenuTemplate = [{
             mainWindow.webContents.send("menuTrigger", "spread")
         }
     },
-    {
-        label: "Toggle Fullscreen",
-        accelerator: "F11",
-        click() {
-            if (mainWindow.isFullScreen()) {
-                mainWindow.setFullScreen(false);
-            } else {
-                mainWindow.setFullScreen(true);
-            }
-            mainWindow.webContents.send("menuTrigger", "fullscreen")
-
-        }
-    }
     ]
 },
 {

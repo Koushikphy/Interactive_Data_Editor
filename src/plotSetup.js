@@ -22,6 +22,7 @@ $ch = $("#custom-handle")
 var layout = {
     autosize: true,
     plot_bgcolor: "#e8ebef",
+    paper_bgcolor: '#fff',
     showlegend: false,
     hovermode: "closest",
     title: '',
@@ -36,6 +37,8 @@ var layout = {
         title: '',
         zeroline: false,
         showline: true,
+        showgrid: true,
+        automargin: true
     },
     yaxis: {
         title: '',
@@ -44,23 +47,25 @@ var layout = {
         showline: true,
         tickformat: " ,.5g",
         hoverformat: " ,.6g",
+        showgrid: true,
     },
     font: { size: 14 },
-    showlegend: false,
+    showlegend: true,
     legend: {
         x: 0,
         y: 1
     }
 };
 
-
+// make a color list here
 var iniPointsD = {
     x: [1],
     y: [1],
     type: 'scatter',
+    opacity: 1,
     mode: 'markers+lines',
     marker: {
-        symbol: "circle-dot",
+        symbol: 200,
         color: '#b00'
     },
     line: {
@@ -77,13 +82,14 @@ var iniPointsC = {
     type: 'scatter',
     mode: 'markers+lines',
     marker: {
-        symbol: "circle-dot"
+        symbol: 200
     },
     line: {
         width: 2
     },
     hoverinfo: 'x+y',
 };
+
 
 const Plotly = require('plotly.js-gl3d-dist');
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, {

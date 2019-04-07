@@ -9,7 +9,7 @@ html {
 body {
     float: left;
     width: 98.5%;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 a {
     margin: 5px;
@@ -211,6 +211,8 @@ transition: width .5s;
 #files{
     text-align: left;
     font-size: 18px;
+    height: 100%;
+    overflow: scroll;
 }
 
 /* .fff{
@@ -237,10 +239,11 @@ transition: width .5s;
   li:hover{background: #dadada}
   
   li{
-      padding-top: 5px
+      padding-top: 5px;
+      margin-left: 3px;
   }
 ol{
-    padding-left: 1pc
+    padding-left: 2pc
 }
 
 #jsoneditor {
@@ -248,3 +251,9 @@ ol{
     height: 100vh;
 transition: width .5s;
   }
+
+
+  .disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+}

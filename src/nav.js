@@ -36,6 +36,7 @@ $(document).mouseup(function (e) {
 
 
 function openNav() {
+    closeNav2();
     $('#split-bar').css("width", 5);
     $('#sidebar').css("width", minWidth);
     $('#full').css("margin-left", minWidth + 6);
@@ -54,6 +55,7 @@ function closeNav() {
 }
 
 function openNav2() {
+    closeNav();
     $('#split-bar2').css("width", 5);
     $('#sidebar2').css("width", minWidth);
     $('#jsoneditor').css("width", minWidth - 5);
@@ -90,12 +92,14 @@ function updateJSON() {
 
 var options = {
     onChangeJSON: function (json) {
-        Plotly.update(figurecontainer, {
-            name: json.lines.Title,
-            marker: json.lines.Markers,
-            line: json.lines.Line
-        },
+        Plotly.update(figurecontainer,
+            {
+                name: json.lines.Title,
+                marker: json.lines.Markers,
+                line: json.lines.Line
+            },
             json.layout)
+        makeRows();
     },
     onColorPicker: function (parent, color, onChange) {
         new JSONEditor.VanillaPicker({
@@ -103,7 +107,6 @@ var options = {
             color: color,
             popup: 'bottom',
             onChange: function (color) {
-                console.log('onChange', color)
                 var alpha = color.rgba[3]
                 var hex = (alpha === 1)
                     ? color.hex.substr(0, 7)
@@ -146,18 +149,59 @@ function removeRow(row) {
     fullData.splice(index, 1);
     fullDataCols.splice(index, 1);
     fileNames.splice(index, 1);
-    updatePlotTrace()
-
+    Plotly.deleteTraces(figurecontainer, index);
+    //take special care if 0 deleted i.e the editable trace
+    if (figurecontainer.data.length == 1) {
+        Plotly.restyle(figurecontainer,
+            {
+                marker: {
+                    symbol: 200,
+                    color: '#b00'
+                },
+                line: {
+                    width: 2,
+                    color: "#1e77b4",
+                }
+            });
+    }
+    makeRows();
+    makeEditable();
+    var col = fullDataCols[0]
+    if (ddd) {
+        xCol.selectedIndex = col.x;
+        yCol.selectedIndex = col.y;
+        zCol.selectedIndex = col.z;
+    } else {
+        xCol.selectedIndex = col.y;
+        yCol.selectedIndex = col.z;
+    }
 }
+
+
+
+function copyFile(row) {
+    index = $('.copyfile').index(row);
+    data = fullData[index]
+    fullData.unshift(fullData[index]);
+    fullDataCols.unshift(JSON.parse(JSON.stringify(fullDataCols[index])));
+    fileNames.unshift(fileNames[index]);
+    addTrace();
+}
+
+
+
 
 function makeRows() {
     // iterate this over filenames
     tmp = '<ol>'
-    for (let name of fileNames) {
+    for (let i = 0; i < fileNames.length; i++) {
+        name = fileNames[i];
+        ccll = fullDataCols[i];
         name = path.basename(name, path.extname(name))
         tmp += `<li onclick='ind(this)'>
         <input type="button" class = 'closefile' value="X">
-        <label class='filename' >${name}</label>
+        <input type="button" class = 'copyfile' value="C">
+        <label class='filename' >${name} ${ccll.y + 1}:${ccll.z + 1}</label>
         </li>`;
     }
     tmp += '</ol>'
@@ -166,4 +210,9 @@ function makeRows() {
         removeRow(this)
         e.stopPropagation();
     });
+    $("li .copyfile").click(function (e) {
+        copyFile(this)
+        e.stopPropagation();
+    });
+    updateJSON()
 }
