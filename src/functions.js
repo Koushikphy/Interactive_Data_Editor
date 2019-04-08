@@ -253,21 +253,14 @@ function addNewFile(fname) {
 
 
 var colorList = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]
-// function* colorList() {
-
-//     for (let color of colorList) yield color
-// }
 
 
 
 function addTrace() {
-    //just plot data
+
     let len = figurecontainer.data.length
     let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
 
-    // just add the color manually 
-    // will throw error if it its beyond 10 
-    // also update more colors
     thisTrace.name = path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
     thisTrace.x = fullData[0][th_in][fullDataCols[0].y]
     thisTrace.y = fullData[0][th_in][fullDataCols[0].z]
@@ -298,77 +291,41 @@ function addTrace() {
 
 
 
-// function updatePlotTrace() {
-//     colors = colorList()
-//     iniPointsD.line.color = colors.next().value
-//     Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
-//         displaylogo: false,
-//         modeBarButtonsToRemove: ['sendDataToCloud']
-//     });
-//     for (let i = 0; i < fullData.length - 1; i++) {
-//         let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
-//         thisTrace.line.color = thisTrace.marker.color = colors.next().value
-//         Plotly.addTraces(figurecontainer, thisTrace)
-//     };
-//     if (fullData.length > 1) {
-//         layout.showlegend = true;
-//     } else {
-//         layout.showlegend = false;
-//     };
-//     Plotly.relayout(figurecontainer, layout)
-//     var xl = [], yl = [], names = [];
-//     for (let i = 0; i < fullData.length; i++) {
-//         xl.push(fullData[i][th_in][fullDataCols[i].y]);
-//         yl.push(fullData[i][th_in][fullDataCols[i].z]);
-//         fnm = path.basename(fileNames[i], path.extname(fileNames[i]))
-//         names.push(fnm + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`);
-//     };
-//     pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-//     points = pointscontainer.getElementsByTagName("path");
-//     updateEditablePlot();
-//     startDragBehavior();
-//     Plotly.restyle(figurecontainer, {
-//         'x': xl,
-//         'y': yl,
-//         name: names
-//     })
-
-//     dpsy = data[th_in][col.z];
-//     dpsx = data[th_in][col.y];
-//     for (var i = 0; i < dpsx.length; i++) {
-//         points[i].handle = {
-//             x: dpsx[i],
-//             y: dpsy[i]
-//         };
-//     };
-//     makeEditable();
-//     makeRows();
-//     updateOnServer();
-//     figurecontainer.on("plotly_selected", selectEvent);
-//     firstSave = true;
-//     undoStack = []
-//     redoStack = []
-// }
-
-
 // this will be the new update plot function
 function updatMultiPlot(all = true) {
     //current true means just update the current plot i.e. 0th 
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    var xl = [dpsx], yl = [dpsy];
-
-    if (all) {
+    var xl = [dpsx], yl = [dpsy], 
+    name = [path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
+    //! put another for swapper
+    if(swapperIsOn){
+        Plotly.restyle(figurecontainer,
+            {
+                x : [data[th_in][col.y], data[th_in][col.y]],
+                y : [data[th_in][col.z], data[th_in][col.s]],
+            }
+            )
+    }else if (all) {
         for (let i = 1; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
             yl.push(fullData[i][th_in][fullDataCols[i].z]);
+            name.push(path.basename(fileNames[i], path.extname(fileNames[i])) + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`)
         };
+    
+        Plotly.restyle(figurecontainer, {
+            'x': xl,
+            'y': yl,
+            name
+            })
+    } else{
+        Plotly.restyle(figurecontainer, {
+            'x': xl,
+            'y': yl,
+            name
+            },0)
     }
-    Plotly.restyle(figurecontainer, {
-        'x': xl,
-        'y': yl,
-    })
     for (var i = 0; i < dpsx.length; i++) {
         points[i].handle = {
             x: dpsx[i],
@@ -391,17 +348,9 @@ function selectEditable(index) {
     [saveNames[0], saveNames[index]] = [saveNames[index], saveNames[0]];
     data = fullData[0];
     col = fullDataCols[0];
-    if (ddd) {
-        xCol.selectedIndex = col.x;
-        yCol.selectedIndex = col.y;
-        zCol.selectedIndex = col.z;
-    } else {
-        xCol.selectedIndex = col.y;
-        yCol.selectedIndex = col.z;
-    }
+
 
     sCol.selectedIndex = col.s;
-    //! reorder filenames here
     updatMultiPlot()
     firstSave = true
     makeEditable()
@@ -412,6 +361,14 @@ function selectEditable(index) {
 }
 
 function makeEditable() {
+    if (ddd) {
+        xCol.selectedIndex = col.x;
+        yCol.selectedIndex = col.y;
+        zCol.selectedIndex = col.z;
+    } else {
+        xCol.selectedIndex = col.y;
+        yCol.selectedIndex = col.z;
+    }
     pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
     points = pointscontainer.getElementsByTagName("path");
     updateEditablePlot();
@@ -435,23 +392,85 @@ function updateEditablePlot() {
     };
 }
 
-// function compfileLoader() {
-//     refdat = 1;
-//     var fname = dialog.showOpenDialog({
-//         defaultPath: recentLocation,
-//         properties: ['openFile']
-//     });
 
-//     if (fname === undefined) return;
-//     fname = fname[0];
-//     compdata = fs.readFileSync(fname, "utf8");
-//     compdata = parseData(compdata);
-//     if (swapped) compdata = expRotate(compdata);
-//     compFName = replaceWithHome(fname);
-//     showStatus(compFName + ' loaded for comparison.');
-//     updatePlot(1);
-//     menu.getMenuItemById("compf").visible = true;
-// }
+
+function initSwapper() {
+    $("#sCol, #sColInp").show()
+    refdat = 0;
+    swapper = true;
+    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
+    Plotly.addTraces(figurecontainer, iniPointsC);
+    col.s = sCol.selectedIndex;
+    Plotly.relayout(figurecontainer, {
+        selectdirection: 'h'
+    });
+    updatePlot();
+    menu.getMenuItemById("swapen").visible = false;
+    menu.getMenuItemById("swapex").visible = true;
+}
+
+
+
+function delSwapper() {
+    $("#sCol, #sColInp").hide();
+    swapper = false;
+    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
+    Plotly.relayout(figurecontainer, {
+        selectdirection: 'any'
+    });
+    updatePlot();
+    menu.getMenuItemById("swapen").visible = true;
+    menu.getMenuItemById("swapex").visible = false;
+}
+
+
+var swapperIsOn = false
+function openSwapper(){
+    swapperIsOn = true;
+    $("#sCol").show()
+    let len = figurecontainer.data.length
+    if (len>2){
+        let toRemove = []
+        for(let i=2; i<len;i++){
+            toRemove.push(i)
+        }
+        Plotly.deleteTraces(figurecontainer, toRemove)
+    } else if(len==1){
+        let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
+        thisTrace.line.color = thisTrace.marker.color = colorList[1]
+        Plotly.addTraces(figurecontainer, thisTrace)
+    }
+    let lname = path.basename(fileNames[0], path.extname(fileNames[0]))
+    Plotly.restyle(figurecontainer,
+        {
+            x : [data[th_in][col.y], data[th_in][col.y]],
+            y : [data[th_in][col.z], data[th_in][col.s]],
+            name : [
+                lname + `${col.y} : ${col.z}`,
+                lname + `${col.y} : ${col.s}`
+            ]
+        }
+        )
+}
+
+//! put all marker and line properties inside
+
+function exitSwapper(){
+    swapperIsOn = false
+    Plotly.deleteTraces(figurecontainer, [0,1])
+    for(let i=0; i<fullData.length; i++){
+        let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
+        marker.push({
+            symbol: 200, color: colorList[i % 9]
+        })
+        line.push({
+            width: 2, color: colorList[i % 9]
+        })
+    }
+    updatMultiPlot(all=true);
+
+}
+
 
 
 function transpose(m) {
@@ -676,6 +695,15 @@ function sliderChanged() {
 function colsChanged(value) {
     col.s = value;
     updatePlot();
+    let lname = path.basename(fileNames[0], path.extname(fileNames[0]))
+    Plotly.restyle(figurecontainer,
+        {
+            name : [
+                lname + `${col.y} : ${col.z}`,
+                lname + `${col.y} : ${col.s}`
+            ]
+        }
+        )
 };
 
 
@@ -714,34 +742,6 @@ function sSwapper() {
 }
 
 
-function initSwapper() {
-    $("#sCol, #sColInp").show()
-    refdat = 0;
-    swapper = true;
-    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
-    Plotly.addTraces(figurecontainer, iniPointsC);
-    col.s = sCol.selectedIndex;
-    Plotly.relayout(figurecontainer, {
-        selectdirection: 'h'
-    });
-    updatePlot();
-    menu.getMenuItemById("swapen").visible = false;
-    menu.getMenuItemById("swapex").visible = true;
-}
-
-
-
-function delSwapper() {
-    $("#sCol, #sColInp").hide();
-    swapper = false;
-    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
-    Plotly.relayout(figurecontainer, {
-        selectdirection: 'any'
-    });
-    updatePlot();
-    menu.getMenuItemById("swapen").visible = true;
-    menu.getMenuItemById("swapex").visible = false;
-}
 
 
 

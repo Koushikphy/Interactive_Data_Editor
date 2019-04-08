@@ -133,10 +133,6 @@ var editor = new JSONEditor(
     });
 
 
-
-
-
-
 function ind(input) {
     var ind = $('li').index(input)
     selectEditable(ind)
