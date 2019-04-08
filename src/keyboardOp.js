@@ -66,14 +66,13 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             resizePlot();
             break;
 
-        case 'swapen':
-            initSwapper();
+        case 'tswap':
+            if (!swapperIsOn) {
+                openSwapper()
+            } else {
+                exitSwapper()
+            }
             break;
-
-        case 'swapex':
-            delSwapper();
-            break;
-
         case "edat":
             $("#extend").slideDown();
             // $("#einp").val(dpsx[dpsx.length-1]);

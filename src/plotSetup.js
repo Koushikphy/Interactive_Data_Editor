@@ -68,13 +68,13 @@ var iniPointsD = {
         symbol: 200,
         color: '#b00',
         size: 6,
-        opacity:1
+        opacity: 1
     },
     line: {
         width: 2,
         color: "#1e77b4",
-        dash : 0,
-        shape:'linear'
+        dash: 0,
+        shape: 'linear'
     },
     hoverinfo: 'x+y',
 };
@@ -84,12 +84,19 @@ var iniPointsC = {
     x: [1],
     y: [1],
     type: 'scatter',
+    opacity: 1,
     mode: 'markers+lines',
     marker: {
-        symbol: 200
+        symbol: 200,
+        color: '#b00',
+        size: 6,
+        opacity: 1
     },
     line: {
-        width: 2
+        width: 2,
+        color: "#1e77b4",
+        dash: 0,
+        shape: 'linear'
     },
     hoverinfo: 'x+y',
 };

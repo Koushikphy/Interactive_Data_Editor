@@ -133,7 +133,7 @@ var editor = new JSONEditor(
     });
 
 
-function ind(input) {
+function getInd(input) {
     var ind = $('li').index(input)
     selectEditable(ind)
 }
@@ -194,7 +194,7 @@ function makeRows() {
         name = fileNames[i];
         ccll = fullDataCols[i];
         name = path.basename(name, path.extname(name))
-        tmp += `<li onclick='ind(this)'>
+        tmp += `<li onclick='getInd(this)'>
         <input type="button" class = 'closefile' value="X">
         <input type="button" class = 'copyfile' value="C">
         <label class='filename' >${name} ${ccll.y + 1}:${ccll.z + 1}</label>

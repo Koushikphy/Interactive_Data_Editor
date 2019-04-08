@@ -177,18 +177,11 @@ const homeMenuTemplate = [{
             mainWindow.webContents.send("menuTrigger", "pa");
         }
     }, {
-        label: "Open Swapper",
+        label: "Toggle Swapper",
         enabled: false,
         id: 'swapen',
         click() {
-            mainWindow.webContents.send("menuTrigger", "swapen")
-        }
-    }, {
-        label: "Exit Swapper",
-        id: 'swapex',
-        visible: false,
-        click() {
-            mainWindow.webContents.send("menuTrigger", "swapex")
+            mainWindow.webContents.send("menuTrigger", "tswap")
         }
     },
     {

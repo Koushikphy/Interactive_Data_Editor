@@ -130,7 +130,6 @@ function fileReader(fname) {
     menu.getMenuItemById("pax").visible = true;
     menu.getMenuItemById("pay").visible = false;
     menu.getMenuItemById("swapen").visible = true;
-    menu.getMenuItemById("swapex").visible = false;
 
     for (let i of ["pax", 'wire', 'surf']) {
         menu.getMenuItemById(i).enabled = false;
@@ -259,20 +258,20 @@ var colorList = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b
 function addTrace() {
 
     let len = figurecontainer.data.length
-    let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
+    let thisTrace = JSON.parse(JSON.stringify(iniPointsC))
 
     thisTrace.name = path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
     thisTrace.x = fullData[0][th_in][fullDataCols[0].y]
     thisTrace.y = fullData[0][th_in][fullDataCols[0].z]
     Plotly.addTraces(figurecontainer, thisTrace, 0);
-    marker = [{ symbol: 200, color: '#b00' }]
-    line = [{ width: 2, color: "#1e77b4" }]
+    marker = [{ symbol: 200, color: '#b00', size: 6, opacity: 1 }]
+    line = [{ width: 2, color: "#1e77b4", dash: 0, shape: 'linear' }]
     for (let i = 1; i < figurecontainer.data.length; i++) {
         marker.push({
-            symbol: 200, color: colorList[i % 9]
+            symbol: 200, color: colorList[i % 9], size: 6, opacity: 1
         })
         line.push({
-            width: 2, color: colorList[i % 9]
+            width: 2, color: colorList[i % 9], dash: 0, shape: 'linear'
         })
     }
     col = fullDataCols[0];
@@ -286,45 +285,40 @@ function addTrace() {
 }
 
 
-
-
-
-
-
 // this will be the new update plot function
 function updatMultiPlot(all = true) {
     //current true means just update the current plot i.e. 0th 
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    var xl = [dpsx], yl = [dpsy], 
-    name = [path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
+    var xl = [dpsx], yl = [dpsy],
+        name = [path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
     //! put another for swapper
-    if(swapperIsOn){
+    if (swapperIsOn) {
         Plotly.restyle(figurecontainer,
             {
-                x : [data[th_in][col.y], data[th_in][col.y]],
-                y : [data[th_in][col.z], data[th_in][col.s]],
+                x: [data[th_in][col.y], data[th_in][col.y]],
+                y: [data[th_in][col.z], data[th_in][col.s]],
             }
-            )
-    }else if (all) {
+        )
+    } else if (all) {
         for (let i = 1; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
             yl.push(fullData[i][th_in][fullDataCols[i].z]);
             name.push(path.basename(fileNames[i], path.extname(fileNames[i])) + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`)
         };
-    
+
         Plotly.restyle(figurecontainer, {
             'x': xl,
             'y': yl,
             name
-            })
-    } else{
+        })
+    } else {
         Plotly.restyle(figurecontainer, {
             'x': xl,
             'y': yl,
             name
-            },0)
+        }, 0)
     }
     for (var i = 0; i < dpsx.length; i++) {
         points[i].handle = {
@@ -335,39 +329,48 @@ function updatMultiPlot(all = true) {
 }
 
 
-
-
 keepTrackIndex = 0
 function selectEditable(index) {
-    if (index >= fullData.length) return;
-    // move the file name in dash board to top
-    // change the title to editable file name
-    [fullData[0], fullData[index]] = [fullData[index], fullData[0]];
-    [fullDataCols[0], fullDataCols[index]] = [fullDataCols[index], fullDataCols[0]];
-    [fileNames[0], fileNames[index]] = [fileNames[index], fileNames[0]];
-    [saveNames[0], saveNames[index]] = [saveNames[index], saveNames[0]];
-    data = fullData[0];
-    col = fullDataCols[0];
+    if (swapperIsOn) {
+        [col.s, col.z] = [col.z, col.s]
+        sCol.selectedIndex = col.s;
+        zCol.selectedIndex = col.z;
+        Plotly.restyle(figurecontainer, {
+            x: [data[th_in][col.y], data[th_in][col.y]],
+            y: [data[th_in][col.z], data[th_in][col.s]]
+        })
+    } else {
+        if (index >= fullData.length) return;
+        // move the file name in dash board to top
+        // change the title to editable file name
+        [fullData[0], fullData[index]] = [fullData[index], fullData[0]];
+        [fullDataCols[0], fullDataCols[index]] = [fullDataCols[index], fullDataCols[0]];
+        [fileNames[0], fileNames[index]] = [fileNames[index], fileNames[0]];
+        [saveNames[0], saveNames[index]] = [saveNames[index], saveNames[0]];
+        data = fullData[0];
+        col = fullDataCols[0];
 
-
-    sCol.selectedIndex = col.s;
-    updatMultiPlot()
-    firstSave = true
+        updatMultiPlot()
+        makeRows()
+        document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[0]);
+    }
+    // firstSave = true
     makeEditable()
-    makeRows()
     undoStack = []
     redoStack = []
-    document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[0]);
 }
+
 
 function makeEditable() {
     if (ddd) {
         xCol.selectedIndex = col.x;
         yCol.selectedIndex = col.y;
         zCol.selectedIndex = col.z;
+        sCol.selectedIndex = col.s;
     } else {
         xCol.selectedIndex = col.y;
         yCol.selectedIndex = col.z;
+        sCol.selectedIndex = col.s;
     }
     pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
     points = pointscontainer.getElementsByTagName("path");
@@ -393,49 +396,19 @@ function updateEditablePlot() {
 }
 
 
-
-function initSwapper() {
-    $("#sCol, #sColInp").show()
-    refdat = 0;
-    swapper = true;
-    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
-    Plotly.addTraces(figurecontainer, iniPointsC);
-    col.s = sCol.selectedIndex;
-    Plotly.relayout(figurecontainer, {
-        selectdirection: 'h'
-    });
-    updatePlot();
-    menu.getMenuItemById("swapen").visible = false;
-    menu.getMenuItemById("swapex").visible = true;
-}
-
-
-
-function delSwapper() {
-    $("#sCol, #sColInp").hide();
-    swapper = false;
-    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
-    Plotly.relayout(figurecontainer, {
-        selectdirection: 'any'
-    });
-    updatePlot();
-    menu.getMenuItemById("swapen").visible = true;
-    menu.getMenuItemById("swapex").visible = false;
-}
-
-
 var swapperIsOn = false
-function openSwapper(){
+function openSwapper() {
     swapperIsOn = true;
-    $("#sCol").show()
+    $("#sCol").show();
+    col.s = sCol.selectedIndex;
     let len = figurecontainer.data.length
-    if (len>2){
+    if (len > 2) {
         let toRemove = []
-        for(let i=2; i<len;i++){
+        for (let i = 2; i < len; i++) {
             toRemove.push(i)
         }
         Plotly.deleteTraces(figurecontainer, toRemove)
-    } else if(len==1){
+    } else if (len == 1) {
         let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
         thisTrace.line.color = thisTrace.marker.color = colorList[1]
         Plotly.addTraces(figurecontainer, thisTrace)
@@ -443,32 +416,47 @@ function openSwapper(){
     let lname = path.basename(fileNames[0], path.extname(fileNames[0]))
     Plotly.restyle(figurecontainer,
         {
-            x : [data[th_in][col.y], data[th_in][col.y]],
-            y : [data[th_in][col.z], data[th_in][col.s]],
-            name : [
-                lname + `${col.y} : ${col.z}`,
-                lname + `${col.y} : ${col.s}`
+            x: [data[th_in][col.y], data[th_in][col.y]],
+            y: [data[th_in][col.z], data[th_in][col.s]],
+            name: [
+                lname + ` ${col.y}:${col.z}`,
+                lname + ` ${col.y}:${col.s}`
             ]
         }
-        )
+    )
+    Plotly.relayout(figurecontainer, {
+        selectdirection: 'h'
+    });
+    menu.getMenuItemById("af").enabled = false;
+    menu.getMenuItemById("arf").enabled = false;
+    $('#files').addClass('disabled')
+    updateJSON();
 }
 
 //! put all marker and line properties inside
 
-function exitSwapper(){
+function exitSwapper() {
     swapperIsOn = false
-    Plotly.deleteTraces(figurecontainer, [0,1])
-    for(let i=0; i<fullData.length; i++){
-        let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
-        marker.push({
-            symbol: 200, color: colorList[i % 9]
-        })
-        line.push({
-            width: 2, color: colorList[i % 9]
-        })
+    Plotly.deleteTraces(figurecontainer, [0, 1])
+    let toUpdate = [JSON.parse(JSON.stringify(iniPointsC))];
+    for (let i = 1; i < fullData.length; i++) {
+        let thisTrace = JSON.parse(JSON.stringify(iniPointsC))
+        thisTrace.line.color = thisTrace.marker.color = colorList[i % 9]
+        toUpdate.push(thisTrace);
     }
-    updatMultiPlot(all=true);
-
+    console.log(toUpdate)
+    Plotly.addTraces(figurecontainer, toUpdate);
+    data = fullData[0]
+    Plotly.relayout(figurecontainer, {
+        selectdirection: 'any'
+    });
+    $("#sCol, #sColInp").hide();
+    updatMultiPlot(all = true);
+    makeEditable()
+    updateJSON();
+    menu.getMenuItemById("af").enabled = true;
+    menu.getMenuItemById("arf").enabled = true;
+    $('#files').removeClass('disabled')
 }
 
 
@@ -649,21 +637,6 @@ function openViewer(x) {
 
 
 
-// function incRefData() {
-//     var mark = menu.getMenuItemById("compf").checked;
-//     if (mark) {
-//         refdat = 1;
-//         updatePlot(1);
-//         showStatus(compFName + ' shown for comparison.');
-//     } else {
-//         refdat = 0;
-//         Plotly.deleteTraces(figurecontainer, 1);
-//     };
-
-
-// };
-
-
 
 function isswap() {
     swapped = !swapped;
@@ -698,12 +671,13 @@ function colsChanged(value) {
     let lname = path.basename(fileNames[0], path.extname(fileNames[0]))
     Plotly.restyle(figurecontainer,
         {
-            name : [
-                lname + `${col.y} : ${col.z}`,
-                lname + `${col.y} : ${col.s}`
+            name: [
+                lname + ` ${col.y}:${col.z}`,
+                lname + ` ${col.y}:${col.s}`
             ]
         }
-        )
+    )
+    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
 };
 
 
