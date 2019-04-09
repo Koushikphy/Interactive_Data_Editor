@@ -6,7 +6,7 @@ $('#split-bar').mousedown(function (e) {
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar').offset().left;
-        if (x > minWidth/ 5.0 && x < window.innerWidth / 2.5) {
+        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
             $('#sidebar').css("width", x - 2);
             $('#full').css("margin-left", x);
             minWidth = x;
@@ -21,7 +21,7 @@ $('#split-bar2').mousedown(function (e) {
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar2').offset().left;
-        if (x > minWidth/ 5.0 && x < window.innerWidth / 2.5) {
+        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
             $('#sidebar2').css("width", x - 2);
             $('#full').css("margin-left", x);
             $('#jsoneditor').css("width", x - 7);
@@ -91,6 +91,32 @@ function updateJSON() {
     editor.update({ lines, layout })
 }
 
+var schema = {
+    "properties": {
+        'lines': {
+            "properties": {
+                "Line": {
+                    "properties": {
+                        "width": {
+                            "type": 'integer'
+                        },
+                        "dash": {
+                            "type": 'integer'
+                        },
+                        "shape": {
+                            "enum": ['linear', 'spline']
+                        }
+                    }
+                },
+                "Markers": {
+                    "properties": {
+                        "symbol": { "type": "number" }
+                    }
+                }
+            }
+        }
+    }
+}
 
 var options = {
     onChangeJSON: function (json) {
@@ -124,16 +150,18 @@ var options = {
         }).show();
     },
     mode: 'form',
+    schema: schema
 };
 
+var jsoneditor = document.getElementById('jsoneditor')
 var editor = new JSONEditor(
-    document.getElementById('jsoneditor'),
+    jsoneditor,
     options,
     {
         "lines": '',
         "layout": ''
     });
-
+$('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
 
 function getInd(input) {
     var ind = $('li').index(input)
@@ -195,7 +223,7 @@ function makeRows() {
     for (let i = 0; i < fileNames.length; i++) {
         name = fileNames[i];
         ccll = fullDataCols[i];
-        name = path.basename(name, path.extname(name))
+        name = path.basename(name)
         tmp += `<li onclick='getInd(this)'>
         <input type="button" class = 'closefile' value="X">
         <input type="button" class = 'copyfile' value="C">

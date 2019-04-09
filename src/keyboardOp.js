@@ -116,7 +116,7 @@ function hotDKeys(e) {
 }
 
 
-
+keepTrackIndex = 0
 function hotKeys(e) {
     if (document.activeElement.type == "text") {
         return;

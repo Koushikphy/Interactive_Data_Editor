@@ -1,123 +1,142 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-body {
-  font-family: "Lato", sans-serif;
-  margin: 0px;
-}
+  <style>
+    body {
+      font-family: "Lato", sans-serif;
+      margin: 0px;
+    }
 
-.title{
-  font-size: 2pc;
-  padding-top: 2.5pc;
-  padding-bottom: 3pc;
-  font-weight: bold;
-  padding-left: 5px
-}
+    .title {
+      font-size: 2pc;
+      padding-top: 2.5pc;
+      padding-bottom: 3pc;
+      font-weight: bold;
+      padding-left: 5px
+    }
 
-.text{
-  font-size: 1.3pc;
-  text-align: justify;
-  padding-left: 15px;
-  padding-right: 7px;
-}
+    .text {
+      font-size: 1.3pc;
+      text-align: justify;
+      padding-left: 15px;
+      padding-right: 7px;
+    }
 
-.dom {
+    .dom {
 
-  font-family: "Courier New";
-  font-size: 1.2pc;
-  background-color: #e9e9e9;
-  font-weight: 500;
-}
+      font-family: "Courier New";
+      font-size: 1.2pc;
+      background-color: #e9e9e9;
+      font-weight: 500;
+    }
 
-.key{
-  font-family: "Courier New";
-  font-weight: bold;
-  font-size: 1.2pc;
-  display: inline-block;
-  width: 17pc;
-  font-weight: bold;
-}
+    .key {
+      font-family: "Courier New";
+      font-weight: bold;
+      font-size: 1.2pc;
+      display: inline-block;
+      width: 17pc;
+      font-weight: bold;
+    }
 
-li { background: rgb(255, 255, 255); padding-left: 5px; }
-li:nth-child(odd) { background: #f1f1f2; }
-li:hover{background: #dadada}
+    .keys li {
+      background: rgb(255, 255, 255);
+      padding-left: 5px;
+    }
 
-li{
-	padding-top: 10px
-}
+    .keys li:nth-child(odd) {
+      background: #f1f1f2;
+    }
 
+    .keys li:hover {
+      background: #dadada
+    }
 
-a{
-  text-decoration: none;
-  color: #0b00a7
-}
-
-a:hover{
-    text-decoration: underline;
-}
-
-
-.sidenav {
-  height: 100%;
-  width: 160px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #3f3e3e;
-  overflow-x: hidden;
-  padding-top: 20px;
-}
-
-.sidenav a {
-  padding: 10px 5px 10px 10px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #f8f7f7;
-  display: block;
-}
+    li {
+      padding-top: 10px
+    }
 
 
-.sidenav a:hover {
-  color: #020202;
-  background-color: #ffffff
-  /* color:#b3b3b3 */
-}
-.main {
-  margin-left: 160px; /* Same as the width of the sidenav */
-  font-size: 28px; /* Increased text to enable scrolling */
-  padding: 0px 10px;
-}
+    a {
+      text-decoration: none;
+      color: #0b00a7
+    }
 
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-</style>
-<script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    a:hover {
+      text-decoration: underline;
+    }
+
+
+    .sidenav {
+      height: 100%;
+      width: 160px;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #3f3e3e;
+      overflow-x: hidden;
+      padding-top: 20px;
+    }
+
+    .sidenav a {
+      padding: 10px 5px 10px 10px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #f8f7f7;
+      display: block;
+    }
+
+
+    .sidenav a:hover {
+      color: #020202;
+      background-color: #ffffff
+        /* color:#b3b3b3 */
+    }
+
+    .main {
+      margin-left: 160px;
+      /* Same as the width of the sidenav */
+      font-size: 28px;
+      /* Increased text to enable scrolling */
+      padding: 0px 10px;
+    }
+
+    @media screen and (max-height: 450px) {
+      .sidenav {
+        padding-top: 15px;
+      }
+
+      .sidenav a {
+        font-size: 18px;
+      }
+    }
+  </style>
+  <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
 </head>
+
 <body>
 
-<div class="sidenav">
-  <a href="javascript:void(0)" onclick="Change(0);">Getting Started</a>
-  <a href="javascript:void(0)" onclick="Change(1);">Features</a>
-  <a href="javascript:void(0)" onclick="Change(2);">Keyboard Shortcuts</a>
-  <a href="javascript:void(0)" onclick="Change(3);">Feedback</a>
-</div>
-<div style="height:20px; background-color:#3f3e3e;position:fixed;width:100%"></div>
-<div class="main"></div>
+  <div class="sidenav">
+    <a href="javascript:void(0)" onclick="Change(0);">Getting Started</a>
+    <a href="javascript:void(0)" onclick="Change(1);">Features</a>
+    <a href="javascript:void(0)" onclick="Change(2);">Keyboard Shortcuts</a>
+    <a href="javascript:void(0)" onclick="Change(3);">Feedback</a>
+  </div>
+  <div style="height:20px; background-color:#3f3e3e;position:fixed;width:100%"></div>
+  <div class="main"></div>
 
-<script src="../lib/jquery.min.js"></script>
-<script>
+  <script src="../lib/jquery.min.js"></script>
+  <script>
 
-const { shell } = require('electron');
-function op(link) { shell.openExternal(link);}
-var allText=[
+    const { shell } = require('electron');
+    function op(link) { shell.openExternal(link); }
+    var allText = [
 
-`    <div class="title">Getting Started</div>
+      `    <div class="title">Getting Started</div>
 <div class="text">
     <p> This Software is developed for making data editing easy and can be used to interactively edit and plot any 2D or gridded 3D data, along with many useful data operations. On opening the software you are greeted with the home screen. To get started from here just load your data (ASCII/utf formatted) file through <label class="dom"> File > Open file</label>. Files can also be opened quickly from <label for="" class="dom">File > Recent Files </label> which saves up to last 10 used files in descending order. In case of 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in the 3D data file. On start the data will be plotted along the 'Y' values. To plot along 'X' values go to <label for="" class="dom">Data > Plot along X</label> and vice versa.</p>
     
@@ -134,7 +153,7 @@ var allText=[
     <p>This software comes with a auto update checker and periodically checks for updates. If a newer version of this software is available to download, it notifies you immediately.</p>
 
 </div>`,
-`
+      `
 <div class="title">Features</div>
 <div class="text">
     This software has a lot of features for various useful data operations including,
@@ -169,7 +188,7 @@ var allText=[
     </ol>
 </div>
 `,
-`    <div class="title">Keyboard Shortcuts</div>
+      `    <div class="title">Keyboard Shortcuts</div>
 <div class="text keys">
     The followings are the keybindings available for this software.
     <ol>
@@ -196,7 +215,7 @@ var allText=[
     <li><label class="key">Ctrl+V</label> Paste copied values.</li>
     </ol>
 </div>`,
-`    <div class="title">Feedback</div>
+      `    <div class="title">Feedback</div>
 <div class="text">
     Thank you for using my software. I would really like to hear your experience of using this software. Found a bug or want a new feature to include, contact me directly or open an <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor/issues');">issue</a>  in the project <a href="javascript:void(0)" onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor');">homepage</a>. You can reach me here,
     <div style="text-align:center; margin-top:21px">
@@ -206,36 +225,39 @@ var allText=[
     </div>
 
 </div>`,
-]
+    ]
 
 
 
 
-function Change(m){
-    
-    var tmp = $(".sidenav a");
-    tmp.css('background-color', '#3f3e3e')
-    tmp.css('color', '#ffffff')
-    tmp.mouseover( function() {
+    function Change(m) {
+
+      var tmp = $(".sidenav a");
+      tmp.css('background-color', '#3f3e3e')
+      tmp.css('color', '#ffffff')
+      tmp.mouseover(function () {
         this.style.backgroundColor = "#ffffff";
-        this.style.color = '#000000'})
-    tmp.mouseleave( function() {
+        this.style.color = '#000000'
+      })
+      tmp.mouseleave(function () {
         this.style.backgroundColor = "#3f3e3e";
-        this.style.color = '#ffffff'})
+        this.style.color = '#ffffff'
+      })
 
-    tmp[m].style.background = '#ffffff'
-    tmp[m].style.color='#000000'
+      tmp[m].style.background = '#ffffff'
+      tmp[m].style.color = '#000000'
 
-    $(tmp[m]).mouseleave( function() {
+      $(tmp[m]).mouseleave(function () {
         this.style.backgroundColor = "#ffffff";
-        this.style.color = '#000000'})
-    $('.main').html(allText[m])
-}
+        this.style.color = '#000000'
+      })
+      $('.main').html(allText[m])
+    }
 
-Change(0);
+    Change(0);
 
-</script>
+  </script>
 
 </body>
 
-</html> 
+</html>

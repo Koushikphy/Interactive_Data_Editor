@@ -1,14 +1,3 @@
-//NOTES:
-// make a fullData array that holds allthe data for all the files 
-// and also keep the data array that stores the data that is being edited currently
-// now make changes like earlier and like the data to the full data
-//
-// trigger legend only when multiple files are present
-//
-
-
-
-
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
@@ -114,7 +103,8 @@ function fileReader(fname) {
     fullData = [];
     fullDataCols = [];
     fileNames = [];
-    saveNames = []
+    saveNames = [];
+    swapperIsOn = false;
     $("#sCol, #sColInp").hide();
     $("#particle").remove();
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
@@ -195,7 +185,7 @@ function fileReader(fname) {
     updateData();
     makeEditable();
     makeRows();
-    let fnm = path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
+    let fnm = path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
     Plotly.restyle(figurecontainer, { name: fnm });
     //update recent menu
 
@@ -212,6 +202,15 @@ function fileReader(fname) {
 
 
 function addNewFileDialog() {
+    if (swapperIsOn) {
+        dialog.showMessageBox({
+            type: "warning",
+            title: "Can't add the file!!!",
+            message: "Plot along X before adding a new file.",
+            buttons: ['Ok']
+        });
+        return
+    }
     var fname = dialog.showOpenDialog({
         defaultPath: recentLocation,
         properties: ['openFile']
@@ -221,7 +220,6 @@ function addNewFileDialog() {
 }
 
 
-// provide an option to load from the recent file
 function addNewFile(fname) {
     layout.showlegend = true
     data = parseData(fs.readFileSync(fname, "utf8"))
@@ -254,13 +252,12 @@ function addNewFile(fname) {
 var colorList = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]
 
 
-
 function addTrace() {
 
     let len = figurecontainer.data.length
     let thisTrace = JSON.parse(JSON.stringify(iniPointsC))
 
-    thisTrace.name = path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
+    thisTrace.name = path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
     thisTrace.x = fullData[0][th_in][fullDataCols[0].y]
     thisTrace.y = fullData[0][th_in][fullDataCols[0].z]
     Plotly.addTraces(figurecontainer, thisTrace, 0);
@@ -292,7 +289,7 @@ function updatMultiPlot(all = true) {
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
     var xl = [dpsx], yl = [dpsy],
-        name = [path.basename(fileNames[0], path.extname(fileNames[0])) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
+        name = [path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
     //! put another for swapper
     if (swapperIsOn) {
         Plotly.restyle(figurecontainer,
@@ -305,7 +302,7 @@ function updatMultiPlot(all = true) {
         for (let i = 1; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
             yl.push(fullData[i][th_in][fullDataCols[i].z]);
-            name.push(path.basename(fileNames[i], path.extname(fileNames[i])) + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`)
+            name.push(path.basename(fileNames[i]) + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`)
         };
 
         Plotly.restyle(figurecontainer, {
@@ -329,7 +326,7 @@ function updatMultiPlot(all = true) {
 }
 
 
-keepTrackIndex = 0
+
 function selectEditable(index) {
     if (swapperIsOn) {
         [col.s, col.z] = [col.z, col.s]
@@ -413,7 +410,7 @@ function openSwapper() {
         thisTrace.line.color = thisTrace.marker.color = colorList[1]
         Plotly.addTraces(figurecontainer, thisTrace)
     }
-    let lname = path.basename(fileNames[0], path.extname(fileNames[0]))
+    let lname = path.basename(fileNames[0])
     Plotly.restyle(figurecontainer,
         {
             x: [data[th_in][col.y], data[th_in][col.y]],
@@ -541,6 +538,15 @@ function saveAs() {
 
 
 function saveData() {
+    if (swapperIsOn) {
+        dialog.showMessageBox({
+            type: "warning",
+            title: "Can't add the file!!!",
+            message: "Plot along X before adding a new file.",
+            buttons: ['Ok']
+        });
+        return
+    }
     tmpData = data
     if (swapped) tmpData = expRotate(tmpData, col.y, col.x)
     var tmpData = tmpData.map(x => transpose(x));
@@ -630,25 +636,31 @@ function openViewer(x) {
 
 function isswap() {
     if (!data.length) return;
-    for(let i=0; i<fullData.length; i++){
-        [fullDataCols[i].x,fullDataCols[i].y]=[fullDataCols[i].y, fullDataCols[i].x]
+    for (let i = 0; i < fullData.length; i++) {
+        [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
         fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
     }
 
-    const allEqual = fullData.every(v=>v.length===fullData[0].length)
+    const allEqual = fullData.every(v => v.length === fullData[0].length)
 
-    if(!allEqual){
-        for(let i=0; i<fullData.length; i++){
-            [fullDataCols[i].x,fullDataCols[i].y]=[fullDataCols[i].y, fullDataCols[i].x]
+    if (!allEqual) {
+        for (let i = 0; i < fullData.length; i++) {
+            [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
             fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
         }
+        dialog.showMessageBox({
+            type: "warning",
+            title: "Can't Plot along Y!!!",
+            message: "File(s) have different grid points along the Y axis\nFree version doesn't allow plotting such data",
+            buttons: ['Ok']
+        });
         return false
     }
     swapped = !swapped;
     var [n1, n2] = ["Y", "X"];
     if (swapped) [n1, n2] = [n2, n1];
-    xName          = n2;
-    [xCol, yCol]   = [yCol, xCol];
+    xName = n2;
+    [xCol, yCol] = [yCol, xCol];
     data = fullData[0]
     col = fullDataCols[0]
     updateData();
@@ -664,7 +676,6 @@ function sliderChanged() {
     $("#custom-handle").blur()
     $slider.slider("value", th_in)
     $ch.text(xName + '=' + data[th_in][col.x][0])
-    updatePlot(1);
     startDragBehavior();
 };
 
@@ -673,7 +684,7 @@ function sliderChanged() {
 function colsChanged(value) {
     col.s = value;
     updatePlot();
-    let lname = path.basename(fileNames[0], path.extname(fileNames[0]))
+    let lname = path.basename(fileNames[0])
     Plotly.restyle(figurecontainer,
         {
             name: [
@@ -776,7 +787,6 @@ function clamp(x, lower, upper) {
 
 
 var oldX, oldCord, indd;
-
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
@@ -904,35 +914,3 @@ function updateOnServer() {
 };
 
 updatePlot = updatMultiPlot
-// function updatePlot(both = 0) {
-//     dpsy = data[th_in][col.z];
-//     dpsx = data[th_in][col.y];
-//     console.log(points)
-//     if (swapper) {
-//         dpsy2 = data[th_in][col.s];
-//         Plotly.restyle(figurecontainer, {
-//             "x": [dpsx, dpsx],
-//             "y": [dpsy, dpsy2]
-//         });
-//     } else if (both && refdat && compdata.length) {
-//         if (figurecontainer.data.length == 1) {
-//             Plotly.addTraces(figurecontainer, iniPointsC);
-//         };
-//         Plotly.restyle(figurecontainer, {
-//             "x": [dpsx, compdata[th_in][col.y]],
-//             "y": [dpsy, compdata[th_in][col.z]]
-//         });
-//     } else {
-//         Plotly.restyle(figurecontainer, {
-//             "x": [dpsx],
-//             "y": [dpsy]
-//         }, 0);
-//     };
-//     for (var i = 0; i < dpsx.length; i++) {
-//         points[i].handle = {
-//             x: dpsx[i],
-//             y: dpsy[i]
-//         };
-//     };
-
-// };

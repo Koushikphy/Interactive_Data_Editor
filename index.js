@@ -155,62 +155,62 @@ const homeMenuTemplate = [{
 },
 {
     label: "View",
-    submenu: [{
-        label: "Plot along X",
-        accelerator: !app.isPackaged ? 'Q' : "",
-        id: 'pax',
-        visible: true,
-        enabled: false,
-        click() {
-            Menu.getApplicationMenu().getMenuItemById("pax").visible = false;
-            Menu.getApplicationMenu().getMenuItemById("pay").visible = true;
-            mainWindow.webContents.send("menuTrigger", "pa");
-        }
-    }, {
-        label: 'Plot along Y',
-        accelerator: !app.isPackaged ? 'Q' : "",
-        id: 'pay',
-        visible: false,
-        click() {
-            Menu.getApplicationMenu().getMenuItemById("pax").visible = true;
-            Menu.getApplicationMenu().getMenuItemById("pay").visible = false;
-            mainWindow.webContents.send("menuTrigger", "pa");
-        }
-    }, {
-        label: "Toggle Swapper",
-        enabled: false,
-        id: 'swapen',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "tswap")
-        }
-    },
-    {
-        label: 'Toggle File dashboard',
-        accelerator: 'CmdOrCtrl+B',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "fdash")
-        }
-    },
-    {
-        label: 'Toggle Plot Settings',
-        accelerator: 'CmdOrCtrl+K',
-        click() {
-            mainWindow.webContents.send("menuTrigger", "pdash")
-        }
-    },
-    {
-        label: "Toggle Fullscreen",
-        accelerator: "F11",
-        click() {
-            if (mainWindow.isFullScreen()) {
-                mainWindow.setFullScreen(false);
-            } else {
-                mainWindow.setFullScreen(true);
+    submenu: [
+        {
+            label: 'Toggle File dashboard',
+            accelerator: 'CmdOrCtrl+B',
+            click() {
+                mainWindow.webContents.send("menuTrigger", "fdash")
             }
-            mainWindow.webContents.send("menuTrigger", "fullscreen")
+        },
+        {
+            label: 'Toggle Plot Settings',
+            accelerator: 'CmdOrCtrl+K',
+            click() {
+                mainWindow.webContents.send("menuTrigger", "pdash")
+            }
+        }, {
+            label: "Plot along X",
+            accelerator: !app.isPackaged ? 'Q' : "",
+            id: 'pax',
+            visible: true,
+            enabled: false,
+            click() {
+                Menu.getApplicationMenu().getMenuItemById("pax").visible = false;
+                Menu.getApplicationMenu().getMenuItemById("pay").visible = true;
+                mainWindow.webContents.send("menuTrigger", "pa");
+            }
+        }, {
+            label: 'Plot along Y',
+            accelerator: !app.isPackaged ? 'Q' : "",
+            id: 'pay',
+            visible: false,
+            click() {
+                Menu.getApplicationMenu().getMenuItemById("pax").visible = true;
+                Menu.getApplicationMenu().getMenuItemById("pay").visible = false;
+                mainWindow.webContents.send("menuTrigger", "pa");
+            }
+        }, {
+            label: "Toggle Swapper",
+            enabled: false,
+            id: 'swapen',
+            click() {
+                mainWindow.webContents.send("menuTrigger", "tswap")
+            }
+        },
+        {
+            label: "Toggle Fullscreen",
+            accelerator: "F11",
+            click() {
+                if (mainWindow.isFullScreen()) {
+                    mainWindow.setFullScreen(false);
+                } else {
+                    mainWindow.setFullScreen(true);
+                }
+                mainWindow.webContents.send("menuTrigger", "fullscreen")
 
+            }
         }
-    }
     ]
 },
 {
