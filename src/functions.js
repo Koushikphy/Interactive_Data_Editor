@@ -433,7 +433,6 @@ function openSwapper() {
     updateJSON();
 }
 
-//! put all marker and line properties inside
 
 function exitSwapper() {
     swapperIsOn = false
@@ -525,15 +524,6 @@ function expRotate(tmpData, i, j) {
         newdat.push(transpose(tmpdat));
     };
     return newdat;
-};
-
-
-
-function rotateData() {
-    if (!data.length) return;
-    data = expRotate(data, col.x, col.y);
-    if (!compdata.length) return;
-    compdata = expRotate(compdata, col.x, col.y);
 };
 
 
@@ -639,13 +629,28 @@ function openViewer(x) {
 
 
 function isswap() {
+    if (!data.length) return;
+    for(let i=0; i<fullData.length; i++){
+        [fullDataCols[i].x,fullDataCols[i].y]=[fullDataCols[i].y, fullDataCols[i].x]
+        fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
+    }
+
+    const allEqual = fullData.every(v=>v.length===fullData[0].length)
+
+    if(!allEqual){
+        for(let i=0; i<fullData.length; i++){
+            [fullDataCols[i].x,fullDataCols[i].y]=[fullDataCols[i].y, fullDataCols[i].x]
+            fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
+        }
+        return false
+    }
     swapped = !swapped;
     var [n1, n2] = ["Y", "X"];
     if (swapped) [n1, n2] = [n2, n1];
-    xName = n2;
-    [xCol, yCol] = [yCol, xCol];
-    [col.x, col.y] = [col.y, col.x];
-    rotateData();
+    xName          = n2;
+    [xCol, yCol]   = [yCol, xCol];
+    data = fullData[0]
+    col = fullDataCols[0]
     updateData();
     th_in = 0;
     $slider.slider("value", 0);
@@ -717,10 +722,6 @@ function sSwapper() {
 
 
 
-
-
-
-
 function selectEvent(event) {
     index = [];
     del_dat = [];
@@ -738,8 +739,6 @@ function selectEvent(event) {
         index = [...new Set(index)];
     };
 };
-
-
 
 
 
@@ -830,7 +829,6 @@ function startDragBehavior() {
     });
     d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
 };
-
 
 
 

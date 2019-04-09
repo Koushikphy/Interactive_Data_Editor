@@ -9,7 +9,7 @@ const cleanCSS = require('gulp-clean-css');
 
 
 function compressCombineJS() {
-    return src(['./src/functions.js', './src/dataOp.js', './src/keyboardOp.js', './src/plotSetup.js', './src/nav.js'])
+    return src(['./src/functions.js', './src/dataOp.js', './src/keyboardOp.js', './src/nav.js','./src/plotSetup.js',])
         .pipe(concat('funcs.js'))
         .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))

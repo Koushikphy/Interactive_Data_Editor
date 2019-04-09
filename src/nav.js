@@ -6,9 +6,10 @@ $('#split-bar').mousedown(function (e) {
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar').offset().left;
-        if (x > minWidth && x < window.innerWidth / 2.5) {
+        if (x > minWidth/ 5.0 && x < window.innerWidth / 2.5) {
             $('#sidebar').css("width", x - 2);
             $('#full').css("margin-left", x);
+            minWidth = x;
             resizePlot()
         }
     })
@@ -20,10 +21,11 @@ $('#split-bar2').mousedown(function (e) {
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar2').offset().left;
-        if (x > minWidth && x < window.innerWidth / 2.5) {
+        if (x > minWidth/ 5.0 && x < window.innerWidth / 2.5) {
             $('#sidebar2').css("width", x - 2);
             $('#full').css("margin-left", x);
             $('#jsoneditor').css("width", x - 7);
+            minWidth = x;
             resizePlot()
         }
     })
@@ -147,19 +149,19 @@ function removeRow(row) {
     fileNames.splice(index, 1);
     Plotly.deleteTraces(figurecontainer, index);
     //take special care if 0 deleted i.e the editable trace
-    if (figurecontainer.data.length == 1) {
-        Plotly.restyle(figurecontainer,
-            {
-                marker: {
-                    symbol: 200,
-                    color: '#b00'
-                },
-                line: {
-                    width: 2,
-                    color: "#1e77b4",
-                }
-            });
-    }
+    // if (figurecontainer.data.length == 1) {
+    //     Plotly.restyle(figurecontainer,
+    //         {
+    //             marker: {
+    //                 symbol: 200,
+    //                 color: '#b00'
+    //             },
+    //             line: {
+    //                 width: 2,
+    //                 color: "#1e77b4",
+    //             }
+    //         });
+    // }
     makeRows();
     makeEditable();
     var col = fullDataCols[0]

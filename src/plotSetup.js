@@ -107,9 +107,11 @@ Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
     displaylogo: false,
     modeBarButtonsToRemove: ['sendDataToCloud'], editable: true
 });
+
 pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
 points = pointscontainer.getElementsByTagName("path");
 figurecontainer.on("plotly_selected", selectEvent);
+figurecontainer.on("plotly_relayout", updateJSON);
 resizePlot();
 
 
