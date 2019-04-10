@@ -1,4 +1,3 @@
-
 var minWidth = window.innerWidth / 4.5
 
 $('#split-bar').mousedown(function (e) {
@@ -86,9 +85,16 @@ function updateJSON() {
         Markers.push(trace.marker)
         Line.push(trace.line)
     }
-    lines = { Title, Markers, Line }
+    lines = {
+        Title,
+        Markers,
+        Line
+    }
     layout = figurecontainer.layout
-    editor.update({ lines, layout })
+    editor.update({
+        lines,
+        layout
+    })
 }
 
 var schema = {
@@ -110,7 +116,9 @@ var schema = {
                 },
                 "Markers": {
                     "properties": {
-                        "symbol": { "type": "number" }
+                        "symbol": {
+                            "type": "number"
+                        }
                     }
                 }
             }
@@ -120,13 +128,13 @@ var schema = {
 
 var options = {
     onChangeJSON: function (json) {
-        Plotly.update(figurecontainer,
-            {
-                name: json.lines.Title,
-                marker: json.lines.Markers,
-                line: json.lines.Line
-            },
-            json.layout)
+        fileNames = json.lines.Title //.map(x => x.replace(/([ :0-9])$/g, ''))
+        Plotly.restyle(figurecontainer, {
+            name: json.lines.Title,
+            marker: json.lines.Markers,
+            line: json.lines.Line
+        })
+        Plotly.relayout(figurecontainer, json.layout)
         makeRows();
     },
     onColorPicker: function (parent, color, onChange) {
@@ -136,9 +144,9 @@ var options = {
             popup: 'bottom',
             onChange: function (color) {
                 var alpha = color.rgba[3]
-                var hex = (alpha === 1)
-                    ? color.hex.substr(0, 7)
-                    : color.hex
+                var hex = (alpha === 1) ?
+                    color.hex.substr(0, 7) :
+                    color.hex
                 onChange(hex)
             },
             //   onDone: function (color) {
@@ -156,8 +164,7 @@ var options = {
 var jsoneditor = document.getElementById('jsoneditor')
 var editor = new JSONEditor(
     jsoneditor,
-    options,
-    {
+    options, {
         "lines": '',
         "layout": ''
     });

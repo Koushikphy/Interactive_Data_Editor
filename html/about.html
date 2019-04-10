@@ -8,10 +8,16 @@
             margin: 5px;
         }
     </style>
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
 </head>
 
 <script src='./lib/jquery.min.js'></script>
+
 <body>
     <div style="text-align: center;">
         <img src="../figs/charts.png" width="75" height="75">
@@ -22,7 +28,8 @@
             by Koushik Naskar</div>
         <div style="font-size: large;margin-top: 7px">Version 2.3.0 </div>
 
-        <div style="font-size: larger;margin-top: 2pc;font-style: italic;margin-bottom: 9px">Copyright &copy; Feb, 2019
+        <div style="font-size: larger;margin-top: 2pc;font-style: italic;margin-bottom: 9px">Copyright &copy; April,
+            2019
             Koushik Naskar</div>
 
 
@@ -47,8 +54,8 @@
                 src="../figs/plotly.png" width="120" height="40"></a>
 
 
-        <a href="javascript:void(0)" onclick="op('https://electronjs.org/');"><img src="../figs/electron.png" width="130"
-                height="40"></a> <br>
+        <a href="javascript:void(0)" onclick="op('https://electronjs.org/');"><img src="../figs/electron.png"
+                width="130" height="40"></a> <br>
 
 
         <a href="javascript:void(0)" onclick="op('https://jquery.com/');"><img src="../figs/jquery.png" width="120"
@@ -63,7 +70,10 @@
 
     </div>
     <script>
-        const { shell } = require('electron');
+        const {
+            shell
+        } = require('electron');
+
         function op(link) {
             shell.openExternal(link);
         }

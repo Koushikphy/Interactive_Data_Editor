@@ -101,6 +101,15 @@
             padding: 0px 10px;
         }
 
+        .sidenote {
+            padding-top: 2.2pc;
+            /* padding-bottom: 1.5pc; */
+            font-weight: bold;
+            font-size: 1.5pc;
+            text-align: justify;
+            padding-right: 7px;
+        }
+
         @media screen and (max-height: 450px) {
             .sidenav {
                 padding-top: 15px;
@@ -144,13 +153,20 @@
 <div class="text">
     <p> This Software is developed for making data editing easy and can be used to interactively edit and plot any 2D or gridded 3D data, along with many useful data operations. On opening the software you are greeted with the home screen. To get started from here just load your data (ASCII/utf formatted) file through <label class="dom"> File > Open file</label>. Files can also be opened quickly from <label for="" class="dom">File > Recent Files </label> which saves up to last 10 used files in descending order. In case of 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in the 3D data file. On start the data will be plotted along the 'Y' values. To plot along 'X' values go to <label for="" class="dom">Data > Plot along X</label> and vice versa.</p>
     
-    <p> The main window has basically 3 parts, Menu bar, Tool bar and the Plot area. Most of the menubar options are self-explanatory and are detailed in the next section. Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. The slider, available only when working with 3D data, can be used to change the X/Y value for which the 2D line is plotted.</p>
+    <p> The main window has basically 4 parts, Menu bar, Tool bar, Side bar and the Plot area. Most of the menubar options are self-explanatory and are detailed in the next section. Detailed description of the side bar is given in the following swction. Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. The slider, available only when working with 3D data, can be used to change the X/Y value for which the 2D line is plotted.</p>
 
-    <p>The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become visible when the mouse is over this area. Hover over them to view theirs functions. These buttons includes features like Saving plot as image, Panning, Zoom, Free/box select, Showing spike lines etc.</p>
+    <p>The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become visible when the mouse is over this area. Hover over them to view theirs functions. These buttons includes features like Saving plot as image, Panning, Zoom, Free/box select, Showing spike lines etc. The legend on the plot window is freely movable.</p>
 
      
     <p>While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D wireframe/surface viewer windows from <label for="" class="dom">Windows</label> menu in real time i.e. all the edits made will be reflected there instantaneously. These windows supports setting axis ranges seperated by comma, with blank meaning autorange.</p>
      
+    <p>Multiple columns from same or multiple files can be opened together for editing, though all the editing features
+        are available only for one line at a moment, and others lines can be selected to edit from <label for=""
+            class="dom">Files Dashboard</label> or by pressing <label for="" class="dom">Ctrl+TAB</label>. The editable
+            line or
+                the
+                primary line is always plotted
+            by default as blue line with red marker and is always on the top of the legend and Files Dashboard. </p>
 
     <p>After edits you can save your modified data from <label  class="dom">File > Save</label>. When saving for first time, the application will ask for name and location of the file to save the data, with default being the same location and name with an added '_new' suffix. Any consecutive saves will save the data in that same file. As usual use <label class="dom">File > Save As</label> to save in a different file. On successful save, you will see a notification on the bottom left corner of the window. The application shows a warning if you try to close without saving any modifeid data and you can either save or quit the application.</p> 
 
@@ -189,8 +205,7 @@
 
     <li><b><i>Configure plot window.</i></b> Configure the plot window as you like through <label for="" class="dom">
             View > Toggle plot settings</label>. Here you can choose the line and marker style of the plot, change
-        legend, tiltle, axis label etc. Also the plot window supports LaTex rendering, so any valid latex text can be
-        used as title and labels.<p></p>
+        legend, tiltle, axis label etc. A detailed description about this given in the next section.<p></p>
     </li>
 
     <li><b><i>Drag and Drop.</i></b> Instead of openning through the menu, files can be opened just by simply drag and
@@ -220,10 +235,31 @@
     And many more...
     </ol>
 </div>
-`, `
-This application has two side bars Files Dashboard and Plot Settings, and can opened or minimized through <label for=""
-    class="dom"> View > Toggle Files Dashboard</label> or <label for="" class="dom"> View > Toggle Plot Settings</label> respectively.
-`,
+`, `<div class="title">Sidebar Navigation</div>
+<div class="text keys">
+The application side bar contains the <b>Files Dashboard</b> and <b>Plot Settings</b>, and can be opened or minimized through <label for=""
+    class="dom"> View > Toggle Files Dashboard</label> and <label for="" class="dom"> View > Toggle Plot Settings</label> respectively. The side bar is resizable and its width can be changed by dragging from the boundary, as usual.
+    <div class='sidenote'>
+        Files Dashboard:
+        </div>
+    <p>This window contains the information of the opened files and the columns used to plot, as a list. The primary
+        line i.e. the line being edited is always on the top. Click on the name of a file to make the corresponding plot
+        editable. Click on the <label for="" class="dom">C</label> button to use the same file again while <label
+            for=""
+                class="dom">X</label> button closees
+            the file.</p>
+    <div class='sidenote'>
+        Plot Settings
+    </div>
+    <p>
+        Appearance of the plot window can be configured from here. Plot settings like title, axis lable, ranges,
+        background color, grid etc. can be changed from layout settings. This application supports LaTeX rendering, so
+        any vaid LaTeX text can be used as title, axis labels or in legends. On the other hand individual line can be
+        configured from the lines option. Choose the line you want to configure from the appropriate options like line
+        Title , Maker and Line properties. Options like symbol, size, color, width, opacity etc. can be set here.
+        Any number say n, from 0 to 44 and n+100, n+200 e.g. 1, 101, 201 etc. is a valid marker symbol. To plot a dash/dot type line put a non zero value of your requirement on the Line dash option. Shape of the line 'linear' means a plot with straight line connecting the points while 'spline' options plots a smooth spline type line.
+    </p>
+</div>`,
             `    <div class="title">Keyboard Shortcuts</div>
 <div class="text keys">
     The followings are the keybindings available for this software.
@@ -235,8 +271,8 @@ This application has two side bars Files Dashboard and Plot Settings, and can op
     <li><label class="key">Ctrl+R</label> Reload the window.</li>
     <li><label class="key">Ctrl+Q</label> Quit the application.</li>
     <li><label class="key">F11</label> Toggle fullscreen.</li>
-    <li><label class="key">Ctrl+K</label> Toggle plot settings.</li>
-    <li><label class="key">Ctrl+B</label> Toggle files dashboard.</li>
+    <li><label class="key">Ctrl+K</label> Toggle Plot Settings sidebar.</li>
+    <li><label class="key">Ctrl+B</label> Toggle Files Dashboard sidebar.</li>
     <li><label class="key">Ctrl+TAB</label> Change editable line.</li>
     <li><label class="key">&lt;space></label> Auto-scale both axes.</li>
     <li><label class="key">Z</label> Zoom mode.</li>

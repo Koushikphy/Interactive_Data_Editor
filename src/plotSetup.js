@@ -1,11 +1,26 @@
-var data = [], compdata = [], olddata = "",
-    dpsx = [], dpsy = [], dpsy2 = [], index = [], del_dat = [],
-    th_in = 0, refdat = 1, ma = 1,
+var data = [],
+    compdata = [],
+    olddata = "",
+    dpsx = [],
+    dpsy = [],
+    dpsy2 = [],
+    index = [],
+    del_dat = [],
+    th_in = 0,
+    refdat = 1,
+    ma = 1,
     file, points, pointscontainer,
     serve = 0,
     lockXc = 1,
-    swapped = 0, swapper = false,
-    ddd = false, col = { x: 0, y: 0, z: 0, s: 0 },
+    swapped = 0,
+    swapper = false,
+    ddd = false,
+    col = {
+        x: 0,
+        y: 0,
+        z: 0,
+        s: 0
+    },
     xName = "X",
     $slider = $("#slider"),
     xCol = document.getElementById("xCol"),
@@ -49,7 +64,9 @@ var layout = {
         hoverformat: " ,.6g",
         showgrid: true,
     },
-    font: { size: 14 },
+    font: {
+        size: 14
+    },
     showlegend: true,
     legend: {
         x: 0,
@@ -105,7 +122,8 @@ var iniPointsC = {
 const Plotly = require('plotly.js-gl3d-dist');
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
     displaylogo: false,
-    modeBarButtonsToRemove: ['sendDataToCloud'], editable: true
+    modeBarButtonsToRemove: ['sendDataToCloud'],
+    editable: true
 });
 
 pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");

@@ -710,6 +710,7 @@ function sliderChanged() {
     $slider.slider("value", th_in)
     $ch.text(xName + '=' + data[th_in][col.x][0])
     startDragBehavior();
+    updatePlot()
 };
 
 
