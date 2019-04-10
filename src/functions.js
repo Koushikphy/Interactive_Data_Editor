@@ -1,16 +1,28 @@
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
-var undoStack = [], redoStack = [], editorWindow, viewer = [, ,],
-    show = false, saved = true, compFName, firstSave = true, issame = false;
+var undoStack = [],
+    redoStack = [],
+    editorWindow, viewer = [, , ],
+    show = false,
+    saved = true,
+    compFName, firstSave = true,
+    issame = false;
 
-var fullData = [], fullDataCols = [], fileNames = [], saveNames = [];
+var fullData = [],
+    fullDataCols = [],
+    fileNames = [],
+    saveNames = [];
 
 function showStatus(msg) {
     $("#status").html(msg);
-    $("#status").toggle('slide', { direction: 'left' }, 500)
+    $("#status").toggle('slide', {
+            direction: 'left'
+        }, 500)
         .delay(3000)
-        .toggle('slide', { direction: 'left' }, 500);
+        .toggle('slide', {
+            direction: 'left'
+        }, 500);
 }
 
 function updateData() {
@@ -163,7 +175,9 @@ function fileReader(fname) {
         op += '<option>' + i + '</option>';
     };
     for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
-    for (let i of enableMenu) { menu.getMenuItemById(i).enabled = true; }
+    for (let i of enableMenu) {
+        menu.getMenuItemById(i).enabled = true;
+    }
 
     xCol.selectedIndex = col.x;
     yCol.selectedIndex = col.y;
@@ -186,7 +200,9 @@ function fileReader(fname) {
     makeEditable();
     makeRows();
     let fnm = path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
-    Plotly.restyle(figurecontainer, { name: fnm });
+    Plotly.restyle(figurecontainer, {
+        name: fnm
+    });
     //update recent menu
 
     recentFiles = recentFiles.filter(x => x != fname);
@@ -261,18 +277,37 @@ function addTrace() {
     thisTrace.x = fullData[0][th_in][fullDataCols[0].y]
     thisTrace.y = fullData[0][th_in][fullDataCols[0].z]
     Plotly.addTraces(figurecontainer, thisTrace, 0);
-    marker = [{ symbol: 200, color: '#b00', size: 6, opacity: 1 }]
-    line = [{ width: 2, color: "#1e77b4", dash: 0, shape: 'linear' }]
+    marker = [{
+        symbol: 200,
+        color: '#b00',
+        size: 6,
+        opacity: 1
+    }]
+    line = [{
+        width: 2,
+        color: "#1e77b4",
+        dash: 0,
+        shape: 'linear'
+    }]
     for (let i = 1; i < figurecontainer.data.length; i++) {
         marker.push({
-            symbol: 200, color: colorList[i % 9], size: 6, opacity: 1
+            symbol: 200,
+            color: colorList[i % 9],
+            size: 6,
+            opacity: 1
         })
         line.push({
-            width: 2, color: colorList[i % 9], dash: 0, shape: 'linear'
+            width: 2,
+            color: colorList[i % 9],
+            dash: 0,
+            shape: 'linear'
         })
     }
     col = fullDataCols[0];
-    Plotly.restyle(figurecontainer, { line, marker });
+    Plotly.restyle(figurecontainer, {
+        line,
+        marker
+    });
     makeRows();
     makeEditable();
 
@@ -288,16 +323,15 @@ function updatMultiPlot(all = true) {
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    var xl = [dpsx], yl = [dpsy],
+    var xl = [dpsx],
+        yl = [dpsy],
         name = [path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
     //! put another for swapper
     if (swapperIsOn) {
-        Plotly.restyle(figurecontainer,
-            {
-                x: [data[th_in][col.y], data[th_in][col.y]],
-                y: [data[th_in][col.z], data[th_in][col.s]],
-            }
-        )
+        Plotly.restyle(figurecontainer, {
+            x: [data[th_in][col.y], data[th_in][col.y]],
+            y: [data[th_in][col.z], data[th_in][col.s]],
+        })
     } else if (all) {
         for (let i = 1; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
@@ -394,6 +428,7 @@ function updateEditablePlot() {
 
 
 var swapperIsOn = false
+
 function openSwapper() {
     swapperIsOn = true;
     $("#sCol").show();
@@ -411,16 +446,14 @@ function openSwapper() {
         Plotly.addTraces(figurecontainer, thisTrace)
     }
     let lname = path.basename(fileNames[0])
-    Plotly.restyle(figurecontainer,
-        {
-            x: [data[th_in][col.y], data[th_in][col.y]],
-            y: [data[th_in][col.z], data[th_in][col.s]],
-            name: [
-                lname + ` ${col.y}:${col.z}`,
-                lname + ` ${col.y}:${col.s}`
-            ]
-        }
-    )
+    Plotly.restyle(figurecontainer, {
+        x: [data[th_in][col.y], data[th_in][col.y]],
+        y: [data[th_in][col.z], data[th_in][col.s]],
+        name: [
+            lname + ` ${col.y}:${col.z}`,
+            lname + ` ${col.y}:${col.s}`
+        ]
+    })
     Plotly.relayout(figurecontainer, {
         selectdirection: 'h'
     });
@@ -658,7 +691,7 @@ function isswap() {
     }
     swapped = !swapped;
     var [n1, n2] = ["Y", "X"];
-    if (swapped) [n1, n2] = [n2, n1];
+    if (swapped)[n1, n2] = [n2, n1];
     xName = n2;
     [xCol, yCol] = [yCol, xCol];
     data = fullData[0]
@@ -685,14 +718,12 @@ function colsChanged(value) {
     col.s = value;
     updatePlot();
     let lname = path.basename(fileNames[0])
-    Plotly.restyle(figurecontainer,
-        {
-            name: [
-                lname + ` ${col.y}:${col.z}`,
-                lname + ` ${col.y}:${col.s}`
-            ]
-        }
-    )
+    Plotly.restyle(figurecontainer, {
+        name: [
+            lname + ` ${col.y}:${col.z}`,
+            lname + ` ${col.y}:${col.s}`
+        ]
+    })
     if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
 };
 
@@ -714,7 +745,6 @@ function resizePlot() {
     setTimeout(function () {
         var height = window.innerHeight - document.getElementById("header").offsetTop - document.getElementById("figurecontainer").offsetTop;
         $("#figurecontainer").height(height - 2);
-
         Plotly.relayout(figurecontainer, {
             autosize: true
         });
@@ -787,6 +817,7 @@ function clamp(x, lower, upper) {
 
 
 var oldX, oldCord, indd;
+
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
