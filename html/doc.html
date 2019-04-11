@@ -153,22 +153,21 @@
 <div class="text">
     <p> This Software is developed for making data editing easy and can be used to interactively edit and plot any 2D or gridded 3D data, along with many useful data operations. On opening the software you are greeted with the home screen. To get started from here just load your data (ASCII/utf formatted) file through <label class="dom"> File > Open file</label>. Files can also be opened quickly from <label for="" class="dom">File > Recent Files </label> which saves up to last 10 used files in descending order. In case of 3D data, the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in the 3D data file. On start the data will be plotted along the 'Y' values. To plot along 'X' values go to <label for="" class="dom">Data > Plot along X</label> and vice versa.</p>
     
-    <p> The main window has basically 4 parts, Menu bar, Tool bar, Side bar and the Plot area. Most of the menubar options are self-explanatory and are detailed in the next section. Detailed description of the side bar is given in the following swction. Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. The slider, available only when working with 3D data, can be used to change the X/Y value for which the 2D line is plotted.</p>
+    <p> The main window has basically 4 parts, Menu bar, Tool bar, Side bar and the Plot area. Most of the menubar options are self-explanatory and are detailed in the following sections along with the Side bar. Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. The slider, available only when working with 3D data, can be used to change the X/Y value for which the 2D line is plotted.</p>
 
     <p>The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become visible when the mouse is over this area. Hover over them to view theirs functions. These buttons includes features like Saving plot as image, Panning, Zoom, Free/box select, Showing spike lines etc. The legend on the plot window is freely movable.</p>
 
      
     <p>While editing the projected 2D plot, the complete 3D plot can be viewed through the 3D wireframe/surface viewer windows from <label for="" class="dom">Windows</label> menu in real time i.e. all the edits made will be reflected there instantaneously. These windows supports setting axis ranges seperated by comma, with blank meaning autorange.</p>
      
-    <p>Multiple columns from same or multiple files can be opened together for editing, though all the editing features
-        are available only for one line at a moment, and others lines can be selected to edit from <label for=""
+    <p>Multiple columns from same or multiple files can be opened together for editing using <label for="" class="dom">File > Add
+            File</label>, though all the editing features
+        are available only for one line at a moment, and others lines can be selected alternatively to edit from <label for=""
             class="dom">Files Dashboard</label> or by pressing <label for="" class="dom">Ctrl+TAB</label>. The editable
-            line or
-                the
-                primary line is always plotted
-            by default as blue line with red marker and is always on the top of the legend and Files Dashboard. </p>
+            line or the primary line is easy to notice as it's always plotted,
+            by default, as blue line with red marker and is always on the top of the legend and Files Dashboard. </p>
 
-    <p>After edits you can save your modified data from <label  class="dom">File > Save</label>. When saving for first time, the application will ask for name and location of the file to save the data, with default being the same location and name with an added '_new' suffix. Any consecutive saves will save the data in that same file. As usual use <label class="dom">File > Save As</label> to save in a different file. On successful save, you will see a notification on the bottom left corner of the window. The application shows a warning if you try to close without saving any modifeid data and you can either save or quit the application.</p> 
+    <p>After edits you can save your modified data from <label  class="dom">File > Save</label>. When saving for first time, the application will ask for name and location of the file to save the data, with default being the same location and name with an added '_new' suffix. Any consecutive saves will save the data in that same file. As usual use <label class="dom">File > Save As</label> to save in a different file. On successful save, you will see a notification on the bottom left corner of the window. If you are working with multiple files then this will save the primary file only. Change the primary editable file to save others. The application shows a warning if you try to close without saving any modifeid data and you can either save or quit the application.</p> 
 
     <p>This software comes with a auto update checker and periodically checks for updates. If a newer version of this software is available to download, it notifies you immediately.</p>
 
@@ -243,11 +242,7 @@ The application side bar contains the <b>Files Dashboard</b> and <b>Plot Setting
         Files Dashboard:
         </div>
     <p>This window contains the information of the opened files and the columns used to plot, as a list. The primary
-        line i.e. the line being edited is always on the top. Click on the name of a file to make the corresponding plot
-        editable. Click on the <label for="" class="dom">C</label> button to use the same file again while <label
-            for=""
-                class="dom">X</label> button closees
-            the file.</p>
+        line i.e. the line being edited is always on the top.  Click on the <label for="" class="dom">C</label> button to use the same file again while <label for=""class="dom">X</label> button closees the file.</p> Every added file through <label for="" class="dom">File > Add File</label> or <label for="" class="dom">File > Add Recent File</label> will be listed here with the column number used for plotting. Click on the name of a file to make the corresponding plot editable, and it will jump to top of the files and legend list.
     <div class='sidenote'>
         Plot Settings
     </div>
