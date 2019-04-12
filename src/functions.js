@@ -12,7 +12,8 @@ var undoStack = [],
 var fullData = [],
     fullDataCols = [],
     fileNames = [],
-    saveNames = [];
+    saveNames = [],
+    legendNames = [];
 
 function showStatus(msg) {
     $("#status").html(msg);
@@ -47,7 +48,6 @@ function updateData() {
         col.y = col.x;
         col.x = 0
     };
-    console.log(col)
     fullDataCols[0] = JSON.parse(JSON.stringify(col));
     updatePlot(1);
     makeRows();
@@ -116,6 +116,7 @@ function fileReader(fname) {
     fullDataCols = [];
     fileNames = [];
     saveNames = [];
+    legendNames = [];
     swapperIsOn = false;
     $("#sCol, #sColInp").hide();
     $("#particle").remove();
@@ -194,6 +195,7 @@ function fileReader(fname) {
     var extn = path.extname(fname);
     var save_name = path.join(dirname, filename + "_new" + extn);
     saveNames.push(save_name);
+    legendNames.push(path.basename(fileNames[0]) + ` ${col.y}:${col.z}`)
 
     // plot here
     updateData();
@@ -248,14 +250,16 @@ function addNewFile(fname) {
         });
         return
     }
-    fullData.unshift(data); //add at the beggining i.e instantly editable
-    fullDataCols.unshift(JSON.parse(JSON.stringify(col)));
-    fileNames.unshift(fname);
+
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname));
     var extn = path.extname(fname);
     var save_name = path.join(dirname, filename + "_new" + extn);
+    fullData.unshift(data); //add at the beggining i.e instantly editable
+    fullDataCols.unshift(JSON.parse(JSON.stringify(col)));
+    fileNames.unshift(fname);
     saveNames.unshift(save_name);
+    legendNames.unshift(path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`)
 
     addTrace();
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
@@ -273,7 +277,7 @@ function addTrace() {
     let len = figurecontainer.data.length
     let thisTrace = JSON.parse(JSON.stringify(iniPointsC))
 
-    thisTrace.name = path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
+    thisTrace.name = legendNames[0]
     thisTrace.x = fullData[0][th_in][fullDataCols[0].y]
     thisTrace.y = fullData[0][th_in][fullDataCols[0].z]
     Plotly.addTraces(figurecontainer, thisTrace, 0);
@@ -325,7 +329,7 @@ function updatMultiPlot(all = true) {
     dpsx = data[th_in][col.y];
     var xl = [dpsx],
         yl = [dpsy],
-        name = [path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`];
+        name = [legendNames[0]];
     //! put another for swapper
     if (swapperIsOn) {
         Plotly.restyle(figurecontainer, {
@@ -336,7 +340,7 @@ function updatMultiPlot(all = true) {
         for (let i = 1; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
             yl.push(fullData[i][th_in][fullDataCols[i].z]);
-            name.push(path.basename(fileNames[i]) + ` ${fullDataCols[i].y + 1}:${fullDataCols[i].z + 1}`)
+            name.push(legendNames[i])
         };
 
         Plotly.restyle(figurecontainer, {
@@ -473,7 +477,6 @@ function exitSwapper() {
         thisTrace.line.color = thisTrace.marker.color = colorList[i % 9]
         toUpdate.push(thisTrace);
     }
-    console.log(toUpdate)
     Plotly.addTraces(figurecontainer, toUpdate);
     data = fullData[0]
     Plotly.relayout(figurecontainer, {
@@ -587,8 +590,8 @@ function saveData() {
     try {
         for (let i of tmpData) {
             for (let j of i) {
-                if (j == undefined) console.log(i)
-                txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
+                if (j == undefined)
+                    txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
             };
             txt += "\n";
         };

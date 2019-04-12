@@ -128,7 +128,7 @@ var schema = {
 
 var options = {
     onChangeJSON: function (json) {
-        fileNames = json.lines.Title //.map(x => x.replace(/([ :0-9])$/g, ''))
+        legendNames = json.lines.Title //.map(x => x.replace(/([ :0-9])$/g, ''))
         Plotly.restyle(figurecontainer, {
             name: json.lines.Title,
             marker: json.lines.Markers,
@@ -232,8 +232,8 @@ function makeRows() {
         ccll = fullDataCols[i];
         name = path.basename(name)
         tmp += `<li onclick='getInd(this)'>
-        <input type="button" class = 'closefile' value="X">
-        <input type="button" class = 'copyfile' value="C">
+        <input type="button" title="Close this File" class = 'closefile' value="X">
+        <input type="button" title="Copy this File" class = 'copyfile' value="C">
         <label class='filename' >${name} ${ccll.y + 1}:${ccll.z + 1}</label>
         </li>`;
     }
