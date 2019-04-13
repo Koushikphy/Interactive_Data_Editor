@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Interactive Data Editor"
-#define MyAppVersion "2.3.0"
+#define MyAppVersion "2.5.0"
 #define MyAppPublisher "Koushik Naskar"   
 #define MyAppURL "https://github.com/Koushikphy/Interactive-Data-Editor"
 #define MyAppExeName "Interactive Data Editor.exe"
@@ -21,17 +21,17 @@ DisableProgramGroupPage=no
 DisableDirPage=no
 DisableWelcomePage=no
 
-OutputDir=C:\Users\Koushik Naskar\Desktop\interactive-data-editor\dist
+OutputDir=.\dist
 OutputBaseFilename=Interactive Data Editor {#MyAppVersion}
-SetupIconFile=C:\Users\Koushik Naskar\Desktop\interactive-data-editor\build\icon.ico
+SetupIconFile=.\build\icon.ico
 SolidCompression=yes
 Compression=lzma2/ultra64
 LZMAUseSeparateProcess=yes
 LZMADictionarySize=1048576
 LZMANumFastBytes=273
 VersionInfoDescription={#MyAppName}
-VersionInfoCopyright=Copyright © Koushik Naskar, February,2019.
-VersionInfoVersion=2.3.0.0
+VersionInfoCopyright=Copyright © Koushik Naskar, April,2019.
+VersionInfoVersion=2.5.0.0
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
@@ -42,8 +42,8 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Koushik Naskar\Desktop\interactive-data-editor\dist\win-unpacked\Interactive Data Editor.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Koushik Naskar\Desktop\interactive-data-editor\dist\win-unpacked\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\dist\win-unpacked\Interactive Data Editor.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\dist\win-unpacked\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

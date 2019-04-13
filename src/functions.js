@@ -7,9 +7,8 @@ var undoStack = [],
     show = false,
     saved = true,
     compFName, firstSave = true,
-    issame = false;
-
-var fullData = [],
+    issame = false,
+    fullData = [],
     fullDataCols = [],
     fileNames = [],
     saveNames = [],
@@ -195,15 +194,14 @@ function fileReader(fname) {
     var extn = path.extname(fname);
     var save_name = path.join(dirname, filename + "_new" + extn);
     saveNames.push(save_name);
-    legendNames.push(path.basename(fileNames[0]) + ` ${col.y}:${col.z}`)
+    legendNames.push(path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`)
 
     // plot here
     updateData();
     makeEditable();
     makeRows();
-    let fnm = path.basename(fileNames[0]) + ` ${fullDataCols[0].y + 1}:${fullDataCols[0].z + 1}`
     Plotly.restyle(figurecontainer, {
-        name: fnm
+        name: legendNames[0]
     });
     //update recent menu
 
@@ -322,7 +320,7 @@ function addTrace() {
 
 
 // this will be the new update plot function
-function updatMultiPlot(all = true) {
+function updatePlot(all = true) {
     //current true means just update the current plot i.e. 0th 
     // leave others as it is.
     dpsy = data[th_in][col.z];
@@ -376,8 +374,6 @@ function selectEditable(index) {
         })
     } else {
         if (index >= fullData.length) return;
-        // move the file name in dash board to top
-        // change the title to editable file name
         [fullData[0], fullData[index]] = [fullData[index], fullData[0]];
         [fullDataCols[0], fullDataCols[index]] = [fullDataCols[index], fullDataCols[0]];
         [fileNames[0], fileNames[index]] = [fileNames[index], fileNames[0]];
@@ -385,11 +381,11 @@ function selectEditable(index) {
         data = fullData[0];
         col = fullDataCols[0];
 
-        updatMultiPlot()
+        updatePlot()
         makeRows()
         document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[0]);
     }
-    // firstSave = true
+    firstSave = true
     makeEditable()
     undoStack = []
     redoStack = []
@@ -409,11 +405,6 @@ function makeEditable() {
     }
     pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
     points = pointscontainer.getElementsByTagName("path");
-    updateEditablePlot();
-    startDragBehavior();
-}
-
-function updateEditablePlot() {
     data = fullData[0]
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
@@ -428,7 +419,9 @@ function updateEditablePlot() {
             y: dpsy[i]
         };
     };
+    startDragBehavior();
 }
+
 
 
 var swapperIsOn = false
@@ -483,7 +476,7 @@ function exitSwapper() {
         selectdirection: 'any'
     });
     $("#sCol, #sColInp").hide();
-    updatMultiPlot(all = true);
+    updatePlot(all = true);
     makeEditable()
     updateJSON();
     menu.getMenuItemById("af").enabled = true;
@@ -513,7 +506,6 @@ function parseData(strDps) {
     };
     return newdat;
 };
-
 
 
 function expRotate(tmpData, i, j) {
@@ -574,15 +566,15 @@ function saveAs() {
 
 
 function saveData() {
-    if (swapperIsOn) {
-        dialog.showMessageBox({
-            type: "warning",
-            title: "Can't add the file!!!",
-            message: "Plot along X before adding a new file.",
-            buttons: ['Ok']
-        });
-        return
-    }
+    // if (swapperIsOn) {
+    //     dialog.showMessageBox({
+    //         type: "warning",
+    //         title: "Can't add the file!!!",
+    //         message: "Plot along X before adding a new file.",
+    //         buttons: ['Ok']
+    //     });
+    //     return
+    // }
     tmpData = data
     if (swapped) tmpData = expRotate(tmpData, col.y, col.x)
     var tmpData = tmpData.map(x => transpose(x));
@@ -590,7 +582,7 @@ function saveData() {
     try {
         for (let i of tmpData) {
             for (let j of i) {
-                if (j == undefined)
+                if (j !== undefined)
                     txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
             };
             txt += "\n";
@@ -603,68 +595,6 @@ function saveData() {
         return false;
     }
 
-};
-
-
-
-
-function spreadsheet() {
-    editorWindow = new BrowserWindow({
-        minWidth: 1200,
-        show: false,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    editorWindow.maximize();
-    editorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "handtable.html"),
-        protocol: 'file:',
-        slashes: true
-    }));
-    editorWindow.setMenuBarVisibility(false);
-
-    editorWindow.show();
-    if (!app.isPackaged) editorWindow.webContents.openDevTools();
-    editorWindow.webContents.once("dom-ready", function () {
-        editorWindow.webContents.send("slider", [xName, col.x, data]);
-    })
-}
-
-
-
-function openViewer(x) {
-    serve = 1;
-    var target = "3D_Viewer_Lines.html"
-    if (x) target = "3D_Viewer_Surface.html"
-
-    viewerWindow = new BrowserWindow({
-        show: false,
-        minWidth: 1200,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    viewerWindow.maximize();
-    setTimeout(function () {
-        viewerWindow.loadURL(url.format({
-            pathname: path.join(__dirname, target),
-            protocol: 'file:',
-            slashes: true
-        }));
-    }, 50)
-    viewerWindow.on("closed", function () {
-        delete viewer[target]
-    })
-
-
-    viewerWindow.show();
-    viewerWindow.setMenuBarVisibility(false);
-    viewer[target] = viewerWindow;
-    if (!app.isPackaged) viewerWindow.webContents.openDevTools();
-    viewerWindow.webContents.once("dom-ready", function () {
-        updateOnServer()
-    })
 };
 
 
@@ -736,7 +666,8 @@ function colsChanged(value) {
 function colChanged(value) {
     $("select").blur();
     fullDataCols[0].z = col.z = value;
-    updatePlot(1);
+    legendNames[0] = path.basename(fileNames[0]) + ` ${col.y + 1}:${col.z + 1}`
+    updatePlot(all = false);
     updateOnServer();
     startDragBehavior();
     makeRows()
@@ -868,7 +799,7 @@ function startDragBehavior() {
     drag.on("dragend", function () {
         updateFigure();
         fullData[0] = data;
-        updatePlot()
+        updatePlot(all = false)
         updateOnServer();
         d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
     });
@@ -926,7 +857,7 @@ function doIt() {
     zCol.selectedIndex = col.z;
     sCol.selectedIndex = col.s;
     data[th_in] = arr;
-    updatePlot(1);
+    updatePlot(all = false);
     startDragBehavior();
     updateOnServer();
     saved = false;
@@ -947,5 +878,3 @@ function updateOnServer() {
     var c2s = []
     for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
 };
-
-updatePlot = updatMultiPlot
