@@ -124,6 +124,10 @@
         .sidenav a {
             border-bottom: 1px solid rgba(255, 255, 255, 0.8);
         }
+
+        * {
+            -webkit-user-select: none;
+        }
     </style>
     <script>
         if (typeof module === "object") {
@@ -164,7 +168,7 @@
             the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed
             through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in
             the 3D data file. Check the sample 3D data files provided with this software to get an idea about the input
-            data format. All the useful data operations are discussed in detailed in the Features section. Apart from
+            data format. All the useful data operations are discussed in detailed in the following sections. Apart from
             the editings this software can be used just as a data plotter too.
         </p>
         <p>This software comes with a auto update checker and periodically checks for updates. If a newer version of
@@ -208,7 +212,7 @@
         columns used to plot, as
         a list.
         Appearance of the plot window can be configured from the <label for="" class="dom">Plot
-            Setting</label>.
+            Settings</label>.
         Options like title, axis lable, ranges, background color, grid etc. can be changed from layout
         settings. This application supports LaTeX rendering,
         so any valid LaTeX text can be used as title, axis labels or in legends. On the other hand individual
@@ -226,7 +230,7 @@
     </p>
     <p>
         Apart from the main window this application has three external windows and accessed from the Windows
-        menyu.
+        menu.
         Two of them is to view the complete 3D plot in real time as you edit the the 2D projection on main
         window.
         And the third one is to edit the data in a spreadsheet like editor, with all basic excel like
@@ -248,7 +252,7 @@
                 <p>
                 Instead of opening the file through menubar or using keyboard shortcut, you can just drag and drop file inside 
                 the application window to load the data. This works with mounted files too. So, to directly edit a remote file, mount
-                the file and just drag and drop.
+                the file and just drag and drop here.
                 </p>
 
         <p>Multiple files can be opened together for editing using <label class="dom">File
@@ -305,7 +309,6 @@
     <li><b><i>Edit multiple data simultaneously.</i></b> You can edit multiple columns of the same or different files
         simultaneously. After loading a file additional files can be added through <label for="" class="dom">File > Add
             File</label>, or you can just use different column of the same file from the <label for="" class="dom">Files Dashboard</label>.
-            Deatailed description of this option is given in the next section.
         <p></p>
     </li>
 
@@ -344,7 +347,7 @@
 `,
             `    <div class="title">Keyboard Shortcuts</div>
 <div class="text keys">
-    The followings are the keybindings available for this software.
+    The followings keybindings are available for this software.
     <ol>
     <li><label class="key">Ctrl+O</label> Open file.</li>
     <li><label class='key'>Shift+Ctrl+O</label> Add new file. </li>

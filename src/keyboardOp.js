@@ -75,7 +75,6 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             break;
         case "edat":
             $("#extend").slideDown();
-            // $("#einp").val(dpsx[dpsx.length-1]);
             break;
         case 'fill':
             $("#filler").slideDown();
@@ -117,6 +116,7 @@ function hotDKeys(e) {
 
 
 keepTrackIndex = 0
+
 function hotKeys(e) {
     if (document.activeElement.type == "text") {
         return;

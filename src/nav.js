@@ -183,20 +183,6 @@ function removeRow(row) {
     fullDataCols.splice(index, 1);
     fileNames.splice(index, 1);
     Plotly.deleteTraces(figurecontainer, index);
-    //take special care if 0 deleted i.e the editable trace
-    // if (figurecontainer.data.length == 1) {
-    //     Plotly.restyle(figurecontainer,
-    //         {
-    //             marker: {
-    //                 symbol: 200,
-    //                 color: '#b00'
-    //             },
-    //             line: {
-    //                 width: 2,
-    //                 color: "#1e77b4",
-    //             }
-    //         });
-    // }
     makeRows();
     makeEditable();
     var col = fullDataCols[0]
@@ -218,6 +204,8 @@ function copyFile(row) {
     fullData.unshift(fullData[index]);
     fullDataCols.unshift(JSON.parse(JSON.stringify(fullDataCols[index])));
     fileNames.unshift(fileNames[index]);
+    saveNames.unshift(saveNames[index]);
+    legendNames.unshift(legendNames[index])
     addTrace();
 }
 
