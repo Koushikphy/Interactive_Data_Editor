@@ -446,8 +446,8 @@ function openSwapper() {
         x: [data[th_in][col.y], data[th_in][col.y]],
         y: [data[th_in][col.z], data[th_in][col.s]],
         name: [
-            lname + ` ${col.y}:${col.z}`,
-            lname + ` ${col.y}:${col.s}`
+            lname + ` ${col.y +1 }:${col.z +1}`,
+            lname + ` ${col.y +1}:${col.s +1}`
         ]
     })
     Plotly.relayout(figurecontainer, {

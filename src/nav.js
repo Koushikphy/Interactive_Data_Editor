@@ -182,6 +182,8 @@ function removeRow(row) {
     fullData.splice(index, 1);
     fullDataCols.splice(index, 1);
     fileNames.splice(index, 1);
+    saveNames.splice(index, 1);
+    legendNames.splice(index, 1);
     Plotly.deleteTraces(figurecontainer, index);
     makeRows();
     makeEditable();
@@ -193,6 +195,39 @@ function removeRow(row) {
     } else {
         xCol.selectedIndex = col.y;
         yCol.selectedIndex = col.z;
+    }
+    if (index == 0) {
+        marker = [{
+            symbol: 200,
+            color: '#b00',
+            size: 6,
+            opacity: 1
+        }]
+        line = [{
+            width: 2,
+            color: "#1e77b4",
+            dash: 0,
+            shape: 'linear'
+        }]
+        for (let i = 1; i < figurecontainer.data.length; i++) {
+            marker.push({
+                symbol: 200,
+                color: colorList[i % 9],
+                size: 6,
+                opacity: 1
+            })
+            line.push({
+                width: 2,
+                color: colorList[i % 9],
+                dash: 0,
+                shape: 'linear'
+            })
+        }
+        col = fullDataCols[0];
+        Plotly.restyle(figurecontainer, {
+            line,
+            marker
+        });
     }
 }
 
