@@ -9,7 +9,7 @@ html {
 body {
     float: left;
     width: 98.5%;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 a {
     margin: 5px;
@@ -118,7 +118,6 @@ input[type=text] {
 .borders {
     padding-top: 1.5px;
     padding-bottom: 1.5px;
-
     border: 1px solid black;
     margin-bottom: 5px;
     width: 37pc;
@@ -159,4 +158,102 @@ input[type=text] {
     margin-bottom: 5px;
     margin-right: 1.5pc;
     margin-left: 1.5pc;
+}
+
+
+
+#full {
+  transition: margin-left .3s;
+}
+
+.lines :hover{
+background-color: rgb(219, 55, 55);
+}
+
+
+#sidebar, #sidebar2 {
+background-color: rgb(243, 243, 243);
+width: 0px;
+float: left;
+height: 100vh;
+transition: width .3s;
+overflow: hidden;
+white-space:nowrap;
+}
+
+.sideheader, .sideheader2{
+    width: 100%;
+    text-align: center;
+    font-size: 21px;
+    margin-bottom: 21px
+}
+
+.closebtn, .closebtn2{
+    text-align: right;
+    font-size: 25px;
+    padding-right: 10px;
+}
+
+#split-bar, #split-bar2 {
+background-color: black;
+height: 100%;
+float: right;
+width: 0px;
+cursor: col-resize;
+transition: width .5s;
+}
+
+.ham{
+    position: absolute;
+    padding-top: 4px;
+}
+
+#files{
+    text-align: left;
+    font-size: 18px;
+    height: 100%;
+    overflow: scroll;
+}
+
+/* .fff{
+    margin: 3px;
+    width: 200 ;
+    display: inline-block;
+}
+
+.fff :hover{
+    background-color: #b9b9b9;
+    cursor: pointer;
+} */
+
+.filename{
+    display: inline-block;
+}
+
+.key{
+    display: inline-block;
+  }
+  
+  li { background: rgb(243, 243, 243); padding-left: 5px; }
+  /* li:nth-child(odd) { background: #f1f1f2; } */
+  li:hover{background: #dadada}
+  
+  li{
+      padding-top: 5px;
+      margin-left: 3px;
+  }
+ol{
+    padding-left: 2pc
+}
+
+#jsoneditor {
+    width: 200px;
+    height: 100vh;
+    transition: width .5s;
+  }
+
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
 }

@@ -1,11 +1,26 @@
-var data = [], compdata = [], olddata = "",
-    dpsx = [], dpsy = [], dpsy2 = [], index = [], del_dat = [],
-    th_in = 0, refdat = 1, ma = 1,
+var data = [],
+    compdata = [],
+    olddata = "",
+    dpsx = [],
+    dpsy = [],
+    dpsy2 = [],
+    index = [],
+    del_dat = [],
+    th_in = 0,
+    refdat = 1,
+    ma = 1,
     file, points, pointscontainer,
     serve = 0,
     lockXc = 1,
-    swapped = 0, swapper = false,
-    ddd = false, col = { x: 0, y: 0, z: 0, s: 0 },
+    swapped = 0,
+    swapper = false,
+    ddd = false,
+    col = {
+        x: 0,
+        y: 0,
+        z: 0,
+        s: 0
+    },
     xName = "X",
     $slider = $("#slider"),
     xCol = document.getElementById("xCol"),
@@ -22,8 +37,10 @@ $ch = $("#custom-handle")
 var layout = {
     autosize: true,
     plot_bgcolor: "#e8ebef",
+    paper_bgcolor: '#fff',
     showlegend: false,
     hovermode: "closest",
+    title: '',
     margin: {
         t: 25,
         r: 0,
@@ -32,32 +49,50 @@ var layout = {
         pad: 0
     },
     xaxis: {
+        title: '',
         zeroline: false,
         showline: true,
+        showgrid: true,
+        automargin: true
     },
     yaxis: {
+        title: '',
         automargin: true,
         zeroline: false,
         showline: true,
         tickformat: " ,.5g",
         hoverformat: " ,.6g",
+        showgrid: true,
     },
-    font: { size: 14 },
+    font: {
+        size: 14
+    },
+    showlegend: true,
+    legend: {
+        x: 0,
+        y: 1
+    }
 };
 
+var colorList = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]
 
 var iniPointsD = {
     x: [1],
     y: [1],
     type: 'scatter',
+    opacity: 1,
     mode: 'markers+lines',
     marker: {
-        symbol: "circle-dot",
-        color: '#b00'
+        symbol: 200,
+        color: '#b00',
+        size: 6,
+        opacity: 1
     },
     line: {
         width: 2,
         color: "#1e77b4",
+        dash: 0,
+        shape: 'linear'
     },
     hoverinfo: 'x+y',
 };
@@ -67,26 +102,35 @@ var iniPointsC = {
     x: [1],
     y: [1],
     type: 'scatter',
+    opacity: 1,
     mode: 'markers+lines',
     marker: {
-        symbol: "x",
-        color: '#f17010'
+        symbol: 200,
+        color: '#b00',
+        size: 6,
+        opacity: 1
     },
     line: {
         width: 2,
-        color: "#3c6d2b",
+        color: "#1e77b4",
+        dash: 0,
+        shape: 'linear'
     },
     hoverinfo: 'x+y',
 };
 
+
 const Plotly = require('plotly.js-gl3d-dist');
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
     displaylogo: false,
-    modeBarButtonsToRemove: ['sendDataToCloud']
+    modeBarButtonsToRemove: ['sendDataToCloud'],
+    editable: true
 });
+
 pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
 points = pointscontainer.getElementsByTagName("path");
 figurecontainer.on("plotly_selected", selectEvent);
+figurecontainer.on("plotly_relayout", updateJSON);
 resizePlot();
 
 

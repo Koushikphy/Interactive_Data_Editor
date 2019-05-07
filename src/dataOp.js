@@ -8,7 +8,7 @@ function pasteThis() {
     saveOldData();
     var tmp = JSON.parse(copyVar);
     for (let i = 0; i < tmp.length; i++) {
-        if(i != col.x){
+        if (i != col.x) {
             data[th_in][i] = tmp[i];
         }
     }
@@ -50,7 +50,7 @@ function repeatMirror() {
     data = data.map(dat => {
 
         var ind = dat[col.y].indexOf(last) + 1
-        if (!ind) {alert("Endpoint must exist !!!"); return dat}
+        if (!ind) { alert("Endpoint must exist !!!"); return dat }
         var newy = dat[col.y].slice(0, ind)
         var tmp = newy.slice()
         tmp.splice(0, 1)
@@ -85,6 +85,7 @@ function repeatMirror() {
     startDragBehavior();
     updateOnServer();
     saved = false;
+    fullData[0] = data
 }
 
 
@@ -150,6 +151,8 @@ function dataFiller() {
     startDragBehavior();
     updateOnServer();
     saved = false;
+    fullData[0] = data
+
 }
 
 
@@ -198,6 +201,8 @@ function filterData() {
     startDragBehavior();
     updateOnServer();
     saved = false;
+    fullData[0] = data
+
 }
 
 
@@ -301,6 +306,8 @@ function deleteInterpolate() {
         selectedpoints: [null]
     });
     saved = false;
+    fullData[0] = data
+
 };
 
 
@@ -318,6 +325,7 @@ function autoSmooth() {
     };
     data[th_in][col.z] = dpsy;
     updatePlot();
+    fullData[0] = data
     saved = false;
 };
 

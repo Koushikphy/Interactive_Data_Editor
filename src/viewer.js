@@ -1,7 +1,15 @@
 var figurecontainer = document.getElementById("figurecontainer"),
-    data = [], cols = [0, 1, 2], ldata = [], lIniData = [], ranges = [], swapped = false,
-    newCol = [0, 0, 0], curCol = false;
-const { ipcRenderer } = require('electron');
+    data = [],
+    cols = [0, 1, 2],
+    ldata = [],
+    lIniData = [],
+    ranges = [],
+    swapped = false,
+    newCol = [0, 0, 0],
+    curCol = false;
+const {
+    ipcRenderer
+} = require('electron');
 const Plotly = require('plotly.js-gl3d-dist');
 
 
@@ -31,9 +39,13 @@ function transpose(m) {
 
 function mark_clicked(mark) {
     if (mark.checked) {
-        Plotly.restyle(figurecontainer, { 'mode': "markers+lines" });
+        Plotly.restyle(figurecontainer, {
+            'mode': "markers+lines"
+        });
     } else {
-        Plotly.restyle(figurecontainer, { 'mode': "lines" });
+        Plotly.restyle(figurecontainer, {
+            'mode': "lines"
+        });
     };
 };
 
@@ -63,32 +75,66 @@ function getRange(lim, range, coln) {
 
 
 function setXRange(lim, range = false) {
-    if (lim == "") { Plotly.relayout(figurecontainer, { "scene.xaxis.autorange": true }); return; };
+    if (lim == "") {
+        Plotly.relayout(figurecontainer, {
+            "scene.xaxis.autorange": true
+        });
+        return;
+    };
     [lim, _] = getRange(lim, range, cols[0]);
-    Plotly.relayout(figurecontainer, { "scene.xaxis.range": lim });
+    Plotly.relayout(figurecontainer, {
+        "scene.xaxis.range": lim
+    });
 };
 
 
 function setYRange(lim, range = false) {
-    if (lim == "") { Plotly.relayout(figurecontainer, { "scene.yaxis.autorange": true }); return; };
+    if (lim == "") {
+        Plotly.relayout(figurecontainer, {
+            "scene.yaxis.autorange": true
+        });
+        return;
+    };
     [lim, _] = getRange(lim, range, cols[1]);
-    Plotly.relayout(figurecontainer, { "scene.yaxis.range": lim });
+    Plotly.relayout(figurecontainer, {
+        "scene.yaxis.range": lim
+    });
 };
 
 
 function setZRange(lim, range = false) {
-    if (lim == "") { Plotly.relayout(figurecontainer, { "scene.zaxis.autorange": true }); return; };
+    if (lim == "") {
+        Plotly.relayout(figurecontainer, {
+            "scene.zaxis.autorange": true
+        });
+        return;
+    };
     [lim, [cmin, cmax]] = getRange(lim, range, cols[2]);
-    Plotly.update(figurecontainer, { "cmin": cmin, "cmax": cmax }, { "scene.zaxis.range": lim });
+    // Plotly.update(figurecontainer, {
+    //     "cmin": cmin,
+    //     "cmax": cmax
+    // }, {
+    //     "scene.zaxis.range": lim
+    //     });
+    Plotly.relayout(figurecontainer, {
+        'scene.zaxis.range': lim,
+    })
+    Plotly.restyle(figurecontainer, {
+        "cmin": cmin,
+        "cmax": cmax
+    })
 };
 
 
 
+
 function makeRotation() {
-    var issame = true, b = data[0][0].length;
+    var issame = true,
+        b = data[0][0].length;
     for (let a of data[0]) {
         if (a.length != b) {
-            issame = false; break;
+            issame = false;
+            break;
         };
     };
 
@@ -107,7 +153,9 @@ function makeRotation() {
 
     xxx = [], yyy = [], zzz = [];
     for (let x of tmp) {
-        var tmp0 = [], tmp1 = [], tmp2 = [];
+        var tmp0 = [],
+            tmp1 = [],
+            tmp2 = [];
         for (let i = 0; i < tmpData0.length; i++) {
             if (tmpData1[i] == x) {
                 tmp0.push(tmpData0[i]);
@@ -143,25 +191,28 @@ function initData(length) {
             hoverlabel: {
                 bgcolor: "#2ca02c"
             },
-        }
-        )
+        })
     };
     return pl_data
 };
 
-var sIniData = [
-    {
-        type: 'surface',
-        hoverinfo: "x+y+z",
-        colorscale: "Portland",
-        hoverlabel: {
-            bgcolor: "#2ca02c"
-        },
-        z: [[1]],
-        x: [[1]],
-        y: [[1]]
-    }
-];
+var sIniData = [{
+    type: 'surface',
+    hoverinfo: "x+y+z",
+    colorscale: "Portland",
+    hoverlabel: {
+        bgcolor: "#2ca02c"
+    },
+    z: [
+        [1]
+    ],
+    x: [
+        [1]
+    ],
+    y: [
+        [1]
+    ]
+}];
 
 var layout = {
     height: window.innerHeight + 68,

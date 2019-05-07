@@ -5,7 +5,14 @@
     <title>Interactive Data Editor</title>
     <link href="../lib/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../lib/jquery-ui.min.css">
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <link rel="stylesheet" href="../lib/jsoneditor.min.css">
+
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
 
 </head>
 
@@ -20,10 +27,10 @@
                 <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">
                     Developed
                     by Koushik Naskar</div>
-                <div style="font-size: large;margin-top: 7px">Version 2.3.0 </div>
+                <div style="font-size: large;margin-top: 7px">Version 2.5.0 </div>
                 <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">
                     Copyright
-                    &copy; Feb, 2019 Koushik Naskar</div>
+                    &copy; April, 2019 Koushik Naskar</div>
                 <a href="javascript:void(0)"
                     onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img
                         src="../figs/facebook.png" width="30" height="30"></a>
@@ -37,9 +44,27 @@
         </div>
     </div>
 
-    <div id="full" style="display: none;">
 
+    <div id="sidebar">
+        <div id="split-bar"></div>
+        <div class="closebtn" onclick="closeNav()">&#9746;</div>
+        <div class="sideheader">
+            Files Dashboard
+        </div>
+        <div id="files"></div>
+    </div>
+    <div id="sidebar2">
+        <div id="split-bar2"></div>
+        <div class="closebtn" onclick="closeNav2()">&#9746;</div>
+        <div class="sideheader">
+            Plot Settings
+        </div>
+        <div id="jsoneditor"></div>
+    </div>
+
+    <div id="full" style="display: none;">
         <div id="header">
+
             An interactive 2D and 3D data editor
         </div>
 
@@ -102,10 +127,22 @@
     </div>
     <div id="status"></div>
 
+    <!-- <div id='jsoneditor'></div> -->
+
     <script src='../lib/init.min.js'></script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
+    <script src="../lib/jsoneditor.min.js"></script>
     <script src="../lib/funcs.min.js"></script>
+    <script async src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG">
+    </script>
+
+    <script>
+
+
+
+
+    </script>
 </body>
 
 </html>
