@@ -140,7 +140,7 @@ const homeMenuTemplate = [{
                 click() {
                     mainWindow.reload();
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'wire', 'surf', "spr", 'af', 'arf', 'pamh', 'pax', 'swapen', "edat", "fill", "filter"]) {
+                    for (let i of ['save', 'saveas', 'tfd', 'tfs', 'wire', 'surf', "spr", 'af', 'arf', 'pamh', 'pax', 'swapen', "edat", "fill", "filter"]) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     men.getMenuItemById("pax").visible = true;
@@ -164,6 +164,8 @@ const homeMenuTemplate = [{
         submenu: [{
                 label: 'Toggle Files dashboard',
                 accelerator: 'CmdOrCtrl+B',
+                id: 'tfd',
+                enabled: false,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "fdash")
                 }
@@ -171,12 +173,14 @@ const homeMenuTemplate = [{
             {
                 label: 'Toggle Plot Settings',
                 accelerator: 'CmdOrCtrl+K',
+                id: 'tfs',
+                enabled: false,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "pdash")
                 }
             }, {
                 label: "Plot along X",
-                accelerator: !app.isPackaged ? 'Q' : "",
+                accelerator: 'CmdOrCtrl+A',
                 id: 'pax',
                 visible: true,
                 enabled: false,
@@ -187,7 +191,7 @@ const homeMenuTemplate = [{
                 }
             }, {
                 label: 'Plot along Y',
-                accelerator: !app.isPackaged ? 'Q' : "",
+                accelerator: 'CmdOrCtrl+A',
                 id: 'pay',
                 visible: false,
                 click() {

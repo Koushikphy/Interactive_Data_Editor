@@ -97,27 +97,44 @@ function updateJSON() {
     })
 }
 
+var symbols = []
+for (let i = 0; i <= 44; i++) {
+    symbols.push(i.toString());
+    symbols.push((i + 100).toString());
+    symbols.push((i + 200).toString())
+}
+
 var schema = {
     "properties": {
         'lines': {
             "properties": {
                 "Line": {
-                    "properties": {
-                        "width": {
-                            "type": 'integer'
-                        },
-                        "dash": {
-                            "type": 'integer'
-                        },
-                        "shape": {
-                            "enum": ['linear', 'spline']
+                    "items": {
+                        "properties": {
+                            "width": {
+                                "type": 'integer'
+                            },
+                            "dash": {
+                                "type": 'integer'
+                            },
+                            "shape": {
+                                "enum": ['linear', 'spline']
+                            }
                         }
                     }
                 },
                 "Markers": {
-                    "properties": {
-                        "symbol": {
-                            "type": "number"
+                    "items": {
+                        "properties": {
+                            "symbol": {
+                                "type": "integer"
+                            },
+                            "size": {
+                                "type": "number"
+                            },
+                            "opacity": {
+                                "type": "number"
+                            }
                         }
                     }
                 }
@@ -125,6 +142,7 @@ var schema = {
         }
     }
 }
+
 
 var options = {
     onChangeJSON: function (json) {

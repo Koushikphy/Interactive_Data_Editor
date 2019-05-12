@@ -85,12 +85,24 @@ function recentMenu() {
 
 //in dev mode don't load animation directly go to plot
 if (app.isPackaged) {
-    const particlesJS = require('particles.js');
-    window.particlesJS.load('particle', '../lib/particles.json');
     versionCheck();
+    if (remote.process.argv.length > 1) {
+        window.onload = function () {
+            fileReader(remote.process.argv[1])
+        };
+    } else {
+        const particlesJS = require('particles.js');
+        window.particlesJS.load('particle', '../lib/particles.json');
+    }
 } else {
     document.getElementById('particle').remove();
     document.getElementById('full').style.display = 'block';
+    if (remote.process.argv.length > 2) {
+        window.onload = function () {
+            fileReader(remote.process.argv[2])
+        };
+
+    };
 }
 
 

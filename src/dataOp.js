@@ -47,10 +47,18 @@ function repeatMirror() {
     for (let i = 0; i < tmp; i++) {
         if (i != col.y) cols_wo_y.push(i)
     }
+
+    for (let i = 0; i < data.length; i++) {
+        if (!(data[0][col.y].indexOf(last) + 1)) {
+            alert("Endpoint must exist !!!");
+            $("#extend").slideUp();
+            return;
+        }
+    }
+
     data = data.map(dat => {
 
         var ind = dat[col.y].indexOf(last) + 1
-        if (!ind) { alert("Endpoint must exist !!!"); return dat }
         var newy = dat[col.y].slice(0, ind)
         var tmp = newy.slice()
         tmp.splice(0, 1)

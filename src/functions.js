@@ -15,6 +15,9 @@ var undoStack = [],
     legendNames = [];
 
 function showStatus(msg) {
+    if ($("#status").is(':visible')) {
+        $("#status").stop()
+    }
     $("#status").html(msg);
     $("#status").toggle('slide', {
             direction: 'left'
@@ -121,10 +124,13 @@ function fileReader(fname) {
     $("#particle").remove();
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $("#full").show();
+    $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
     if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
-    Plotly.relayout(figurecontainer, {
-        selectdirection: 'any'
-    });
+    if (figurecontainer.layout.selectdirection != 'any') {
+        Plotly.relayout(figurecontainer, {
+            selectdirection: 'any'
+        });
+    }
     xCol = document.getElementById("xCol");
     yCol = document.getElementById("yCol");
 
@@ -152,7 +158,7 @@ function fileReader(fname) {
 
 
     //setup the column selector and menu.
-    var enableMenu = ['save', 'saveas', "spr", 'pamh', 'swapen', "edat", "fill", "filter", 'af', 'arf']
+    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'pamh', 'swapen', "edat", "fill", "filter", 'af', 'arf']
     if (ddd) { //3
         $(".3D").show()
         var fl = JSON.parse(localStorage.getItem("cols3d"));
@@ -377,12 +383,13 @@ function selectEditable(index) {
         [fullDataCols[0], fullDataCols[index]] = [fullDataCols[index], fullDataCols[0]];
         [fileNames[0], fileNames[index]] = [fileNames[index], fileNames[0]];
         [saveNames[0], saveNames[index]] = [saveNames[index], saveNames[0]];
+        [legendNames[0], legendNames[index]] = [legendNames[index], legendNames[0]];
+
         data = fullData[0];
         col = fullDataCols[0];
 
         updatePlot()
         makeRows()
-        document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[0]);
     }
     firstSave = true
     makeEditable()
@@ -419,6 +426,7 @@ function makeEditable() {
         };
     };
     startDragBehavior();
+    document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[0]);
 }
 
 
