@@ -279,7 +279,168 @@ function solve(A, ks) {
     return ks;
 };
 
+function determinant(a,b,c,d,e,f,g,h,i){
+    return a*e*i - a*f*h - b*d*i + b*g*f + c*d*h - c*e*g
+}
 
+
+var abs = Math.abs;
+
+function array_fill(i, n, v) {
+    var a = [];
+    for (; i < n; i++) {
+        a.push(v);
+    }
+    return a;
+}
+
+/**
+ * Gaussian elimination
+ * @param  array A matrix
+ * @param  array x vector
+ * @return array x solution vector
+ */
+function gauss(A, x) {
+
+    var i, k, j;
+
+    // Just make a single matrix
+    for (i=0; i < A.length; i++) { 
+        A[i].push(x[i]);
+    }
+    var n = A.length;
+
+    for (i=0; i < n; i++) { 
+        // Search for maximum in this column
+        var maxEl = abs(A[i][i]),
+            maxRow = i;
+        for (k=i+1; k < n; k++) { 
+            if (abs(A[k][i]) > maxEl) {
+                maxEl = abs(A[k][i]);
+                maxRow = k;
+            }
+        }
+
+
+        // Swap maximum row with current row (column by column)
+        for (k=i; k < n+1; k++) { 
+            var tmp = A[maxRow][k];
+            A[maxRow][k] = A[i][k];
+            A[i][k] = tmp;
+        }
+
+        // Make all rows below this one 0 in current column
+        for (k=i+1; k < n; k++) { 
+            var c = -A[k][i]/A[i][i];
+            for (j=i; j < n+1; j++) { 
+                if (i===j) {
+                    A[k][j] = 0;
+                } else {
+                    A[k][j] += c * A[i][j];
+                }
+            }
+        }
+    }
+
+    // Solve equation Ax=b for an upper triangular matrix A
+    x = array_fill(0, n, 0);
+    for (i=n-1; i > -1; i--) { 
+        x[i] = A[i][n]/A[i][i];
+        for (k=i-1; k > -1; k--) { 
+            A[k][n] -= A[k][i] * x[i];
+        }
+    }
+
+    return x;
+}
+
+function deleteExtrapolate(){
+    if (!index.length) return;
+    var xs = dpsx.slice();
+    var ys = dpsy.slice();
+    for (var i = index.length - 1; i >= 0; i--) {
+        xs.splice(index[i], 1);
+        ys.splice(index[i], 1);
+    }
+
+    // fit with a quadratic polynomial
+    a = b = c = d = e = m = n = p = 0
+    a = xs.length
+    for (let i=0; i<a; i++){
+        b += xs[i]
+        c += xs[i]**2
+        d += xs[i]**3
+        e += xs[i]**4
+        m += ys[i]
+        n += ys[i]*xs[i]
+        p += ys[i]*xs[i]**2
+    }
+
+    // det = determinant(a,b,c,b,c,d,c,d,e)
+    // c0 = determinant(m,b,c,n,c,d,p,d,e)/det
+    // c1 = determinant(a,m,c,b,n,d,c,p,e)/det
+    // c2 = determinant(a,b,m,b,c,n,c,d,p)/det
+
+    var [c0, c1 , c2] = gauss([[a,b,c],[b,c,d],[c,d,e]], [m,n,p])
+    function exterp(x){
+        return c0 + c1*x + c2*x**2
+    }
+    saveOldData();
+    for (let ind of index) {
+        data[th_in][col.z][ind] = exterp(data[th_in][col.y][ind]);
+    };
+
+    updatePlot();
+    updateOnServer();
+    index = [];
+    Plotly.restyle(figurecontainer, {
+        selectedpoints: [null]
+    });
+    saved = false;
+    fullData[0] = data
+
+}
+
+
+
+function deleteInterpolateTest() {
+    if (!index.length) return;
+    var xs = dpsx.slice();
+    var ys = dpsy.slice();
+    //check for endpoints
+    // don't remove last values
+    // if (index[0] == 0) index.splice(0, 1)
+    // if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)
+    for (var i = index.length - 1; i >= 0; i--) {
+        xs.splice(index[i], 1);
+        ys.splice(index[i], 1);
+    }
+    ks = getNaturalKs(xs, ys);
+
+    function spline(x) {
+        var i = 1;
+        while (xs[i] < x) i++;
+        var t = (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
+        var a = ks[i - 1] * (xs[i] - xs[i - 1]) - (ys[i] - ys[i - 1]);
+        var b = -ks[i] * (xs[i] - xs[i - 1]) + (ys[i] - ys[i - 1]);
+        var q = (1 - t) * ys[i - 1] + t * ys[i] + t * (1 - t) * (a * (1 - t) + b * t);
+        console.log(x,q)
+        return q;
+    };
+    saveOldData();
+    for (let ind of index) {
+        data[th_in][col.z][ind] = spline(data[th_in][col.y][ind]);
+    };
+    updatePlot();
+    updateOnServer();
+    index = [];
+    Plotly.restyle(figurecontainer, {
+        selectedpoints: [null]
+    });
+    saved = false;
+    fullData[0] = data
+
+};
 
 function deleteInterpolate() {
     if (!index.length) return;
