@@ -6,6 +6,16 @@ html {
     box-sizing: border-box;
 }
 
+*, *:before, *:after{-webkit-box-sizing: inherit;box-sizing: inherit;}
+.toastIn{
+    opacity:1 !important;
+    transform:scale(1) !important;
+}
+.toastOut{
+    transform:scale(0.6) !important;
+    opacity:0 !important;
+}
+
 body {
     float: left;
     width: 98.5%;
@@ -52,7 +62,7 @@ input[type=text] {
     text-align: center;
 }
 
-#status {
+/* #status {
     font-size: 21px;
     position: fixed;
     display: none;
@@ -65,7 +75,7 @@ input[type=text] {
     font-size: large;
     border-top-right-radius: 5px;
     box-shadow: 0 0 10px #000;
-}
+} */
 
 
 

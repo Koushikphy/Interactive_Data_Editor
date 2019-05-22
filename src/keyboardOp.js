@@ -168,7 +168,10 @@ function hotKeys(e) {
         case "D":
             deleteInterpolate()
             break;
-
+        case "e":
+        case "E":
+            deleteExtrapolate()
+            break;
         case "m":
         case "M":
             autoSmooth();

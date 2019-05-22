@@ -180,7 +180,7 @@ const homeMenuTemplate = [{
                 }
             }, {
                 label: "Plot along X",
-                accelerator: 'CmdOrCtrl+A',
+                accelerator: 'CmdOrCtrl+W',
                 id: 'pax',
                 visible: true,
                 enabled: false,
@@ -191,7 +191,7 @@ const homeMenuTemplate = [{
                 }
             }, {
                 label: 'Plot along Y',
-                accelerator: 'CmdOrCtrl+A',
+                accelerator: 'CmdOrCtrl+W',
                 id: 'pay',
                 visible: false,
                 click() {

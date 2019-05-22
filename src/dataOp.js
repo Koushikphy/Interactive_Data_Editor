@@ -294,12 +294,6 @@ function array_fill(i, n, v) {
     return a;
 }
 
-/**
- * Gaussian elimination
- * @param  array A matrix
- * @param  array x vector
- * @return array x solution vector
- */
 function gauss(A, x) {
 
     var i, k, j;
@@ -343,7 +337,8 @@ function gauss(A, x) {
     }
 
     // Solve equation Ax=b for an upper triangular matrix A
-    x = array_fill(0, n, 0);
+    // x = array_fill(0, n, 0);
+    x = x.map(i=>0)
     for (i=n-1; i > -1; i--) { 
         x[i] = A[i][n]/A[i][i];
         for (k=i-1; k > -1; k--) { 
@@ -362,7 +357,14 @@ function deleteExtrapolate(){
         xs.splice(index[i], 1);
         ys.splice(index[i], 1);
     }
-
+    //taking only just 3 closest points
+    if (index[0] == 0) {
+        xs = xs.slice(0,3)
+        ys = ys.slice(0,3)
+    }else if (index[index.length - 1] == dpsx.length - 1){
+        xs = xs.slice(Math.max(xs.length - 3, 1))
+        ys = ys.slice(Math.max(ys.length - 3, 1))
+    } 
     // fit with a quadratic polynomial
     a = b = c = d = e = m = n = p = 0
     a = xs.length
@@ -392,55 +394,56 @@ function deleteExtrapolate(){
 
     updatePlot();
     updateOnServer();
-    index = [];
-    Plotly.restyle(figurecontainer, {
-        selectedpoints: [null]
-    });
     saved = false;
     fullData[0] = data
-
 }
 
 
 
-function deleteInterpolateTest() {
-    if (!index.length) return;
-    var xs = dpsx.slice();
-    var ys = dpsy.slice();
-    //check for endpoints
-    // don't remove last values
-    // if (index[0] == 0) index.splice(0, 1)
-    // if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)
-    for (var i = index.length - 1; i >= 0; i--) {
-        xs.splice(index[i], 1);
-        ys.splice(index[i], 1);
-    }
-    ks = getNaturalKs(xs, ys);
+// function deleteInterpolateTest() {
+//     if (!index.length) return;
+//     var xs = dpsx.slice();
+//     var ys = dpsy.slice();
+//     //check for endpoints
+//     // don't remove last values
+//     // if (index[0] == 0) index.splice(0, 1)
+//     // if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)
+//     for (var i = index.length - 1; i >= 0; i--) {
+//         xs.splice(index[i], 1);
+//         ys.splice(index[i], 1);
+//     }
+//     ks = getNaturalKs(xs, ys);
 
-    function spline(x) {
-        var i = 1;
-        while (xs[i] < x) i++;
-        var t = (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
-        var a = ks[i - 1] * (xs[i] - xs[i - 1]) - (ys[i] - ys[i - 1]);
-        var b = -ks[i] * (xs[i] - xs[i - 1]) + (ys[i] - ys[i - 1]);
-        var q = (1 - t) * ys[i - 1] + t * ys[i] + t * (1 - t) * (a * (1 - t) + b * t);
-        console.log(x,q)
-        return q;
-    };
-    saveOldData();
-    for (let ind of index) {
-        data[th_in][col.z][ind] = spline(data[th_in][col.y][ind]);
-    };
-    updatePlot();
-    updateOnServer();
-    index = [];
-    Plotly.restyle(figurecontainer, {
-        selectedpoints: [null]
-    });
-    saved = false;
-    fullData[0] = data
+//     function spline(x) {
+//         var i = 1;
+//         if (x> xs[xs.length-1]){
+//             i = xs.length-1
+//         } else{
+//         while (xs[i] < x) i++;
+//         }
+//         var t = (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
+//         var a = ks[i - 1] * (xs[i] - xs[i - 1]) - (ys[i] - ys[i - 1]);
+//         var b = -ks[i] * (xs[i] - xs[i - 1]) + (ys[i] - ys[i - 1]);
+//         var q = (1 - t) * ys[i - 1] + t * ys[i] + t * (1 - t) * (a * (1 - t) + b * t);
+//         console.log(x,i)
+//         return q;
+//     };
+//     saveOldData();
+//     for (let ind of index) {
+//         data[th_in][col.z][ind] = spline(data[th_in][col.y][ind]);
+//     };
+//     updatePlot();
+//     updateOnServer();
+//     index = [];
+//     Plotly.restyle(figurecontainer, {
+//         selectedpoints: [null]
+//     });
+//     saved = false;
+//     fullData[0] = data
 
-};
+// };
+
+
 
 function deleteInterpolate() {
     if (!index.length) return;
@@ -470,10 +473,10 @@ function deleteInterpolate() {
     };
     updatePlot();
     updateOnServer();
-    index = [];
-    Plotly.restyle(figurecontainer, {
-        selectedpoints: [null]
-    });
+    // index = [];
+    // Plotly.restyle(figurecontainer, {
+    //     selectedpoints: [null]
+    // });
     saved = false;
     fullData[0] = data
 
