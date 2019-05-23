@@ -896,10 +896,10 @@ var TOAST={
         this.toast = document.createElement("div");
         this.toast.id = "__TOAST";
 
-        this.decoration = data.color || "#8393c0";
-        this.background = data.color || "rgb(52, 53, 73)";
-        this.color = data.color || "white";
-        this.time = data.time || 4000;
+        this.decoration =  "#8393c0";
+        this.background =  "rgb(52, 53, 73)";
+        this.color =  "white";
+        this.time =  4000;
 
         Object.assign(this.toast.style, {
             position:"absolute",
@@ -924,18 +924,18 @@ var TOAST={
         var body = document.querySelector("body");
         body.insertBefore(this.toast,body.firstChild);
         // css
-        var style = document.createElement("style");
-        style.innerHTML=`
-            .toastIn{
-                opacity:1 !important;
-                transform:scale(1) !important;
-            }
-            .toastOut{
-                transform:scale(0.6) !important;
-                opacity:0 !important;
-            }
-        `;
-        document.querySelector("head").appendChild(style);
+        // var style = document.createElement("style");
+        // style.innerHTML=`
+        //     .toastIn{
+        //         opacity:1 !important;
+        //         transform:scale(1) !important;
+        //     }
+        //     .toastOut{
+        //         transform:scale(0.6) !important;
+        //         opacity:0 !important;
+        //     }
+        // `;
+        // document.querySelector("head").appendChild(style);
     },
     close:function(el){   
         el.classList.add("toastOut");

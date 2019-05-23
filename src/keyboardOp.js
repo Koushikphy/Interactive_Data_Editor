@@ -75,12 +75,15 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             break;
         case "edat":
             $("#extend").slideDown();
+            resizePlot()
             break;
         case 'fill':
             $("#filler").slideDown();
+            resizePlot()
             break;
         case 'filter':
             $('#filter').slideDown();
+            resizePlot()
             break;
         case 'pdash':
             if ($('#sidebar2').width()) {
