@@ -305,7 +305,9 @@
     <li><b><i>Smooth out.</i></b> Automatically smooth out data using spline and linear kernel(Moving Average) smoother.
         To smooth out select the portion of the data and press <label class="dom">D</label> or <label
             class="dom">M</label> to smooth out using spline and moving average respectively. Press and hold <label
-            for="" class="dom">M</label> to apply moving average multiple times.<p></p>
+            for="" class="dom">M</label> to apply moving average multiple times. Also, a local quadratic regression method is
+            supplied to extrapolate and smooth out the extreme data points and is used by pressing <label class="dom">E</label>.
+            This method can be applied to intermediate data points too.<p></p>
     </li>
 
     <li><b><i>2D and 3D support.</i></b> This software supports both 2D and 3D data editing, but for 3D editing data
@@ -373,6 +375,7 @@
     <li><label class="key">Arrow Down</label> Move down selected points.</li>
     <li><label class="key">D</label> Smooth Out using Spline Interpolation.</li>
     <li><label class="key">M</label> Smooth Out  using Moving Average method. </li>
+    <li><label class="key">E</label> Smooth Out using a local Quadratic function.</li>
     <li><label class="key">C</label> Change Sign.</li>
     <li><label class="key">Ctrl+Z</label> Undo.</li>
     <li><label class="key">Shift+Ctrl+Z</label> Redo.</li>
