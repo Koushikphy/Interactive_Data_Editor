@@ -169,7 +169,7 @@ function dataFiller() {
     var cols_wo_y = []
     var tmp = data[0].length
     // variable regressionIsOn
-    var regressionIsOn = true
+    var regressionIsOn = $("#expSel")[0].selectedIndex ? true : false;
     for (let i = 0; i < tmp; i++) {
         if (i != col.y) cols_wo_y.push(i)
     }
