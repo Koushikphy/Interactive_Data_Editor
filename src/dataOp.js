@@ -1,11 +1,9 @@
 var copyVar;
 
-function spl(xs,ys){
-
+function spline(xs,ys){
     var n=xs.length
     var diff = new Array(n).fill(0) 
     var u = new Array(n).fill(0)
-    let sig,p;
     for(let i=1; i<n-1;i++){
         sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
         p=sig*diff[i-1]+2.0
@@ -15,49 +13,46 @@ function spl(xs,ys){
     for (let i=n-2;i>-1;i=i-1){
         diff[i]=diff[i]*diff[i+1]+u[i]
     }
-    xs = xs
-    ys = ys 
-    diff = diff
 
-return function(x){
-    let i = 0,h,a,b;
-    while(x>xs[i]) i++; i--;
-    h=xs[i+1]-xs[i]
-    a=(xs[i+1]-x)/h
-    b=(x-xs[i])/h
-    return a*ys[i]+b*ys[i+1]+ ((a**3-a)*diff[i]+(b**3-b)*diff[i+1])*(h**2)/6.0
-}
-}
-
-
-class Spline{
-    constructor(xs, ys){
-        var n=xs.length
-        var diff = new Array(n).fill(0) 
-        var u = new Array(n).fill(0)
-        let sig,p;
-        for(let i=1; i<n-1;i++){
-            sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
-            p=sig*diff[i-1]+2.0
-            diff[i]=(sig-1.0)/p
-            u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
-        }
-        for (let i=n-2;i>-1;i=i-1){
-            diff[i]=diff[i]*diff[i+1]+u[i]
-        }
-        this.xs = xs
-        this.ys = ys 
-        this.diff = diff
-    }
-    getVal(x){
-        let i = 0,h,a,b;
-        while(x>this.xs[i]) i++; i--;
-        h=this.xs[i+1]-this.xs[i]
-        a=(this.xs[i+1]-x)/h
-        b=(x-this.xs[i])/h
-        return a*this.ys[i]+b*this.ys[i+1]+ ((a**3-a)*this.diff[i]+(b**3-b)*this.diff[i+1])*(h**2)/6.0
+    return function(x){
+        let i=0;
+        while(x>xs[i]) i++; i--;
+        h=xs[i+1]-xs[i]
+        a=(xs[i+1]-x)/h
+        b=(x-xs[i])/h
+        return a*ys[i]+b*ys[i+1]+ ((a**3-a)*diff[i]+(b**3-b)*diff[i+1])*(h**2)/6.0
     }
 }
+
+
+// class Spline{
+//     constructor(xs, ys){
+//         var n=xs.length
+//         var diff = new Array(n).fill(0) 
+//         var u = new Array(n).fill(0)
+//         let sig,p;
+//         for(let i=1; i<n-1;i++){
+//             sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
+//             p=sig*diff[i-1]+2.0
+//             diff[i]=(sig-1.0)/p
+//             u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
+//         }
+//         for (let i=n-2;i>-1;i=i-1){
+//             diff[i]=diff[i]*diff[i+1]+u[i]
+//         }
+//         this.xs = xs
+//         this.ys = ys 
+//         this.diff = diff
+//     }
+//     getVal(x){
+//         let i = 0,h,a,b;
+//         while(x>this.xs[i]) i++; i--;
+//         h=this.xs[i+1]-this.xs[i]
+//         a=(this.xs[i+1]-x)/h
+//         b=(x-this.xs[i])/h
+//         return a*this.ys[i]+b*this.ys[i+1]+ ((a**3-a)*this.diff[i]+(b**3-b)*this.diff[i+1])*(h**2)/6.0
+//     }
+// }
 
 function determinant(a,b,c,d,e,f,g,h,i){
     return a*e*i - a*f*h - b*d*i + b*g*f + c*d*h - c*e*g
@@ -88,17 +83,18 @@ function regression(xs ,ys){
 
 
 function copyThis() {
-    copyVar = JSON.stringify(data[th_in]);
+    copyVar = JSON.stringify([dpsx, dpsy]);
 }
 
 function pasteThis() {
-    saveOldData();
-    var tmp = JSON.parse(copyVar);
-    for (let i = 0; i < tmp.length; i++) {
-        if (i != col.x) {
-            data[th_in][i] = tmp[i];
-        }
+    var [t1, t2] = JSON.parse(copyVar);
+    if (data[th_in][0].length != t1.length){
+        alert("copy paste between unequal data set not supported!"); 
+        return;
     }
+    saveOldData();
+    data[th_in][col.y] = t1 
+    data[th_in][col.z] = t2
     updatePlot(1);
     updateOnServer();
     saved = false;
@@ -213,16 +209,16 @@ function dataFiller() {
         var xs = dat[col.y].slice()
         var lInd = dat[col.y].length - 1;
         // check if regression is required by cheking the starting of the array
+        let backRegRequired = false, frontRegRequired = false;
         if(regressionIsOn){
             if(fullArr[0]<xs[0]) frontRegRequired = true 
             if(fullArr[fullArr.length-1]>xs[xs.length-1]) backRegRequired = true
-        } else{
-            frontRegRequired = backRegRequired = false
         }
+
         for (let tc of cols_wo_y) {
             newArr = [];
             var ys = dat[tc].slice();
-            spline = new Spline(xs, ys)
+            spl = spline(xs, ys)
             if(frontRegRequired){
                 frontReg = regression(xs.slice(0,3), ys.slice(0,3))
             }
@@ -232,9 +228,6 @@ function dataFiller() {
                     ys.slice(Math.max(ys.length-3,1))
                 )
             }
-
-
-
 
             for (let val of fullArr) {
                 ind = dat[col.y].indexOf(val)
@@ -254,7 +247,7 @@ function dataFiller() {
                             newArr.push(dat[tc][lInd])
                         }
                     } else {                            //spline interpolation
-                        newArr.push(spline.getVal(val))
+                        newArr.push(spl(val))
                     }
                 }
             }
@@ -343,28 +336,6 @@ function deleteExtrapolate(){
     ys = dpsy.slice(Math.max(first-3,0),first).concat(dpsy.slice(last+1,last+4))
 
 
-    // // fit with a quadratic polynomial
-    // a = b = c = d = e = m = n = p = 0
-    // a = xs.length
-    // for (let i=0; i<a; i++){
-    //     b += xs[i]
-    //     c += xs[i]**2
-    //     d += xs[i]**3
-    //     e += xs[i]**4
-    //     m += ys[i]
-    //     n += ys[i]*xs[i]
-    //     p += ys[i]*xs[i]**2
-    // }
-
-    // det = determinant(a,b,c,b,c,d,c,d,e)
-    // c0 = determinant(m,b,c,n,c,d,p,d,e)/det
-    // c1 = determinant(a,m,c,b,n,d,c,p,e)/det
-    // c2 = determinant(a,b,m,b,c,n,c,d,p)/det
-
-
-    // function exterp(x){
-    //     return c0 + c1*x + c2*x**2
-    // }
     exterp = regression(xs,ys)
     saveOldData();
     for (let ind of index) {
@@ -392,35 +363,11 @@ function deleteInterpolate() {
         ys.splice(index[i], 1);
     }
 
-    // calculate coefficients
-    // n=xs.length
-    // diff = new Array(n).fill(0) 
-    // u = new Array(n).fill(0)
-    // for(let i=1; i<n-1;i++){
-    //     sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
-    //     p=sig*diff[i-1]+2.0
-    //     diff[i]=(sig-1.0)/p
-    //     u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
-    // }
-    // for (let i=n-2;i>-1;i=i-1){
-    //     diff[i]=diff[i]*diff[i+1]+u[i]
-    // }
 
-    // function spline(x){
-    // i = 0
-    // while(x>xs[i]) i++; i--;
-    // h=xs[i+1]-xs[i]
-    // a=(xs[i+1]-x)/h
-    // b=(x-xs[i])/h
-    // y = a*ys[i]+b*ys[i+1]+ ((a**3-a)*diff[i]+(b**3-b)*diff[i+1])*(h**2)/6.0
-    // return y
-    // }
-
-
-    spline = new Spline(xs,ys)
+    spl = spline(xs,ys)
     saveOldData();
     for (let ind of index) {
-        data[th_in][col.z][ind] = spline.getVal(data[th_in][col.y][ind]);
+        data[th_in][col.z][ind] = spl(data[th_in][col.y][ind]);
     };
     updatePlot();
     updateOnServer();

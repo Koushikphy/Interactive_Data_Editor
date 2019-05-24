@@ -98,17 +98,19 @@
         </div>
 
         <div class="borders" style="width: 100%;display: none;" id="filler">
-            Start : <input type="text" id="fstart" style="width: 5pc"> <br>
+            Start : <input type="text" id="fstart" style="width: 5pc">            
+            Extrapolate: <select style="width: 5pc;" id="expSel">
+                <option>Closest</option>
+                <option>Regression</option>
+            </select> 
+            <br>
             End &nbsp;: <input type="text" id="fend" style="width: 5pc;">
-            <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="function dtest(){$('#filler').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.9pc">
+            <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.7pc;margin-right: 2px">
+            <input type="submit" value="Cancel" onclick="function dtest(){$('#filler').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.7pc">
             &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
                 proceeding.</span><br>
             Step : <input type="text" id="fstep" style="width: 5pc;">
-            Extrapolation :<select style=" font-weight: bolder; font-size: medium; width: 2pc;" id="expsSel">
-                <option>Closest</option>
-                <option>Regression</option>
-            </select>
+
         </div>
 
         <div class="borders" ; style="width: 100%;display: none;" id="filter">
