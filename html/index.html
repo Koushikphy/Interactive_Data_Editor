@@ -88,7 +88,7 @@
             <br>
             Extend times: <input type="text" id="etime" style="width: 76px;">
             <input type="submit" value="OK" onclick="repeatMirror()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="$('#extend').slideUp();" style="width: 5pc;height: 1.9pc">
+            <input type="submit" value="Cancel" onclick="function dtest(){$('#extend').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.9pc">
             <br>
             Extend by:
             <select style="width: 5pc;margin-left: 18px;" id="repSel">
@@ -101,7 +101,7 @@
             Start : <input type="text" id="fstart" style="width: 5pc"> <br>
             End &nbsp;: <input type="text" id="fend" style="width: 5pc;">
             <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="$('#filler').slideUp();" style="width: 5pc;height: 1.9pc">
+            <input type="submit" value="Cancel" onclick="function dtest(){$('#filler').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.9pc">
             &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
                 proceeding.</span><br>
             Step : <input type="text" id="fstep" style="width: 5pc;">
@@ -116,7 +116,7 @@
             <input type="text" id="flc" style="width: 40px;margin: 0"> <br>
             Fill with &nbsp;: <input type="text" id="flf" style="width: 5pc;">
             <input type="submit" value="OK" onclick="filterData()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="$('#filter').slideUp();" style="width: 5pc;height: 1.9pc">
+            <input type="submit" value="Cancel" onclick="function dtest(){$('#filter').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.9pc">
             &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
                 proceeding.</span>
             <br>
