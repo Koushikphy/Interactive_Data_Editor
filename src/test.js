@@ -54,11 +54,50 @@ function regression(xs ,ys){
 
 xs = [0,1,2,3,4,5,6,7,8,9]
 ys = [0,1,4,9,16,25,36,49,64,81]
-
+console.time("dbsave");
 testSpline = new Spline(xs, ys)
 tmp = testSpline.getVal
 console.log(testSpline.getVal(1.5))
-console.log(xs,ys)
 
+console.timeEnd("dbsave")
+
+console.time("dbsave");
 tmp = regression(xs, ys)
 console.log(tmp(1.5))
+
+console.timeEnd("dbsave")
+
+function spl(xs,ys){
+
+        var n=xs.length
+        var diff = new Array(n).fill(0) 
+        var u = new Array(n).fill(0)
+        let sig,p;
+        for(let i=1; i<n-1;i++){
+            sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
+            p=sig*diff[i-1]+2.0
+            diff[i]=(sig-1.0)/p
+            u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
+        }
+        for (let i=n-2;i>-1;i=i-1){
+            diff[i]=diff[i]*diff[i+1]+u[i]
+        }
+        xs = xs
+        ys = ys 
+        diff = diff
+
+    return function(x){
+        let i = 0,h,a,b;
+        while(x>xs[i]) i++; i--;
+        h=xs[i+1]-xs[i]
+        a=(xs[i+1]-x)/h
+        b=(x-xs[i])/h
+        return a*ys[i]+b*ys[i+1]+ ((a**3-a)*diff[i]+(b**3-b)*diff[i+1])*(h**2)/6.0
+    }
+}
+
+
+testSpline = spl(xs, ys)
+console.time("dbsave");
+console.log(testSpline(1.5))
+console.timeEnd("dbsave")
