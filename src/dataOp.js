@@ -88,8 +88,9 @@ function copyThis() {
 
 function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
-    if (data[th_in][0].length != t1.length){
-        alert("copy paste between unequal data set not supported!"); 
+    // if (data[th_in][0].length != t1.length){
+    if(!t1.every((v,i)=>v===data[th_in][col.y][i])){
+        alert("Copy paste between different data set is not supported!"); 
         return;
     }
     saveOldData();
