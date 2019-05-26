@@ -62,20 +62,7 @@ input[type=text] {
     text-align: center;
 }
 
-/* #status {
-    font-size: 21px;
-    position: fixed;
-    display: none;
-    bottom: 0;
-    left: 0;
-    text-align: left;
-    padding-right: 10px;
-    background: #3f3e3e;
-    color:#fff;
-    font-size: large;
-    border-top-right-radius: 5px;
-    box-shadow: 0 0 10px #000;
-} */
+
 
 
 
@@ -90,22 +77,16 @@ input[type=text] {
 }
 
 
-/*.basediv{
-    position: relative;
-    display: inline-block;
-}*/
+
 
 .container {
-    display: table;
-    margin: 0 auto;
-    background: #ffffff
+
+    background: #ffffff ;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.parent {
-    position: absolute;
-    width: 100%;
-    background-color: transparent;
-}
 
 .basediv {
     position: relative;
@@ -132,6 +113,16 @@ input[type=text] {
     margin-bottom: 5px;
     width: 37pc;
 }
+
+.data{
+    width: 100%;display: none;
+}
+
+.column{
+    margin-top: 5px; width:100%
+}
+
+
 
 #figurecontainer {
     margin: 0px;
@@ -225,16 +216,7 @@ transition: width .5s;
     overflow: scroll;
 }
 
-/* .fff{
-    margin: 3px;
-    width: 200 ;
-    display: inline-block;
-}
 
-.fff :hover{
-    background-color: #b9b9b9;
-    cursor: pointer;
-} */
 
 .filename{
     display: inline-block;
@@ -266,4 +248,29 @@ ol{
 .disabled {
     pointer-events: none;
     opacity: 0.4;
+}
+
+#full, #sColInp, #sCol{
+    display: none
+}
+
+#flcl,#flf,#fstep,#fend,#expSel,#fstart,#repSel{
+    width:5pc;
+}
+
+#repSel{
+    width:4.75pc;
+}
+#flSel{
+    font-weight: bolder; font-size: medium; width: 2pc;
+}
+
+#flc{
+    width: 40px;margin: 0
+}
+#einp{
+    width: 46px
+}
+#etime{
+    width: 76px
 }

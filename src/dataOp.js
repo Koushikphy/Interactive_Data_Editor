@@ -25,35 +25,6 @@ function spline(xs,ys){
 }
 
 
-// class Spline{
-//     constructor(xs, ys){
-//         var n=xs.length
-//         var diff = new Array(n).fill(0) 
-//         var u = new Array(n).fill(0)
-//         let sig,p;
-//         for(let i=1; i<n-1;i++){
-//             sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
-//             p=sig*diff[i-1]+2.0
-//             diff[i]=(sig-1.0)/p
-//             u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
-//         }
-//         for (let i=n-2;i>-1;i=i-1){
-//             diff[i]=diff[i]*diff[i+1]+u[i]
-//         }
-//         this.xs = xs
-//         this.ys = ys 
-//         this.diff = diff
-//     }
-//     getVal(x){
-//         let i = 0,h,a,b;
-//         while(x>this.xs[i]) i++; i--;
-//         h=this.xs[i+1]-this.xs[i]
-//         a=(this.xs[i+1]-x)/h
-//         b=(x-this.xs[i])/h
-//         return a*this.ys[i]+b*this.ys[i+1]+ ((a**3-a)*this.diff[i]+(b**3-b)*this.diff[i+1])*(h**2)/6.0
-//     }
-// }
-
 function determinant(a,b,c,d,e,f,g,h,i){
     return a*e*i - a*f*h - b*d*i + b*g*f + c*d*h - c*e*g
 }
@@ -81,7 +52,6 @@ function regression(xs ,ys){
 }
 
 
-
 function copyThis() {
     copyVar = JSON.stringify([dpsx, dpsy]);
 }
@@ -101,9 +71,6 @@ function pasteThis() {
     saved = false;
     startDragBehavior();
 }
-
-
-
 
 
 function swapData() {
@@ -321,10 +288,6 @@ function filterData() {
 }
 
 
-
-function determinant(a,b,c,d,e,f,g,h,i){
-    return a*e*i - a*f*h - b*d*i + b*g*f + c*d*h - c*e*g
-}
 
 
 function deleteExtrapolate(){

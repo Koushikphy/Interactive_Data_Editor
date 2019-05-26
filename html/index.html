@@ -6,41 +6,30 @@
     <link href="../lib/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../lib/jquery-ui.min.css">
     <link rel="stylesheet" href="../lib/jsoneditor.min.css">
-
-    <script>
-        if (typeof module === 'object') {
-            window.module = module;
-            module = undefined;
-        }
+    <script> 
+        if (typeof module === 'object') { window.module = module; module = undefined;  }
     </script>
-
 </head>
 
 <body>
     <div class="basediv" id="particle">
-        <div class="parent">
             <div class="container">
                 <img src="../figs/charts.png" width="75" height="75">
                 <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
-                <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">A Software to
-                    interactively edit data in a graphical manner</div>
+                <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">
+                    A Software to interactively edit data in a graphical manner
+                </div>
                 <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">
-                    Developed
-                    by Koushik Naskar</div>
+                    Developed by Koushik Naskar
+                </div>
                 <div style="font-size: large;margin-top: 7px">Version 2.5.0 </div>
                 <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">
-                    Copyright
-                    &copy; April, 2019 Koushik Naskar</div>
-                <a href="javascript:void(0)"
-                    onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img
-                        src="../figs/facebook.png" width="30" height="30"></a>
-                <a href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img
-                        src="../figs/github.png" width="30" height="30"></a>
-                <a href="javascript:void(0)"
-                    onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img
-                        src="../figs/gmail.png" width="30" height="30"></a>
+                    Copyright &copy; April, 2019 Koushik Naskar
+                </div>
+                <a href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../figs/facebook.png" width="30" height="30"></a>
+                <a href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img  src="../figs/github.png" width="30" height="30"></a>
+                <a href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../figs/gmail.png" width="30" height="30"></a>
 
-            </div>
         </div>
     </div>
 
@@ -48,107 +37,81 @@
     <div id="sidebar">
         <div id="split-bar"></div>
         <div class="closebtn" onclick="closeNav()">&#9746;</div>
-        <div class="sideheader">
-            Files Dashboard
-        </div>
+        <div class="sideheader"> Files Dashboard </div>
         <div id="files"></div>
     </div>
     <div id="sidebar2">
         <div id="split-bar2"></div>
         <div class="closebtn" onclick="closeNav2()">&#9746;</div>
-        <div class="sideheader">
-            Plot Settings
-        </div>
+        <div class="sideheader"> Plot Settings </div>
         <div id="jsoneditor"></div>
     </div>
 
-    <div id="full" style="display: none;">
-        <div id="header">
-
-            An interactive 2D and 3D data editor
-        </div>
-
-        <div class="borders" style="margin-top: 5px; width:100%" id="container">
+    <div id="full" >
+        <div id="header"> An interactive 2D and 3D data editor </div>
+        <div class="borders column" id="container">
             &nbsp;Data Column ⇒ &ensp;
             X :<select id="xCol" onchange="updateData();"></select>&ensp;
             Y :<select id="yCol" onchange="updateData();"></select>&ensp;
             <span class="3D">Z :<select id="zCol" onchange="colChanged(this.selectedIndex)"></select></span>
-            <input id='sColInp' type="submit" value="&#8644;" style="display: none" onclick='sSwapper()'>
-            <select id="sCol" onchange="colsChanged(this.selectedIndex)" style="display: none"></select>
-
+            <input id='sColInp' type="submit" value="&#8644;" onclick='sSwapper()'>
+            <select id="sCol" onchange="colsChanged(this.selectedIndex)"></select>
             <div id="drag" class='3D'>&nbsp;Drag the slider to change 'X' value:</div>
             <div id="slider" class='3D' style="background: #eaeaea">
                 <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
             </div>
         </div>
 
-        <div class="borders" style="width: 100%;display: none;" id="extend">
-            Extend from : <span style="font-family: sans-serif;"> 0</span> to <input type="text" id="einp"
-                style="width: 46px">
-            <br>
-            Extend times: <input type="text" id="etime" style="width: 76px;">
+        <div class="borders data" id="extend">
+            Extend from : 0 to <input type="text" id="einp"> <br>
+            Extend times: <input type="text" id="etime">
             <input type="submit" value="OK" onclick="repeatMirror()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="function dtest(){$('#extend').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.9pc">
-            <br>
-            Extend by:
-            <select style="width: 5pc;margin-left: 18px;" id="repSel">
+            <input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc"> <br>
+            Extend by: <select style="margin-left: 18px;" id="repSel" >
                 <option>Repeat</option>
                 <option>Mirror</option>
             </select><br>
         </div>
 
-        <div class="borders" style="width: 100%;display: none;" id="filler">
-            Start : <input type="text" id="fstart" style="width: 5pc">            
-            Extrapolate: <select style="width: 5pc;" id="expSel">
+        <div class="borders data" id="filler">
+            Start : <input type="text" id="fstart">            
+            Extrapolate: <select  id="expSel">
                 <option>Closest</option>
                 <option>Regression</option>
-            </select> 
-            <br>
-            End &nbsp;: <input type="text" id="fend" style="width: 5pc;">
+            </select> <br>
+            End &nbsp;: <input type="text" id="fend">
             <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.7pc;margin-right: 2px">
-            <input type="submit" value="Cancel" onclick="function dtest(){$('#filler').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.7pc">
-            &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
-                proceeding.</span><br>
-            Step : <input type="text" id="fstep" style="width: 5pc;">
-
+            <input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.7pc">
+            &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
+            Step : <input type="text" id="fstep">
         </div>
 
-        <div class="borders" ; style="width: 100%;display: none;" id="filter">
-            Condition:<select style=" font-weight: bolder; font-size: medium; width: 2pc;" id="flSel">
+        <div class="borders data" id="filter">
+            Condition:<select id="flSel">
                 <option>&lt;</option>
                 <option>></option>
                 <option>=</option>
             </select>
-            <input type="text" id="flc" style="width: 40px;margin: 0"> <br>
-            Fill with &nbsp;: <input type="text" id="flf" style="width: 5pc;">
+            <input type="text" id="flc"> <br>
+            Fill with &nbsp;: <input type="text" id="flf">
             <input type="submit" value="OK" onclick="filterData()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="function dtest(){$('#filter').slideUp(); resizePlot()};dtest();" style="width: 5pc;height: 1.9pc">
-            &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
-                proceeding.</span>
-            <br>
-            Columns : <input type="text" id="flcl" style="width: 5pc;">
+            <input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc">
+            &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
+            Columns : <input type="text" id="flcl">
         </div>
 
         <div id="figurecontainer"></div>
     </div>
-    <!-- <div id="status"></div> -->
-
-    <!-- <div id='jsoneditor'></div> -->
 
     <script src='../lib/init.min.js'></script>
     <script defer src="../lib/jquery.min.js"></script>
     <script defer src="../lib/jquery-ui.min.js"></script>
     <script defer src="../lib/jsoneditor.min.js"></script>
     <script defer src="../lib/funcs.min.js"></script>
-    <script defer src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG">
-    </script>
+    <script defer src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+<script>
 
-    <script>
-
-
-
-
-    </script>
+</script>
 </body>
 
 </html>

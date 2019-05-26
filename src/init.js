@@ -84,6 +84,8 @@ function recentMenu() {
 };
 
 //in dev mode don't load animation directly go to plot
+// const particlesJS = require('particles.js');
+// window.particlesJS.load('particle', '../lib/particles.json');
 if (app.isPackaged) {
     versionCheck();
     if (remote.process.argv.length > 1) {
@@ -117,4 +119,10 @@ if (fl !== null) {
 var fl = JSON.parse(localStorage.getItem("recent"));
 if (fl !== null) {
     recentLocation = fl;
+}
+
+
+function closeThis(m){
+    $(m).parent().slideUp();
+    resizePlot();
 }

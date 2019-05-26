@@ -14,19 +14,6 @@ var undoStack = [],
     saveNames = [],
     legendNames = [];
 
-// function showStatus(msg) {
-//     if ($("#status").is(':visible')) {
-//         $("#status").stop()
-//     }
-//     $("#status").html(msg);
-//     $("#status").toggle('slide', {
-//             direction: 'left'
-//         }, 500)
-//         .delay(3000)
-//         .toggle('slide', {
-//             direction: 'left'
-//         }, 500);
-// }
 
 function updateData() {
     col.x = xCol.selectedIndex;
@@ -919,23 +906,9 @@ var TOAST={
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems : 'flex-end'
-            
         })
         var body = document.querySelector("body");
         body.insertBefore(this.toast,body.firstChild);
-        // css
-        // var style = document.createElement("style");
-        // style.innerHTML=`
-        //     .toastIn{
-        //         opacity:1 !important;
-        //         transform:scale(1) !important;
-        //     }
-        //     .toastOut{
-        //         transform:scale(0.6) !important;
-        //         opacity:0 !important;
-        //     }
-        // `;
-        // document.querySelector("head").appendChild(style);
     },
     close:function(el){   
         el.classList.add("toastOut");
@@ -946,10 +919,10 @@ var TOAST={
     add:function(text,time){
         if(!time) time=this.time;
         var self=this;
-        var width = text.length * 8 +100
+        // var width = text.length * 8 +100
         var toast = document.createElement("div");
         Object.assign(toast.style,{
-            width:`${width}`,
+            // width:`${width}`,
             padding:"10px",
             minHeight: "10px",
             backgroundColor:this.background,
