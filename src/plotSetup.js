@@ -83,7 +83,7 @@ var iniPointsD = {
     opacity: 1,
     mode: 'markers+lines',
     marker: {
-        symbol: 200,
+        symbol: "circle-dot",
         color: '#b00',
         size: 6,
         opacity: 1
@@ -105,7 +105,7 @@ var iniPointsC = {
     opacity: 1,
     mode: 'markers+lines',
     marker: {
-        symbol: 200,
+        symbol: "circle-dot",
         color: '#b00',
         size: 6,
         opacity: 1

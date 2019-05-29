@@ -272,7 +272,7 @@ function addTrace() {
     thisTrace.y = fullData[0][th_in][fullDataCols[0].z]
     Plotly.addTraces(figurecontainer, thisTrace, 0);
     marker = [{
-        symbol: 200,
+        symbol: "circle-dot",
         color: '#b00',
         size: 6,
         opacity: 1
@@ -285,7 +285,7 @@ function addTrace() {
     }]
     for (let i = 1; i < figurecontainer.data.length; i++) {
         marker.push({
-            symbol: 200,
+            symbol: "circle-dot",
             color: colorList[i % 9],
             size: 6,
             opacity: 1

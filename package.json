@@ -20,7 +20,8 @@
     "productName": "Interactive Data Editor",
     "asar": true,
     "dmg": {
-      "contents": [{
+      "contents": [
+        {
           "x": 110,
           "y": 150
         },

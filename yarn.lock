@@ -2921,9 +2921,9 @@ plist@^3.0.1:
     xmldom "0.1.x"
 
 plotly.js-gl3d-dist@^1.47.1:
-  version "1.47.1"
-  resolved "https://registry.yarnpkg.com/plotly.js-gl3d-dist/-/plotly.js-gl3d-dist-1.47.1.tgz#3475ea9cf0d4c679c45470ce8bfd961df7ae9c28"
-  integrity sha512-TdQ4N9gvxlT0gYHPcvlGGCqCzkYoIYXGIMTVuN2GlETJYL9lbBSWX7U20CrEga8WHhPEUt3+62waDQW00lnL8A==
+  version "1.48.0"
+  resolved "https://registry.yarnpkg.com/plotly.js-gl3d-dist/-/plotly.js-gl3d-dist-1.48.0.tgz#7db60767c099219245ea2fd6cb8b5d0c9a3ef8be"
+  integrity sha512-tl6fYRltx/qxhuNQ1RDA/hebd++HDonhJyvjIVfIpMghBmm5Pija2/KIlDkFrkL4b6D7/YUAlT0QFEps9yrpBw==
 
 plugin-error@1.0.1:
   version "1.0.1"

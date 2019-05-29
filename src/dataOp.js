@@ -44,10 +44,15 @@ function regression(xs ,ys){
         p += ys[i]*xs[i]**2
     }
 
+    console.log(a,b,c,d,e,m,n,p)
     det = determinant(a,b,c,b,c,d,c,d,e)
     c0 = determinant(m,b,c,n,c,d,p,d,e)/det
     c1 = determinant(a,m,c,b,n,d,c,p,e)/det
     c2 = determinant(a,b,m,b,c,n,c,d,p)/det
+    console.log(det)
+    qq = (c-b**2/a)*(e-c**2/a) - (d- b*c/a)**2
+    qq1 = p*(c-b**2/a) - n*(d-b*c/a)
+    console.log(qq1/qq)
     return function(x){ return c0 + c1*x + c2*x**2 }
 }
 
@@ -164,7 +169,7 @@ function dataFiller() {
     // variable regressionIsOn
     var regressionIsOn = $("#expSel")[0].selectedIndex ? true : false;
     for (let i = 0; i < tmp; i++) {
-        if (i != col.y) cols_wo_y.push(i)
+        if ((i != col.y) & (i != col.x)) cols_wo_y.push(i)
     }
 
     var fullArr = []
@@ -223,6 +228,7 @@ function dataFiller() {
             dat[tc] = newArr;
         }
         dat[col.y] = fullArr;
+        dat[col.x] = new Array(fullArr.length).fill(dat[col.x][0])
         return dat;
     })
 
@@ -299,13 +305,15 @@ function deleteExtrapolate(){
     xs = dpsx.slice(Math.max(first-3,0),first).concat(dpsx.slice(last+1,last+4))
     ys = dpsy.slice(Math.max(first-3,0),first).concat(dpsy.slice(last+1,last+4))
 
+    console.log(xs,ys)
 
     exterp = regression(xs,ys)
     saveOldData();
     for (let ind of index) {
+        console.log(ind, data[th_in][col.y][ind])
         data[th_in][col.z][ind] = exterp(data[th_in][col.y][ind]);
     };
-
+    console.log(data[th_in][col.z], data[th_in][col.y])
     updatePlot();
     updateOnServer();
     saved = false;
