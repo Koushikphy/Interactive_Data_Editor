@@ -16,7 +16,7 @@
 
 
     <div id="container">
-        <label id="full" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
+        <label id="fullS" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
         <input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
         <div id="slider" style="background: #eaeaea; display: none">
             <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
@@ -26,7 +26,7 @@
     <script>
         const { remote, ipcRenderer } = require('electron');
         const { dialog, BrowserWindow, Menu } = remote;
-        var full = document.getElementById("full");
+        var full = document.getElementById("fullS");
         var xcol = [], data = [], hot, columns = [], xName;
         var btn = document.getElementById("btn");
         btn.style.visibility = "hidden";

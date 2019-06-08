@@ -1,55 +1,63 @@
 var copyVar;
 
-function spline(xs,ys){
-    var n=xs.length
-    var diff = new Array(n).fill(0) 
-    var u = new Array(n).fill(0)
-    for(let i=1; i<n-1;i++){
-        sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
-        p=sig*diff[i-1]+2.0
-        diff[i]=(sig-1.0)/p
-        u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
-    }
-    for (let i=n-2;i>-1;i=i-1){
-        diff[i]=diff[i]*diff[i+1]+u[i]
-    }
 
-    return function(x){
-        let i=0;
-        while(x>xs[i]) i++; i--;
-        h=xs[i+1]-xs[i]
-        a=(xs[i+1]-x)/h
-        b=(x-xs[i])/h
-        return a*ys[i]+b*ys[i+1]+ ((a**3-a)*diff[i]+(b**3-b)*diff[i+1])*(h**2)/6.0
+class Spline{
+    constructor(xs, ys){
+        var n=xs.length
+        var diff = new Array(n).fill(0) 
+        var u = new Array(n).fill(0)
+        let sig,p;
+        for(let i=1; i<n-1;i++){
+            sig=(xs[i]-xs[i-1])/(xs[i+1]-xs[i-1])
+            p=sig*diff[i-1]+2.0
+            diff[i]=(sig-1.0)/p
+            u[i]=(6.0*((ys[i+1]-ys[i])/(xs[i+1]-xs[i])-(ys[i]-ys[i-1])/(xs[i]-xs[i-1]))/(xs[i+1]-xs[i-1])-sig*u[i-1])/p
+        }
+        for (let i=n-2;i>-1;i=i-1){
+            diff[i]=diff[i]*diff[i+1]+u[i]
+        }
+        this.xs = xs
+        this.ys = ys 
+        this.diff = diff
+    }
+    getVal(x){
+        let i = 0,h,a,b;
+        while(x>this.xs[i]) i++; i--;
+        h=this.xs[i+1]-this.xs[i]
+        a=(this.xs[i+1]-x)/h
+        b=(x-this.xs[i])/h
+        return a*this.ys[i]+b*this.ys[i+1]+ ((a**3-a)*this.diff[i]+(b**3-b)*this.diff[i+1])*(h**2)/6.0
+    }
+}
+
+
+class Regression{
+    constructor(xs,ys){
+        var a,b,c,d,e,m,n,p,det;
+        b = c = d = e = m = n = p = 0;
+        a = xs.length;
+        for (let i=0; i<a; i++){
+            b += xs[i]
+            c += xs[i]**2
+            d += xs[i]**3
+            e += xs[i]**4
+            m += ys[i]
+            n += ys[i]*xs[i]
+            p += ys[i]*xs[i]**2
+        }
+        det = determinant(a,b,c,b,c,d,c,d,e)
+        this.c0 = determinant(m,b,c,n,c,d,p,d,e)/det
+        this.c1 = determinant(a,m,c,b,n,d,c,p,e)/det
+        this.c2 = determinant(a,b,m,b,c,n,c,d,p)/det
+    }
+    val(x){
+        return this.c0 + this.c1*x + this.c2*x**2
     }
 }
 
 
 function determinant(a,b,c,d,e,f,g,h,i){
     return a*(e*i - f*h) - b*(d*i - g*f) + c*(d*h - e*g)
-}
-
-
-function regression(xs ,ys){
-    // fit with a quadratic polynomial
-    var a = b = c = d = e = m = n = p = 0
-    a = xs.length
-    for (let i=0; i<a; i++){
-        b += xs[i]
-        c += xs[i]**2
-        d += xs[i]**3
-        e += xs[i]**4
-        m += ys[i]
-        n += ys[i]*xs[i]
-        p += ys[i]*xs[i]**2
-    }
-
-    console.log(a,b,c,d,e,m,n,p)
-    det = determinant(a,b,c,b,c,d,c,d,e)
-    c0 = determinant(m,b,c,n,c,d,p,d,e)/det
-    c1 = determinant(a,m,c,b,n,d,c,p,e)/det
-    c2 = determinant(a,b,m,b,c,n,c,d,p)/det
-    return function(x){ return c0 + c1*x + c2*x**2 }
 }
 
 
@@ -184,18 +192,22 @@ function dataFiller() {
             if(fullArr[fullArr.length-1]>xs[xs.length-1]) backRegRequired = true
         }
 
+
         for (let tc of cols_wo_y) {
             newArr = [];
             var ys = dat[tc].slice();
-            spl = spline(xs, ys)
+            spl = new Spline(xs, ys)
             if(frontRegRequired){
-                frontReg = regression(xs.slice(0,3), ys.slice(0,3))
+                frontReg = new Regression(xs.slice(0,3), ys.slice(0,3))
             }
             if(backRegRequired){
-                backReg = regression(
+                backReg = new Regression(
                     xs.slice(Math.max(xs.length-3,1)),
                     ys.slice(Math.max(ys.length-3,1))
                 )
+            }
+            if (dat[2][0]==168){
+                console.log(frontReg.val(0), backReg.val(0))
             }
 
             for (let val of fullArr) {
@@ -204,19 +216,19 @@ function dataFiller() {
                     newArr.push(dat[tc][ind])
                 } else {
                     if (val <= dat[col.y][0]) {  // front extrapolation
-                        if (regressionIsOn){
-                            newArr.push(frontReg(val))
+                        if (frontRegRequired){
+                            newArr.push(frontReg.val(val))
                         }else{
                             newArr.push(dat[tc][0])
                         }
                     } else if (val >= dat[col.y][lInd]) { //back extrapolation
-                        if (regressionIsOn){
-                            newArr.push(backReg(val))
+                        if (backRegRequired){
+                            newArr.push(backReg.val(val))
                         }else{
                             newArr.push(dat[tc][lInd])
                         }
                     } else {                            //spline interpolation
-                        newArr.push(spl(val))
+                        newArr.push(spl.getVal(val))
                     }
                 }
             }
@@ -301,15 +313,13 @@ function deleteExtrapolate(){
     xs = dpsx.slice(Math.max(first-3,0),first).concat(dpsx.slice(last+1,last+4))
     ys = dpsy.slice(Math.max(first-3,0),first).concat(dpsy.slice(last+1,last+4))
 
-    console.log(xs,ys)
-
-    exterp = regression(xs,ys)
+    exterp = new Regression(xs,ys)
     saveOldData();
     for (let ind of index) {
         console.log(ind, data[th_in][col.y][ind])
-        data[th_in][col.z][ind] = exterp(data[th_in][col.y][ind]);
+        data[th_in][col.z][ind] = exterp.val(data[th_in][col.y][ind]);
     };
-    console.log(data[th_in][col.z], data[th_in][col.y])
+
     updatePlot();
     updateOnServer();
     saved = false;
@@ -332,10 +342,10 @@ function deleteInterpolate() {
     }
 
 
-    spl = spline(xs,ys)
+    spl = new Spline(xs,ys)
     saveOldData();
     for (let ind of index) {
-        data[th_in][col.z][ind] = spl(data[th_in][col.y][ind]);
+        data[th_in][col.z][ind] = spl.getVal(data[th_in][col.y][ind]);
     };
     updatePlot();
     updateOnServer();
