@@ -92,6 +92,17 @@ function fileReader(fname) {
     });
     if (res) return;
 
+    // parse the file and data
+    data = parseData(fs.readFileSync(fname, "utf8"))
+    if(data==undefined) return
+    var dirname = path.dirname(fname);
+    var filename = path.basename(fname, path.extname(fname))
+    var extn = path.extname(fname)
+    save_name = path.join(dirname, filename + "_new" + extn);
+    recentLocation = dirname;
+    localStorage.setItem("recent", JSON.stringify(recentLocation));
+
+
     //reset everything....
     swapped = 0;
     refdat = 0;
@@ -131,15 +142,7 @@ function fileReader(fname) {
     }
 
 
-    // parse the file and data
-    var dirname = path.dirname(fname);
-    var filename = path.basename(fname, path.extname(fname))
-    var extn = path.extname(fname)
-    save_name = path.join(dirname, filename + "_new" + extn);
-    recentLocation = dirname;
-    localStorage.setItem("recent", JSON.stringify(recentLocation));
-    data = fs.readFileSync(fname, "utf8");
-    data = parseData(data);
+
     ddd = data.length != 1;
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
 
@@ -230,8 +233,9 @@ function addNewFileDialog() {
 
 
 function addNewFile(fname) {
-    layout.showlegend = true
+    // layout.showlegend = true
     data = parseData(fs.readFileSync(fname, "utf8"))
+    if(data==undefined) return
     if (fullData[0].length != data.length) {
         dialog.showMessageBox({
             type: "warning",
@@ -486,18 +490,53 @@ function transpose(m) {
 };
 
 
+function test(x){
+    y = parseFloat(x)
+    if(isNaN(y)){
+        throw "Not a number"
+    } else{
+        return y
+    }
+}
+
+
+function newTest(){
+    try{
+        test('dwe')
+    } 
+    catch(err){
+        console.log(err)
+    }
+}
+
+
+
 function parseData(strDps) {
     var newdat = [],
         blocks = [];
     strDps = strDps.trim().split(/\t\t\t|\r?\n\r?\n/);
-    for (let i of strDps) {
-        blocks = i.trim().split("\n");
-        for (var j = 0; j < blocks.length; j++) {
-            blocks[j] = blocks[j].trim().split(/[\s\t]+/);
-            blocks[j] = blocks[j].map(x => parseFloat(x));
-        };
-        newdat.push(transpose(blocks));
-    };
+    try{
+        for (let i of strDps) {
+            blocks = i.trim().split("\n");
+            for (var j = 0; j < blocks.length; j++) {
+                blocks[j] = blocks[j].trim().split(/[\s\t]+/);
+                blocks[j] = blocks[j].map(x => {
+                    y = parseFloat(x)
+                    if(isNaN(y)){
+                        throw "badData"
+                    } else{
+                        return y
+                    }
+                });
+            };
+            newdat.push(transpose(blocks));
+        }
+    } catch(err){
+        if(err='badData'){
+            alert("Bad data found !!!\nCheck the file before openning.")
+        }
+        return
+    }
     return newdat;
 };
 
