@@ -26,7 +26,7 @@ function spline(xs,ys){
 
 
 function determinant(a,b,c,d,e,f,g,h,i){
-    return a*e*i - a*f*h - b*d*i + b*g*f + c*d*h - c*e*g
+    return a*(e*i - f*h) - b*(d*i - g*f) + c*(d*h - e*g)
 }
 
 
@@ -49,10 +49,6 @@ function regression(xs ,ys){
     c0 = determinant(m,b,c,n,c,d,p,d,e)/det
     c1 = determinant(a,m,c,b,n,d,c,p,e)/det
     c2 = determinant(a,b,m,b,c,n,c,d,p)/det
-    console.log(det)
-    qq = (c-b**2/a)*(e-c**2/a) - (d- b*c/a)**2
-    qq1 = p*(c-b**2/a) - n*(d-b*c/a)
-    console.log(qq1/qq)
     return function(x){ return c0 + c1*x + c2*x**2 }
 }
 
