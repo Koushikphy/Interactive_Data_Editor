@@ -33,17 +33,24 @@ class Spline{
 
 class Regression{
     constructor(xs,ys){
-        var a,b,c,d,e,m,n,p,det;
+        var a,b,c,d,e,m,n,p,det,ss,newX, me;
         b = c = d = e = m = n = p = 0;
         a = xs.length;
+        // converting to mean weighted x axis
+        ss = xs.reduce(function(a, b) { return a + b; }, 0);
+        this.me = ss/xs.length;
+        newX = []
+        for (let i of xs){
+            newX.push(i-this.me)
+        }
         for (let i=0; i<a; i++){
-            b += xs[i]
-            c += xs[i]**2
-            d += xs[i]**3
-            e += xs[i]**4
+            b += newX[i]
+            c += newX[i]**2
+            d += newX[i]**3
+            e += newX[i]**4
             m += ys[i]
-            n += ys[i]*xs[i]
-            p += ys[i]*xs[i]**2
+            n += ys[i]*newX[i]
+            p += ys[i]*newX[i]**2
         }
         det = determinant(a,b,c,b,c,d,c,d,e)
         this.c0 = determinant(m,b,c,n,c,d,p,d,e)/det
@@ -51,6 +58,7 @@ class Regression{
         this.c2 = determinant(a,b,m,b,c,n,c,d,p)/det
     }
     val(x){
+        x-=this.me;
         return this.c0 + this.c1*x + this.c2*x**2
     }
 }
