@@ -146,6 +146,12 @@ var schema = {
             "properties":{
                 "selectdirection":{
                     "enum":["v","h", "any"]
+                },
+                "dragmode":{
+                    "enum":["select", "zoom"]
+                },
+                "hovermode":{
+                    "enum":[ "false","x","y", "closest"]
                 }
             }
         }
