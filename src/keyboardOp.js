@@ -213,8 +213,28 @@ function hotKeys(e) {
                 }
                 selectEditable(keepTrackIndex)
             }
+            break;
+        case "ArrowLeft": case "ArrowRight":
+            if (e.ctrlKey | e.shiftKey){
+                moveReflect(e.keyCode-37, e.shiftKey)
+            };
+    
     };
 };
+
+function moveReflect(key, mod){
+    saveOldData();
+    var ind = index[index.length-1]+1;
+    var tmp = dpsy.slice(index[0], ind);
+    if(!key) ind=index[0]-index.length;
+    if(mod) tmp.reverse();
+    dpsy.splice(ind, tmp.length, ...tmp);
+    updatePlot();
+    updateOnServer();
+    // index=[]; del_dat = [];
+    // Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+};
+
 
 
 $(window).keydown(hotKeys);
