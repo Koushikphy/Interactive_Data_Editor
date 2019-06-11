@@ -228,11 +228,10 @@ function moveReflect(key, mod){
     var tmp = dpsy.slice(index[0], ind);
     if(!key) ind=index[0]-index.length;
     if(mod) tmp.reverse();
+    tmp.shift();
     dpsy.splice(ind, tmp.length, ...tmp);
     updatePlot();
     updateOnServer();
-    // index=[]; del_dat = [];
-    // Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 };
 
 
