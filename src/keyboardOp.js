@@ -75,7 +75,8 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             break;
         case "edat":
             $("#extend").slideDown();
-            resizePlot()
+            $("#einp").val(data[th_in][col.y].slice(-1)[0])
+            resizePlot();
             break;
         case 'fill':
             $("#filler").slideDown();

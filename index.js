@@ -332,7 +332,7 @@ const homeMenuTemplate = [{
             {
                 label: "Homepage",
                 click() {
-                    shell.openExternal("https://koushikphy.github.io/Interactive-Data-Editor");
+                    shell.openExternal("https://koushikphy.github.io/ide/");
                 }
             },
             {
