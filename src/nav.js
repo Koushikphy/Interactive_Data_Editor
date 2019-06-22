@@ -152,6 +152,22 @@ var schema = {
                 },
                 "hovermode":{
                     "enum":[ "false","x","y", "closest"]
+                },
+                "xaxis":{
+                        "properties":{
+                            "type":{
+                                "enum":['linear','log','date', 'category']
+                            }
+                        },
+                        "required": ["type"]
+                },
+                "yaxis":{
+                        "properties":{
+                            "type":{
+                                "enum":['linear','log','date', 'category']
+                            }
+                        },
+                        "required": ["type"]
                 }
             }
         }
