@@ -388,6 +388,7 @@ function autoSmooth() {
 
 
 function changeSign() {
+    console.log('fwehf', index)
     if (!index.length) return;
     saveOldData();
     for (let ind of index) {
@@ -401,3 +402,24 @@ function changeSign() {
     });
     saved = false;
 };
+
+
+
+function setValue(){
+    saveOldData();
+    var value = parseFloat($("#valinput").val());
+    if (isNaN(value) ){
+        return;
+    } else{
+        for (let ind of index) {
+            data[th_in][col.z][ind] = value;
+        };
+    }
+    updatePlot();
+    updateOnServer();
+    Plotly.restyle(figurecontainer, {
+        selectedpoints: [null]
+    });
+    saved = false;
+    $('#setval').hide();
+}

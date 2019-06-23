@@ -274,3 +274,53 @@ ol{
 #etime{
     width: 76px
 }
+
+.custom-cm {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    padding: 10px 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+  }
+  
+  .custom-cm__item {
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+  
+  .custom-cm__item:hover {
+    background-color: #f8f8f8;
+  }
+  
+  .custom-cm__divider {
+    border-bottom: 1px solid #eeeeee;
+  }
+
+
+#setval{
+    width: 250px;
+    height: 100px;
+    background-color: #ffffff;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 2px solid #aaa;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 18px;
+    display: none
+}
+#valinput{
+    margin: 9px
+}
+
+#setval input[type="button"] {
+    width: 60px;
+}

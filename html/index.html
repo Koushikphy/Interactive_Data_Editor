@@ -102,6 +102,22 @@
 
         <div id="figurecontainer"></div>
     </div>
+    <div class="custom-cm">
+        <div class="custom-cm__item" onclick="exectuteContext()">change sign</div>
+        <div class="custom-cm__item">Item #2</div>
+        <div class="custom-cm__item">Item #3</div>
+        <div class="custom-cm__divider"></div>
+        <div class="custom-cm__item">Item #4</div>
+      </div>
+
+
+    <div id="setval">
+        Set a value for the selected points <br>
+        <input type="text" id="valinput"><br>
+        <input type="button" value="OK" onclick="setValue();">
+        <input type="button" value="Cancel" onclick="$('#setval').hide();">
+    </div>
+
 
     <script src='../lib/init.min.js'></script>
     <script defer src="../lib/jquery.min.js"></script>
@@ -109,9 +125,7 @@
     <script defer src="../lib/jsoneditor.min.js"></script>
     <script defer src="../lib/funcs.min.js"></script>
     <script defer src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
-<script>
 
-</script>
 </body>
 
 </html>

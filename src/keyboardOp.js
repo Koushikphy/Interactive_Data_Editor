@@ -235,7 +235,32 @@ function moveReflect(key, mod){
     updateOnServer();
 };
 
+function contextMenuFuncs(e) {
+    e.preventDefault();
+    var cm = $('.custom-cm');
+    ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;
+    lll = e.clientX + cm.width() > window.innerWidth ? window.innerWidth - cm.width() : e.clientX;
+    cm.css({top:ttt,left:lll})
+    cm.toggle();
+  };
 
+function resetClicks(){
+    $('.custom-cm').hide();
+    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+    index = [];
+    del_dat = [];
+}
+
+function exectuteContext(x){
+
+    $('.custom-cm').hide();
+    $('#setval').show();
+}
 
 $(window).keydown(hotKeys);
 $(window).keyup(hotDKeys);
+$('#figurecontainer').contextmenu(contextMenuFuncs)
+$('#figurecontainer').click(resetClicks)
+
+
+

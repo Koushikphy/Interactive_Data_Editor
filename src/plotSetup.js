@@ -134,6 +134,7 @@ figurecontainer.on("plotly_relayout", updateJSON);
 resizePlot();
 
 
+
 $(function () {
     $slider.slider({
         min: 0,

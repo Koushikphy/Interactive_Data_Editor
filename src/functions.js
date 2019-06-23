@@ -732,12 +732,13 @@ function sSwapper() {
 
 
 function selectEvent(event) {
-    index = [];
-    del_dat = [];
+    // index = [];
+    // del_dat = [];
     if (event == undefined) {
-        Plotly.restyle(figurecontainer, {
-            selectedpoints: [null]
-        });
+        // Plotly.restyle(figurecontainer, {
+        //     selectedpoints: [null]
+        // });
+        return;
     } else {
         for (let pt of event.points) {
             ind = dpsx.findIndex(n => n == pt.x);
