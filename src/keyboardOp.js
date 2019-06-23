@@ -209,7 +209,6 @@ function hotKeys(e) {
             if (e.ctrlKey) {
                 keepTrackIndex += 1
                 if (keepTrackIndex == fullData.length) {
-                    console.log(keepTrackIndex)
                     keepTrackIndex = 1
                 }
                 selectEditable(keepTrackIndex)

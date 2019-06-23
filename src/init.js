@@ -37,7 +37,7 @@ function versionCheck() {
                     buttons: ['OK', "Cancel"]
                 })
                 if (!res) {
-                    shell.openExternal("https://github.com/Koushikphy/Interactive-Data-Editor/releases")
+                    shell.openExternal("https://koushikphy.github.io/ide/#download--installation")
                 }
             }
         })

@@ -103,17 +103,19 @@
         <div id="figurecontainer"></div>
     </div>
     <div class="custom-cm">
-        <div class="custom-cm__item" onclick="exectuteContext()">change sign</div>
-        <div class="custom-cm__item">Item #2</div>
-        <div class="custom-cm__item">Item #3</div>
+        <div class="custom-cm__item" onclick="exectuteContext()">Set Value</div>
+        <div class="custom-cm__item">Copy Left</div>
+        <div class="custom-cm__item">Copy Right</div>
         <div class="custom-cm__divider"></div>
-        <div class="custom-cm__item">Item #4</div>
+        <div class="custom-cm__item">Mirror Left</div>
+        <div class="custom-cm__item">Mirror Right</div>
+
       </div>
 
-
+    <!-- hidden window for setting values -->
     <div id="setval">
         Set a value for the selected points <br>
-        <input type="text" id="valinput"><br>
+        <input type="text" id="valinput" onchange="setValue();"><br>
         <input type="button" value="OK" onclick="setValue();">
         <input type="button" value="Cancel" onclick="$('#setval').hide();">
     </div>

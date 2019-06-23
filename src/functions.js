@@ -734,6 +734,7 @@ function sSwapper() {
 function selectEvent(event) {
     // index = [];
     // del_dat = [];
+    $('.custom-cm').hide();
     if (event == undefined) {
         // Plotly.restyle(figurecontainer, {
         //     selectedpoints: [null]
