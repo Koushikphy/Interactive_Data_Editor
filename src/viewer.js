@@ -244,94 +244,94 @@ var layout = {
 };
 
 
-Plotly.addTraces(figurecontainer,[{
-    type: 'surface',
-    hoverinfo: "x+y+z",
-    colorscale: "Portland",
-    hoverlabel: {
-        bgcolor: "#2ca02c"
-    },
-    z: [
-        [1]
-    ],
-    x: [
-        [1]
-    ],
-    y: [
-        [1]
-    ]
-}])
-Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[3]] ,colorscale: "Viridis"},1);
-Plotly.restyle(figurecontainer, {colorscale: "Electric"},1)
+// Plotly.addTraces(figurecontainer,[{
+//     type: 'surface',
+//     hoverinfo: "x+y+z",
+//     colorscale: "Portland",
+//     hoverlabel: {
+//         bgcolor: "#2ca02c"
+//     },
+//     z: [
+//         [1]
+//     ],
+//     x: [
+//         [1]
+//     ],
+//     y: [
+//         [1]
+//     ]
+// }])
+// Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[3]] ,colorscale: "Viridis"},1);
+// Plotly.restyle(figurecontainer, {colorscale: "Electric"},1)
 
-Plotly.relayout(figurecontainer,{
-    scene: {
-        aspectmode:"manual",
-        aspectratio:{
-            x: 1,
-            y : .8,
-            z: .5
-        },
-        zaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: true,
-            title: "u (a.u.)",
-            font:{
-                family:"Times New Roman",
-                size : 100
-            }
-        },
-        yaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: true,
-            title: "R (a.u.)",
-            font:{
-                family:"Times New Roman",
-                size : 100
-            }
-        },
-        xaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: true,
-            title: "r (a.u.)",
-            font:{
-                family:"Times New Roman",
-                size : 100
-            }
-        }
-    },
-})
+// Plotly.relayout(figurecontainer,{
+//     scene: {
+//         aspectmode:"manual",
+//         aspectratio:{
+//             x: 1,
+//             y : .8,
+//             z: .5
+//         },
+//         zaxis: {
+//             showgrid: false,
+//             zeroline: false,
+//             showline: true,
+//             title: "u (a.u.)",
+//             font:{
+//                 family:"Times New Roman",
+//                 size : 100
+//             }
+//         },
+//         yaxis: {
+//             showgrid: false,
+//             zeroline: false,
+//             showline: true,
+//             title: "R (a.u.)",
+//             font:{
+//                 family:"Times New Roman",
+//                 size : 100
+//             }
+//         },
+//         xaxis: {
+//             showgrid: false,
+//             zeroline: false,
+//             showline: true,
+//             title: "r (a.u.)",
+//             font:{
+//                 family:"Times New Roman",
+//                 size : 100
+//             }
+//         }
+//     },
+// })
 
-Plotly.downloadImage(figurecontainer, {format: 'svg', width: 2000, height: 1500});
+// Plotly.downloadImage(figurecontainer, {format: 'svg', width: 2000, height: 1500});
 
-// Plotly.restyle(figurecontainer, {opacity:.95})
-Plotly.restyle(figurecontainer,{
-    contours:{
-        x:{
-            show: true,
-            start: 1,
-            end : 10,
-            size: .5,
-            color: '#3a3a3a',
-            // usecolormap: true,
-            width : 1
-        },
-        y:{
-            show: true,
-            start: 0,
-            end : 10,
-            size: .5,
-            color: '#3a3a3a',
-            // usecolormap: true,
-            width : 1
-        }
-    }
-})
-// 03af0f
-// #ed2704
+// // Plotly.restyle(figurecontainer, {opacity:.95})
+// Plotly.restyle(figurecontainer,{
+//     contours:{
+//         x:{
+//             show: true,
+//             start: 1,
+//             end : 10,
+//             size: .5,
+//             color: '#3a3a3a',
+//             // usecolormap: true,
+//             width : 1
+//         },
+//         y:{
+//             show: true,
+//             start: 0,
+//             end : 10,
+//             size: .5,
+//             color: '#3a3a3a',
+//             // usecolormap: true,
+//             width : 1
+//         }
+//     }
+// })
+// // 03af0f
+// // #ed2704
 // 0211ea
 
 // 

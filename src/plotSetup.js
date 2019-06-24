@@ -41,6 +41,11 @@ var layout = {
     showlegend: false,
     hovermode: "closest",
     title: '',
+    titlefont:{
+        family:"Droid Sans",
+        size:10,
+        color:'#000000'
+    },
     margin: {
         t: 25,
         r: 0,
@@ -53,7 +58,15 @@ var layout = {
         zeroline: false,
         showline: true,
         showgrid: true,
-        automargin: true
+        automargin: true,
+        // tick0:'',
+        dtick:'',
+        titlefont:{
+            family:"Droid Sans",
+            size:10,
+            color:'#000000'
+        }
+        
     },
     yaxis: {
         title: '',
@@ -61,8 +74,15 @@ var layout = {
         zeroline: false,
         showline: true,
         tickformat: " ,.5g",
+        // tick0:'',
+        dtick:'',
         hoverformat: " ,.6g",
         showgrid: true,
+        titlefont:{
+            family:"Droid Sans",
+            size:10,
+            color:'#000000'
+        }
     },
     font: {
         size: 14
