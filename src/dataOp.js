@@ -422,4 +422,5 @@ function setValue(){
     });
     saved = false;
     $('#setval').hide();
+    $("#valinput").val(0);
 }
