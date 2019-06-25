@@ -202,6 +202,7 @@ var sIniData = [{
     type: 'surface',
     hoverinfo: "x+y+z",
     colorscale: "Portland",
+    showscale: false,
     hoverlabel: {
         bgcolor: "#2ca02c"
     },
@@ -244,94 +245,287 @@ var layout = {
 };
 
 
-// Plotly.addTraces(figurecontainer,[{
-//     type: 'surface',
-//     hoverinfo: "x+y+z",
-//     colorscale: "Portland",
-//     hoverlabel: {
-//         bgcolor: "#2ca02c"
-//     },
-//     z: [
-//         [1]
-//     ],
-//     x: [
-//         [1]
-//     ],
-//     y: [
-//         [1]
-//     ]
-// }])
-// Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[3]] ,colorscale: "Viridis"},1);
-// Plotly.restyle(figurecontainer, {colorscale: "Electric"},1)
+Plotly.addTraces(figurecontainer,[{
+    type: 'surface',
+    hoverinfo: "x+y+z",
+    colorscale: "Viridis",
+    showscale:false,
+    hoverlabel: {
+        bgcolor: "#2ca02c"
+    },
+    z: [
+        [1]
+    ],
+    x: [
+        [1]
+    ],
+    y: [
+        [1]
+    ]
+}])
+
+Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[6]]},1);
+
+
+Plotly.relayout(figurecontainer,{
+    scene: {
+        aspectmode:"manual",
+        aspectratio:{
+            x: 1,
+            y : .8,
+            z: .5
+        },
+        zaxis: {
+            showgrid: false,
+            zeroline: false,
+            showline: true,
+            title: "u (a.u.)",
+            titlefont:{
+                family:"Times New Roman",
+                size : 40
+            },
+            // dtick:0.05,
+            tickfont:{
+                family:"Times New Roman",
+                size : 20
+            },
+            ticks: "outside"
+        },
+        yaxis: {
+            showgrid: false,
+            zeroline: false,
+            showline: true,
+            automargin:true,
+            title: "R (a.u.)",
+            titlefont:{
+                family:"Times New Roman",
+                size : 40
+            },
+            dtick:1,
+            tickfont:{
+                family:"Times New Roman",
+                size : 20
+            },
+            ticks: "outside",
+            tickprefix:"   "
+        },
+        xaxis: {
+            showgrid: false,
+            zeroline: false,
+            showline: true,
+            title: "r (a.u.)",
+            titlefont:{
+                family:"Times New Roman",
+                size : 40
+            },
+            dtick:1,
+            tickfont:{
+                family:"Times New Roman",
+                size : 20
+            },
+            ticks: "outside"
+        }
+    },
+})
+
 
 // Plotly.relayout(figurecontainer,{
-//     scene: {
-//         aspectmode:"manual",
-//         aspectratio:{
-//             x: 1,
-//             y : .8,
-//             z: .5
-//         },
-//         zaxis: {
-//             showgrid: false,
-//             zeroline: false,
-//             showline: true,
-//             title: "u (a.u.)",
-//             font:{
+//     scene:{
+//         yaxis:{
+//             dtick:1,
+//             tickfont:{
 //                 family:"Times New Roman",
-//                 size : 100
-//             }
-//         },
-//         yaxis: {
-//             showgrid: false,
-//             zeroline: false,
-//             showline: true,
-//             title: "R (a.u.)",
-//             font:{
-//                 family:"Times New Roman",
-//                 size : 100
-//             }
-//         },
-//         xaxis: {
-//             showgrid: false,
-//             zeroline: false,
-//             showline: true,
-//             title: "r (a.u.)",
-//             font:{
-//                 family:"Times New Roman",
-//                 size : 100
-//             }
+//                 size : 15
+//             },
 //         }
-//     },
+//     }
 // })
 
 // Plotly.downloadImage(figurecontainer, {format: 'svg', width: 2000, height: 1500});
 
+
+var mode={
+    modeBarButtonsToRemove : ["toImage"],
+    modeBarButtonsToAdd    : [
+        [
+            {
+                name: 'test',
+                icon: Plotly.Icons.camera,
+                click: function(){alert('dhqwduh2qu')}
+            }
+        ]
+    ]
+}
+
 // // Plotly.restyle(figurecontainer, {opacity:.95})
-// Plotly.restyle(figurecontainer,{
-//     contours:{
-//         x:{
-//             show: true,
-//             start: 1,
-//             end : 10,
-//             size: .5,
-//             color: '#3a3a3a',
-//             // usecolormap: true,
-//             width : 1
-//         },
-//         y:{
-//             show: true,
-//             start: 0,
-//             end : 10,
-//             size: .5,
-//             color: '#3a3a3a',
-//             // usecolormap: true,
-//             width : 1
-//         }
-//     }
-// })
+Plotly.restyle(figurecontainer,{
+    showscale:false,
+    contours:{
+        x:{
+            show: false,
+            start: 1,
+            end : 10,
+            size: .5,
+            color: '#3a3a3a',
+            // usecolormap: false,
+            width : 1
+        },
+        y:{
+            show: false,
+            start: 0,
+            end : 10,
+            size: .5,
+            color: '#3a3a3a',
+            // usecolormap: true,
+            width : 1
+        }
+    }
+})
 // // 03af0f
 // // #ed2704
 // 0211ea
 
 // 
+var trace={
+    type: 'surface',
+    hoverinfo: "x+y+z",
+    colorscale: "Portland",
+    hoverlabel: {
+        bgcolor: "#2ca02c"
+    },
+    z: [
+        [1]
+    ],
+    x: [
+        [1]
+    ],
+    y: [
+        [1]
+    ],
+    showscale: false,
+    cmin: cmin,
+    cmax: cmax,
+    cauto:false,
+    colorbar:{
+        thickness:30,
+        dtick:5,
+        tickfont:{
+            family:"Times New Roman",
+            size : 20
+        },
+    },
+    contours:{
+        x:{
+            show: true,
+            start: 1,
+            end : 10,
+            size: .5,
+            color: '#000',
+            usecolormap: false,
+            width : 1
+        },
+        y:{
+            show: true,
+            start: 0,
+            end : 10,
+            size: .5,
+            color: '#000',
+            usecolormap: false,
+            width : 1
+        },
+        z:{
+            show: false,
+            start: 0,
+            end : 10,
+            size: .5,
+            color: '#000',
+            usecolormap: false,
+            width : 1
+        }
+    }
+}
+
+var newLayout = {
+    height: window.innerHeight + 68,
+    width: window.innerWidth - 17,
+    margin: {
+        t: 0,
+        r: 50,
+        b: 0,
+        l: 25,
+        pad: 0
+    },
+                autorange: true,
+            spikesides: false,
+    showlegend: false,
+    scene: {
+        aspectmode:"manual",
+        aspectratio:{
+            x: 1,
+            y : .8,
+            z: .5
+        },
+        zaxis: {
+            range:[],
+            autorange: true,
+            spikesides: false,
+            showgrid: false,
+            zeroline: false,
+            showline: true,
+            title: "u (a.u.)",
+            titlefont:{
+                family:"Times New Roman",
+                size : 40
+            },
+            dtick:5,
+            tickfont:{
+                family:"Times New Roman",
+                size : 20
+            },
+            tickformat:'',
+            ticks: "outside"
+        },
+        yaxis: {
+            range:[],
+            autorange: true,
+            spikesides: false,
+            showgrid: false,
+            zeroline: false,
+            showline: true,
+            automargin:true,
+            title: "R (a.u.)",
+            titlefont:{
+                family:"Times New Roman",
+                size : 40
+            },
+            dtick:2,
+            tickfont:{
+                family:"Times New Roman",
+                size : 20
+            },
+            ticks: "outside",
+            tickformat:'',
+            // tickprefix:"   "
+        },
+        xaxis: {
+            range:[],
+            autorange: true,
+            spikesides: false,
+            showgrid: false,
+            zeroline: false,
+            showline: true,
+            title: "r (a.u.)",
+            titlefont:{
+                family:"Times New Roman",
+                size : 40
+            },
+            dtick:2,
+            tickfont:{
+                family:"Times New Roman",
+                size : 20
+            },
+            ticks: "outside",
+            tickformat:''
+        }
+    },
+}

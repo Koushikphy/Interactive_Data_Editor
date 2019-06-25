@@ -13,14 +13,15 @@
 <body>
     <div class="basediv" id="figurecontainer"></div>
     <div class="floatdiv">
-        <input type="submit" value="Choose File" onclick="fileLoader();">
-        <label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
-        Select Plot Style :
-        <select autocomplete="off" disabled="" id="ssel" onchange="updatePlot();" style="width: 71px">
-            <option selected="">Line</option>
-            <option>Surface</option>
-        </select>
-        <p></p>
+
+
+        <div class="borders">
+            <input type="submit" value="Choose File" onclick="fileLoader();">
+            <label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+            Trace Index :<select id="trace"></select>
+            <button id= "addTrace" alt="ihdi2h">C</button>
+            <button id= "removeTrace" alt = "fihwifeh">X</button>
+        </div>
         <div class="borders" id="colSel" onchange="updatePlot();">
             Data Column ⇒
             X :<select id="xcol"></select>
@@ -29,17 +30,43 @@
         </div>
         <div class="borders">
             Axes Ranges ⇒
-            X : <input onchange="setXRange(this.value, ranges[cols[0]])" type="text" />
+            X : <input onchange="setXRange(this.value, ranges[cols[0]])" type="text" alt="hwfh"/>
             Y : <input onchange="setYRange(this.value, ranges[cols[1]])" type="text" />
             Z : <input onchange="setZRange(this.value, ranges[cols[2]])" type="text" />
         </div><br />
     </div>
+
+    <div id="sidebar">
+        <div id="split-bar"></div>
+        <div class="closebtn" onclick="closeNav()">&#9746;</div>
+        <div class="sideheader"> Files Dashboard </div>
+        <div id="files"></div>
+    </div>
+
     <div id="sidebar2">
         <div id="split-bar2"></div>
         <div class="closebtn" onclick="closeNav2()">&#9746;</div>
         <div class="sideheader"> Plot Settings </div>
         <div id="jsoneditor"></div>
     </div>
+
+    <div id="download">
+        Download the image
+        File Name: <input type="text" id= "dfileName"><br>
+        File Type:<select id="fileFormat">
+                <option>JPEG</option>
+                <option>PNG</option>
+                <option>SVG</option>
+                <option>WEBP</option>
+            </select><br>
+        Image Resolution: <input type="text" id="imRes"><br>
+        <input type="button" value="OK" onclick="downloadImage();">
+        <input type="button" value="Cancel" onclick="$('#download').hide();">
+    </div>
+
+
+
+
     <script src="../lib/jsoneditor.min.js"></script>
     <script src="../lib/viewer.min.js"></script>
     <script>
@@ -90,8 +117,9 @@
                 Plotly.restyle(figurecontainer, { "x": [data[cols[0]]], "y": [data[cols[1]]], "z": [data[cols[2]]] });
             };
 figurecontainer.on("plotly_relayout", updateJSON);
-
         };
+
+
 
 
 
@@ -110,6 +138,7 @@ figurecontainer.on("plotly_relayout", updateJSON);
 
         function fileLoader() {
             const fname = dialog.showOpenDialog({ properties: ['openFile'] })[0];
+            // fname = '/home/koushik/F+H2/Jacobi/C2V/EnrScalled_new.dat'
             var dirname = path.dirname(fname);
             var filename = path.basename(fname)
             var strDps = fs.readFileSync(fname, "utf8");
@@ -137,6 +166,27 @@ figurecontainer.on("plotly_relayout", updateJSON);
             updatePlot();
             $("#ssel")[0].disabled = false;
             $("#file_name1").html(filename);
+
+Plotly.addTraces(figurecontainer,[{
+    type: 'surface',
+    hoverinfo: "x+y+z",
+    colorscale: "Viridis",
+    showscale:false,
+    hoverlabel: {
+        bgcolor: "#2ca02c"
+    },
+    z: [
+        [1]
+    ],
+    x: [
+        [1]
+    ],
+    y: [
+        [1]
+    ]
+}])
+
+Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[6]]},1);
         }
 
 

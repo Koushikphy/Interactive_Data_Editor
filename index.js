@@ -125,7 +125,7 @@ const homeMenuTemplate = [{
                 click() {
                     var childWindow = new BrowserWindow();
                     childWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/Plotter.html'),
+                        pathname: path.join(__dirname, 'html/newPlotter.html'),
                         protocol: 'file:',
                         slashes: true
                     }));

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>3D Plotter</title>
+    <link href="../lib/style.min.css" rel="stylesheet" >
+    <link rel="stylesheet" href="../lib/jsoneditor.min.css">
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="../lib/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="basediv" id="figurecontainer"></div>
+    <div class="floatdiv">
+
+
+        <div class="borders">
+            <input type="submit" value="Choose File" onclick="fileLoader();">
+            <label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
+            Trace Index :<select id="trace"></select>
+            <button title="Add a new surface" id= "addTrace" onclick="addNewPlot();" >&#x271A;</button>
+            <button title="Remove this surface" id= "removeTrace">&#x2716;</button>
+        </div>
+        <div class="borders" id="colSel" onchange="updateThisPlot();">
+            Data Column ⇒
+            X :<select id="xcol"></select>
+            Y :<select id="ycol"></select>
+            Z :<select id="zcol"></select>    
+        </div>
+        <div class="borders">
+            Axes Ranges ⇒
+            X : <input onchange="setXRange(this.value, ranges[cols[0]])" type="text" alt="hwfh"/>
+            Y : <input onchange="setYRange(this.value, ranges[cols[1]])" type="text" />
+            Z : <input onchange="setZRange(this.value, ranges[cols[2]])" type="text" />
+        </div><br />
+    </div>
+
+    <div id="sidebar">
+        <div id="split-bar"></div>
+        <div class="closebtn" onclick="closeNav()">&#9746;</div>
+        <div class="sideheader"> Files Dashboard </div>
+        <div id="files"></div>
+    </div>
+
+    <div id="sidebar2">
+        <div id="split-bar2"></div>
+        <div class="closebtn" onclick="closeNav()">&#9746;</div>
+        <div class="sideheader"> Plot Settings </div>
+        <div id="jsoneditor"></div>
+    </div>
+
+    <div id = "branding">
+        <i>Developed by</i><b> <a href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')">Koushik&ensp;</a></b><br>
+        <i>Powered by</i><b> <a href='javascript:void(0);' onclick="shell.openExternal('https://plot.ly/javascript/')">Plotly </a></b>
+    </div>
+
+    <div id="download">
+        <div class='jjjj'><b> Download the image</b><br></div>
+
+        &ensp; File Name: <input type="text" id= "dfileName"><br>
+        &ensp; File Type:<select id="fileFormat">
+                <option>JPEG</option>
+                <option>PNG</option>
+                <option>SVG</option>
+                <option>WEBP</option>
+            </select><br>
+        &ensp; Image Resolution: <input type="text" id="imRes"><br>
+        <div  class='jjjj'>
+            <input type="button" value="OK" onclick="downloadImage();">
+            <input type="button" value="Cancel" onclick="$('#download').hide();">
+    </div>
+    </div>
+
+    <script src="../lib/jsoneditor.min.js"></script>
+    <script src="../src/new.js"></script>
+    <script src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+</body>
+
+</html>

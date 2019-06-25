@@ -304,7 +304,7 @@ ol{
   }
 
 
-#setval{
+#download,#setval{
     width: 250px;
     height: 100px;
     background-color: #ffffff;
@@ -320,10 +320,39 @@ ol{
     font-size: 18px;
     display: none
 }
+
+#download{
+    text-align: left;
+    width: 300px;
+    height: 150px;
+}
+.jjjj{
+    text-align: center;
+    margin: 10px
+}
+#fileFormat{
+    width: 5pc;
+    margin-left: 12px
+}
+
+
 #valinput{
     margin: 9px
 }
 
 #setval input[type="button"] {
     width: 60px;
+}
+
+#branding{
+    position: fixed;
+    bottom: 0;
+    right:0;
+    text-shadow: #000000;
+    font-size: 1.15pc;
+}
+
+a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
 }
