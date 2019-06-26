@@ -140,12 +140,27 @@ var iniPointsC = {
 };
 
 
+
+
 const Plotly = require('plotly.js-gl3d-dist');
-Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
-    displaylogo: false,
-    modeBarButtonsToRemove: ['sendDataToCloud'],
-    editable: true
-});
+
+
+
+var mode={
+    displaylogo:false,
+    editable: true,
+    modeBarButtonsToRemove : ["toImage","sendDataToCloud"],
+    modeBarButtonsToAdd    : [
+        [
+            {
+                name: 'Save the image',
+                icon: Plotly.Icons.camera,
+                click: function(){$('#download').show();}
+            }
+        ]
+    ]
+}
+Plotly.newPlot(figurecontainer, [iniPointsD], layout, mode);
 
 pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
 points = pointscontainer.getElementsByTagName("path");

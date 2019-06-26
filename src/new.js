@@ -15,12 +15,11 @@ const path = require('path');
 const { dialog } = remote;
 
 ipcRenderer.on('checkClose', function (e, d) { ipcRenderer.send('checkClose', 'closeIt')})
-
+$("#imRes").val("1500x2000")
 
 //! Problems:
-//1. auto limits when multiple traces are there
-//2. openning the settinggs winsow is pushing the mode bar out
-//3. range settings are out of whack
+//1. openning the settinggs winsow is pushing the mode bar out
+
 
 
 var trace={
@@ -90,13 +89,13 @@ var trace={
 }
 
 var layout = {
-    height: window.innerHeight + 68,
-    width: window.innerWidth - 17,
+    height: window.innerHeight,
+    width: window.innerWidth ,
     margin: {
         t: 0,
-        r: 50,
+        r: 0,
         b: 0,
-        l: 25,
+        l: 0,
         pad: 0
     },
     autorange: true,
@@ -336,7 +335,8 @@ function setXRange(lim) {
     };
     var xInd = $('#xcol')[0].selectedIndex+1
     var range = ranges[xInd]
-    [lim, _] = getRange(lim, range);
+    var [lim, [t1,t2]] = getRange(lim, range);
+    console.log(lim)
     Plotly.relayout(figurecontainer, {
         "scene.xaxis.range": lim
     });
@@ -352,7 +352,7 @@ function setYRange(lim) {
     };
     var yInd = $('#xcol')[0].selectedIndex+1
     var range = ranges[yInd]
-    [lim, _] = getRange(lim, range);
+    var [lim, [t1,t2]] = getRange(lim, range);
     Plotly.relayout(figurecontainer, {
         "scene.yaxis.range": lim
     });
@@ -449,7 +449,6 @@ function openNav() {
     $('.floatdiv').css("margin-left", minWidth + 15);
     $('#figurecontainer').css("margin-left", minWidth + 15);
     $('.basediv').css("margin-left", minWidth + 6);
-    $('.ham').toggle()
 // resizePlot()
 }
 
@@ -497,7 +496,7 @@ var colorPallete = ['Greys','YlGnBu','Greens','YlOrRd','Bluered','RdBu','Reds','
 
 var schema ={
     "properties":{
-        "Traces":{
+        "Surfaces":{
             "items":{
                 "properties":{
                     "colorscale":{
@@ -538,7 +537,7 @@ var options = {
 
         }
 
-        for(let item of json.Traces){
+        for(let item of json.Surfaces){
             for (let key of Object.keys(upTrace)){
                 upTrace[key].push(item[key])
                 // console.log(item[key])
@@ -576,7 +575,7 @@ var jsoneditor = document.getElementById('jsoneditor')
 var editor = new JSONEditor(
 jsoneditor,
 options, {
-"Traces": '',
+"Surfaces": '',
 "Layout": ''
 });
 $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
@@ -584,22 +583,31 @@ $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
 
 
 function updateJSON() {
-    var Traces=[]
+    var Surfaces=[]
     for (let trace of figurecontainer.data) {
         let tmp = JSON.parse(JSON.stringify(trace))
         delete tmp.type 
         delete tmp.x 
         delete tmp.y 
         delete tmp.z
-        Traces.push(tmp)
+        Surfaces.push(tmp)
     }
 
     Layout = figurecontainer.layout
     editor.update({
-        Traces,
+        Surfaces,
         Layout
     })
 }
+
+ipcRenderer.on("menuTrigger", function (e, d) {
+
+    if(d=="topbar"){
+        $(".floatdiv").toggle();
+    }else if(d=="open"){
+        fileLoader()
+    }
+})
 
 
 

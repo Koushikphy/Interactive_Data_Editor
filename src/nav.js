@@ -277,7 +277,7 @@ function getInd(input) {
 
 function removeRow(row) {
     if (fullData.length == 1) return
-    index = $('.closefile').index(row)
+    var index = $('.closefile').index(row)
     fullData.splice(index, 1);
     fullDataCols.splice(index, 1);
     fileNames.splice(index, 1);
@@ -333,7 +333,7 @@ function removeRow(row) {
 
 
 function copyFile(row) {
-    index = $('.copyfile').index(row);
+    var index = $('.copyfile').index(row);
     data = fullData[index]
     fullData.unshift(fullData[index]);
     fullDataCols.unshift(JSON.parse(JSON.stringify(fullDataCols[index])));

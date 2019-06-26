@@ -397,6 +397,11 @@ const plotMenuTemplate = [{
                 mainWindow.webContents.send("menuTrigger", "fullscreen")
 
             }
+        },{
+            label : "Toggle Top Bar",
+            click(){
+                mainWindow.webContents.send("menuTrigger", 'topbar')
+            }
         },
         {
             label: 'Quit',

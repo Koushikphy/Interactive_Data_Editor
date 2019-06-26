@@ -15,6 +15,17 @@ var undoStack = [],
     legendNames = [];
 
 
+    //downloads the image
+function downloadImage(){
+    var fileName = $('#dfileName').val()
+    var type = $('#fileFormat').val().toLocaleLowerCase()
+    var res = $('#imRes').val().split("x")
+    Plotly.downloadImage(figurecontainer, {filename: fileName, format: type, width: res[1], height: res[0]});
+    $('#download').hide();
+}
+
+
+
 function updateData() {
     col.x = xCol.selectedIndex;
     col.y = yCol.selectedIndex;

@@ -235,6 +235,7 @@ function moveReflect(key, mod){
 };
 
 function contextMenuFuncs(e) {
+    if(!index.length) return
     e.preventDefault();
     var cm = $('.custom-cm');
     ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;

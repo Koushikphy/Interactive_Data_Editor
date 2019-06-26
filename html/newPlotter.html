@@ -16,9 +16,8 @@
 
 
         <div class="borders">
-            <input type="submit" value="Choose File" onclick="fileLoader();">
-            <label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
-            Trace Index :<select id="trace" onclick="traceUpdate()"></select>
+            <label id="file_name1" style="display: inline-block;width: 15pc"> No File Choosen.</label>
+            Surface No:<select id="trace" onclick="traceUpdate()"></select>
             <button title="Add a new surface" id= "addTrace" onclick="addNewPlot();" >&#x271A;</button>
             <button title="Remove this surface" id= "removeTrace" onclick="deleteTrace();">&#x2716;</button>
         </div>
@@ -56,7 +55,7 @@
     </div>
 
     <div id="download">
-        <div class='jjjj'><b> Download the image</b><br></div>
+        <div class='jjjj'><b> Save the image</b><br></div>
 
         &ensp; File Name: <input type="text" id= "dfileName"><br>
         &ensp; File Type:<select id="fileFormat">
