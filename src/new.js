@@ -10,10 +10,17 @@ var figurecontainer = document.getElementById("figurecontainer"),
     zCols = []
 const Plotly = require('plotly.js-gl3d-dist');
 const fs = require("fs");
-const {ipcRenderer, remote,shell } = require('electron');
+const {ipcRenderer, remote,shell ,Menu} = require('electron');
 const path = require('path');
 const { dialog } = remote;
 
+ipcRenderer.on('checkClose', function (e, d) { ipcRenderer.send('checkClose', 'closeIt')})
+
+
+//! Problems:
+//1. auto limits when multiple traces are there
+//2. openning the settinggs winsow is pushing the mode bar out
+//3. range settings are out of whack
 
 
 var trace={
@@ -21,7 +28,7 @@ var trace={
     hoverinfo: "x+y+z",
     colorscale: "Portland",
     opacity: 1,
-    name : 'fewfui',
+    name : 'surface',
     hoverlabel: {
         bgcolor: "#2ca02c"
     },
@@ -41,6 +48,11 @@ var trace={
     colorbar:{
         thickness:30,
         dtick:0,
+        len: 0,
+        x:1.02,
+        xpad:10,
+        y:1.02,
+        ypad:10,
         tickfont:{
             family:"Times New Roman",
             size : 20
@@ -90,6 +102,7 @@ var layout = {
     autorange: true,
     spikesides: false,
     showlegend: true,
+    autosize:true,
     scene: {
         aspectmode:"manual",
         aspectratio:{
@@ -100,9 +113,9 @@ var layout = {
         zaxis: {
             range:['',''],
             autorange: true,
-            spikesides: true,
+            spikesides: false,
             showgrid: true,
-            zeroline: true,
+            zeroline: false,
             showline: true,
             title: "",
             titlefont:{
@@ -114,15 +127,20 @@ var layout = {
                 family:"Times New Roman",
                 size : 15
             },
+            ticklen: 2,
+            tickwidth: 1,
+            tickcolor: '#000',
+            ticksuffix:'',
+            tickprefix: '',
             tickformat:'',
             ticks: "outside"
         },
         yaxis: {
             range:[],
             autorange: true,
-            spikesides: true,
+            spikesides: false,
             showgrid: true,
-            zeroline: true,
+            zeroline: false,
             showline: true,
             automargin:true,
             title: "",
@@ -135,16 +153,20 @@ var layout = {
                 family:"Times New Roman",
                 size : 15
             },
-            ticks: "outside",
+            ticklen: 2,
+            tickwidth: 1,
+            tickcolor: '#000',
+            ticksuffix:'',
+            tickprefix: '',
             tickformat:'',
-            // tickprefix:"   "
+            ticks: "outside"
         },
         xaxis: {
             range:[],
             autorange: true,
-            spikesides: true,
+            spikesides: false,
             showgrid: true,
-            zeroline: true,
+            zeroline: false,
             showline: true,
             title: "",
             titlefont:{
@@ -156,8 +178,13 @@ var layout = {
                 family:"Times New Roman",
                 size : 15
             },
-            ticks: "outside",
-            tickformat:''
+            ticklen: 2,
+            tickwidth: 1,
+            tickcolor: '#000',
+            ticksuffix:'',
+            tickprefix: '',
+            tickformat:'',
+            ticks: "outside"
         }
     },
 }
@@ -177,29 +204,17 @@ var mode={
 }
 
 
+
+
 //plotting a dummy surface plot and adding the updateJSON funtion to it
 Plotly.newPlot(figurecontainer, [trace], layout, mode);
 figurecontainer.on("plotly_relayout", updateJSON);
 
 
 
-function getIndex(){
-    var ind = document.getElementById('trace').selectedIndex;
-}
-
-
-
 function transpose(m) {
     return m[0].map((_, i) => m.map(x => x[i]));
 };
-
-
-//this array contains all the data, for later now
-// var fullData = []
-
-function addNewTrace(){
-
-}
 
 
 // loads file from the dialog box
@@ -238,8 +253,12 @@ function fileLoader() {
         let flat_dat = [].concat(...data[i]);
         ranges.push([Math.min(...flat_dat), Math.max(...flat_dat)]);
     };
-    updatePlot(0);
+    
     $("#file_name1").html(filename);
+    $("#trace")[0].innerHTML =  '<option>1</option>'
+    $("#trace")[0].selectedIndex = 0
+    zCols.push(2);
+    updateThisPlot();
 }
 
 
@@ -253,49 +272,47 @@ function addNewPlot(){
     document.getElementById('trace').innerHTML = op
     document.getElementById('trace').selectedIndex = thisInd
     Plotly.addTraces(figurecontainer,trace)
-    updatePlot(thisInd)
+    updateThisPlot()
 }
 
 
-function selUpdate() {
-
-};
-
-
-function colUpdate(){
-
-}
 
 function updateThisPlot(){
-    var ind = document.getElementById('trace').selectedIndex;
-    updatePlot(ind)
+    var ind = $('#trace')[0].selectedIndex;
+    a = $("#zcol")[0].selectedIndex;
+    b = $("#ycol")[0].selectedIndex;
+    c = $("#xcol")[0].selectedIndex;
+    zCols[ind] = a
+    Plotly.restyle(figurecontainer, { "x": [data[c]], "y": [data[b]], "z": [data[a]] },ind);
 }
 
-//only surface plots
-function updatePlot(thisInd) {
-    // var thisInd = figurecontainer.data.length
-    // thisInd = 0
-    cols = [];
-    for (let a of $("#colSel select")) {
-        cols.push(a.selectedIndex)
-    };
-        Plotly.restyle(figurecontainer, { "x": [data[cols[0]]], "y": [data[cols[1]]], "z": [data[cols[2]]] },thisInd);
-};
+
+function traceUpdate(){
+    var ind = $('#trace')[0].selectedIndex;
+    $("#zcol")[0].selectedIndex = zCols[ind]
+}
+
+
+function deleteTrace(){
+    var ind = $('#trace')[0].selectedIndex;
+    zCols.splice(ind,1)
+    if (!zCols.length){ //everything is gone reload
+        console.log('reload')
+        return;
+    }
+    Plotly.deleteTraces(figurecontainer, ind);
+    $('#trace')[0].selectedIndex = 0
+    $("#zcol")[0].selectedIndex = zCols[0]
+
+}
 
 
 
-function getRange(lim, range, coln) {
+
+function getRange(lim, range) {
     var min, max;
     lim = lim.split(",").map(x => parseFloat(x));
-
-    if (range) {
-        [min, max] = range;
-    } else {
-        //ranges are already calculated
-        var flat_dat = data[coln].flat();
-        max = Math.max(...flat_dat);
-        min = Math.min(...flat_dat);
-    };
+    [min, max] = range;
 
     if (isNaN(lim[0])) {
         lim[0] = min;
@@ -309,49 +326,54 @@ function getRange(lim, range, coln) {
 };
 
 
-//fix these range false business
-function setXRange(lim, range = false) {
+//assuming x and y column of all the traces will be the same
+function setXRange(lim) {
     if (lim == "") {
         Plotly.relayout(figurecontainer, {
             "scene.xaxis.autorange": true
         });
         return;
     };
-    [lim, _] = getRange(lim, range, cols[0]);
+    var xInd = $('#xcol')[0].selectedIndex+1
+    var range = ranges[xInd]
+    [lim, _] = getRange(lim, range);
     Plotly.relayout(figurecontainer, {
         "scene.xaxis.range": lim
     });
 };
 
 
-function setYRange(lim, range = false) {
+function setYRange(lim) {
     if (lim == "") {
         Plotly.relayout(figurecontainer, {
             "scene.yaxis.autorange": true
         });
         return;
     };
-    [lim, _] = getRange(lim, range, cols[1]);
+    var yInd = $('#xcol')[0].selectedIndex+1
+    var range = ranges[yInd]
+    [lim, _] = getRange(lim, range);
     Plotly.relayout(figurecontainer, {
         "scene.yaxis.range": lim
     });
 };
 
-
-function setZRange(lim, range = false) {
+// assuming zCols has  the list of all the current z axis cols
+function setZRange(lim) {
     if (lim == "") {
         Plotly.relayout(figurecontainer, {
             "scene.zaxis.autorange": true
         });
         return;
     };
-    [lim, [cmin, cmax]] = getRange(lim, range, cols[2]);
-    // Plotly.update(figurecontainer, {
-    //     "cmin": cmin,
-    //     "cmax": cmax
-    // }, {
-    //     "scene.zaxis.range": lim
-    //     });
+    var tmpMin=[], tmpMax=[]
+    for(let cc of zCols){
+        tmpMin.push(ranges[cc][0])
+        tmpMax.push(ranges[cc][1])
+    }
+    var range = [ Math.min(...tmpMin), Math.max(...tmpMax) ]
+    console.log(range)
+    var [lim, [cmin, cmax]] = getRange(lim,range)
     Plotly.relayout(figurecontainer, {
         'scene.zaxis.range': lim,
     })
@@ -363,14 +385,6 @@ function setZRange(lim, range = false) {
 
 
 
-
-
-// Plotly.restyle(figurecontainer,{
-//     [
-//         {colorscale: "Earth"},
-//         {colorscale: "Portland"}
-//     ]
-// })
 //downloads the image
 function downloadImage(){
     var fileName = $('#dfileName').val()
@@ -381,9 +395,9 @@ function downloadImage(){
 }
 
 //called from the modebar triggers the download window
-// function triggerDownload(){
-//     $('#download').show();
-// }
+function triggerDownload(){
+    $('#download').show();
+}
 
 
 
@@ -433,6 +447,7 @@ function openNav() {
     $('#sidebar2').css("width", minWidth);
     $('#jsoneditor').css("width", minWidth - 5);
     $('.floatdiv').css("margin-left", minWidth + 15);
+    $('#figurecontainer').css("margin-left", minWidth + 15);
     $('.basediv').css("margin-left", minWidth + 6);
     $('.ham').toggle()
 // resizePlot()
@@ -519,13 +534,14 @@ var options = {
             cmax: [],
             cauto:[],
             colorbar:[],
-            contours:[]
+            contours:[],
+
         }
 
         for(let item of json.Traces){
             for (let key of Object.keys(upTrace)){
                 upTrace[key].push(item[key])
-                console.log(item[key])
+                // console.log(item[key])
             }
         }
         // Plotly.relayout(figurecontainer, json.layout)

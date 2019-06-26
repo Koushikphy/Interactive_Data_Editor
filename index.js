@@ -123,15 +123,21 @@ const homeMenuTemplate = [{
             {
                 label: "3D plotter",
                 click() {
-                    var childWindow = new BrowserWindow();
-                    childWindow.loadURL(url.format({
+                    // var childWindow = new BrowserWindow();
+                    // childWindow.loadURL(url.format({
+                    //     pathname: path.join(__dirname, 'html/newPlotter.html'),
+                    //     protocol: 'file:',
+                    //     slashes: true
+                    // }));
+                    // childWindow.maximize();
+                    // childWindow.setMenu(null);
+                    mainWindow.loadURL(url.format({
                         pathname: path.join(__dirname, 'html/newPlotter.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
-                    childWindow.maximize();
-                    childWindow.setMenu(null);
-                    if (!app.isPackaged) childWindow.webContents.openDevTools();
+                    Menu.setApplicationMenu(plotMenu);
+                    if (!app.isPackaged) mainWindow.webContents.openDevTools();
                 }
             },
             {
@@ -357,3 +363,116 @@ const homeMenuTemplate = [{
 ];
 
 var homeMenu = Menu.buildFromTemplate(homeMenuTemplate);
+
+
+
+const plotMenuTemplate = [{
+    label: 'File',
+    submenu: [{
+            label: "Open file",
+            accelerator: 'CmdOrCtrl+O',
+            click() {
+                mainWindow.webContents.send("menuTrigger", "open");
+            }
+        },
+        {
+            type: 'separator'
+        },
+        {
+            label: 'Reload',
+            accelerator: 'CmdOrCtrl+R',
+            click() {
+                mainWindow.reload();
+            }
+        },
+        {
+            label: "Toggle Fullscreen",
+            accelerator: "F11",
+            click() {
+                if (mainWindow.isFullScreen()) {
+                    mainWindow.setFullScreen(false);
+                } else {
+                    mainWindow.setFullScreen(true);
+                }
+                mainWindow.webContents.send("menuTrigger", "fullscreen")
+
+            }
+        },
+        {
+            label: 'Quit',
+            accelerator: 'CmdOrCtrl+Q',
+            click() {
+                app.quit();
+            },
+        }
+    ]
+    },
+
+    {
+    label: "Help",
+    submenu: [{
+            label: "Documentation",
+            click() {
+                var childWindow = new BrowserWindow({
+                    show: false,
+                    icon: path.join(__dirname, 'figs/charts.png'),
+                    webPreferences: {
+                        nodeIntegration: true
+                    }
+                });
+                childWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'html/doc.html'),
+                    protocol: 'file:',
+                    slashes: true
+                }));
+                childWindow.maximize();
+                childWindow.setMenuBarVisibility(false);
+                childWindow.show();
+            }
+        }, {
+            label: "Sample Data",
+            click() {
+                var childWindow = new BrowserWindow({
+                    icon: path.join(__dirname, 'figs/charts.png'),
+                    webPreferences: {
+                        nodeIntegration: true
+                    }
+                });
+                childWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'html/data.html'),
+                    protocol: 'file:',
+                    slashes: true
+                }));
+                childWindow.setMenuBarVisibility(false);;
+            }
+        },
+
+        {
+            label: "Homepage",
+            click() {
+                shell.openExternal("https://koushikphy.github.io/ide/");
+            }
+        },
+        {
+            label: "About",
+            click() {
+                var childWindow = new BrowserWindow({
+                    icon: path.join(__dirname, 'figs/charts.png'),
+                    webPreferences: {
+                        nodeIntegration: true
+                    }
+                });
+                childWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'html/about.html'),
+                    protocol: 'file:',
+                    slashes: true
+                }));
+                childWindow.setMenuBarVisibility(false);
+            }
+        },
+    ]
+}
+];
+
+
+var plotMenu  = Menu.buildFromTemplate(plotMenuTemplate);

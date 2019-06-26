@@ -18,9 +18,9 @@
         <div class="borders">
             <input type="submit" value="Choose File" onclick="fileLoader();">
             <label id="file_name1" style="display: inline-block;width: 10pc"> No File Choosen.</label>
-            Trace Index :<select id="trace"></select>
+            Trace Index :<select id="trace" onclick="traceUpdate()"></select>
             <button title="Add a new surface" id= "addTrace" onclick="addNewPlot();" >&#x271A;</button>
-            <button title="Remove this surface" id= "removeTrace">&#x2716;</button>
+            <button title="Remove this surface" id= "removeTrace" onclick="deleteTrace();">&#x2716;</button>
         </div>
         <div class="borders" id="colSel" onchange="updateThisPlot();">
             Data Column ⇒
@@ -30,9 +30,9 @@
         </div>
         <div class="borders">
             Axes Ranges ⇒
-            X : <input onchange="setXRange(this.value, ranges[cols[0]])" type="text" alt="hwfh"/>
-            Y : <input onchange="setYRange(this.value, ranges[cols[1]])" type="text" />
-            Z : <input onchange="setZRange(this.value, ranges[cols[2]])" type="text" />
+            X : <input onchange="setXRange(this.value)" type="text" alt="hwfh"/>
+            Y : <input onchange="setYRange(this.value)" type="text" />
+            Z : <input onchange="setZRange(this.value)" type="text" />
         </div><br />
     </div>
 

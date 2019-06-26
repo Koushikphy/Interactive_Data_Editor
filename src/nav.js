@@ -52,7 +52,6 @@ function closeNav() {
     $('#full').css("margin-left", 0);
     $('.ham').toggle();
     resizePlot()
-
 }
 
 function openNav2() {
