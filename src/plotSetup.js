@@ -36,7 +36,7 @@ $ch = $("#custom-handle")
 
 var layout = {
     autosize: true,
-    plot_bgcolor: "#e8ebef",
+    plot_bgcolor: "#fafafa",
     paper_bgcolor: '#fff',
     showlegend: false,
     hovermode: "closest",

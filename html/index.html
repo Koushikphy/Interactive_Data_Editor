@@ -22,7 +22,7 @@
                 <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">
                     Developed by Koushik Naskar
                 </div>
-                <div style="font-size: large;margin-top: 7px">Version 2.6.0 DR </div>
+                <div style="font-size: large;margin-top: 7px">Version 2.6.0 </div>
                 <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">
                     Copyright &copy; April, 2019 Koushik Naskar
                 </div>
@@ -48,7 +48,7 @@
     </div>
 
     <div id="full" >
-        <div id="header"> An interactive 2D and 3D data editor </div>
+        <!-- <div id="header"> Interactive Data Editor </div> -->
         <div class="borders column" id="container">
             &nbsp;Data Column ⇒ &ensp;
             X :<select id="xCol" onchange="updateData();"></select>&ensp;
@@ -137,7 +137,9 @@
             <input type="button" value="Cancel" onclick="$('#download').hide();">
     </div>
     </div>
-
+    <div id = "branding">
+         <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik</b>&ensp;</a><br>
+    </div>
 
     <script src='../lib/init.min.js'></script>
     <script defer src="../lib/jquery.min.js"></script>

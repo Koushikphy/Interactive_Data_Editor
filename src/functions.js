@@ -722,7 +722,7 @@ function colChanged(value) {
 
 function resizePlot() {
     setTimeout(function () {
-        var height = window.innerHeight - document.getElementById("header").offsetTop - document.getElementById("figurecontainer").offsetTop;
+        var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
         $("#figurecontainer").height(height - 2);
         Plotly.relayout(figurecontainer, {
             autosize: true

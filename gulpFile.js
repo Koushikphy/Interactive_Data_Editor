@@ -24,13 +24,15 @@ function compressCombineJS() {
 }
 
 function compressJS() {
-    return src(['./src/init.js', './src/viewer.js'])
+    return src(['./src/init.js', './src/viewer.js','./src/plotter.js'])
         .pipe(uglify())
         .pipe(rename({
             suffix: '.min'
         }))
         .pipe(dest('./lib'))
 }
+
+
 
 function compressCSS() {
     return src('src/style.css')
