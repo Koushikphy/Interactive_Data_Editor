@@ -97,6 +97,7 @@ if (app.isPackaged) {
         window.particlesJS.load('particle', '../lib/particles.json');
     }
 } else {
+    document.getElementById("branding").remove()
     document.getElementById('particle').remove();
     document.getElementById('full').style.display = 'block';
     if (remote.process.argv.length > 2) {

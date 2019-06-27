@@ -117,6 +117,7 @@ var layout = {
             zeroline: false,
             showline: true,
             title: "",
+            showticklabels:true,
             titlefont:{
                 family:"Times New Roman",
                 size : 10
@@ -142,6 +143,7 @@ var layout = {
             zeroline: false,
             showline: true,
             automargin:true,
+            showticklabels:true,
             title: "",
             titlefont:{
                 family:"Times New Roman",
@@ -167,6 +169,7 @@ var layout = {
             showgrid: true,
             zeroline: false,
             showline: true,
+            showticklabels:true,
             title: "",
             titlefont:{
                 family:"Times New Roman",
