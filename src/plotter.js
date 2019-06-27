@@ -1,13 +1,8 @@
 var figurecontainer = document.getElementById("figurecontainer"),
     data = [],
-    cols = [0, 1, 2],
-    ldata = [],
-    lIniData = [],
     ranges = [],
-    swapped = false,
-    newCol = [0, 0, 0],
-    curCol = false;
-    zCols = []
+    zCols = [],
+    fname;
 const Plotly = require('plotly.js-gl3d-dist');
 const fs = require("fs");
 const {ipcRenderer, remote,shell ,Menu} = require('electron');
@@ -40,17 +35,17 @@ var trace={
     y: [
         [1]
     ],
-    showscale: false,
+    showscale: true,
     cmin: 0,
     cmax: 0,
     cauto:true,
     colorbar:{
         thickness:30,
-        dtick:0,
-        len: 0,
+        dtick:1,
+        len: 1,
         x:1.02,
         xpad:10,
-        y:1.02,
+        y:0.5,
         ypad:10,
         tickfont:{
             family:"Times New Roman",
@@ -214,16 +209,27 @@ figurecontainer.on("plotly_relayout", updateJSON);
 
 
 
+
+
+function fileLoader(){
+    fname = dialog.showOpenDialog({ properties: ['openFile'] });
+    if (fname === undefined) return
+    fname = fname[0]
+    fileReader(fname);
+    
+
+    $("#trace")[0].innerHTML =  '<option>1</option>'
+    $("#trace")[0].selectedIndex = 0
+    zCols.push(2);
+    updateThisPlot();
+}
+
 function transpose(m) {
     return m[0].map((_, i) => m.map(x => x[i]));
 };
 
-
 // loads file from the dialog box
-function fileLoader() {
-    const fname = dialog.showOpenDialog({ properties: ['openFile'] })[0];
-    var dirname = path.dirname(fname);
-    var filename = path.basename(fname)
+function fileReader(fname) {
     var strDps = fs.readFileSync(fname, "utf8");
     strDps = strDps.trim().split(/\t\t\t\t\t|\n\n/);
     col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
@@ -239,6 +245,11 @@ function fileLoader() {
         };
     };
 
+    for (var i = 0; i < col; ++i) {
+        let flat_dat = [].concat(...data[i]);
+        ranges.push([Math.min(...flat_dat), Math.max(...flat_dat)]);
+    };
+
     //update the select boxes
     var op = "";
     for (var i = 1; i <= col; i++) {
@@ -250,17 +261,8 @@ function fileLoader() {
         tmp[i].selectedIndex = i;
     };
 
+    $("#file_name1").html(path.basename(fname));
 
-    for (var i = 0; i < col; ++i) {
-        let flat_dat = [].concat(...data[i]);
-        ranges.push([Math.min(...flat_dat), Math.max(...flat_dat)]);
-    };
-    
-    $("#file_name1").html(filename);
-    $("#trace")[0].innerHTML =  '<option>1</option>'
-    $("#trace")[0].selectedIndex = 0
-    zCols.push(2);
-    updateThisPlot();
 }
 
 
@@ -404,11 +406,7 @@ function triggerDownload(){
 
 
 
-
-
-
 var minWidth = window.innerWidth / 3
-
 $('#split-bar').mousedown(function (e) {
     e.preventDefault();
     $(document).mousemove(function (e) {
@@ -493,20 +491,20 @@ $(document).unbind('mousemove');
 
 
 
-var typeList = ["Arial", "Balto", "Courier New", "Droid Sans",, "Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
-var symList =["circle","circle-open","circle-dot","circle-open-dot","square","square-open","square-dot","square-open-dot","diamond","diamond-open","diamond-dot","diamond-open-dot","cross","cross-open","cross-dot","cross-open-dot","x","x-open","x-dot","x-open-dot","triangle-up","triangle-up-open","triangle-up-dot","triangle-up-open-dot","triangle-down","triangle-down-open","triangle-down-dot","triangle-down-open-dot","triangle-left","triangle-left-open","triangle-left-dot","triangle-left-open-dot","triangle-right","triangle-right-open","triangle-right-dot","triangle-right-open-dot","triangle-ne","triangle-ne-open","triangle-ne-dot","triangle-ne-open-dot","triangle-se","triangle-se-open","triangle-se-dot","triangle-se-open-dot","triangle-sw","triangle-sw-open","triangle-sw-dot","triangle-sw-open-dot","triangle-nw","triangle-nw-open","triangle-nw-dot","triangle-nw-open-dot","pentagon","pentagon-open","pentagon-dot","pentagon-open-dot","hexagon","hexagon-open","hexagon-dot","hexagon-open-dot","hexagon2","hexagon2-open","hexagon2-dot","hexagon2-open-dot","octagon","octagon-open","octagon-dot","octagon-open-dot","star","star-open","star-dot","star-open-dot","hexagram","hexagram-open","hexagram-dot","hexagram-open-dot","star-triangle-up","star-triangle-up-open","star-triangle-up-dot","star-triangle-up-open-dot","star-triangle-down","star-triangle-down-open","star-triangle-down-dot","star-triangle-down-open-dot","star-square","star-square-open","star-square-dot","star-square-open-dot","star-diamond","star-diamond-open","star-diamond-dot","star-diamond-open-dot","diamond-tall","diamond-tall-open","diamond-tall-dot","diamond-tall-open-dot","diamond-wide","diamond-wide-open","diamond-wide-dot","diamond-wide-open-dot","hourglass","hourglass-open","bowtie","bowtie-open","circle-cross","circle-cross-open","circle-x","circle-x-open","square-cross","square-cross-open","square-x","square-x-open","diamond-cross","diamond-cross-open","diamond-x","diamond-x-open","cross-thin","cross-thin-open","x-thin","x-thin-open","asterisk","asterisk-open","hash","hash-open","hash-dot","hash-open-dot","y-up","y-up-open","y-down","y-down-open","y-left","y-left-open","y-right","y-right-open","line-ew","line-ew-open","line-ns","line-ns-open","line-ne","line-ne-open","line-nw","line-nw-open"]
+var typeList = ["Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
 var colorPallete = ['Greys','YlGnBu','Greens','YlOrRd','Bluered','RdBu','Reds','Blues','Picnic','Rainbow','Portland','Jet','Hot','Blackbody','Earth','Electric','Viridis','Cividis']
+
+
 
 var schema ={
     "properties":{
         "Surfaces":{
-            "items":{
-                "properties":{
-                    "colorscale":{
-                        "enum":colorPallete
-                    },
-                    "opacity":{
-                        "type":"number"
+            "properties":{
+                "colorscale":{
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": colorPallete
                     }
                 }
             }
@@ -515,6 +513,76 @@ var schema ={
             "properties":{
                 "height":{
                     "type":"number"
+                },
+                "scene":{
+                    "properties":{
+                        "zaxis":{
+                            "properties":{
+                                "title":{
+                                    "properties":{
+                                        "font":{
+                                            "properties":{
+                                                "family":{
+                                                    "enum": typeList
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "tickfont":{
+                                    "properties":{
+                                        "family":{
+                                            "enum": typeList
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "yaxis":{
+                            "properties":{
+                                "title":{
+                                    "properties":{
+                                        "font":{
+                                            "properties":{
+                                                "family":{
+                                                    "enum": typeList
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "tickfont":{
+                                    "properties":{
+                                        "family":{
+                                            "enum": typeList
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "xaxis":{
+                            "properties":{
+                                "title":{
+                                    "properties":{
+                                        "font":{
+                                            "properties":{
+                                                "family":{
+                                                    "enum": typeList
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "tickfont":{
+                                    "properties":{
+                                        "family":{
+                                            "enum": typeList
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -524,31 +592,7 @@ var schema ={
 
 var options = {
     onChangeJSON: function (json) {
-        var upTrace = {
-            hoverinfo: [],
-            colorscale: [],
-            autocolorscale:[],
-            opacity: [],
-            name : [],
-            hoverlabel:[],
-            showscale: [],
-            cmin: [],
-            cmax: [],
-            cauto:[],
-            colorbar:[],
-            contours:[],
-
-        }
-
-        for(let item of json.Surfaces){
-            for (let key of Object.keys(upTrace)){
-                upTrace[key].push(item[key])
-                // console.log(item[key])
-            }
-        }
-        // Plotly.relayout(figurecontainer, json.layout)
-        Plotly.update(figurecontainer, upTrace, json.Layout)
-        // makeRows();
+        Plotly.update(figurecontainer, json.Surfaces, json.Layout)
     },
     onColorPicker: function (parent, color, onChange) {
         new JSONEditor.VanillaPicker({
@@ -576,27 +620,39 @@ var options = {
 
 var jsoneditor = document.getElementById('jsoneditor')
 var editor = new JSONEditor(
-jsoneditor,
-options, {
-"Surfaces": '',
-"Layout": ''
-});
+        jsoneditor,
+        options, {
+            "Surfaces": '',
+            "Layout": ''
+        }
+);
 $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
 
 
 
 function updateJSON() {
-    var Surfaces=[]
+    var Surfaces = {
+        hoverinfo: [],
+        colorscale: [],
+        autocolorscale:[],
+        opacity: [],
+        name : [],
+        hoverlabel:[],
+        showscale: [],
+        cmin: [],
+        cmax: [],
+        cauto:[],
+        colorbar:[],
+        contours:[],
+
+    }
     for (let trace of figurecontainer.data) {
-        let tmp = JSON.parse(JSON.stringify(trace))
-        delete tmp.type 
-        delete tmp.x 
-        delete tmp.y 
-        delete tmp.z
-        Surfaces.push(tmp)
+            for (let key of Object.keys(Surfaces)){
+                Surfaces[key].push(trace[key])
+        }
     }
 
-    Layout = figurecontainer.layout
+    var Layout = figurecontainer.layout
     editor.update({
         Surfaces,
         Layout
@@ -609,6 +665,10 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         $(".floatdiv").toggle();
     }else if(d=="open"){
         fileLoader()
+    }else if(d=='lcon'){
+        loadConfig()
+    }else if(d=="scon"){
+        saveConfig()
     }
 })
 
@@ -627,3 +687,87 @@ function hotKeys(e) {
     }
 }
 $(window).keydown(hotKeys);
+
+
+
+
+function saveConfig(){
+    var tmp_name = dialog.showSaveDialog({
+        title: "Save Configuration",
+        filters: [{
+            name: 'JSON',
+             extensions: ['json']
+        }]
+    });
+    if (tmp_name === undefined) return
+
+
+    var layout = figurecontainer.layout;
+
+    var surfaces = {
+        hoverinfo: [],
+        colorscale: [],
+        autocolorscale:[],
+        opacity: [],
+        name : [],
+        hoverlabel:[],
+        showscale: [],
+        cmin: [],
+        cmax: [],
+        cauto:[],
+        colorbar:[],
+        contours:[],
+
+    }
+    for (let trace of figurecontainer.data) {
+            for (let key of Object.keys(surfaces)){
+                surfaces[key].push(trace[key])
+        }
+    }
+    var x = $("#ycol")[0].selectedIndex;
+    var y = $("#xcol")[0].selectedIndex;
+    var z = zCols;
+    var file = fname
+    
+    fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,layout}, null, '\t'), 'utf8');
+}
+
+function loadConfig(){
+    const tfname = dialog.showOpenDialog({
+        properties: ['openFile']
+    });
+    if (tfname === undefined) return 
+    var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
+    fname = out.file
+    fileReader(out.file)    // data loaded
+    zCols = out.z          
+    //set up trace index selector
+    var op = "";
+    for(let i=1;i<=zCols.length;i++){
+        op += '<option>' + i + '</option>';
+    }
+    $('#trace')[0].innerHTML = op
+    $('#trace')[0].selectedIndex = 0
+    $("#zcol")[0].selectedIndex=zCols[0];
+    $("#ycol")[0].selectedIndex=out.y;
+    $("#xcol")[0].selectedIndex=out.x;
+
+
+    var tmp=[];
+    if(zCols.length>1){
+        for(let i=1; i<zCols.length ;i++){
+            tmp.push(trace)
+        }
+        Plotly.addTraces(figurecontainer,tmp)
+    }
+
+
+    out.surfaces.x = [data[out.x]]
+    out.surfaces.y = [data[out.y]]
+    out.surfaces.z = []
+    for(let i of zCols){
+        out.surfaces.z.push(data[i])
+    }
+
+    Plotly.update(figurecontainer, out.surfaces, out.layout)
+}

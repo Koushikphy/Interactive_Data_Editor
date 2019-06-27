@@ -127,3 +127,5 @@ function closeThis(m){
     $(m).parent().slideUp();
     resizePlot();
 }
+
+

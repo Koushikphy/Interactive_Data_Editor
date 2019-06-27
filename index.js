@@ -366,6 +366,16 @@ const plotMenuTemplate = [{
             click() {
                 mainWindow.webContents.send("menuTrigger", "open");
             }
+        },{
+            label: "Load Configuration",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "lcon");
+            }
+        },{
+            label: "Save Configuration",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "scon");
+            }
         },
         {
             type: 'separator'

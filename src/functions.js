@@ -922,7 +922,9 @@ function updateOnServer() {
     };
     var s_data = [x_list, y_list, z_list];
     var c2s = []
-    for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
+    for (let w in viewer) {
+        viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
+    }
 };
 
 
