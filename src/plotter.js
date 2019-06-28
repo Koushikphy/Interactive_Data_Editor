@@ -35,7 +35,7 @@ var trace={
     y: [
         [1]
     ],
-    showscale: true,
+    showscale: false,
     cmin: 0,
     cmax: 0,
     cauto:true,
@@ -301,13 +301,11 @@ function deleteTrace(){
     var ind = $('#trace')[0].selectedIndex;
     zCols.splice(ind,1)
     if (!zCols.length){ //everything is gone reload
-        console.log('reload')
         return;
     }
     Plotly.deleteTraces(figurecontainer, ind);
     $('#trace')[0].selectedIndex = 0
     $("#zcol")[0].selectedIndex = zCols[0]
-
 }
 
 
@@ -399,7 +397,7 @@ function downloadImage(){
     $('#download').hide();
 }
 
-//called from the modebar triggers the download window
+//triggers the download window
 function triggerDownload(){
     $('#download').show();
 }
@@ -442,7 +440,7 @@ $(document).mouseup(function (e) {
     $(document).unbind('mousemove');
 });
 
-var minWidth = window.innerWidth / 4.5
+var minWidth = window.innerWidth / 4
 function openNav() {
     $('#split-bar2').css("width", 5);
     $('#sidebar2').css("width", minWidth);
@@ -619,13 +617,7 @@ var options = {
 };
 
 var jsoneditor = document.getElementById('jsoneditor')
-var editor = new JSONEditor(
-        jsoneditor,
-        options, {
-            "Surfaces": '',
-            "Layout": ''
-        }
-);
+var editor = new JSONEditor( jsoneditor, options, {"Surfaces": '', "Layout": '' });
 $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
 
 
@@ -659,6 +651,7 @@ function updateJSON() {
     })
 }
 
+
 ipcRenderer.on("menuTrigger", function (e, d) {
 
     if(d=="topbar"){
@@ -686,8 +679,9 @@ function hotKeys(e) {
         }
     }
 }
-$(window).keydown(hotKeys);
 
+
+$(window).keydown(hotKeys);
 
 
 
@@ -768,6 +762,5 @@ function loadConfig(){
     for(let i of zCols){
         out.surfaces.z.push(data[i])
     }
-
     Plotly.update(figurecontainer, out.surfaces, out.layout)
 }

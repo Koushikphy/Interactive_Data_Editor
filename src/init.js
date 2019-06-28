@@ -104,7 +104,6 @@ if (app.isPackaged) {
         window.onload = function () {
             fileReader(remote.process.argv[2])
         };
-
     };
 }
 

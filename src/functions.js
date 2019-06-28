@@ -501,24 +501,24 @@ function transpose(m) {
 };
 
 
-function test(x){
-    y = parseFloat(x)
-    if(isNaN(y)){
-        throw "Not a number"
-    } else{
-        return y
-    }
-}
+// function test(x){
+//     y = parseFloat(x)
+//     if(isNaN(y)){
+//         throw "Not a number"
+//     } else{
+//         return y
+//     }
+// }
 
 
-function newTest(){
-    try{
-        test('dwe')
-    } 
-    catch(err){
-        console.log(err)
-    }
-}
+// function newTest(){
+//     try{
+//         test('dwe')
+//     } 
+//     catch(err){
+//         console.log(err)
+//     }
+// }
 
 
 
@@ -923,7 +923,9 @@ function updateOnServer() {
     var s_data = [x_list, y_list, z_list];
     var c2s = []
     for (let w in viewer) {
-        viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
+        setTimeout(() => {
+            viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
+        },50)
     }
 };
 

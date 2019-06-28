@@ -5,7 +5,9 @@
     <meta charset="utf-8" />
     <title>Interactive Data Editor</title>
     <link href="../lib/style.min.css" rel="stylesheet" />
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script>
+        if (typeof module === 'object') { window.module = module; module = undefined; }
+    </script>
     <script src="../lib/jquery.min.js"></script>
 </head>
 
@@ -17,8 +19,8 @@
         <form><input id="is_mark" onclick="mark_clicked(this)" type="checkbox" /> Markers </form>
         <div class="borders">
             Axes Ranges ⇒
-            X : <input onchange="setXRange(this.value)" type="text" id='xInp' />
-            Y : <input onchange="setYRange(this.value)" type="text" id='yInp' />
+            X : <input onchange="setXYRange(this.value,0)" type="text" id='xInp' />
+            Y : <input onchange="setXYRange(this.value,1)" type="text" id='yInp' />
             Z : <input onchange="setZRange(this.value)" type="text" id='zInp' />
         </div>
     </div>
@@ -27,11 +29,24 @@
         var xxx = [], yyy = [], zzz = [], check = true;
         Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
 
+        function mark_clicked(mark) {
+            if (mark.checked) {
+                Plotly.restyle(figurecontainer, {
+                    'mode': "markers+lines"
+                });
+            } else {
+                Plotly.restyle(figurecontainer, {
+                    'mode': "lines"
+                });
+            };
+        };
+
+
         function updatePlot() {
             makeRotation();
             xxx = data[0].concat(xxx),
-                yyy = data[1].concat(yyy),
-                zzz = data[2].concat(zzz);
+            yyy = data[1].concat(yyy),
+            zzz = data[2].concat(zzz);
             if (figurecontainer.data.length != xxx.length) {
                 Plotly.newPlot(figurecontainer, initData(xxx.length), layout);
             };

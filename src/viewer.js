@@ -7,9 +7,7 @@ var figurecontainer = document.getElementById("figurecontainer"),
     swapped = false,
     newCol = [0, 0, 0],
     curCol = false;
-const {
-    ipcRenderer
-} = require('electron');
+const {ipcRenderer} = require('electron');
 const Plotly = require('plotly.js-gl3d-dist');
 
 
@@ -20,14 +18,13 @@ ipcRenderer.on("sdata", function (e, d) {
     if (!curCol) curCol = newCol;
     if (newCol[0] !== curCol[0]) {
         curCol[0] = newCol[0];
-        setXRange($("#xInp").val());
+        setXYRange($("#xInp").val(),0);
     } else if (newCol[1] !== curCol[1]) {
         curCol[1] = newCol[1];
-        setYRange($("#yInp").val());
+        setXYRange($("#yInp").val(),1);
     } else if (newCol[2] !== curCol[2]) {
         curCol[2] = newCol[2];
         setZRange($("#zInp").val());
-
     }
 })
 
@@ -37,30 +34,16 @@ function transpose(m) {
 };
 
 
-function mark_clicked(mark) {
-    if (mark.checked) {
-        Plotly.restyle(figurecontainer, {
-            'mode': "markers+lines"
-        });
-    } else {
-        Plotly.restyle(figurecontainer, {
-            'mode': "lines"
-        });
-    };
-};
 
-
-function getRange(lim, range, coln) {
+function getRange(lim, coln) {
     var min, max;
     lim = lim.split(",").map(x => parseFloat(x));
 
-    if (range) {
-        [min, max] = range;
-    } else {
-        var flat_dat = data[coln].flat();
-        max = Math.max(...flat_dat);
-        min = Math.min(...flat_dat);
-    };
+
+    var flat_dat = data[coln].flat();
+    max = Math.max(...flat_dat);
+    min = Math.min(...flat_dat);
+
 
     if (isNaN(lim[0])) {
         lim[0] = min;
@@ -73,43 +56,61 @@ function getRange(lim, range, coln) {
     return [lim, [cmin, cmax]];
 };
 
-
-function setXRange(lim, range = false) {
+// assusme x=0, y=1
+function setXYRange(lim, axis){
+    if(swapped) axis=!axis
+    ax = axis ? "yaxis" : "xaxis"
     if (lim == "") {
+        var tmp = `scene.${ax}.autorange`
         Plotly.relayout(figurecontainer, {
-            "scene.xaxis.autorange": true
-        });
-        return;
-    };
-    [lim, _] = getRange(lim, range, cols[0]);
-    Plotly.relayout(figurecontainer, {
-        "scene.xaxis.range": lim
-    });
-};
-
-
-function setYRange(lim, range = false) {
-    if (lim == "") {
+            [tmp] : true // json key set from variable
+        })
+    }else {
+        [lim, _] = getRange(lim, cols[axis]);
+        var tmp = `scene.${ax}.range`
         Plotly.relayout(figurecontainer, {
-            "scene.yaxis.autorange": true
-        });
-        return;
-    };
-    [lim, _] = getRange(lim, range, cols[1]);
-    Plotly.relayout(figurecontainer, {
-        "scene.yaxis.range": lim
-    });
-};
+            [tmp] : lim
+        })
+    }
+}
 
 
-function setZRange(lim, range = false) {
+// function setXRange(lim) {
+//     if (lim == "") {
+//         Plotly.relayout(figurecontainer, {
+//             "scene.xaxis.autorange": true
+//         });
+//         return;
+//     };
+//     [lim, _] = getRange(lim, cols[0]);
+//     Plotly.relayout(figurecontainer, {
+//         "scene.xaxis.range": lim
+//     });
+// };
+
+
+// function setYRange(lim) {
+//     if (lim == "") {
+//         Plotly.relayout(figurecontainer, {
+//             "scene.yaxis.autorange": true
+//         });
+//         return;
+//     };
+//     [lim, _] = getRange(lim, cols[1]);
+//     Plotly.relayout(figurecontainer, {
+//         "scene.yaxis.range": lim
+//     });
+// };
+
+
+function setZRange(lim) {
     if (lim == "") {
         Plotly.relayout(figurecontainer, {
             "scene.zaxis.autorange": true
         });
         return;
     };
-    [lim, [cmin, cmax]] = getRange(lim, range, cols[2]);
+    [lim, [cmin, cmax]] = getRange(lim, cols[2]);
     // Plotly.update(figurecontainer, {
     //     "cmin": cmin,
     //     "cmax": cmax
