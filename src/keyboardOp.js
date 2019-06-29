@@ -241,6 +241,7 @@ function contextMenuFuncs(e) {
     ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;
     lll = e.clientX + cm.width() > window.innerWidth ? window.innerWidth - cm.width() : e.clientX;
     cm.css({top:ttt,left:lll})
+    $(".submenu").css({top:ttt+10, left:lll+200})
     cm.toggle();
   };
 

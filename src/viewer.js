@@ -37,8 +37,8 @@ function transpose(m) {
 
 function getRange(lim, coln) {
     var min, max;
-    lim = lim.split(",").map(x => parseFloat(x));
 
+    lim = lim.split(",").map(x => parseFloat(x));
 
     var flat_dat = data[coln].flat();
     max = Math.max(...flat_dat);
@@ -58,7 +58,7 @@ function getRange(lim, coln) {
 
 // assusme x=0, y=1
 function setXYRange(lim, axis){
-    if(swapped) axis=!axis
+    // if(swapped) axis=+!axis
     ax = axis ? "yaxis" : "xaxis"
     if (lim == "") {
         var tmp = `scene.${ax}.autorange`
