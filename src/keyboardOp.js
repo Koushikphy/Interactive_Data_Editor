@@ -234,34 +234,68 @@ function moveReflect(key, mod){
     updateOnServer();
 };
 
+
+var cm = $('.custom-cm');
+var sub = $(".submen")
+var subm = $(".submenu")
+
+
 function contextMenuFuncs(e) {
     if(!index.length) return
     e.preventDefault();
-    var cm = $('.custom-cm');
+    
     ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;
     lll = e.clientX + cm.width() > window.innerWidth ? window.innerWidth - cm.width() : e.clientX;
-    cm.css({top:ttt,left:lll})
-    $(".submenu").css({top:ttt+10, left:lll+200})
+    cm.css({ top: ttt, left: lll })
+
+    lll += 147
+    // ttt += 65
+    ttt = ttt+84+65 > window.innerHeight ? ttt : ttt+65 
+    lll = lll+175> window.innerWidth  ? lll-172-147 : lll;
+    $(".submenu").css({top:ttt, left:lll})
     cm.toggle();
-  };
+};
+$('#figurecontainer').contextmenu(contextMenuFuncs)
+
 
 function resetClicks(){
-    $('.custom-cm').hide();
+    cm.hide();
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
     index = [];
     del_dat = [];
 }
 
-function exectuteContext(x){
-
-    $('.custom-cm').hide();
+function exectuteContext(x) {
+    cm.hide();
     $('#setval').show();
+    // $('#setval').css({top:x.clientY,left:x.clientY})
 }
 
 $(window).keydown(hotKeys);
 $(window).keyup(hotDKeys);
-$('#figurecontainer').contextmenu(contextMenuFuncs)
+// $('#figurecontainer').contextmenu(contextMenuFuncs)
 $('#figurecontainer').click(resetClicks)
 
 
 
+sub.mouseover(function () {
+    subm.show()
+});
+
+
+subm.mouseover(function () {
+    subm.show()
+});
+
+
+sub.mouseleave(function () {
+    if (!$('.submen:hover').length & !$('.submenu:hover').length) {
+        subm.hide()
+    }
+});
+
+subm.mouseleave(function () {
+    if (!$('.submen:hover').length & !$('.submenu:hover').length) {
+        subm.hide()
+    }
+});

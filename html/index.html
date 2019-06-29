@@ -102,7 +102,9 @@
         <div id="figurecontainer"></div>
     </div>
     <div class="custom-cm">
-        <div class="custom-cm__item" onclick="exectuteContext()">Set Value</div>
+        <div class="custom-cm__item" onclick="exectuteContext(event)">Set Value</div>
+        <div class="custom-cm__item" onclick="cm.hide();changeSign();">Change Sign <span class="signsk">C</span> </div>
+        <div class="custom-cm__item  submen">Smooth Out <span class="signs">&#9658;</span></div>
         <!-- <div class="custom-cm__item">Copy Left</div>
         <div class="custom-cm__item">Copy Right</div>
         <div class="custom-cm__divider"></div>
@@ -110,9 +112,9 @@
         <div class="custom-cm__item">Mirror Right</div> -->
       </div>
     <div class="submenu">
-        <div class="custom-cm__item">fewifh3eo</div>
-        <div class="custom-cm__item">fewifh3eo</div>
-        <div class="custom-cm__item">fewifh3eo</div>
+        <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteInterpolate()">Cubic Spline <span class="signsk">D</span></div>
+        <div class="custom-cm__item" onclick="autoSmooth()">Mooving Average <span class="signsk">M</span></div>
+        <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteExtrapolate()" >Regression Fitting <span class="signsk">E</span></div>
     </div>
 
     <!-- hidden window for setting values -->

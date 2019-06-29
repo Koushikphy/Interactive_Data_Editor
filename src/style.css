@@ -286,24 +286,39 @@ ol{
     position: absolute;
     top: 0;
     left: 0;
-    width: 200px;
+    width: 150px;
   }
 
+  .submenu{
+      width: 175px
+  }
 
-  .custom-cm:hover .submenu{
+  /* .custom-cm:active~.submenu{
       display: block;
-  }
+  } */
 
   
   .custom-cm__item {
     cursor: pointer;
-    padding: 5px 10px;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+    padding-left: 10px;
   }
   
   .custom-cm__item:hover {
     background-color: #f8f8f8;
+    /* box-shadow: -10px 0px 20px 0 #ccc */
   }
   
+  .signs{
+      float: right;
+  }
+  .signsk{
+    float: right;
+    margin-right: 15px;
+}
+
   .custom-cm__divider {
     border-bottom: 1px solid #eeeeee;
   }
