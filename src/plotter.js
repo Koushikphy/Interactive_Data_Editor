@@ -22,7 +22,7 @@ var trace={
     hoverinfo: "x+y+z",
     colorscale: "Portland",
     opacity: 1,
-    name : 'surface',
+    name: 'surface',
     hoverlabel: {
         bgcolor: "#2ca02c"
     },
@@ -55,6 +55,7 @@ var trace={
     contours:{
         x:{
             show: false,
+            highlight:true,
             start: 0,
             end : 0,
             size: 1,
@@ -64,6 +65,7 @@ var trace={
         },
         y:{
             show: false,
+            highlight:true,
             start: 0,
             end : 0,
             size: 1,
@@ -73,14 +75,16 @@ var trace={
         },
         z:{
             show: false,
+            highlight:true,
             start: 0,
             end : 0,
-            size: 0,
+            size: 1,
             color: '#000',
             usecolormap: false,
             width : 1
         }
-    }
+    },
+    hidesurface:false,
 }
 
 var layout = {
@@ -404,7 +408,7 @@ function triggerDownload(){
 
 
 
-var minWidth = window.innerWidth / 3
+var minWidth = window.innerWidth / 2.5
 $('#split-bar').mousedown(function (e) {
     e.preventDefault();
     $(document).mousemove(function (e) {
@@ -626,7 +630,6 @@ function updateJSON() {
     var Surfaces = {
         hoverinfo: [],
         colorscale: [],
-        autocolorscale:[],
         opacity: [],
         name : [],
         hoverlabel:[],
@@ -636,6 +639,7 @@ function updateJSON() {
         cauto:[],
         colorbar:[],
         contours:[],
+        hidesurface:[],
 
     }
     for (let trace of figurecontainer.data) {
@@ -653,7 +657,6 @@ function updateJSON() {
 
 
 ipcRenderer.on("menuTrigger", function (e, d) {
-
     if(d=="topbar"){
         $(".floatdiv").toggle();
     }else if(d=="open"){
@@ -662,26 +665,32 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         loadConfig()
     }else if(d=="scon"){
         saveConfig()
-    }
-})
-
-
-
-function hotKeys(e) {
-    if (document.activeElement.type == "text") {
-        return;
-    };
-    if(e.key=="b" && e.ctrlKey){
+    } else if (d == "side") {
         if ($('#sidebar2').width()) {
             closeNav();
         } else {
             openNav();
         }
     }
-}
+})
 
 
-$(window).keydown(hotKeys);
+
+// function hotKeys(e) {
+//     if (document.activeElement.type == "text") {
+//         return;
+//     };
+//     if(e.key=="b" && e.ctrlKey){
+//         if ($('#sidebar2').width()) {
+//             closeNav();
+//         } else {
+//             openNav();
+//         }
+//     }
+// }
+
+
+// $(window).keydown(hotKeys);
 
 
 
@@ -728,7 +737,11 @@ function saveConfig(){
 
 function loadConfig(){
     const tfname = dialog.showOpenDialog({
-        properties: ['openFile']
+        properties: ['openFile'],
+        filters: [{
+            name: 'JSON',
+             extensions: ['json']
+        }]
     });
     if (tfname === undefined) return 
     var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))

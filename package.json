@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "particles.js": "^2.0.0",
-    "plotly.js-gl3d-dist": "^1.47.1",
+    "plotly.js-gl3d-dist": "^1.48.3",
     "request": "^2.88.0"
   }
 }

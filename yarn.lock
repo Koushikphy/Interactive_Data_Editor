@@ -2920,7 +2920,7 @@ plist@^3.0.1:
     xmlbuilder "^9.0.7"
     xmldom "0.1.x"
 
-plotly.js-gl3d-dist@^1.47.1:
+plotly.js-gl3d-dist@^1.48.3:
   version "1.48.3"
   resolved "https://registry.yarnpkg.com/plotly.js-gl3d-dist/-/plotly.js-gl3d-dist-1.48.3.tgz#42742b3753d6fd40b4a91e0cd6126ce8354717e3"
   integrity sha512-ofbPX7gMDwkZZGKRV0h7XoMGpNAPb8RJR+fJEqENPMGHU8PytUkCNxGUScKX1EfWf/+gFc2XdP0jDfUzT9YRTA==

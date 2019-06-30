@@ -366,26 +366,36 @@ const plotMenuTemplate = [{
             click() {
                 mainWindow.webContents.send("menuTrigger", "open");
             }
-        },{
+        },
+        {
             label: "Load Configuration",
             click() {
                 mainWindow.webContents.send("menuTrigger", "lcon");
             }
-        },{
+        },
+        {
             label: "Save Configuration",
             click() {
                 mainWindow.webContents.send("menuTrigger", "scon");
             }
-        },
-        {
+        },        {
             type: 'separator'
         },
         {
-            label: 'Reload',
-            accelerator: 'CmdOrCtrl+R',
-            click() {
-                mainWindow.reload();
+            label : "Toggle Plot Settings",
+            accelerator: 'CmdOrCtrl+K',
+            click(){
+                mainWindow.webContents.send("menuTrigger", 'side')
             }
+        },
+        {
+            label : "Toggle Top Bar",
+            click(){
+                mainWindow.webContents.send("menuTrigger", 'topbar')
+            }
+        },
+        {
+            type: 'separator'
         },
         {
             label: "Toggle Fullscreen",
@@ -399,10 +409,12 @@ const plotMenuTemplate = [{
                 mainWindow.webContents.send("menuTrigger", "fullscreen")
 
             }
-        },{
-            label : "Toggle Top Bar",
-            click(){
-                mainWindow.webContents.send("menuTrigger", 'topbar')
+        },
+        {
+            label: 'Reload',
+            accelerator: 'CmdOrCtrl+R',
+            click() {
+                mainWindow.reload();
             }
         },
         {

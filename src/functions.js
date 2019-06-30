@@ -20,7 +20,7 @@ function downloadImage(){
     var fileName = $('#dfileName').val()
     var type = $('#fileFormat').val().toLocaleLowerCase()
     var res = $('#imRes').val().split("x")
-    Plotly.downloadImage(figurecontainer, {filename: fileName, format: type, width: res[1], height: res[0]});
+    Plotly.downloadImage(figurecontainer, {filename: fileName, format: type, width: res[0], height: res[1]});
     $('#download').hide();
 }
 

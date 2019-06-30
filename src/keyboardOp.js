@@ -253,9 +253,9 @@ function contextMenuFuncs(e) {
     ttt = ttt+84+65 > window.innerHeight ? ttt : ttt+65 
     lll = lll+175> window.innerWidth  ? lll-172-147 : lll;
     $(".submenu").css({top:ttt, left:lll})
-    cm.toggle();
+    cm.show();
 };
-$('#figurecontainer').contextmenu(contextMenuFuncs)
+// $('#figurecontainer').contextmenu(contextMenuFuncs)
 
 
 function resetClicks(){
@@ -273,7 +273,7 @@ function exectuteContext(x) {
 
 $(window).keydown(hotKeys);
 $(window).keyup(hotDKeys);
-// $('#figurecontainer').contextmenu(contextMenuFuncs)
+$('#figurecontainer').contextmenu(contextMenuFuncs)
 $('#figurecontainer').click(resetClicks)
 
 
@@ -290,12 +290,12 @@ subm.mouseover(function () {
 
 sub.mouseleave(function () {
     if (!$('.submen:hover').length & !$('.submenu:hover').length) {
-        subm.hide()
+        setTimeout(function(){subm.hide()} , 200) 
     }
 });
 
 subm.mouseleave(function () {
     if (!$('.submen:hover').length & !$('.submenu:hover').length) {
-        subm.hide()
+        setTimeout(function(){subm.hide()} , 200) 
     }
 });
