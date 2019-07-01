@@ -232,8 +232,20 @@ function transpose(m) {
     return m[0].map((_, i) => m.map(x => x[i]));
 };
 
+function removeExtraTraces(){
+    var ex = figurecontainer.data.length -1;
+    if(ex){
+        var tmp = []
+        for(let i =1; i<=ex;i++){ //keep the first and delete every thing
+            tmp.push(i)
+        }
+        Plotly.deleteTraces(figurecontainer, tmp);
+    }
+}
+
 // loads file from the dialog box
 function fileReader(fname) {
+    removeExtraTraces()
     var strDps = fs.readFileSync(fname, "utf8");
     strDps = strDps.trim().split(/\t\t\t\t\t|\n\n/);
     col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
@@ -736,6 +748,7 @@ function saveConfig(){
 }
 
 function loadConfig(){
+    removeExtraTraces()
     const tfname = dialog.showOpenDialog({
         properties: ['openFile'],
         filters: [{
