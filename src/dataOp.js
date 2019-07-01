@@ -215,7 +215,7 @@ function dataFiller() {
                 )
             }
             if (dat[2][0]==168){
-                console.log(frontReg.val(0), backReg.val(0))
+                // console.log(frontReg.val(0), backReg.val(0))
             }
 
             for (let val of fullArr) {
@@ -324,7 +324,7 @@ function deleteExtrapolate(){
     exterp = new Regression(xs,ys)
     saveOldData();
     for (let ind of index) {
-        console.log(ind, data[th_in][col.y][ind])
+        // console.log(ind, data[th_in][col.y][ind])
         data[th_in][col.z][ind] = exterp.val(data[th_in][col.y][ind]);
     };
 
@@ -388,7 +388,6 @@ function autoSmooth() {
 
 
 function changeSign() {
-    console.log('fwehf', index)
     if (!index.length) return;
     saveOldData();
     for (let ind of index) {

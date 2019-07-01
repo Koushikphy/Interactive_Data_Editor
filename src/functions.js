@@ -743,6 +743,7 @@ function sSwapper() {
 
 
 function selectEvent(event) {
+    // console.log(event)
     // index = [];
     // del_dat = [];
     // $('.custom-cm').hide();
@@ -753,9 +754,9 @@ function selectEvent(event) {
         return;
     } else {
         for (let pt of event.points) {
-            ind = dpsx.findIndex(n => n == pt.x);
-            if (dpsy[ind] == pt.y) {
-                index.push(ind);
+            // ind = dpsx.findIndex(n => n == pt.x);
+            if (dpsy[pt.pointIndex] == pt.y) {
+                index.push(pt.pointIndex);
             };
         };
         index = [...new Set(index)];

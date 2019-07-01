@@ -43,7 +43,7 @@ var layout = {
     title: '',
     titlefont:{
         family:"Droid Sans",
-        size:10,
+        size:20,
         color:'#000000'
     },
     margin: {
@@ -63,7 +63,7 @@ var layout = {
         dtick:'',
         titlefont:{
             family:"Droid Sans",
-            size:10,
+            size:20,
             color:'#000000'
         }
         
@@ -80,7 +80,7 @@ var layout = {
         showgrid: true,
         titlefont:{
             family:"Droid Sans",
-            size:10,
+            size:20,
             color:'#000000'
         }
     },
