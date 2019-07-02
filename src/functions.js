@@ -397,6 +397,7 @@ function selectEditable(index) {
     makeEditable()
     undoStack = []
     redoStack = []
+    updateOnServer()
 }
 
 
