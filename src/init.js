@@ -28,7 +28,7 @@ function versionCheck() {
         function (_, _, body) {
             var new_ver = JSON.parse(body).name
             console.log(new_ver)
-            if (new_ver != "v2.5.0") {
+            if (new_ver != "v2.6.0") {
                 var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
                 var res = dialog.showMessageBox({
                     type: "question",

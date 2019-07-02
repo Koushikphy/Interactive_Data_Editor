@@ -409,6 +409,16 @@ const plotMenuTemplate = [{
                 mainWindow.webContents.send("menuTrigger", "fullscreen")
 
             }
+        },{
+            label: "Home",
+            click(){
+                mainWindow.loadURL(url.format({
+                    pathname: path.join(__dirname, 'html/index.html'),
+                    protocol: 'file:',
+                    slashes: true
+                }));
+                Menu.setApplicationMenu(homeMenu);
+            }
         },
         {
             label: 'Reload',
