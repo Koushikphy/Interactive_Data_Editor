@@ -24,7 +24,7 @@ function compressCombineJS() {
 }
 
 function compressJS() {
-    return src(['./src/init.js', './src/viewer.js','./src/plotter.js'])
+    return src(['./src/init.js', './src/plotter.js'])
         .pipe(uglify())
         .pipe(rename({
             suffix: '.min'

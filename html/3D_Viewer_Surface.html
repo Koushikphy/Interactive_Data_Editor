@@ -14,20 +14,32 @@
 <body>
     <div class="basediv" id="figurecontainer"></div>
     <div class="floatdiv">
-        <div id="status" style="font-size: 19px"><i><b>Waiting to get Update...</b><br />Any changes made in the
-                3D_Editor will be updated here on real time.</i></div>
-        <br />
-        <div class="borders">
-            Axes Ranges ⇒
-            X : <input onchange="setXRange(this.value,0)" type="text" id='xInp' />
-            Y : <input onchange="setYRange(this.value,1)" type="text" id='yInp' />
-            Z : <input onchange="setZRange(this.value)" type="text" id='zInp' />
-        </div>
+    <div id="status" style="font-size: 19px"><i><b>Waiting to get Update...</b><br />Any changes made in the 3D_Editor will be updated here on real time.</i></div>
+    <br />
+    <div class="borders">
+        Axes Ranges ⇒
+        X : <input onchange="setXRange(this.value)" type="text" id='xInp' />
+        Y : <input onchange="setYRange(this.value)" type="text" id='yInp' />
+        Z : <input onchange="setZRange(this.value)" type="text" id='zInp' />
     </div>
-    <script src="../lib/viewer.min.js"></script>
+    </div>
+    <!-- <script src="../lib/viewer.min.js"></script> -->
     <script>
-        Plotly.newPlot(figurecontainer, sIniData, layout, { displaylogo: false });
+        var figurecontainer = document.getElementById("figurecontainer"),
+            data = [],
+            newCol = [0, 0, 0],
+            curCol = false;
+            first = true
+        const {ipcRenderer} = require('electron');
+        const Plotly = require('plotly.js-gl3d-dist');
+
+
+        
         function updatePlot() {
+            if(first){
+                Plotly.newPlot(figurecontainer, sIniData, layout, { displaylogo: false });
+                first = false
+            }
             if (swapped) {
                 Plotly.restyle(figurecontainer, { 'y': [data[0]], 'x': [data[1]], 'z': [data[2]] });
             } else {
@@ -35,6 +47,129 @@
             }
             $("#status").html("<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>");
         };
+
+
+        ipcRenderer.on("sdata", function (e, d) {
+            [data, swapped, newCol] = d;
+            updatePlot();
+            if (!curCol) curCol = newCol;
+            if (newCol[0] !== curCol[0]) {
+                curCol[0] = newCol[0];
+                setXRange($("#xInp").val());
+            } else if (newCol[1] !== curCol[1]) {
+                curCol[1] = newCol[1];
+                setYRange($("#yInp").val());
+            } else if (newCol[2] !== curCol[2]) {
+                curCol[2] = newCol[2];
+                setZRange($("#zInp").val());
+            }
+        })
+
+
+
+
+
+        function getRange(lim, coln) {
+            var min, max;
+
+            lim = lim.split(",").map(x => parseFloat(x));
+
+            var flat_dat = data[coln].flat();
+            max = Math.max(...flat_dat);
+            min = Math.min(...flat_dat);
+
+            if (isNaN(lim[0])) {
+                lim[0] = min;
+            };
+            if (isNaN(lim[1])) {
+                lim[1] = max;
+            };
+            cmin = Math.max(lim[0], min);
+            cmax = Math.min(lim[1], max);
+            return [lim, [cmin, cmax]];
+        };
+
+
+        function setXRange(lim){
+            if (lim == "") {
+                Plotly.relayout(figurecontainer, { 'scene.xaxis.autorange' : true })
+            }else {
+                [lim, _] = getRange(lim, 0);
+                Plotly.relayout(figurecontainer, { 'scene.xaxis.range' : lim })
+            }
+        }
+
+        function setYRange(lim){
+            if (lim == "") {
+                Plotly.relayout(figurecontainer, {'scene.yaxis.autorange' : true })
+            }else {
+                [lim, _] = getRange(lim, 1);
+                Plotly.relayout(figurecontainer, {
+                    'scene.yaxis.range' : lim
+                })
+            }
+        }
+
+
+        function setZRange(lim) {
+            if (lim == "") {
+                Plotly.update(figurecontainer,{"cauto": true}, { "scene.zaxis.autorange": true });
+                return;
+            };
+            [lim, [cmin, cmax]] = getRange(lim,2);
+            // Plotly.relayout(figurecontainer, {'scene.zaxis.range': lim})
+            // Plotly.restyle(figurecontainer, {"cmin": cmin, "cmax": cmax })
+            Plotly.update(figurecontainer, {"cmin": cmin, "cmax": cmax},{'scene.zaxis.range': lim} )
+        };
+
+
+
+        var sIniData = [{
+            type: 'surface',
+            hoverinfo: "x+y+z",
+            colorscale: "Portland",
+            showscale: false,
+            hoverlabel: {
+                bgcolor: "#2ca02c"
+            },
+            z: [
+                [1]
+            ],
+            x: [
+                [1]
+            ],
+            y: [
+                [1]
+            ]
+        }];
+
+
+        var layout = {
+            height: window.innerHeight + 68,
+            width: window.innerWidth - 17,
+            margin: {
+                t: 0,
+                r: 50,
+                b: 0,
+                l: 25,
+                pad: 0
+            },
+            showlegend: false,
+            scene: {
+                aspectmode: "cube",
+                zaxis: {
+                    autorange: true,
+                    spikesides: false,
+                },
+                yaxis: {
+                    spikesides: false,
+                },
+                xaxis: {
+                    spikesides: false,
+                }
+            },
+        };
+
     </script>
 </body>
 

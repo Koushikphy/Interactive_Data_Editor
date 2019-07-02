@@ -688,24 +688,6 @@ ipcRenderer.on("menuTrigger", function (e, d) {
 
 
 
-// function hotKeys(e) {
-//     if (document.activeElement.type == "text") {
-//         return;
-//     };
-//     if(e.key=="b" && e.ctrlKey){
-//         if ($('#sidebar2').width()) {
-//             closeNav();
-//         } else {
-//             openNav();
-//         }
-//     }
-// }
-
-
-// $(window).keydown(hotKeys);
-
-
-
 function saveConfig(){
     var tmp_name = dialog.showSaveDialog({
         title: "Save Configuration",
