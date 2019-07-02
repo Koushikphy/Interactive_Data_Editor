@@ -39,6 +39,7 @@ function getRange(lim, coln) {
     var min, max;
 
     lim = lim.split(",").map(x => parseFloat(x));
+    if( !isNaN(lim[0]) & !isNaN(lim[1])) return lim
 
     var flat_dat = data[coln].flat();
     max = Math.max(...flat_dat);
@@ -75,34 +76,6 @@ function setXYRange(lim, axis){
 }
 
 
-// function setXRange(lim) {
-//     if (lim == "") {
-//         Plotly.relayout(figurecontainer, {
-//             "scene.xaxis.autorange": true
-//         });
-//         return;
-//     };
-//     [lim, _] = getRange(lim, cols[0]);
-//     Plotly.relayout(figurecontainer, {
-//         "scene.xaxis.range": lim
-//     });
-// };
-
-
-// function setYRange(lim) {
-//     if (lim == "") {
-//         Plotly.relayout(figurecontainer, {
-//             "scene.yaxis.autorange": true
-//         });
-//         return;
-//     };
-//     [lim, _] = getRange(lim, cols[1]);
-//     Plotly.relayout(figurecontainer, {
-//         "scene.yaxis.range": lim
-//     });
-// };
-
-
 function setZRange(lim) {
     if (lim == "") {
         Plotly.relayout(figurecontainer, {
@@ -111,12 +84,7 @@ function setZRange(lim) {
         return;
     };
     [lim, [cmin, cmax]] = getRange(lim, cols[2]);
-    // Plotly.update(figurecontainer, {
-    //     "cmin": cmin,
-    //     "cmax": cmax
-    // }, {
-    //     "scene.zaxis.range": lim
-    //     });
+
     Plotly.relayout(figurecontainer, {
         'scene.zaxis.range': lim,
     })
