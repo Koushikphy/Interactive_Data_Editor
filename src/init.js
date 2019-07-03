@@ -15,10 +15,10 @@ var recentLocation, recentFiles = [];
 
 
 function versionCheck() {
-    var today = new Date()
-    var today = today.getDate() + '' + today.getMonth()
-    if (today == JSON.parse(localStorage.getItem("today"))) return;
-    localStorage.setItem("today", JSON.stringify(today))
+    // var today = new Date()
+    // var today = today.getDate() + '' + today.getMonth()
+    // if (today == JSON.parse(localStorage.getItem("today"))) return;
+    // localStorage.setItem("today", JSON.stringify(today))
     req({
             'url': "https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/releases/latest",
             'headers': {
@@ -28,7 +28,7 @@ function versionCheck() {
         function (_, _, body) {
             var new_ver = JSON.parse(body).name
             console.log(new_ver)
-            if (new_ver != "v2.6.0") {
+            if (new_ver != "v2.5.0") {
                 var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to downlod it now?`
                 var res = dialog.showMessageBox({
                     type: "question",
