@@ -12,7 +12,7 @@ var undoStack = [],
     fullDataCols = [],
     fileNames = [],
     saveNames = [],
-    legendNames = [];
+    legendNames = [], rangedSelector=0;
 
 
     //downloads the image
@@ -159,7 +159,7 @@ function fileReader(fname) {
 
 
     //setup the column selector and menu.
-    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'pamh', 'swapen', "edat", "fill", "filter", 'af', 'arf']
+    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf']
     if (ddd) { //3
         $(".3D").show()
         var fl = JSON.parse(localStorage.getItem("cols3d"));
@@ -744,16 +744,10 @@ function sSwapper() {
 
 
 function selectEvent(event) {
-    // console.log(event)
-    // index = [];
-    // del_dat = [];
-    // $('.custom-cm').hide();
-    if (event == undefined) {
-        // Plotly.restyle(figurecontainer, {
-        //     selectedpoints: [null]
-        // });
-        return;
-    } else {
+    if (event != undefined) {
+        index = [];
+        del_dat = [];
+        $('.custom-cm').hide();
         for (let pt of event.points) {
             // ind = dpsx.findIndex(n => n == pt.x);
             if (dpsy[pt.pointIndex] == pt.y) {
@@ -761,8 +755,13 @@ function selectEvent(event) {
             };
         };
         index = [...new Set(index)];
+        if (rangedSelector) {
+            index = Plotly.d3.range(index[0], index[index.length - 1]+1)
+            Plotly.restyle(figurecontainer, {selectedpoints: [index]});
+        }
     };
 };
+
 
 
 

@@ -138,7 +138,7 @@ const homeMenuTemplate = [{
                 click() {
                     mainWindow.reload();
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfd', 'tfs', 'wire', 'surf', "spr", 'af', 'arf', 'pamh', 'pax', 'swapen', "edat", "fill", "filter"]) {
+                    for (let i of ['save', 'saveas', 'tfd', 'tfs', 'wire', 'surf', "spr", 'af', 'arf',  'pax', 'swapen', "edat", "fill", "filter"]) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     men.getMenuItemById("pax").visible = true;
@@ -244,15 +244,24 @@ const homeMenuTemplate = [{
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
         }, {
-            label: "Points not movable horaizontally",
-            enabled: false,
-            checked: true,
+            label: "Points movable horaizontally",
+            // enabled: false,
+            checked: false,
             type: "checkbox",
-            id: "pamh",
+            id :"pamh",
             click() {
                 mainWindow.webContents.send("menuTrigger", "pamh")
             }
-        }, ]
+        },{
+            label: "Ranged selector",
+            // enabled: false,
+            checked: false,
+            type: "checkbox",
+            id:"rsch",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "rsch")
+            }
+        },  ]
     },
     // {
     //     label: "Data",

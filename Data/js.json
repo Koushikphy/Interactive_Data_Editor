@@ -1,96 +1,44 @@
 {
-	"file": "C:\\Users\\KOUSHIK\\Desktop\\interactive-data-editor\\Data\\3D_1.dat",
-	"x": 2,
-	"y": 1,
+	"file": "C:\\Users\\Koushik Naskar\\Desktop\\interactive-data-editor\\Data\\3.0.dat",
+	"x": 1,
+	"y": 0,
 	"z": [
-		3,
-		4,
-		5
+		2
 	],
 	"surfaces": {
 		"hoverinfo": [
-			"x+y+z",
-			"x+y+z",
 			"x+y+z"
 		],
 		"colorscale": [
-			"Portland",
-			"Greens",
-			"Earth"
+			"Portland"
 		],
 		"autocolorscale": [
-			null,
-			null,
-			null
+			false
 		],
 		"opacity": [
-			1,
-			1,
 			1
 		],
 		"name": [
-			"surface",
-			"surface",
 			"surface"
 		],
 		"hoverlabel": [
 			{
 				"bgcolor": "#2ca02c"
-			},
-			{
-				"bgcolor": "#2ca02c"
-			},
-			{
-				"bgcolor": "#2ca02c"
 			}
 		],
 		"showscale": [
-			false,
-			false,
 			false
 		],
 		"cmin": [
-			-1.6544682,
-			-1.6544682,
-			-1.6544682
+			0
 		],
 		"cmax": [
-			-1,
-			-1,
-			-1
+			0
 		],
 		"cauto": [
-			false,
-			false,
-			false
+			true
 		],
 		"colorbar": [
-			{
-				"thickness": 30,
-				"dtick": 1,
-				"len": 1,
-				"x": 1.02,
-				"xpad": 10,
-				"y": 0.5,
-				"ypad": 10,
-				"tickfont": {
-					"family": "Times New Roman",
-					"size": 20
-				}
-			},
-			{
-				"thickness": 30,
-				"dtick": 1,
-				"len": 1,
-				"x": 1.02,
-				"xpad": 10,
-				"y": 0.5,
-				"ypad": 10,
-				"tickfont": {
-					"family": "Times New Roman",
-					"size": 20
-				}
-			},
 			{
 				"thickness": 30,
 				"dtick": 1,
@@ -109,6 +57,7 @@
 			{
 				"x": {
 					"show": false,
+					"highlight": true,
 					"start": 0,
 					"end": 0,
 					"size": 1,
@@ -118,6 +67,7 @@
 				},
 				"y": {
 					"show": false,
+					"highlight": true,
 					"start": 0,
 					"end": 0,
 					"size": 1,
@@ -127,67 +77,10 @@
 				},
 				"z": {
 					"show": false,
-					"start": 0,
-					"end": 0,
-					"size": 0,
-					"color": "#000",
-					"usecolormap": false,
-					"width": 1
-				}
-			},
-			{
-				"x": {
-					"show": false,
+					"highlight": true,
 					"start": 0,
 					"end": 0,
 					"size": 1,
-					"color": "#000",
-					"usecolormap": false,
-					"width": 1
-				},
-				"y": {
-					"show": false,
-					"start": 0,
-					"end": 0,
-					"size": 1,
-					"color": "#000",
-					"usecolormap": false,
-					"width": 1
-				},
-				"z": {
-					"show": false,
-					"start": 0,
-					"end": 0,
-					"size": 0,
-					"color": "#000",
-					"usecolormap": false,
-					"width": 1
-				}
-			},
-			{
-				"x": {
-					"show": false,
-					"start": 0,
-					"end": 0,
-					"size": 1,
-					"color": "#000",
-					"usecolormap": false,
-					"width": 1
-				},
-				"y": {
-					"show": false,
-					"start": 0,
-					"end": 0,
-					"size": 1,
-					"color": "#000",
-					"usecolormap": false,
-					"width": 1
-				},
-				"z": {
-					"show": false,
-					"start": 0,
-					"end": 0,
-					"size": 0,
 					"color": "#000",
 					"usecolormap": false,
 					"width": 1
@@ -195,135 +88,92 @@
 			}
 		]
 	},
-	"layout": {
-		"height": 695,
-		"width": 1015,
-		"margin": {
-			"t": 0,
-			"r": 0,
-			"b": 0,
-			"l": 0,
-			"pad": 0
+	"Layout": {
+		"aspectratio": {
+			"x": 1,
+			"y": 1,
+			"z": 1
 		},
-		"autorange": true,
-		"spikesides": false,
-		"showlegend": true,
-		"autosize": true,
-		"scene": {
-			"aspectmode": "manual",
-			"aspectratio": {
-				"x": 1,
-				"y": 1,
-				"z": 1
-			},
-			"zaxis": {
-				"range": [
-					-1.6544682,
-					-1
-				],
-				"autorange": false,
-				"spikesides": false,
-				"showgrid": true,
-				"zeroline": false,
-				"showline": true,
-				"title": {
-					"text": "",
-					"font": {
-						"family": "Times New Roman",
-						"size": 10
-					}
-				},
-				"showticklabels": true,
-				"dtick": 0,
-				"tickfont": {
+		"Xaxis": {
+			"title": {
+				"text": "",
+				"font": {
 					"family": "Times New Roman",
-					"size": 15
-				},
-				"ticklen": 2,
-				"tickwidth": 1,
-				"tickcolor": "#000",
-				"ticksuffix": "",
-				"tickprefix": "",
-				"tickformat": "",
-				"ticks": "outside"
-			},
-			"yaxis": {
-				"range": [],
-				"autorange": true,
-				"spikesides": false,
-				"showgrid": true,
-				"zeroline": false,
-				"showline": true,
-				"automargin": true,
-				"showticklabels": true,
-				"title": {
-					"text": "",
-					"font": {
-						"family": "Times New Roman",
-						"size": 10
-					}
-				},
-				"dtick": 0,
-				"tickfont": {
-					"family": "Times New Roman",
-					"size": 15
-				},
-				"ticklen": 2,
-				"tickwidth": 1,
-				"tickcolor": "#000",
-				"ticksuffix": "",
-				"tickprefix": "",
-				"tickformat": "",
-				"ticks": "outside"
-			},
-			"xaxis": {
-				"range": [],
-				"autorange": true,
-				"spikesides": false,
-				"showgrid": true,
-				"zeroline": false,
-				"showline": true,
-				"showticklabels": true,
-				"title": {
-					"text": "",
-					"font": {
-						"family": "Times New Roman",
-						"size": 10
-					}
-				},
-				"dtick": 0,
-				"tickfont": {
-					"family": "Times New Roman",
-					"size": 15
-				},
-				"ticklen": 2,
-				"tickwidth": 1,
-				"tickcolor": "#000",
-				"ticksuffix": "",
-				"tickprefix": "",
-				"tickformat": "",
-				"ticks": "outside"
-			},
-			"camera": {
-				"up": {
-					"x": 0,
-					"y": 0,
-					"z": 1
-				},
-				"center": {
-					"x": -0.01775854872164866,
-					"y": 0.06541678050512603,
-					"z": -0.019695356951202284
-				},
-				"eye": {
-					"x": -2.052069175200838,
-					"y": 0.7882990127505949,
-					"z": 0.1431590359820447
-				},
-				"projection": {
-					"type": "perspective"
+					"size": 10
 				}
-			}
+			},
+			"showticklabels": true,
+			"tickfont": {
+				"family": "Times New Roman",
+				"size": 15
+			},
+			"tickmode": "linear",
+			"dtick": 5,
+			"tickvals": "",
+			"ticktext": "",
+			"range": [
+				"",
+				""
+			],
+			"autorange": true,
+			"spikesides": false,
+			"showgrid": true,
+			"zeroline": false,
+			"showline": true
+		},
+		"Yaxis": {
+			"title": {
+				"text": "",
+				"font": {
+					"family": "Times New Roman",
+					"size": 10
+				}
+			},
+			"showticklabels": true,
+			"tickfont": {
+				"family": "Times New Roman",
+				"size": 15
+			},
+			"tickmode": "auto",
+			"dtick": 0,
+			"tickvals": "",
+			"ticktext": "",
+			"range": [
+				"",
+				""
+			],
+			"autorange": true,
+			"spikesides": false,
+			"showgrid": true,
+			"zeroline": false,
+			"showline": true
+		},
+		"Zaxis": {
+			"title": {
+				"text": "",
+				"font": {
+					"family": "Times New Roman",
+					"size": 10
+				}
+			},
+			"showticklabels": true,
+			"tickfont": {
+				"family": "Times New Roman",
+				"size": 15
+			},
+			"tickmode": "auto",
+			"dtick": 0,
+			"tickvals": "",
+			"ticktext": "",
+			"range": [
+				"",
+				""
+			],
+			"autorange": true,
+			"spikesides": false,
+			"showgrid": true,
+			"zeroline": false,
+			"showline": true
 		}
 	}
 }

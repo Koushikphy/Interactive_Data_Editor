@@ -396,9 +396,6 @@ function changeSign() {
     updatePlot();
     updateOnServer();
     index = [];
-    Plotly.restyle(figurecontainer, {
-        selectedpoints: [null]
-    });
     saved = false;
 };
 

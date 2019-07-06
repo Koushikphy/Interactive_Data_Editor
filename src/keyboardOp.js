@@ -60,7 +60,10 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             isswap();
             break;
         case "pamh":
-            lockXc = menu.getMenuItemById("pamh").checked ? 1 : 0;
+            lockXc = menu.getMenuItemById("pamh").checked ? 0 : 1;
+            break;
+        case "rsch":
+            rangedSelector = menu.getMenuItemById("rsch").checked ? 1 : 0;
             break;
         case "fullscreen":
             resizePlot();
@@ -75,7 +78,9 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             break;
         case "edat":
             $("#extend").slideDown();
-            $("#einp").val(data[th_in][col.y].slice(-1)[0])
+            if($("#einp").val()==""){
+                $("#einp").val(data[th_in][col.y].slice(-1)[0])
+            }
             resizePlot();
             break;
         case 'fill':
@@ -100,6 +105,7 @@ ipcRenderer.on("menuTrigger", function (e, d) {
                 openNav();
             }
             break;
+
     }
 });
 
@@ -245,7 +251,7 @@ function contextMenuFuncs(e) {
     e.preventDefault();
     
     ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;
-    lll = e.clientX + cm.width() > window.innerWidth ? window.innerWidth - cm.width() : e.clientX;
+    lll = e.clientX + cm.width() > window.innerWidth-5 ? window.innerWidth - cm.width()-5 : e.clientX;
     cm.css({ top: ttt, left: lll })
 
     lll += 147
@@ -258,11 +264,14 @@ function contextMenuFuncs(e) {
 // $('#figurecontainer').contextmenu(contextMenuFuncs)
 
 
-function resetClicks(){
+function resetClicks(e) {
     cm.hide();
-    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-    index = [];
-    del_dat = [];
+    if (e.target.tagName == "rect") {
+        Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+        index = [];
+        del_dat = [];
+    }
+
 }
 
 function exectuteContext(x) {
@@ -299,3 +308,4 @@ subm.mouseleave(function () {
         setTimeout(function(){subm.hide()} , 200) 
     }
 });
+

@@ -2,7 +2,7 @@ var figurecontainer = document.getElementById("figurecontainer"),
     data = [],
     ranges = [],
     zCols = [],
-    fname;
+    fname, recentLocation='';
 const Plotly = require('plotly.js-gl3d-dist');
 const fs = require("fs");
 const {ipcRenderer, remote,shell ,Menu} = require('electron');
@@ -22,7 +22,6 @@ var trace={
     hoverinfo: "x+y+z",
     colorscale: "Portland",
     opacity: 1,
-    name: 'surface',
     hoverlabel: {
         bgcolor: "#2ca02c"
     },
@@ -83,8 +82,7 @@ var trace={
             usecolormap: false,
             width : 1
         }
-    },
-    hidesurface:false,
+    }
 }
 
 var layout = {
@@ -109,90 +107,80 @@ var layout = {
             z: 1
         },
         zaxis: {
+            title: "",
+            titlefont:{
+                family:"Times New Roman",
+                size : 10
+            },
+            showticklabels:true,
+            tickfont:{
+                family:"Times New Roman",
+                size : 15
+            },
+            tickmode: "auto",
+            dtick:10,
+            tickvals: '',
+            ticktext:'',
+            ticks:"outside",
             range:['',''],
             autorange: true,
             spikesides: false,
             showgrid: true,
             zeroline: false,
             showline: true,
-            title: "",
-            showticklabels:true,
-            titlefont:{
-                family:"Times New Roman",
-                size : 10
-            },
-            dtick:0,
-            tickfont:{
-                family:"Times New Roman",
-                size : 15
-            },
-            ticklen: 2,
-            tickwidth: 1,
-            tickcolor: '#000',
-            ticksuffix:'',
-            tickprefix: '',
-            tickformat:'',
-            ticks: "outside"
         },
         yaxis: {
-            range:[],
-            autorange: true,
-            spikesides: false,
-            showgrid: true,
-            zeroline: false,
-            showline: true,
-            automargin:true,
-            showticklabels:true,
             title: "",
             titlefont:{
                 family:"Times New Roman",
                 size : 10
             },
-            dtick:0,
+            showticklabels:true,
             tickfont:{
                 family:"Times New Roman",
                 size : 15
             },
-            ticklen: 2,
-            tickwidth: 1,
-            tickcolor: '#000',
-            ticksuffix:'',
-            tickprefix: '',
-            tickformat:'',
-            ticks: "outside"
+            tickmode: "auto",
+            dtick:10,
+            tickvals: '',
+            ticktext:'',
+            ticks:"outside",
+            range:['',''],
+            autorange: true,
+            spikesides: false,
+            showgrid: true,
+            zeroline: false,
+            showline: true,
         },
         xaxis: {
-            range:[],
-            autorange: true,
-            spikesides: false,
-            showgrid: true,
-            zeroline: false,
-            showline: true,
-            showticklabels:true,
             title: "",
             titlefont:{
                 family:"Times New Roman",
                 size : 10
             },
-            dtick:0,
+            showticklabels:true,
             tickfont:{
                 family:"Times New Roman",
                 size : 15
             },
-            ticklen: 2,
-            tickwidth: 1,
-            tickcolor: '#000',
-            ticksuffix:'',
-            tickprefix: '',
-            tickformat:'',
-            ticks: "outside"
+            tickmode: "auto",
+            dtick:10,
+            tickvals: '',
+            ticktext:'',
+            ticks:"outside",
+            range:['',''],
+            autorange: true,
+            spikesides: false,
+            showgrid: true,
+            zeroline: false,
+            showline: true,
         }
     },
 }
 
 var mode={
     displaylogo:false,
-    modeBarButtonsToRemove : ["toImage","sendDataToCloud"],
+    modeBarButtonsToRemove : ["toImage"],
     modeBarButtonsToAdd    : [
         [
             {
@@ -216,7 +204,7 @@ figurecontainer.on("plotly_relayout", updateJSON);
 
 
 function fileLoader(){
-    fname = dialog.showOpenDialog({ properties: ['openFile'] });
+    fname = dialog.showOpenDialog({ properties: ['openFile'], defaultPath: recentLocation });
     if (fname === undefined) return
     fname = fname[0]
     fileReader(fname);
@@ -226,6 +214,7 @@ function fileLoader(){
     $("#trace")[0].selectedIndex = 0
     zCols.push(2);
     updateThisPlot();
+    updateJSON();
 }
 
 function transpose(m) {
@@ -525,25 +514,11 @@ var schema ={
         },
         "Layout":{
             "properties":{
-                "height":{
-                    "type":"number"
-                },
-                "scene":{
+                "Zaxis":{
                     "properties":{
-                        "zaxis":{
+                        "title":{
                             "properties":{
-                                "title":{
-                                    "properties":{
-                                        "font":{
-                                            "properties":{
-                                                "family":{
-                                                    "enum": typeList
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "tickfont":{
+                                "font":{
                                     "properties":{
                                         "family":{
                                             "enum": typeList
@@ -552,20 +527,27 @@ var schema ={
                                 }
                             }
                         },
-                        "yaxis":{
+                        "tickfont":{
                             "properties":{
-                                "title":{
-                                    "properties":{
-                                        "font":{
-                                            "properties":{
-                                                "family":{
-                                                    "enum": typeList
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "tickfont":{
+                                "family":{
+                                    "enum": typeList
+                                }
+                            }
+                        },
+                        "tickmode": {
+                                "enum":["auto","linear", "data"]
+
+                        },
+                        "ticks":{
+                            "enum":["outside","inside", ""]
+                        }
+                    }
+                },
+                "Yaxis":{
+                    "properties":{
+                        "title":{
+                            "properties":{
+                                "font":{
                                     "properties":{
                                         "family":{
                                             "enum": typeList
@@ -574,20 +556,27 @@ var schema ={
                                 }
                             }
                         },
-                        "xaxis":{
+                        "tickfont":{
                             "properties":{
-                                "title":{
-                                    "properties":{
-                                        "font":{
-                                            "properties":{
-                                                "family":{
-                                                    "enum": typeList
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "tickfont":{
+                                "family":{
+                                    "enum": typeList
+                                }
+                            }
+                        },
+                        "tickmode": {
+                                "enum":["auto","linear", "data"]
+
+                        },
+                        "ticks":{
+                            "enum":["outside","inside", ""]
+                        }
+                    }
+                },
+                "Xaxis":{
+                    "properties":{
+                        "title":{
+                            "properties":{
+                                "font":{
                                     "properties":{
                                         "family":{
                                             "enum": typeList
@@ -595,6 +584,20 @@ var schema ={
                                     }
                                 }
                             }
+                        },
+                        "tickfont":{
+                            "properties":{
+                                "family":{
+                                    "enum": typeList
+                                }
+                            }
+                        },
+                        "tickmode": {
+                                "enum":["auto","linear", "data"]
+
+                        },
+                        "ticks":{
+                            "enum":["outside","inside", ""]
                         }
                     }
                 }
@@ -606,7 +609,18 @@ var schema ={
 
 var options = {
     onChangeJSON: function (json) {
-        Plotly.update(figurecontainer, json.Surfaces, json.Layout)
+        var layout = figurecontainer.layout;
+        layout.aspectratio = json.aspectratio
+        layout.scene.xaxis = json.Layout.Xaxis
+        layout.scene.yaxis = json.Layout.Yaxis
+        layout.scene.zaxis = json.Layout.Zaxis
+        layout.scene.zaxis.tickvals = json.Layout.Zaxis.tickvals.split(",")
+        layout.scene.zaxis.ticktext = json.Layout.Zaxis.ticktext.split(",")
+        layout.scene.xaxis.tickvals = json.Layout.Xaxis.tickvals.split(",")
+        layout.scene.xaxis.ticktext = json.Layout.Xaxis.ticktext.split(",")
+        layout.scene.yaxis.tickvals = json.Layout.Yaxis.tickvals.split(",")
+        layout.scene.yaxis.ticktext = json.Layout.Yaxis.ticktext.split(",")
+        Plotly.update(figurecontainer, json.Surfaces, layout)
     },
     onColorPicker: function (parent, color, onChange) {
         new JSONEditor.VanillaPicker({
@@ -620,12 +634,6 @@ var options = {
                     color.hex
                 onChange(hex)
             },
-            //   onDone: function (color) {
-            //     console.log('onDone', color)
-            //   },
-            //   onClose: function (color) {
-            //     console.log('onClose', color)
-            //   }
         }).show();
     },
     mode: 'form',
@@ -660,7 +668,27 @@ function updateJSON() {
         }
     }
 
-    var Layout = figurecontainer.layout
+    var Layout = {
+        "aspectratio" :figurecontainer.layout.scene.aspectratio,
+        "Xaxis" :figurecontainer.layout.scene.xaxis,
+        "Yaxis" :figurecontainer.layout.scene.yaxis,
+        "Zaxis" :figurecontainer.layout.scene.zaxis,
+    }
+    try {
+        Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
+        Layout.Xaxis.tickvals = figurecontainer.layout.scene.xaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Yaxis.ticktext = figurecontainer.layout.scene.yaxis.ticktext.join(',')
+        Layout.Yaxis.tickvals = figurecontainer.layout.scene.yaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
+        Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
+    } catch (err) {}
+
+
+
     editor.update({
         Surfaces,
         Layout
@@ -693,13 +721,32 @@ function saveConfig(){
         title: "Save Configuration",
         filters: [{
             name: 'JSON',
-             extensions: ['json']
-        }]
+            extensions: ['json']
+        }],
+        defaultPath :recentLocation
     });
     if (tmp_name === undefined) return
 
 
-    var layout = figurecontainer.layout;
+    var Layout = {
+        "aspectratio" :figurecontainer.layout.scene.aspectratio,
+        "Xaxis" :figurecontainer.layout.scene.xaxis,
+        "Yaxis" :figurecontainer.layout.scene.yaxis,
+        "Zaxis" :figurecontainer.layout.scene.zaxis,
+    }
+    try {
+        Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
+        Layout.Xaxis.tickvals = figurecontainer.layout.scene.xaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Yaxis.ticktext = figurecontainer.layout.scene.yaxis.ticktext.join(',')
+        Layout.Yaxis.tickvals = figurecontainer.layout.scene.yaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
+        Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
+    } catch (err) { }
+    
 
     var surfaces = {
         hoverinfo: [],
@@ -726,7 +773,7 @@ function saveConfig(){
     var z = zCols;
     var file = fname
     
-    fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,layout}, null, '\t'), 'utf8');
+    fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,Layout}, null, '\t'), 'utf8');
 }
 
 function loadConfig(){
@@ -736,7 +783,8 @@ function loadConfig(){
         filters: [{
             name: 'JSON',
              extensions: ['json']
-        }]
+        }],
+        defaultPath : recentLocation
     });
     if (tfname === undefined) return 
     var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
@@ -770,5 +818,17 @@ function loadConfig(){
     for(let i of zCols){
         out.surfaces.z.push(data[i])
     }
-    Plotly.update(figurecontainer, out.surfaces, out.layout)
+    var layout = figurecontainer.layout;
+    layout.aspectratio = out.aspectratio
+    layout.scene.xaxis = out.Layout.Xaxis
+    layout.scene.yaxis = out.Layout.Yaxis
+    layout.scene.zaxis = out.Layout.Zaxis
+    layout.scene.zaxis.tickvals = out.Layout.Zaxis.tickvals.split(",")
+    layout.scene.zaxis.ticktext = out.Layout.Zaxis.ticktext.split(",")
+    layout.scene.xaxis.tickvals = out.Layout.Xaxis.tickvals.split(",")
+    layout.scene.xaxis.ticktext = out.Layout.Xaxis.ticktext.split(",")
+    layout.scene.yaxis.tickvals = out.Layout.Yaxis.tickvals.split(",")
+    layout.scene.yaxis.ticktext = out.Layout.Yaxis.ticktext.split(",")
+    Plotly.update(figurecontainer, out.surfaces, layout)
+    updateJSON();
 }
