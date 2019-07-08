@@ -207,6 +207,7 @@ function fileLoader(){
     fname = dialog.showOpenDialog({ properties: ['openFile'], defaultPath: recentLocation });
     if (fname === undefined) return
     fname = fname[0]
+    recentLocation = path.dirname(fname)
     fileReader(fname);
     
 
@@ -789,6 +790,7 @@ function loadConfig(){
     if (tfname === undefined) return 
     var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
     fname = out.file
+    recentLocation = path.dirname(fname)
     fileReader(out.file)    // data loaded
     zCols = out.z          
     //set up trace index selector
