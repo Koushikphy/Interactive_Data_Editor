@@ -611,7 +611,8 @@ var schema ={
 var options = {
     onChangeJSON: function (json) {
         var layout = figurecontainer.layout;
-        layout.aspectratio = json.aspectratio
+        layout.scene.aspectmode = "manual"
+        layout.scene.aspectratio = json.Layout.aspectratio
         layout.scene.xaxis = json.Layout.Xaxis
         layout.scene.yaxis = json.Layout.Yaxis
         layout.scene.zaxis = json.Layout.Zaxis
@@ -621,6 +622,7 @@ var options = {
         layout.scene.xaxis.ticktext = json.Layout.Xaxis.ticktext.split(",")
         layout.scene.yaxis.tickvals = json.Layout.Yaxis.tickvals.split(",")
         layout.scene.yaxis.ticktext = json.Layout.Yaxis.ticktext.split(",")
+        console.log(layout)
         Plotly.update(figurecontainer, json.Surfaces, layout)
     },
     onColorPicker: function (parent, color, onChange) {
@@ -727,6 +729,7 @@ function saveConfig(){
         defaultPath :recentLocation
     });
     if (tmp_name === undefined) return
+    recentLocation = path.dirname(tmp_name)
 
 
     var Layout = {
@@ -790,7 +793,7 @@ function loadConfig(){
     if (tfname === undefined) return 
     var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
     fname = out.file
-    recentLocation = path.dirname(fname)
+    recentLocation = path.dirname(tfname[0])
     fileReader(out.file)    // data loaded
     zCols = out.z          
     //set up trace index selector
@@ -821,7 +824,8 @@ function loadConfig(){
         out.surfaces.z.push(data[i])
     }
     var layout = figurecontainer.layout;
-    layout.aspectratio = out.aspectratio
+    layout.scene.aspectmode = "manual"
+    layout.scene.aspectratio = out.Layout.aspectratio
     layout.scene.xaxis = out.Layout.Xaxis
     layout.scene.yaxis = out.Layout.Yaxis
     layout.scene.zaxis = out.Layout.Zaxis

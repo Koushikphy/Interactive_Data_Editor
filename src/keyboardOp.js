@@ -211,6 +211,9 @@ function hotKeys(e) {
         case 'O':
             if (!app.isPackaged) sSwapper();
             break
+        case 'x':
+        case 'X':
+            removeBadData()
         case 'Tab':
             if (e.ctrlKey) {
                 keepTrackIndex += 1
