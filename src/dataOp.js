@@ -429,7 +429,6 @@ function removeBadData(){
     for (let i = index.length - 1; i >= 0; i--) {
         for(let j=0; j<data[0].length; j++){
             data[th_in][j].splice(index[i], 1);
-            data[th_in][j].splice(index[i], 1);
         }
     }
     updatePlot();
