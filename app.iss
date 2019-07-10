@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Interactive Data Editor"
-#define MyAppVersion "2.5.0"
+#define MyAppVersion "2.6.0"
 #define MyAppPublisher "Koushik Naskar"   
 #define MyAppURL "https://github.com/Koushikphy/Interactive-Data-Editor"
 #define MyAppExeName "Interactive Data Editor.exe"
@@ -31,7 +31,7 @@ LZMADictionarySize=1048576
 LZMANumFastBytes=273
 VersionInfoDescription={#MyAppName}
 VersionInfoCopyright=Copyright © Koushik Naskar, April,2019.
-VersionInfoVersion=2.5.0.0
+VersionInfoVersion=2.6.0.0
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
