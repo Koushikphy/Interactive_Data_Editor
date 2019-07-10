@@ -225,6 +225,12 @@ var schema = {
 }
 
 
+
+// var 
+
+
+
+
 var options = {
     onChangeJSON: function (json) {
         legendNames = json.lines.Title //.map(x => x.replace(/([ :0-9])$/g, ''))
