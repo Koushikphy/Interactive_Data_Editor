@@ -365,3 +365,5 @@ function makeRows() {
     });
     updateJSON()
 }
+
+// $("select*[id^=Style]")

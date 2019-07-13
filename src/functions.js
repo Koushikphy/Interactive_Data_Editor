@@ -526,7 +526,7 @@ function transpose(m) {
 function parseData(strDps) {
     var newdat = [],
         blocks = [];
-    strDps = strDps.trim().split(/\t\t\t|\r?\n\r?\n/);
+    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
     try{
         for (let i of strDps) {
             blocks = i.trim().split("\n");
