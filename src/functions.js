@@ -224,6 +224,15 @@ function fileReader(fname) {
 }
 
 
+
+function selUpdate() {
+    var op = "";
+    for (var i = 1; i <= data[0].length; i++) {
+        op += '<option>' + i + '</option>';
+    };
+    for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
+}
+
 function addNewFileDialog() {
     if (swapperIsOn) {
         dialog.showMessageBox({
@@ -256,11 +265,15 @@ function addNewFile(fname) {
         });
         return
     }
+    if (fullData[0][0].length != data[0].length) {
+        selUpdate();
+    }
 
     var dirname = path.dirname(fname);
     var filename = path.basename(fname, path.extname(fname));
     var extn = path.extname(fname);
     var save_name = path.join(dirname, filename + "_new" + extn);
+    var oldLength = data[0].length;
     fullData.unshift(data); //add at the beggining i.e instantly editable
     fullDataCols.unshift(JSON.parse(JSON.stringify(col)));
     fileNames.unshift(fname);
@@ -392,6 +405,9 @@ function selectEditable(index) {
 
         updatePlot()
         makeRows()
+        if (fullData[0][0].length != fullData[index].length) {
+            selUpdate();
+        }
     }
     firstSave = true
     makeEditable()
