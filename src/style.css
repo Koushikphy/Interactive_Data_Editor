@@ -45,6 +45,11 @@ select {
     cursor: pointer; 
 }
 
+
+.jsoneditor-tree select{
+    width:auto
+}
+
 input[type=text] {
     margin-right: 10px;
     width: 7pc;
