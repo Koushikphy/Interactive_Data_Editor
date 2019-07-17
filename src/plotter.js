@@ -536,7 +536,7 @@ var schema ={
                             }
                         },
                         "tickmode": {
-                                "enum":["auto","linear", "data"]
+                                "enum":["auto","linear", "array"]
 
                         },
                         "ticks":{
@@ -565,7 +565,7 @@ var schema ={
                             }
                         },
                         "tickmode": {
-                                "enum":["auto","linear", "data"]
+                                "enum":["auto","linear", "array"]
 
                         },
                         "ticks":{
@@ -594,7 +594,7 @@ var schema ={
                             }
                         },
                         "tickmode": {
-                                "enum":["auto","linear", "data"]
+                                "enum":["auto","linear", "array"]
 
                         },
                         "ticks":{
@@ -737,6 +737,7 @@ function saveConfig(){
         "Xaxis" :figurecontainer.layout.scene.xaxis,
         "Yaxis" :figurecontainer.layout.scene.yaxis,
         "Zaxis" :figurecontainer.layout.scene.zaxis,
+        "View" : figurecontainer.layout.scene.camera
     }
     try {
         Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
@@ -772,11 +773,11 @@ function saveConfig(){
                 surfaces[key].push(trace[key])
         }
     }
-    var x = $("#ycol")[0].selectedIndex;
-    var y = $("#xcol")[0].selectedIndex;
+    var x = $("#xcol")[0].selectedIndex;
+    var y = $("#ycol")[0].selectedIndex;
     var z = zCols;
     var file = fname
-    
+
     fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,Layout}, null, '\t'), 'utf8');
 }
 
@@ -829,6 +830,7 @@ function loadConfig(){
     layout.scene.xaxis = out.Layout.Xaxis
     layout.scene.yaxis = out.Layout.Yaxis
     layout.scene.zaxis = out.Layout.Zaxis
+    layout.scene.camera = out.Layout.View
     layout.scene.zaxis.tickvals = out.Layout.Zaxis.tickvals.split(",")
     layout.scene.zaxis.ticktext = out.Layout.Zaxis.ticktext.split(",")
     layout.scene.xaxis.tickvals = out.Layout.Xaxis.tickvals.split(",")
