@@ -197,7 +197,7 @@ var mode={
 
 //plotting a dummy surface plot and adding the updateJSON funtion to it
 Plotly.newPlot(figurecontainer, [trace], layout, mode);
-figurecontainer.on("plotly_relayout", updateJSON);
+// figurecontainer.on("plotly_relayout", updateJSON);
 
 
 
@@ -336,12 +336,6 @@ function getRange(lim, range) {
 
 //assuming x and y column of all the traces will be the same
 function setXRange(lim) {
-    if (lim == "") {
-        Plotly.relayout(figurecontainer, {
-            "scene.xaxis.autorange": true
-        });
-        return;
-    };
     var xInd = $('#xcol')[0].selectedIndex+1
     var range = ranges[xInd]
     var [lim, [t1,t2]] = getRange(lim, range);
@@ -349,47 +343,44 @@ function setXRange(lim) {
     Plotly.relayout(figurecontainer, {
         "scene.xaxis.range": lim
     });
+    updateJSON()
 };
 
 
 function setYRange(lim) {
-    if (lim == "") {
-        Plotly.relayout(figurecontainer, {
-            "scene.yaxis.autorange": true
-        });
-        return;
-    };
+
     var yInd = $('#xcol')[0].selectedIndex+1
     var range = ranges[yInd]
     var [lim, [t1,t2]] = getRange(lim, range);
     Plotly.relayout(figurecontainer, {
         "scene.yaxis.range": lim
     });
+    updateJSON()
 };
 
 // assuming zCols has  the list of all the current z axis cols
 function setZRange(lim) {
-    if (lim == "") {
-        Plotly.relayout(figurecontainer, {
-            "scene.zaxis.autorange": true
-        });
-        return;
-    };
+
     var tmpMin=[], tmpMax=[]
     for(let cc of zCols){
         tmpMin.push(ranges[cc][0])
         tmpMax.push(ranges[cc][1])
     }
     var range = [ Math.min(...tmpMin), Math.max(...tmpMax) ]
-    console.log(range)
     var [lim, [cmin, cmax]] = getRange(lim,range)
-    Plotly.relayout(figurecontainer, {
-        'scene.zaxis.range': lim,
+    // Plotly.relayout(figurecontainer, {
+    //     'scene.zaxis.range': lim,
+    // })
+    // Plotly.restyle(figurecontainer, {
+    //     "cmin": cmin,
+    //     "cmax": cmax
+    // })
+    Plotly.update(figurecontainer, {
+        "cmin": cmin,"cmax": cmax
+    },{
+        'scene.zaxis.range': lim
     })
-    Plotly.restyle(figurecontainer, {
-        "cmin": cmin,
-        "cmax": cmax
-    })
+    updateJSON()
 };
 
 
@@ -622,8 +613,8 @@ var options = {
         layout.scene.xaxis.ticktext = json.Layout.Xaxis.ticktext.split(",")
         layout.scene.yaxis.tickvals = json.Layout.Yaxis.tickvals.split(",")
         layout.scene.yaxis.ticktext = json.Layout.Yaxis.ticktext.split(",")
-        console.log(layout)
-        Plotly.update(figurecontainer, json.Surfaces, layout)
+
+        Plotly.update(figurecontainer, json.Surfaces, layout);
     },
     onColorPicker: function (parent, color, onChange) {
         new JSONEditor.VanillaPicker({
@@ -670,28 +661,25 @@ function updateJSON() {
                 Surfaces[key].push(trace[key])
         }
     }
-
+    let lay = JSON.parse(JSON.stringify(figurecontainer.layout.scene))
     var Layout = {
-        "aspectratio" :figurecontainer.layout.scene.aspectratio,
-        "Xaxis" :figurecontainer.layout.scene.xaxis,
-        "Yaxis" :figurecontainer.layout.scene.yaxis,
-        "Zaxis" :figurecontainer.layout.scene.zaxis,
+        "aspectratio" :lay.aspectratio,
+        "Xaxis" :lay.xaxis,
+        "Yaxis" :lay.yaxis,
+        "Zaxis" :lay.zaxis,
     }
     try {
-        Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
-        Layout.Xaxis.tickvals = figurecontainer.layout.scene.xaxis.tickvals.join(',')
+        Layout.Xaxis.ticktext = lay.xaxis.ticktext.join(',')
+        Layout.Xaxis.tickvals = lay.xaxis.tickvals.join(',')
     } catch (err) {};
     try {
-        Layout.Yaxis.ticktext = figurecontainer.layout.scene.yaxis.ticktext.join(',')
-        Layout.Yaxis.tickvals = figurecontainer.layout.scene.yaxis.tickvals.join(',')
+        Layout.Yaxis.ticktext = lay.yaxis.ticktext.join(',')
+        Layout.Yaxis.tickvals = lay.yaxis.tickvals.join(',')
     } catch (err) {};
     try {
-        Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
-        Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
+        Layout.Zaxis.ticktext = lay.zaxis.ticktext.join(',')
+        Layout.Zaxis.tickvals = lay.zaxis.tickvals.join(',')
     } catch (err) {}
-
-
-
     editor.update({
         Surfaces,
         Layout
@@ -751,7 +739,7 @@ function saveConfig(){
         Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
         Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
     } catch (err) { }
-    
+
 
     var surfaces = {
         hoverinfo: [],
