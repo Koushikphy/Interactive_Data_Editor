@@ -5,15 +5,17 @@
     <title>Interactive Data Editor</title>
     <link href="../lib/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../lib/jquery-ui.min.css">
+    <link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
     <script>
-    if (typeof module === 'object') { window.module = module; module = undefined; }
+        if (typeof module === 'object') { window.module = module; module = undefined; }
     </script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
+    <!-- <script src="../handsontable/dist/handsontable.full.min.js"></script> -->
+
+    <script src="../handsontable/for/numeric.js"></script>
     <script src="../handsontable/for/handsontable.full.js"></script>
     <script src="../handsontable/for/handsontable.formula.js"></script>
-    <link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
-    <script src="../handsontable/for/numeric.js"></script>
     <script src="../handsontable/for/parser.js"></script>
     <script src="../handsontable/for/ruleJS.js"></script>
     <script src="../handsontable/for/underscore.string.js"></script>
@@ -84,7 +86,10 @@
                 manualColumnResize: true,
                 manualRowResize: true,
                 formulas:true,
-                afterChange: function change(e, d) { if (d != "loadData") btn.style.visibility = "visible" }
+                afterChange: function change(e, d) {
+                     if (d != "loadData") btn.style.visibility = "visible" ;
+                     
+                    }
             });
 
         })
