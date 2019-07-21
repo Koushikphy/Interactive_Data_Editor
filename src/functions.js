@@ -231,6 +231,17 @@ function selUpdate() {
         op += '<option>' + i + '</option>';
     };
     for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
+    if(ddd){
+        xCol.selectedIndex = col.x;
+        yCol.selectedIndex = col.y;
+        zCol.selectedIndex = col.z;
+        sCol.selectedIndex = col.s;
+    }else{
+        xCol.selectedIndex = col.y;
+        yCol.selectedIndex = col.z;
+        sCol.selectedIndex = col.s;
+    }
+
 }
 
 function addNewFileDialog() {

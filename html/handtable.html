@@ -5,7 +5,9 @@
     <title>Interactive Data Editor</title>
     <link href="../lib/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../lib/jquery-ui.min.css">
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script>
+    if (typeof module === 'object') { window.module = module; module = undefined; }
+    </script>
     <script src="../lib/jquery.min.js"></script>
     <script src="../lib/jquery-ui.min.js"></script>
     <script src="../handsontable/for/handsontable.full.js"></script>
@@ -59,8 +61,6 @@
                     });
                 });
 
-
-
             } else {
                 full.style.display = "none";
             }
@@ -69,9 +69,9 @@
                 document.getElementById("table").offsetTop;
 
 
-            for (var i = data[0][0].length; i > 0; i--) {
-                columns.push({ type: "numeric" })
-            };
+            // for (var i = data[0][0].length; i > 0; i--) {
+            //     columns.push({ type: "numeric" })
+            // };
             $ch.text(xName + '=' + data[0][0][xcol]);
             hot = new Handsontable(document.getElementById("table"), {
                 data: data[0],
@@ -99,9 +99,64 @@
             return m[0].map((_, i) => m.map(x => x[i]));
         };
 
+
+
+
+        var allAlpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        function parseValue(str, block){
+            let old = str
+            var loc = str.match(/[A-Z]+[0-9]+/g)   // got all the location reference
+            for(let item of loc){
+
+                let row = parseInt(item.match(/[0-9]+/g)[0]-1)
+                let col = allAlpha.search( item.match(/[A-Z]+/g)[0])
+                str = str.replace( item , block[row][col]  )
+            }
+            return str
+        }
+        const rule = new ruleJS()
+        rule.init()
+
+
+
         function updateData() {
             btn.style.visibility = "hidden";
-            ipcRenderer.send("back", data);
+
+            let tmpDat = data.map(function(block){  // clean data
+            let tmpBlock=[]
+            for(let row of block){
+                row = row.filter(el=>el!=null)
+                tmpBlock.push(row)
+            }
+            return tmpBlock.filter(el=>el.length)
+            })
+
+            tmpDat = tmpDat.map(function(block){
+                var nRows = block.length;
+                var nCols = block[0].length
+                for(let i=0;i<nRows;i++){
+                    for(let j=0;j<nCols;j++){
+                    value = block[i][j]
+                    val = parseFloat(value);
+                    if (!isNaN(val)) {
+                        block[i][j]= val
+                        continue
+                    }
+                    //formula found
+                    formula = parseValue(value.substr(1), block) //remove '=' sign
+                    block[i][j] = rule.parse(
+                        formula,{
+                        row: i,
+                        col: j,
+                        id: 'A1'
+                        }
+                    ).result
+                    }
+                }
+                return block
+                })
+                    // console.log(tmpDat)
+            ipcRenderer.send("back", tmpDat);
         }
 
 

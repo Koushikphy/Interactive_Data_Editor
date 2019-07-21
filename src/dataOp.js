@@ -92,6 +92,7 @@ function pasteThis() {
 
 function swapData() {
     if (!index.length) return;
+    if(!swapperIsOn)  return;
     saveOldData();
     for (let ind of index) {
         [data[th_in][col.z][ind], data[th_in][col.s][ind]] = [data[th_in][col.s][ind], data[th_in][col.z][ind]]

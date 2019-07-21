@@ -350,7 +350,8 @@ const homeMenuTemplate = [{
                         icon: path.join(__dirname, 'figs/charts.png'),
                         webPreferences: {
                             nodeIntegration: true
-                        }
+                        },
+                        height:650
                     });
                     childWindow.loadURL(url.format({
                         pathname: path.join(__dirname, 'html/about.html'),

@@ -9,6 +9,7 @@ ipcRenderer.on("adrf", function (e, d) {
 ipcRenderer.on("back", function (e, d) {
     data = d.map(x => transpose(x))
     updatePlot(1);
+    selUpdate()
     startDragBehavior();
     updateOnServer();
 })
