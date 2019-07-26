@@ -228,6 +228,13 @@ function hotKeys(e) {
             if (e.ctrlKey | e.shiftKey){
                 moveReflect(e.keyCode-37, e.shiftKey)
             };
+        case 'k':
+        case 'K':
+            dataSupStart()
+            break;
+        case 'l':
+        case 'L':
+            dataSupEnd();
     
     };
 };
