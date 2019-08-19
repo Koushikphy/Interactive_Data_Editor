@@ -79,6 +79,7 @@ function closeNav2() {
 
 function updateJSON() {
     var Plots = [];
+    var tmpLeg = []
     for (let trace of figurecontainer.data) {
         Plots.push({
             Title : trace.name,
@@ -86,7 +87,9 @@ function updateJSON() {
             Marker : trace.marker,
             Line : trace.line,
         })
+        tmpLeg.push(trace.name)
     }
+    legendNames = tmpLeg;
     Layout = figurecontainer.layout
     editor.update({
         Plots,
@@ -233,6 +236,7 @@ var options = {
             line.push(trace.Line)
             marker.push(trace.Marker)
         }
+        legendNames = name;
         Plotly.update(figurecontainer, { name, mode, line, marker}, json.Layout)
         makeRows();
     },
