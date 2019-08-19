@@ -77,6 +77,7 @@ function closeNav2() {
 
 
 
+
 function updateJSON() {
     var Plots = [];
     var tmpLeg = []

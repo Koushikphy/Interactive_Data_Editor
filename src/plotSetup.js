@@ -167,7 +167,14 @@ points = pointscontainer.getElementsByTagName("path");
 figurecontainer.on("plotly_selected", selectEvent);
 figurecontainer.on("plotly_relayout", updateJSON);
 resizePlot();
-
+figurecontainer.on("plotly_legendclick", function(){
+    var tmpLeg=[]
+    for (let trace of figurecontainer.data) {
+        tmpLeg.push(trace.name)
+    }
+    legendNames = tmpLeg;
+    updateJSON()
+});
 
 
 $(function () {
