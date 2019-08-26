@@ -15,7 +15,7 @@ var undoStack = [],
     legendNames = [], rangedSelector=0;
 
 
-    //downloads the image
+//downloads the image
 function downloadImage(){
     var fileName = $('#dfileName').val()
     var type = $('#fileFormat').val().toLocaleLowerCase()
