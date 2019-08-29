@@ -134,7 +134,13 @@ function fileReader(fname) {
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $("#full").show();
     $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
-    if (figurecontainer.data.length == 2) Plotly.deleteTraces(figurecontainer, 1);
+    if (figurecontainer.data.length > 2){
+        let tt = [];
+        for(let i=1;i<figurecontainer.data.length;i++){
+            tt.push(i)
+        }
+        Plotly.deleteTraces(figurecontainer, tt);
+    }
     if (figurecontainer.layout.selectdirection != 'any') {
         Plotly.relayout(figurecontainer, {
             selectdirection: 'any'
