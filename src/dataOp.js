@@ -339,13 +339,13 @@ function deleteExtrapolate(){
 function dataSupEnd(){
     if (!index.length) return 
     first = index[0]
+    if(first==0) return
     let xs= dpsx.slice(Math.max(first-3,0),first)
     let ys= dpsy.slice(Math.max(first-3,0),first)
     exterp = new Regression(xs,ys)
     saveOldData();
     let tmpVal = exterp.val(data[th_in][col.y][first]) - data[th_in][col.z][first]
     for (let ind of index) {
-        // console.log(ind, data[th_in][col.y][ind])
         data[th_in][col.z][ind] +=tmpVal
     };
     updatePlot();
@@ -358,13 +358,13 @@ function dataSupEnd(){
 function dataSupStart(){
     if (!index.length) return 
     last = index[index.length - 1]
+    if(last==dpsx.length-1) return
     let xs= dpsx.slice(last+1,last+4)
     let ys= dpsy.slice(last+1,last+4)
     exterp = new Regression(xs,ys)
     saveOldData();
     let tmpVal = exterp.val(data[th_in][col.y][last]) - data[th_in][col.z][last]
     for (let ind of index) {
-        // console.log(ind, data[th_in][col.y][ind])
         data[th_in][col.z][ind] +=tmpVal
     };
     updatePlot();
