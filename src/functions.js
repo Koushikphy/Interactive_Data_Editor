@@ -13,7 +13,7 @@ var undoStack = [],
     fileNames = [],
     saveNames = [],
     legendNames = [], rangedSelector=0;
-
+                
 
 //downloads the image
 function downloadImage(){
@@ -47,6 +47,7 @@ function updateData() {
         col.z = col.y;
         col.y = col.x;
         col.x = 0
+        col2dChanged()
     };
     fullDataCols[0] = JSON.parse(JSON.stringify(col));
     updatePlot(1);
@@ -739,7 +740,14 @@ function colsChanged(value) {
     if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
 };
 
-
+function col2dChanged(){
+    $("select").blur();
+    legendNames[0] = path.basename(fileNames[0]) + ` ${col.y + 1}:${col.z + 1}`
+    updatePlot(all = false);
+    updateOnServer();
+    startDragBehavior();
+    makeRows()
+}
 
 function colChanged(value) {
     $("select").blur();
