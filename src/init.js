@@ -83,6 +83,21 @@ function recentMenu() {
     localStorage.setItem("files", JSON.stringify(recentFiles));
 };
 
+var menu = Menu.getApplicationMenu();
+
+var fl = JSON.parse(localStorage.getItem("files"));
+if (fl !== null) {
+    recentFiles = fl;
+    recentMenu();
+}
+
+var fl = JSON.parse(localStorage.getItem("recent"));
+if (fl !== null) {
+    recentLocation = fl;
+}
+
+
+
 //in dev mode don't load animation directly go to plot
 // const particlesJS = require('particles.js');
 // window.particlesJS.load('particle', '../lib/particles.json');
@@ -108,23 +123,6 @@ if (app.isPackaged) {
 }
 
 
-var menu = Menu.getApplicationMenu();
 
-var fl = JSON.parse(localStorage.getItem("files"));
-if (fl !== null) {
-    recentFiles = fl;
-    recentMenu();
-}
-
-var fl = JSON.parse(localStorage.getItem("recent"));
-if (fl !== null) {
-    recentLocation = fl;
-}
-
-
-function closeThis(m){
-    $(m).parent().slideUp();
-    resizePlot();
-}
 
 

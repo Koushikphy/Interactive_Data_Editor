@@ -14,7 +14,7 @@ const cleanCSS = require('gulp-clean-css');
 
 
 function compressCombineJS() {
-    return src(['./src/functions.js', './src/dataOp.js', './src/keyboardOp.js', './src/nav.js', './src/extwindow.js', './src/plotSetup.js', ])
+    return src(['./src/functions.js','./src/download.js', './src/dataOp.js', './src/keyboardOp.js', './src/nav.js','./src/plotSetup.js','./src/numeric.js' , './src/notify.js'])
         .pipe(concat('funcs.js'))
         .pipe(uglify())
         .pipe(rename({
@@ -22,6 +22,17 @@ function compressCombineJS() {
         }))
         .pipe(dest('./lib'))
 }
+
+function compressCombineJSp() {
+    return src(['./src/download.js','./src/plotter.js'])
+        .pipe(concat('plotter.js'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(dest('./lib'))
+}
+
 
 function compressJS() {
     return src(['./src/init.js', './src/plotter.js'])
@@ -46,7 +57,7 @@ function compressCSS() {
 
 
 
-exports.default = parallel(compressJS, compressCSS, compressCombineJS);
+exports.default = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
 
 exports.watch = function () {
     watch('./src/*.*', parallel('default'));

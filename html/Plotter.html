@@ -37,13 +37,6 @@
         </div><br />
     </div>
 
-    <div id="sidebar">
-        <div id="split-bar"></div>
-        <div class="closebtn" onclick="closeNav()">&#9746;</div>
-        <div class="sideheader"> Files Dashboard </div>
-        <div id="files"></div>
-    </div>
-
     <div id="sidebar2">
         <div id="split-bar2"></div>
         <div class="closebtn" onclick="closeNav()">&#9746;</div>
@@ -55,25 +48,8 @@
          <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br>
     </div>
 
-    <div id="download">
-        <div class='jjjj'><b> Save the image</b><br></div>
-
-        &ensp; File Name: <input type="text" id= "dfileName"><br>
-        &ensp; File Type:<select id="fileFormat">
-                <option>JPEG</option>
-                <option>PNG</option>
-                <option>SVG</option>
-                <option>WEBP</option>
-            </select><br>
-        &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080"><br>
-        <div  class='jjjj'>
-            <input type="button" value="OK" onclick="downloadImage();">
-            <input type="button" value="Cancel" onclick="$('#download').hide();">
-    </div>
-    </div>
-
     <script src="../lib/jsoneditor.min.js"></script>
-    <script src="../src/plotter.js"></script>
+    <script src="../lib/plotter.min.js"></script>
     <script src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
 
 </body>

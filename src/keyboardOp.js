@@ -26,6 +26,51 @@ ipcRenderer.on('checkClose', function (e, d) {
 })
 
 
+
+var extendUtils = {
+    'filter': ` Condition:<select id="flSel">
+    <option>&lt;</option>
+    <option>></option>
+    <option>=</option>
+</select>
+<input type="text" id="flc"> <br>
+Fill with &nbsp;: <input type="text" id="flf">
+<input type="submit" value="OK" onclick="filterData();closeThis(this)" style="width: 5pc;height: 1.9pc">
+<input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc">
+&ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
+Columns : <input type="text" id="flcl">`,
+'filler': `            Start : <input type="text" id="fstart">
+Extrapolate: <select  id="expSel">
+    <option>Closest</option>
+    <option>Regression</option>
+</select> <br>
+End &nbsp;: <input type="text" id="fend">
+<input type="submit" value="OK" onclick="dataFiller();closeThis(this)" style="width: 5pc;height: 1.7pc;margin-right: 2px">
+<input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.7pc">
+&ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
+Step : <input type="text" id="fstep">`,
+'extend': `Extend from : 0 to <input type="text" id="einp"> <br>
+Extend times: <input type="text" id="etime">
+<input type="submit" value="OK" onclick="repeatMirror();closeThis(this)" style="width: 5pc;height: 1.9pc">
+<input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc"> <br>
+Extend by: <select style="margin-left: 18px;" id="repSel" >
+    <option>Repeat</option>
+    <option>Mirror</option>
+</select><br>`,
+'rgfit': `<span style="display: inline-block; margin-bottom: .4pc"> 
+Order of polynomial: &ensp;</span> 
+<input style="height: 1.4pc" id="polyInp" type="number" value="1" min="1" oninput="polyfit(this.value)"> &ensp; 
+<input type="submit" value="Close" onclick="closeThis(this);revertPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
+Fitted Equation: <span id='formulaStr'></span>`
+}
+
+
+function closeThis(m){
+    $(m).parent().slideUp();
+    resizePlot();
+}
+
+
 ipcRenderer.on("menuTrigger", function (e, d) {
     if (show) console.log(e, d);
     switch (d) {
@@ -78,19 +123,32 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             }
             break;
         case "edat":
-            $("#extend").slideDown();
-            if($("#einp").val()==""){
-                $("#einp").val(data[th_in][col.y].slice(-1)[0])
-            }
+            document.getElementById('extendutils').innerHTML = extendUtils['extend']
+            $("#einp").val(last)
+            $("#etime").val(times)
+            $("#extendutils").slideDown();
             resizePlot();
             break;
         case 'fill':
-            $("#filler").slideDown();
+            document.getElementById('extendutils').innerHTML = extendUtils['filler']
+            $("#fstart").val(start)
+            $("#fend").val(stop)
+            $("#fstep").val(step)
+            $("#extendutils").slideDown();
             resizePlot()
             break;
         case 'filter':
-            $('#filter').slideDown();
+            document.getElementById('extendutils').innerHTML = extendUtils['filter']
+            $('#extendutils').slideDown();
             resizePlot()
+            break;
+        case 'rgft':
+            document.getElementById('extendutils').innerHTML = extendUtils['rgfit']
+            if(polyfit(1)){
+                $('#extendutils').slideDown();
+                resizePlot()
+                for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+            }
             break;
         case 'pdash':
             if ($('#sidebar2').width()) {
@@ -106,21 +164,19 @@ ipcRenderer.on("menuTrigger", function (e, d) {
                 openNav();
             }
             break;
-
     }
 });
 
 
 
 function hotDKeys(e) {
-    if (document.activeElement.type == "text") {
-        return;
-    };
+    if (document.activeElement.type == "text") return
     switch (e.key) {
         case 'm':
         case 'ArrowDown':
         case 'ArrowUp':
             ma = 1;
+            fullData[0] = data;
             updateOnServer();
     }
 }
@@ -129,9 +185,7 @@ function hotDKeys(e) {
 keepTrackIndex = 0
 
 function hotKeys(e) {
-    if (document.activeElement.type == "text") {
-        return;
-    };
+    if (document.activeElement.type == "text") return
     switch (e.key) {
         case " ":
             Plotly.relayout(figurecontainer, {
@@ -239,18 +293,6 @@ function hotKeys(e) {
     };
 };
 
-function moveReflect(key, mod){
-    saveOldData();
-    var ind = index[index.length-1]+1;
-    var tmp = dpsy.slice(index[0], ind);
-    if(!key) ind=index[0]-index.length;
-    if(mod) tmp.reverse();
-    tmp.shift();
-    dpsy.splice(ind, tmp.length, ...tmp);
-    updatePlot();
-    updateOnServer();
-};
-
 
 var cm = $('.custom-cm');
 var sub = $(".submen")
@@ -285,11 +327,18 @@ function resetClicks(e) {
 
 }
 
-function exectuteContext(x) {
+function exectuteContext() {
     cm.hide();
-    $('#setval').show();
-    // $('#setval').css({top:x.clientY,left:x.clientY})
+    //setValue function available in dataOp.js
+    var div = document.createElement('div');
+    div.id = 'setval'
+    div.innerHTML = `Set a value for the selected points <br>
+        <input type="text" id="valinput" onchange="setValue();"><br>
+        <input type="button" value="OK" onclick="setValue();">
+        <input type="button" value="Cancel" onclick="$('#setval').remove();">`.trim()
+    document.body.appendChild(div)
 }
+
 
 $(window).keydown(hotKeys);
 $(window).keyup(hotDKeys);
@@ -319,4 +368,6 @@ subm.mouseleave(function () {
         setTimeout(function(){subm.hide()} , 200) 
     }
 });
+
+
 

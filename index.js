@@ -243,7 +243,14 @@ const homeMenuTemplate = [{
             click() {
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
-        }, {
+        },{
+            label: "Regression Fitting",
+            enabled: false,
+            id:"rgft",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "rgft")
+            }
+        },{
             label: "Points movable horaizontally",
             // enabled: false,
             checked: false,

@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <!-- initial loader -->
     <div class="basediv" id="particle">
             <div class="container">
                 <img src="../figs/charts.png" width="75" height="75">
@@ -64,92 +65,22 @@
             </div>
         </div>
 
-        <div class="borders data" id="extend">
-            Extend from : 0 to <input type="text" id="einp"> <br>
-            Extend times: <input type="text" id="etime">
-            <input type="submit" value="OK" onclick="repeatMirror()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc"> <br>
-            Extend by: <select style="margin-left: 18px;" id="repSel" >
-                <option>Repeat</option>
-                <option>Mirror</option>
-            </select><br>
-        </div>
-
-        <div class="borders data" id="filler">
-            Start : <input type="text" id="fstart">            
-            Extrapolate: <select  id="expSel">
-                <option>Closest</option>
-                <option>Regression</option>
-            </select> <br>
-            End &nbsp;: <input type="text" id="fend">
-            <input type="submit" value="OK" onclick="dataFiller()" style="width: 5pc;height: 1.7pc;margin-right: 2px">
-            <input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.7pc">
-            &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
-            Step : <input type="text" id="fstep">
-        </div>
-
-        <div class="borders data" id="filter">
-            Condition:<select id="flSel">
-                <option>&lt;</option>
-                <option>></option>
-                <option>=</option>
-            </select>
-            <input type="text" id="flc"> <br>
-            Fill with &nbsp;: <input type="text" id="flf">
-            <input type="submit" value="OK" onclick="filterData()" style="width: 5pc;height: 1.9pc">
-            <input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc">
-            &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
-            Columns : <input type="text" id="flcl">
-        </div>
-
+        <div class="borders data" id="extendutils"></div>
         <div id="figurecontainer"></div>
-        <div id = "branding">
-                <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br>
-           </div>
+        <div id = "branding"> <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br></div>
+
     </div>
     <div class="custom-cm">
-        <div class="custom-cm__item" onclick="exectuteContext(event)">Change Value</div>
+        <div class="custom-cm__item" onclick="exectuteContext()">Change Value</div>
         <div class="custom-cm__item" onclick="cm.hide();changeSign();">Change Sign <span class="signsk">C</span> </div>
         <div class="custom-cm__item" onclick="subm.hide();cm.hide();removeBadData()">Remove data<span class="signsk">X</span></div>
         <div class="custom-cm__item  submen">Smooth Out <span class="signs">&#9658;</span></div>
-        <!-- <div class="custom-cm__item">Copy Left</div>
-        <div class="custom-cm__item">Copy Right</div>
-        <div class="custom-cm__divider"></div>
-        <div class="custom-cm__item">Mirror Left</div>
-        <div class="custom-cm__item">Mirror Right</div> -->
       </div>
     <div class="submenu">
         <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteInterpolate()">Cubic Spline <span class="signsk">D</span></div>
         <div class="custom-cm__item" onclick="autoSmooth()">Mooving Average <span class="signsk">M</span></div>
         <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteExtrapolate()" >Regression Fitting <span class="signsk">E</span></div>
     </div>
-
-    <!-- hidden window for setting values -->
-    <div id="setval">
-        Set a value for the selected points <br>
-        <input type="text" id="valinput" onchange="setValue();"><br>
-        <input type="button" value="OK" onclick="setValue();">
-        <input type="button" value="Cancel" onclick="$('#setval').hide();">
-    </div>
-
-
-    <div id="download">
-        <div class='jjjj'><b> Save the image</b><br></div>
-
-        &ensp; File Name: <input type="text" id= "dfileName"><br>
-        &ensp; File Type:<select id="fileFormat">
-                <option>JPEG</option>
-                <option>PNG</option>
-                <option>SVG</option>
-                <option>WEBP</option>
-            </select><br>
-        &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080"><br>
-        <div  class='jjjj'>
-            <input type="button" value="OK" onclick="downloadImage();">
-            <input type="button" value="Cancel" onclick="$('#download').hide();">
-    </div>
-    </div>
-
 
     <script src='../lib/init.min.js'></script>
     <script defer src="../lib/jquery.min.js"></script>

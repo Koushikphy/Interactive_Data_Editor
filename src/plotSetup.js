@@ -28,8 +28,8 @@ var data = [],
     zCol = document.getElementById("zCol"),
     sCol = document.getElementById("sCol"),
     xVal = document.getElementById("x_val"),
-    figurecontainer = document.getElementById("figurecontainer");
-$ch = $("#custom-handle")
+    figurecontainer = document.getElementById("figurecontainer"),
+    $ch = $("#custom-handle")
 
 
 
@@ -140,11 +140,7 @@ var iniPointsC = {
 };
 
 
-
-
 const Plotly = require('plotly.js-gl3d-dist');
-
-
 
 var mode={
     displaylogo:false,
@@ -155,7 +151,7 @@ var mode={
             {
                 name: 'Save the image',
                 icon: Plotly.Icons.camera,
-                click: function(){$('#download').show();}
+                click: triggerDownload
             }
         ]
     ]

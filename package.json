@@ -44,7 +44,7 @@
       }
     },
     "win": {
-      "target": "msi"
+      "target": ["msi", "nsis"]
     }
   },
   "files": [

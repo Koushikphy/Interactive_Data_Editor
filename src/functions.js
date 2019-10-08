@@ -13,18 +13,6 @@ var undoStack = [],
     fileNames = [],
     saveNames = [],
     legendNames = [], rangedSelector=0;
-                
-
-//downloads the image
-function downloadImage(){
-    var fileName = $('#dfileName').val()
-    var type = $('#fileFormat').val().toLocaleLowerCase()
-    var res = $('#imRes').val().split("x")
-    Plotly.downloadImage(figurecontainer, {filename: fileName, format: type, width: res[0], height: res[1]});
-    $('#download').hide();
-}
-
-
 
 function updateData() {
     col.x = xCol.selectedIndex;
@@ -39,9 +27,8 @@ function updateData() {
         $ch.text(xName + '=' + data[0][col.x][0])
         //set custom handler length
         var tmpl = []
-        for (let i of data) {
-            tmpl.push(i[col.x][0].toString().length);
-        }
+        for (let i of data) tmpl.push(i[col.x][0].toString().length);
+
         $ch.width(Math.floor((Math.max(...tmpl) / 2) + 2) * em2px);
     } else { //2D
         col.z = col.y;
@@ -93,8 +80,6 @@ function fileLoader() {
 
 
 function fileReader(fname) {
-
-
     //check if other file is open
     if (!saved) var res = dialog.showMessageBox({
         type: "warning",
@@ -155,9 +140,8 @@ function fileReader(fname) {
     menu.getMenuItemById("pay").visible = false;
     menu.getMenuItemById("swapen").visible = true;
 
-    for (let i of ["pax", 'wire', 'surf']) {
-        menu.getMenuItemById(i).enabled = false;
-    }
+    for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
+
 
 
 
@@ -166,13 +150,14 @@ function fileReader(fname) {
 
 
     //setup the column selector and menu.
-    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf']
+    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf', 'rgft']
     if (ddd) { //3
         $(".3D").show()
         var fl = JSON.parse(localStorage.getItem("cols3d"));
         if (fl !== null) {
             col = fl;
         }
+        enableMenu.splice(enableMenu.indexOf('rgft'),1);
         enableMenu.push('pax', 'wire', 'surf');
 
     } else { //2d
@@ -189,9 +174,8 @@ function fileReader(fname) {
         op += '<option>' + i + '</option>';
     };
     for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
-    for (let i of enableMenu) {
-        menu.getMenuItemById(i).enabled = true;
-    }
+    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
+    
 
     xCol.selectedIndex = col.x;
     yCol.selectedIndex = col.y;
@@ -306,8 +290,6 @@ function addNewFile(fname) {
 }
 
 
-
-
 function addTrace() {
 
     let len = figurecontainer.data.length
@@ -400,7 +382,6 @@ function updatePlot(all = true) {
 }
 
 
-
 function selectEditable(index) {
     if (swapperIsOn) {
         [col.s, col.z] = [col.z, col.s]
@@ -469,7 +450,6 @@ function makeEditable() {
 
 
 var swapperIsOn = false
-
 function openSwapper() {
     swapperIsOn = true;
     $("#sCol").show();
@@ -530,108 +510,6 @@ function exitSwapper() {
 
 
 
-function transpose(m) {
-
-    return m[0].map((_, i) => m.map(x => x[i]));
-};
-
-
-// function test(x){
-//     y = parseFloat(x)
-//     if(isNaN(y)){
-//         throw "Not a number"
-//     } else{
-//         return y
-//     }
-// }
-
-
-// function newTest(){
-//     try{
-//         test('dwe')
-//     } 
-//     catch(err){
-//         console.log(err)
-//     }
-// }
-
-
-
-function parseData(strDps) {
-    var newdat = [],
-        blocks = [];
-    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
-    try{
-        for (let i of strDps) {
-            blocks = i.trim().split("\n");
-            for (var j = 0; j < blocks.length; j++) {
-                blocks[j] = blocks[j].trim().split(/[\s\t]+/);
-                blocks[j] = blocks[j].map(x => {
-                    y = parseFloat(x)
-                    if(isNaN(y)){
-                        throw "badData"
-                    } else{
-                        return y
-                    }
-                });
-            };
-            newdat.push(transpose(blocks));
-        }
-    } catch(err){
-        if(err='badData'){
-            alert("Bad data found !!!\nCheck the file before openning.")
-        }
-        return
-    }
-    return newdat;
-};
-
-
-function expRotate(tmpData, i, j) {
-    //Bunch up on i-th column and sort along j-th column
-    tmpData = tmpData.map(x => transpose(x));
-    if (!issame) {
-        issame = true;
-        var b = tmpData[0].length;
-        for (let a of tmpData) {
-            if (a.length != b) {
-                issame = false;
-                break;
-            };
-        };
-    }
-
-
-    if (issame) {
-        tmpData = transpose(tmpData);
-        tmpData = tmpData.map(x => transpose(x));
-        return tmpData;
-    };
-
-
-    tmpData = [].concat(...tmpData).filter(x => x !== undefined);
-
-    var tmp = new Set();
-    for (let a of tmpData) {
-        tmp.add(a[i]);
-    };
-    tmp = [...tmp].sort((a, b) => a - b);
-    var newdat = [];
-    for (let x of tmp) {
-        var tmpdat = [];
-        for (let line of tmpData) {
-            if (x == line[i]) {
-                tmpdat.push(line)
-            };
-        };
-        tmpdat = tmpdat.sort((m, n) => m[j] - n[j]);
-        newdat.push(transpose(tmpdat));
-    };
-    return newdat;
-};
-
-
-
 function saveAs() {
     var tmp_name = dialog.showSaveDialog({
         title: "Save As:",
@@ -645,15 +523,6 @@ function saveAs() {
 
 
 function saveData() {
-    // if (swapperIsOn) {
-    //     dialog.showMessageBox({
-    //         type: "warning",
-    //         title: "Can't add the file!!!",
-    //         message: "Plot along X before adding a new file.",
-    //         buttons: ['Ok']
-    //     });
-    //     return
-    // }
     tmpData = data
     if (swapped) tmpData = expRotate(tmpData, col.y, col.x)
     var tmpData = tmpData.map(x => transpose(x));
@@ -676,9 +545,7 @@ function saveData() {
 
 };
 
-
-
-
+// plots along a different axis
 function isswap() {
     if (!data.length) return;
     for (let i = 0; i < fullData.length; i++) {
@@ -733,8 +600,8 @@ function colsChanged(value) {
     let lname = path.basename(fileNames[0])
     Plotly.restyle(figurecontainer, {
         name: [
-            lname + ` ${col.y}:${col.z}`,
-            lname + ` ${col.y}:${col.s}`
+            lname + ` ${col.y+1}:${col.z+1}`,
+            lname + ` ${col.y+1}:${col.s+1}`
         ]
     })
     if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
@@ -804,8 +671,6 @@ function selectEvent(event) {
 };
 
 
-
-
 function updateFigure() {
     var y = [],
         x = [];
@@ -834,13 +699,11 @@ function updateFigure() {
 
 
 function clamp(x, lower, upper) {
-
     return Math.max(lower, Math.min(x, upper));
 };
 
 
 var oldX, oldCord, indd;
-
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
@@ -888,6 +751,7 @@ function startDragBehavior() {
         updateFigure();
         fullData[0] = data;
         updatePlot(all = false)
+        if(polyFitLive) polyfit($("#polyInp").val());    // calls for regression fit
         updateOnServer();
         d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
     });
@@ -954,134 +818,78 @@ function doIt() {
 
 function updateOnServer() {
     if (!serve) return;
-    var x_list = [],
-        y_list = [],
-        z_list = [];
-    for (let i of data) {
-        x_list.push(i[col.x]);
-        y_list.push(i[col.y]);
-        z_list.push(i[col.z]);
-    };
-    var s_data = [x_list, y_list, z_list];
-    var c2s = []
-    for (let w in viewer) {
-        setTimeout(() => {
-            viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
-        },50)
-    }
+    return new Promise((resolve, reject)=>{
+        var x_list = [],
+            y_list = [],
+            z_list = [];
+        for (let i of data) {
+            x_list.push(i[col.x]);
+            y_list.push(i[col.y]);
+            z_list.push(i[col.z]);
+        };
+        var s_data = [x_list, y_list, z_list];
+        var c2s = []
+        for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
+        resolve();
+    })
 };
 
 
-var TOAST={
-    toast:null,
-    _id:0,
-    time:null,
-    init:function(data={}){
-        // Create TOAST
-        this.toast = document.createElement("div");
-        this.toast.id = "__TOAST";
 
-        this.decoration =  "#8393c0";
-        this.background =  "rgb(52, 53, 73)";
-        this.color =  "white";
-        this.time =  4000;
 
-        Object.assign(this.toast.style, {
-            position:"absolute",
-            top:"0",
-            right:"0",
-            width:"100%",
-            height:"100%",
-            zIndex:"99999",
-            pointerEvents:"none",
-            paddingRight: "3px",
-            paddingBottom:"3px",
-            paddingTop:"3px",
-            borderRadius: "3px",
-            padding: "3px",
-            overflow:"hidden",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            alignItems : 'flex-end'
-        })
-        var body = document.querySelector("body");
-        body.insertBefore(this.toast,body.firstChild);
-    },
-    close:function(el){   
-        el.classList.add("toastOut");
-        setTimeout(function(){
-            el.remove();
-        },250);
-    },
-    add:function(text,time){
-        if(!time) time=this.time;
-        var self=this;
-        // var width = text.length * 8 +100
-        var toast = document.createElement("div");
-        Object.assign(toast.style,{
-            // width:`${width}`,
-            padding:"10px",
-            minHeight: "10px",
-            backgroundColor:this.background,
-            color:"white",
-            float : "right",
-            borderRadius:"3px",
-            boxShadow:"0 1px 19px 0px rgba(0, 0, 0, 0.45)",
-            paddingRight:"50px",
-            position:"relative",
-            marginBottom:"3px",
-            display:"flex",
-            alignItems:"center",
-            color:this.color,
-            transition:"all 250ms ease",
-            opacity:"0",
-            transform:"scale(0.7)",
-            fontFamily: "sans-serif"
-        })
-        toast.innerHTML=`
-            <p style="margin:0;">${text}</p>
-            <div onclick="TOAST.close(this.parentNode);" style="
-                position:absolute;
-                right:0;
-                top:0;
-                width:50px;
-                height:100%;
-                padding-top:3px;
-                padding-bottom:3px;
-                pointer-events: all;
-                cursor: pointer;
-            ">
-                <div style="
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    width:100%;
-                    height:100%;
-                    border-left-style: solid;
-                    border-width: 1px;
-                    font-family: monospace;
-                    font-size: 1em;
-                    border-color: ${this.decoration};
-                    color: ${this.decoration};
-                ">
-                    X
-                </div>
-            </div>
-        `;
-        this.toast.appendChild(toast);
-        setTimeout(function(){
-            self.close(toast);
-        },time)
-        return toast;
-    }
+function spreadsheet() {
+    editorWindow = new BrowserWindow({
+        minWidth: 1200,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    editorWindow.maximize();
+    editorWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "handtable.html"),
+        protocol: 'file:',
+        slashes: true
+    }));
+    editorWindow.setMenuBarVisibility(false);
+
+    editorWindow.show();
+    if (!app.isPackaged) editorWindow.webContents.openDevTools();
+    editorWindow.webContents.once("dom-ready", function () {
+        editorWindow.webContents.send("slider", [xName, col.x, data]);
+    })
 }
 
-TOAST.init();
-function showStatus(a){
-    var t = TOAST.add(a,4321);
-    setTimeout(function(){
-        t.classList.add("toastIn");
-    },50)
-    $(t).width(a.length*8+5)
-}
+
+
+function openViewer(x) {
+    serve = 1;
+    var target = "3D_Viewer_Lines.html"
+    if (x) target = "3D_Viewer_Surface.html"
+
+    viewerWindow = new BrowserWindow({
+        show: false,
+        minWidth: 1200,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    viewerWindow.maximize();
+    setTimeout(function () {
+        viewerWindow.loadURL(url.format({
+            pathname: path.join(__dirname, target),
+            protocol: 'file:',
+            slashes: true
+        }));
+    }, 50)
+    viewerWindow.on("closed", function () {
+        delete viewer[target]
+    })
+    viewerWindow.show();
+    viewerWindow.setMenuBarVisibility(false);
+    viewer[target] = viewerWindow;
+    if (!app.isPackaged) viewerWindow.webContents.openDevTools();
+    viewerWindow.webContents.once("dom-ready", function () {
+        updateOnServer()
+    })
+};

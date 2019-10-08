@@ -10,7 +10,6 @@ const path = require('path');
 const { dialog } = remote;
 
 ipcRenderer.on('checkClose', function (e, d) { ipcRenderer.send('checkClose', 'closeIt')})
-$("#imRes").val("1500x2000")
 
 //! Problems:
 //1. openning the settinggs winsow is pushing the mode bar out
@@ -180,18 +179,18 @@ var layout = {
 
 var mode={
     displaylogo:false,
-    modeBarButtonsToRemove : ["toImage"],
+    editable: true,
+    modeBarButtonsToRemove : ["toImage","sendDataToCloud"],
     modeBarButtonsToAdd    : [
         [
             {
                 name: 'Save the image',
                 icon: Plotly.Icons.camera,
-                click: function(){$('#download').show();}
+                click: triggerDownload
             }
         ]
     ]
 }
-
 
 
 
@@ -385,22 +384,6 @@ function setZRange(lim) {
 
 
 
-//downloads the image
-function downloadImage(){
-    var fileName = $('#dfileName').val()
-    var type = $('#fileFormat').val().toLocaleLowerCase()
-    var res = $('#imRes').val().split("x")
-    Plotly.downloadImage(figurecontainer, {filename: fileName, format: type, width: res[1], height: res[0]});
-    $('#download').hide();
-}
-
-//triggers the download window
-function triggerDownload(){
-    $('#download').show();
-}
-
-
-
 var minWidth = window.innerWidth / 2.5
 $('#split-bar').mousedown(function (e) {
     e.preventDefault();
@@ -432,10 +415,6 @@ $('#split-bar2').mousedown(function (e) {
     })
 });
 
-
-$(document).mouseup(function (e) {
-    $(document).unbind('mousemove');
-});
 
 var minWidth = window.innerWidth / 4
 function openNav() {
@@ -478,11 +457,7 @@ $('#split-bar2').mousedown(function (e) {
     })
 });
 
-
-
-$(document).mouseup(function (e) {
-$(document).unbind('mousemove');
-});
+$(document).mouseup(function (e) {$(document).unbind('mousemove')});
 
 
 

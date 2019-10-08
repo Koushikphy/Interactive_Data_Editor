@@ -343,7 +343,6 @@ ol{
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-size: 18px;
-    display: none
 }
 
 #download{
@@ -380,4 +379,11 @@ ol{
 a {
     color: rgb(0, 0, 0);
     text-decoration: none;
+}
+
+#polyInp{
+    width: 3pc
+}
+#formulaStr{
+    margin-left: 2.7pc
 }
