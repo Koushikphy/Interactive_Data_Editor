@@ -3,7 +3,6 @@
 //doesnot depend on the outside parameter, and solely depend on the given argument
 
 
-
 function parseData(strDps) {
     var newdat = [],
         blocks = [];

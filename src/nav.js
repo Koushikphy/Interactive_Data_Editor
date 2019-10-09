@@ -5,8 +5,8 @@ $('#split-bar').mousedown(function (e) {
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar').offset().left;
-        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
-            $('#sidebar').css("width", x - 2);
+        if (x > window.innerWidth / 5.5 && x < window.innerWidth / 2.5) {
+            $('#sidebar').width(x - 2);
             $('#full').css("margin-left", x);
             minWidth = x;
             resizePlot()
@@ -20,10 +20,10 @@ $('#split-bar2').mousedown(function (e) {
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar2').offset().left;
-        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
-            $('#sidebar2').css("width", x - 2);
+        if (x > window.innerWidth / 5.5 && x < window.innerWidth / 2.5) {
+            $('#sidebar2').width(x - 2);
             $('#full').css("margin-left", x);
-            $('#jsoneditor').css("width", x - 7);
+            $('#jsoneditor').width(x - 7);
             minWidth = x;
             resizePlot()
         }
@@ -38,39 +38,35 @@ $(document).mouseup(function (e) {
 
 function openNav() {
     closeNav2();
-    $('#split-bar').css("width", 5);
-    $('#sidebar').css("width", minWidth);
+    $('#split-bar').width(5);
+    $('#sidebar').width(minWidth);
     $('#full').css("margin-left", minWidth + 6);
-    $('.ham').toggle();
     resizePlot()
 }
 
 
 function closeNav() {
-    $('#split-bar').css("width", 0);
-    $('#sidebar').css("width", 0);
+    if (!$('#sidebar').width()) return
+    $('#split-bar,#sidebar').width(0);
     $('#full').css("margin-left", 0);
-    $('.ham').toggle();
     resizePlot()
 }
 
 function openNav2() {
     closeNav();
-    $('#split-bar2').css("width", 5);
-    $('#sidebar2').css("width", minWidth);
-    $('#jsoneditor').css("width", minWidth - 5);
+    $('#split-bar2').width(5);
+    $('#sidebar2').width(minWidth);
+    $('#jsoneditor').width(minWidth - 5);
     $('#full').css("margin-left", minWidth + 6);
-    $('.ham').toggle()
     resizePlot()
 }
 
 
 function closeNav2() {
-    $('#split-bar2').css("width", 0);
-    $('#sidebar2').css("width", 0);
+    if (!$('#sidebar2').width()) return
+    $('#split-bar2,#sidebar2').width(0);
     $('#full').css("margin-left", 0);
-    $('#jsoneditor').css("width", 195);
-    $('.ham').toggle()
+    $('#jsoneditor').width(195);
     resizePlot()
 }
 
@@ -79,6 +75,8 @@ function closeNav2() {
 
 
 function updateJSON() {
+    if (!$('#sidebar2').width()) return // dont call if its not visible
+    console.log('called')
     var Plots = [];
     var tmpLeg = []
     for (let trace of figurecontainer.data) {

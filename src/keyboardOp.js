@@ -114,7 +114,6 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         case "fullscreen":
             resizePlot();
             break;
-
         case 'tswap':
             if (!swapperIsOn) {
                 openSwapper()

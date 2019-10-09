@@ -126,7 +126,6 @@ function dataFiller() {
             backRegRequired = fullArr[fullArr.length-1]>xs[xs.length-1]
         }
 
-
         for (let tc of cols_wo_y) {
             newArr = [];
             var ys = dat[tc].slice();
@@ -137,7 +136,8 @@ function dataFiller() {
             if(backRegRequired){
                 backReg = new Regression(
                     xs.slice(Math.max(xs.length-3,1)),
-                    ys.slice(Math.max(ys.length-3,1)), 2
+                    ys.slice(Math.max(ys.length-3,1)),
+                    2
                 )
             }
 
@@ -212,7 +212,6 @@ function filterData() {
             }
             return dat;
         })
-
     }
     endJobs({resize:true, startdrag:true})
     showStatus('Data filtered...');
@@ -306,9 +305,7 @@ function autoSmooth() {
 function changeSign() {
     if (!index.length) return;
     saveOldData();
-    for (let ind of index) {
-        data[th_in][col.z][ind] *= -1;
-    };
+    for (let ind of index) data[th_in][col.z][ind] *= -1;
     endJobs()
 };
 
@@ -320,14 +317,10 @@ function setValue(){
     if (isNaN(value) ){
         return;
     } else{
-        for (let ind of index) {
-            data[th_in][col.z][ind] = value;
-        };
+        for (let ind of index) data[th_in][col.z][ind] = value;
     }
     endJobs({clearIndex:true})
-    Plotly.restyle(figurecontainer, {
-        selectedpoints: [null]
-    });
+    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
     $('#setval').remove();
 }
 
@@ -342,24 +335,15 @@ function removeBadData(){
         }
     }
     endJobs({clearIndex:true})
-    Plotly.restyle(figurecontainer, {
-        selectedpoints: [null]
-    });
+    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 }
 
 
-function test(len, n){
-    var tmp = (len-1)/n
-    var a = []
-    for(let i=0;i<=n;i++) a.push(tmp*i)
-    return a
-}
 
 function revertPloyFit(){
     Plotly.deleteTraces(figurecontainer, 1);
     polyFitLive = false;
-    for (let i of ['edat','fill','filter', 'af','arf']) menu.getMenuItemById(i).enabled = true;
-
+    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
 }
 
 
@@ -369,23 +353,22 @@ function polyfit(n){
     if(!n) return
     if (!polyFitLive) {
         if(ddd){
-            showStatus('Regression fitting is only supported for 2D data.'); return
+            alert('Regression fitting is only supported for 2D data.'); return
         }
         if(figurecontainer.data.length>1){
-            showStatus('Supported only for one plot at time.'); return
+            alert('Supported only for one plot at time.'); return
         }
     }
 
     if(n>=dpsx.length) {
         showStatus(`Fitting of order ${n} is not possible.`); return
     }
-    
     var xs = dpsx.slice(), ys = dpsy.slice(), fitx=[],fity=[];
     var poly = new Regression(xs,ys,n)
     var tmp = (xs.length-1)/n/4
     for(let i=0;i<=n*4;i++) fitx.push(xs[parseInt(tmp*i)])
     for(let xx of fitx) fity.push(poly.val(xx))
-    if(!polyFitLive){
+    if(!polyFitLive){ // initiate the plot in not started
         polyFitLive = true
         let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
         thisTrace.mode = 'lines'
@@ -404,7 +387,7 @@ function polyfit(n){
         formulaStr += ` ${vv>=0? '+' : '-'}${Math.abs(vv)}x<sup>${i>1? i : ''}</sup>`
     }
     document.getElementById('formulaStr').innerHTML = formulaStr;
-    return true
+    return true // to be parsed by the menutrigger
 }
 
 
