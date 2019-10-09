@@ -19,6 +19,13 @@
     "appId": "com.ide.app",
     "productName": "Interactive Data Editor",
     "asar": true,
+    "nsis": {
+      "oneClick" : false , 
+      "allowToChangeInstallationDirectory": true, 
+      "perMachine" : false ,
+      "differentialPackage":true,
+      "displayLanguageSelector":true
+  },
     "dmg": {
       "contents": [
         {
@@ -34,9 +41,7 @@
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
+      "target": ["apk"
       ],
       "category": "Office",
       "desktop": {
