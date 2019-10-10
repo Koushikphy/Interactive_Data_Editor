@@ -67,7 +67,6 @@
     "!testData"
   ],
   "devDependencies": {
-    "@lightrabbit/ml-matrix": "^5.2.5",
     "electron": "^4.0.0",
     "electron-builder": "^20.38.4",
     "gulp": "^4.0.0",

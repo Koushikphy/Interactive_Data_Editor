@@ -342,7 +342,7 @@ function transpose(m) {
 
 
 
-const {Matrix,solve} = require('../node_modules/@lightrabbit/ml-matrix/matrix.js')
+const {Matrix,solve} = require('../tmp/matrix.js')
 
 class Regression{
     constructor(xs,ys,n, mp=false){
