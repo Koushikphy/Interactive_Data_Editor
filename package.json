@@ -20,12 +20,12 @@
     "productName": "Interactive Data Editor",
     "asar": true,
     "nsis": {
-      "oneClick" : false , 
-      "allowToChangeInstallationDirectory": true, 
-      "perMachine" : false ,
-      "differentialPackage":true,
-      "displayLanguageSelector":true
-  },
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "differentialPackage": true,
+      "displayLanguageSelector": true
+    },
     "dmg": {
       "contents": [
         {
@@ -41,7 +41,9 @@
       ]
     },
     "linux": {
-      "target": ["apk"
+      "target": [
+        "AppImage",
+        "deb"
       ],
       "category": "Office",
       "desktop": {
@@ -49,7 +51,10 @@
       }
     },
     "win": {
-      "target": ["msi", "nsis"]
+      "target": [
+        "msi",
+        "nsis"
+      ]
     }
   },
   "files": [
@@ -62,6 +67,7 @@
     "!testData"
   ],
   "devDependencies": {
+    "@lightrabbit/ml-matrix": "^5.2.5",
     "electron": "^4.0.0",
     "electron-builder": "^20.38.4",
     "gulp": "^4.0.0",
