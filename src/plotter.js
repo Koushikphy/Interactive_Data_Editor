@@ -805,13 +805,3 @@ function loadConfig(){
 }
 
 
-
-// Plotly.newPlot(figurecontainer, [{type:'contour', z:data[4], x:xx, y:yy, ncontours:20,contours: {
-//     coloring: 'heatmap',
-//     showlabels: true,
-//     start: -1.5,
-//     end: 0,
-//     size:.1},
-// zmin:-1.5,
-// zmax: 0
-// }])
