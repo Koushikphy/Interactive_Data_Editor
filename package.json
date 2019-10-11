@@ -18,7 +18,12 @@
   "build": {
     "appId": "com.ide.app",
     "productName": "Interactive Data Editor",
-    "asar": true,
+    "asar": false,
+    "files": [
+      "!src",
+      "!gulpFile.js",
+      "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}"
+    ],
     "nsis": {
       "oneClick" : false , 
       "allowToChangeInstallationDirectory": true, 
@@ -51,12 +56,6 @@
       "target": ["msi", "nsis"]
     }
   },
-  "files": [
-    "**/*",
-    "build/icon.*",
-    "!src/*",
-    "!gulpFile.js"
-  ],
   "devDependencies": {
     "electron": "^4.0.0",
     "electron-builder": "^20.38.4",
