@@ -3331,7 +3331,7 @@ class QrDecomposition$$1 {
    */
   solve(value) {
     value = Matrix.checkMatrix(value);
-
+    console.log('here')
     var qr = this.QR;
     var m = qr.rows;
 
