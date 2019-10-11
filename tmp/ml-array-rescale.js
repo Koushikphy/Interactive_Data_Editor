@@ -1,8 +1,10 @@
-import max from 'ml-array-max';
-import min from 'ml-array-min';
-import isArray from 'is-any-array';
+const {max} = require('./ml-array-max');
+const {min} = require('./ml-array-min');
+const {isArray} = require('./is-any-array');
 
-export default function rescale(input, options = {}) {
+
+
+function rescale(input, options = {}) {
   if (!isArray(input)) {
     throw new TypeError('input must be an array');
   } else if (input.length === 0) {
@@ -44,3 +46,4 @@ export default function rescale(input, options = {}) {
 
   return output;
 }
+exports.rescale = rescale

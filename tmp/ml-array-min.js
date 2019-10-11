@@ -1,11 +1,11 @@
-import isArray from 'is-any-array';
 
+const {isArray} = require('./is-any-array')
 /**
  * Computes the minimum of the given values
  * @param {Array<number>} input
  * @return {number}
  */
-export default function min(input) {
+function min(input) {
   if (!isArray(input)) {
     throw new TypeError('input must be an array');
   }
@@ -20,3 +20,4 @@ export default function min(input) {
   }
   return minValue;
 }
+exports.min = min

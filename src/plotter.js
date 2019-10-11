@@ -11,7 +11,7 @@ const { dialog } = remote;
 
 ipcRenderer.on('checkClose', function (e, d) { ipcRenderer.send('checkClose', 'closeIt')})
 
-//! Problems:
+//Problems:
 //1. openning the settinggs winsow is pushing the mode bar out
 
 
@@ -803,5 +803,3 @@ function loadConfig(){
     Plotly.update(figurecontainer, out.surfaces, layout)
     updateJSON();
 }
-
-

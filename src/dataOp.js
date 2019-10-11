@@ -364,7 +364,7 @@ function polyfit(n){
         showStatus(`Fitting of order ${n} is not possible.`); return
     }
     var xs = dpsx.slice(), ys = dpsy.slice(), fitx=[],fity=[];
-    var poly = new Regression(xs,ys,n)
+    var poly = new Regression(xs,ys,n, true)
     var tmp = (xs.length-1)/n/4
     for(let i=0;i<=n*4;i++) fitx.push(xs[parseInt(tmp*i)])
     for(let xx of fitx) fity.push(poly.val(xx))

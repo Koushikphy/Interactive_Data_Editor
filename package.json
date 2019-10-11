@@ -20,12 +20,12 @@
     "productName": "Interactive Data Editor",
     "asar": true,
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "perMachine": false,
-      "differentialPackage": true,
-      "displayLanguageSelector": true
-    },
+      "oneClick" : false , 
+      "allowToChangeInstallationDirectory": true, 
+      "perMachine" : false ,
+      "differentialPackage":true,
+      "displayLanguageSelector":true
+  },
     "dmg": {
       "contents": [
         {
@@ -41,20 +41,14 @@
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
+      "target": ["AppImage", "deb"],
       "category": "Office",
       "desktop": {
         "Encoding": "UTF-8"
       }
     },
     "win": {
-      "target": [
-        "msi",
-        "nsis"
-      ]
+      "target": ["msi", "nsis"]
     }
   },
   "files": [

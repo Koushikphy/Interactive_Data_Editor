@@ -4,8 +4,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var rescale = _interopDefault(require('ml-array-rescale'));
-var max = _interopDefault(require('ml-array-max'));
+var rescale = _interopDefault(require('./ml-array-rescale'));
+var max = _interopDefault(require('./ml-array-max'));
 
 /**
  * @class LuDecomposition

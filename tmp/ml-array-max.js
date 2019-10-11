@@ -1,11 +1,11 @@
-import isArray from 'is-any-array';
 
+const {isArray} = require('./is-any-array')
 /**
  * Computes the maximum of the given values
  * @param {Array<number>} input
  * @return {number}
  */
-export default function max(input) {
+function max(input) {
   if (!isArray(input)) {
     throw new TypeError('input must be an array');
   }
@@ -20,3 +20,4 @@ export default function max(input) {
   }
   return maxValue;
 }
+exports.max = max
