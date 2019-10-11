@@ -55,10 +55,7 @@
     "**/*",
     "build/icon.*",
     "!src/*",
-    "!gulpFile.js",
-    "!app.iss",
-    "!yarn.lock",
-    "!testData"
+    "!gulpFile.js"
   ],
   "devDependencies": {
     "electron": "^4.0.0",

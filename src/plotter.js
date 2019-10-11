@@ -81,7 +81,8 @@ var trace={
             usecolormap: false,
             width : 1
         }
-    }
+    },
+    hidesurface:false
 }
 
 var layout = {
@@ -628,9 +629,9 @@ function updateJSON() {
         cauto:[],
         colorbar:[],
         contours:[],
-        hidesurface:[],
-
+        hidesurface:[]
     }
+
     for (let trace of figurecontainer.data) {
             for (let key of Object.keys(Surfaces)){
                 Surfaces[key].push(trace[key])
@@ -729,6 +730,7 @@ function saveConfig(){
         cauto:[],
         colorbar:[],
         contours:[],
+        hidesurface:[]
 
     }
     for (let trace of figurecontainer.data) {
