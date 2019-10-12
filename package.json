@@ -18,7 +18,7 @@
   "build": {
     "appId": "com.ide.app",
     "productName": "Interactive Data Editor",
-    "asar": false,
+    "asar": true,
     "files": [
       "!src",
       "!gulpFile.js",

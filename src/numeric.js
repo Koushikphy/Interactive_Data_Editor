@@ -77,35 +77,35 @@ function expRotate(tmpData, i, j) {
 
 
 
-function matvecmul(a,b){
-    // b is a vector
-    if (a[0].length != b.length) return
-    var n = a.length, m = b.length
-    res = new Array(n).fill(0)
-    for(let k=0; k<m; k++){
-        for (let i=0; i<n; i++){
-                res[i] += a[i][k]* b[k]
-        }
-    }
-    return res
-}
+// function matvecmul(a,b){
+//     // b is a vector
+//     if (a[0].length != b.length) return
+//     var n = a.length, m = b.length
+//     res = new Array(n).fill(0)
+//     for(let k=0; k<m; k++){
+//         for (let i=0; i<n; i++){
+//                 res[i] += a[i][k]* b[k]
+//         }
+//     }
+//     return res
+// }
 
 
-function matmul(a,b){
-    // column and row length
-    if (a[0].length != b.length) return
-    // a is of length nxm,,, b is of mxp so  res is of the length nxp
-    var n = a.length, p = b[0].length, m = b.length
-    res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
-    for(let k=0; k<m; k++){
-        for (let i=0; i<n; i++){
-            for(let j =0; j<p ; j++){
-                res[i][j] += a[i][k]* b[k][j]
-            }
-        }
-    }
-    return res
-}
+// function matmul(a,b){
+//     // column and row length
+//     if (a[0].length != b.length) return
+//     // a is of length nxm,,, b is of mxp so  res is of the length nxp
+//     var n = a.length, p = b[0].length, m = b.length
+//     res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
+//     for(let k=0; k<m; k++){
+//         for (let i=0; i<n; i++){
+//             for(let j =0; j<p ; j++){
+//                 res[i][j] += a[i][k]* b[k][j]
+//             }
+//         }
+//     }
+//     return res
+// }
 
 
 
@@ -115,78 +115,95 @@ function transpose(m) {
 
 
 
-const {Matrix,solve} = require('../tmp/matrix.js')
+function hypotenuse(a, b) {
+    var r = 0;
+    if (Math.abs(a) > Math.abs(b)) {
+      r = b / a;
+      return Math.abs(a) * Math.sqrt(1 + r * r);
+    }
+    if (b !== 0) {
+      r = a / b;
+      return Math.abs(b) * Math.sqrt(1 + r * r);
+    }
+    return 0;
+  }
+
+function solve(A,x){// solves a system of linear equations using QR decomposition
+    var qr = JSON.parse(JSON.stringify(A))
+    var X  = JSON.parse(JSON.stringify(x))
+
+    var m = qr.length
+    var n = qr[0].length
+    var rdiag = new Array(n);
+    var i, j, k, s;
+  
+    for (k = 0; k < n; k++) {
+      var nrm = 0;
+      for (i = k; i < m; i++) {
+        nrm =hypotenuse(nrm, qr[i][k]);
+      }
+      if (nrm !== 0) {
+        if (qr[k][k] < 0) {
+          nrm = -nrm;
+        }
+        for (i = k; i < m; i++) {
+          qr[i][k] /= nrm
+        }
+        qr[k][k] +=1  
+        for (j = k + 1; j < n; j++) {
+          s = 0;
+          for (i = k; i < m; i++) {
+            s += qr[i][k] * qr[i][j]
+          }
+          s = -s / qr[k][k];
+          for (i = k; i < m; i++) {
+            qr[i][j] += s * qr[i][k] 
+          }
+        }
+      }
+      rdiag[k] = -nrm;
+    }
+    //solve the equations
+    for (k = 0; k < n; k++) {
+        s = 0;
+        for (i = k; i < m; i++) {
+          s += qr[i][k] * X[i];
+        }
+        s = -s / qr[k][k];
+        for (i = k; i < m; i++) {
+          X[i] += s * qr[i][k];
+        }
+    }
+    for (k = n - 1; k >= 0; k--) {
+      X[k] /= rdiag[k];
+      for (i = 0; i < k; i++) {
+          X[i] -= X[k] * qr[i][k];
+        }
+    }
+    return X.slice(0,n)
+  }
+
 
 class Regression{
-    constructor(xs,ys,n, mp=false){
+    constructor(xs,ys,n){
         //fit x,y with a polynomial of order n 
         var x=xs.slice(0), y = ys.slice(0);
         this.n=n;
-        // normalize the x array
-        // var ss =0;
-        // for(let xx of x) ss+=xx;
-        // this.me = ss/x.length;
-        // for(let i=0; i<x.length;i++) x[i] -= this.me
-
-        if ((n==2) & !mp ) { //explicit formula for quadratic
-            this.cf = [0,0,0];
-            // for quadratic case by default just use explicit formula 
-            // as its more timeconsuming to go through the full svd calculation
-            var a=x.length,b=0,c=0,d=0,e=0,m=0,o=0,p=0,det;
-            for (let i=0; i<a; i++){
-                b += x[i]
-                c += x[i]**2
-                d += x[i]**3
-                e += x[i]**4
-                m += y[i]
-                o += y[i]*x[i]
-                p += y[i]*x[i]**2
+        var aa = [];// generate the augmented matrix
+        for(let xx of x){
+            let c = new Array(n+1)
+            for(let i=0; i<=n;i++){
+                c[i] = xx**i
             }
-            det = this.determinant(a,b,c,b,c,d,c,d,e)
-            this.cf[0] = this.determinant(m,b,c,o,c,d,p,d,e)/det
-            this.cf[1] = this.determinant(a,m,c,b,o,d,c,p,e)/det
-            this.cf[2] = this.determinant(a,b,m,b,c,o,c,d,p)/det
-        } else if((n==1) & !mp ){ //explicit formula for linear
-            this.cf = [0,0];
-            var a=x.length,b=0,c=0,d=0,m=0,o=0;
-            for (let i=0; i<a; i++){
-                b += x[i]
-                c += x[i]**2
-                m += y[i]
-                o += y[i]*x[i]
-            }
-            this.cf[1] = (n*o - (b*m))/(n*c - b*b)
-            this.cf[0] = (m - this.cf[1]*b)/a
-        } else{ //morre-penrose for a general nth order
-            var aa = [], USV, u, v,s,sf,pse;// generate the augmented matrix
-            for(let xx of x){
-                let c = new Array(n+1)
-                for(let i=0; i<=n;i++){
-                    c[i] = xx**i
-                }
-                aa.push(c)
-            }
-            var aaa = new Matrix(aa)
-            var bbb = Matrix.columnVector(y)
-            this.cf = solve(aaa,bbb).flat()
-            // USV = svd(aa)
-            // u = USV.U
-            // v = USV.V
-            // s = USV.S
-            // sf = new Array(s.length).fill(0).map(_=> new Array(s.length).fill(0))
-            // // inverse of eigenvalus, check if non zero
-            // for(let i=0; i<s.length;i++) if (s[i]>Number.EPSILON) sf[i][i] = 1/s[i]
-            // pse = matmul(matmul(v, sf), transpose(u))
-            // this.cf = matvecmul(pse, y)
+            aa.push(c)
         }
+        this.cf =solve(aa,y)
     }
     determinant(a,b,c,d,e,f,g,h,i){
         return a*(e*i - f*h) - b*(d*i - g*f) + c*(d*h - e*g)
     }
-
     val(x) {
         var s=0
-        // x-=this.me
         for(let i=0;i<=this.n;i++){
             s+=this.cf[i]*x**i
         }
@@ -203,10 +220,6 @@ class Regression{
 // tt = new Regression(x,y,2)
 // console.log(tt.cf)
 // console.log(tt.val(x[0]), tt.val(x[0])-y[0])
-
-
-
-
 
 
 
@@ -239,15 +252,3 @@ class Spline{
         return a*this.ys[i]+b*this.ys[i+1]+ ((a**3-a)*this.diff[i]+(b**3-b)*this.diff[i+1])*(h**2)/6.0
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
