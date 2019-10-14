@@ -1,2 +1,4 @@
 dist/
 node_modules/
+funcs.min.js
+plot.min.js
