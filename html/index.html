@@ -23,7 +23,7 @@
                 <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">
                     Developed by Koushik Naskar
                 </div>
-                <div style="font-size: large;margin-top: 7px">Version 2.6.0 </div>
+                <div id='versionname' style="font-size: large;margin-top: 7px">Version 2.6.0 </div>
                 <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">
                     Copyright &copy; July, 2019 Koushik Naskar
                 </div>
@@ -83,6 +83,9 @@
         <div class="custom-cm__item" onclick="autoSmooth()">Mooving Average <span class="signsk">M</span></div>
         <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteExtrapolate()" >Regression Fitting <span class="signsk">E</span></div>
     </div>
+    <script>
+        document.getElementById('versionname').innerHTML =`Version ${require('../package.json').version}` 
+    </script>
 
     <script src='../lib/init.min.js'></script>
     <script defer src="../lib/jquery.min.js"></script>
