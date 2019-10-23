@@ -1,0 +1,191 @@
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.7"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<input type="text" id ='formInput' value="a0*cos(x)+a1*x**2">
+<button onclick="startTrain()">Start Training</button>
+<button onclick="clearInterval(loop)">Stop Training</button>
+<div id="fig"></div>
+
+
+
+
+<script>
+
+
+var xxxx = [0.66807700,0.69377300,0.71946800,0.74516300,0.77085900,1.00791600,1.04668200,1.08544800,1.12421400,1.16298000,1.34706300,1.39887300,1.45068300,1.50249400,1.55430400,1.68528700,1.75010600,1.81492500,1.87974400,1.94456200,2.02235700,2.10014000,2.17792300,2.25570600,2.33348900,2.35804000,2.44873400,2.53942800,2.63012200,2.69210700,2.72081500,2.79565000,2.89919200,3.00273500,3.10627800,3.14065000,3.25697000,3.37329000,3.48961100,3.61251600,3.74153400,3.87055300,4.24884100]
+var yyyyy = [2.65924000,2.41115000,2.17944000,1.97250000,1.78737000,0.76178300,0.67076600,0.59290400,0.52627500,0.46925000,0.29020600,0.25843000,0.23218700,0.21037700,0.19205800,0.15658600,0.14297700,0.13094500,0.12005900,0.11002700,0.09888300,0.08871100,0.07935700,0.07078600,0.06295000,0.06060100,0.05265800,0.04457000,0.04390400,0.03127600,0.03274400,0.02770300,0.02547200,0.02337700,0.01636200,0.01447100,0.01297800,0.01025300,0.00847500,0.00657900,0.00515400,0.00320700,0.00000000]
+
+
+  const tfx = tf.tensor1d(xxxx)//.mul(tf.scalar(Math.PI/180.0))
+  const tfy = tf.tensor1d(yyyyy)
+  const trainX = tfx.dataSync()
+  const trainY = tfy.dataSync()
+  a1 = tf.variable(tf.scalar(0))
+  a2 = tf.variable(tf.scalar(0))
+  a3 = tf.variable(tf.scalar(0))
+  a4 = tf.variable(tf.scalar(0))
+  a5 = tf.variable(tf.scalar(0))
+  a6 = tf.variable(tf.scalar(0))
+
+
+
+
+
+  var coeffList = [a1,a2,a3,a4,a5,a6]
+
+  const learningRate = 0.1;
+  const optimizer = tf.train.sgd(learningRate);
+// modify power
+// not working for more than 3
+// var c = a0.mul(x.cos()).add(a1.mul(x.sin()).add(a3.mul(pow(x,2)))
+
+var dat = [{
+    x: trainX,
+    y: trainY,
+    text : 'fvugherguierui',
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+        symbol: "circle-dot",
+        color: '#b00',
+        size: 3,
+        opacity: 1
+    }
+  },
+  {
+    x: [[0]],
+    y: [[0]],
+    type: 'scatter',
+    mode: 'lines',
+    line: {
+        width: 2,
+        color: "#1e77b4",
+        dash: 0,
+        shape: 'linear'
+    }
+}]
+
+
+  Plotly.newPlot(fig, dat, {title:'ebrguerbgeubg'})
+
+
+  lossFunc = (prediction, labels)=> prediction.sub(labels).square().mean()
+
+
+
+
+
+
+
+
+
+
+  function predict(x) {
+    return tf.tidy(function() {
+      return tf.exp(a2.add(a3.mul(x)).add(a4.mul(x.pow(tf.scalar(1)))).add(a4.mul(x.pow(tf.scalar(2))))).mul(a1).add(a6)
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function updatePlot(){
+    
+      lossVal = optimizer.minimize(()=> lossFunc(predict(tfx), tfy),true)  //train model
+      console.log(lossVal.dataSync()[0], tf.memory().numTensors)
+      yss = predict(tfx)
+      Plotly.restyle(fig, {
+          x: [trainX],
+          y: [yss.dataSync()],
+      },1)
+    //   var values = ''
+    //   for (let val of coeffList){
+    //     values+= `${val.name} : ${val.val.dataSync()[0]},<br>`
+    //   }
+    //   values += `loss : ${lossVal.dataSync()[0]}`
+    //   Plotly.relayout(fig , {title: values})
+      yss.dispose()
+      lossVal.dispose()
+  }
+
+
+
+  var predict, loop;
+  function startTrain(){
+    // ff = getFuncFromStr()
+    // predict = (x)=> tf.tidy( function(){return ff(x)}) 
+    loop = setInterval(updatePlot,100)
+  }
+
+
+// var tt = a0.mul(x.cos()).add(a1.mul(x.sin())).add(a3.mul(x.cos()))
+
+
+//   function getFuncFromStr(){
+//     var str = document.getElementById('formInput').value
+//     var ss = str.replace('**', 'pow')
+//         var ss = ss.trim().split('+').map(x=>x.trim().split('*'))
+//         var coeffPatter = /(a\d+)/
+//         var funcPattern=/([a-z]+\(x\))/
+
+//         var funcList = ['abs','acos','acosh','asin','asinh','atan','atanh','cos','cosh','exp','log','sin','sinh','sqrt','tan','tanh']
+        
+//         var formStr = ss.map(term=>term.map(part=>{
+//             if(coeffPatter.test(part)){ //this is a coefficient
+//                 eval(`${part}=tf.variable(tf.scalar(0))`)
+//                 coeffList.push({name: part,val: eval(part)})
+//                 return part
+//             } else if (funcPattern.test(part)){//this is a function
+//                 func = part.replace('(x)','')
+//                 if(funcList.includes(func)){
+//                     return `x.${func}()`
+//                 }
+//             } else if(/xpow\(?[+-]?\d+\)?/.test(part)){//this is power term
+//                 return `x.pow(tf.scalar(${part.replace('xpow','')}))`
+//             }else if (part=='x'){
+//               return part
+//             }else{
+//                 throw "Can't parse the formula."
+//             }
+//         })).map(x=>{
+//           if(x.length==1){
+//             return x
+//           }else{
+//             return `${x[0]}.mul(${x[1]}).mul(` + x.slice(2).join(').mul(') + ')'
+//           }
+//         })
+//         console.log(formStr)
+//         if(formStr.length==1){
+//           formStr = formStr[0]
+//         }else{
+//           formStr = `${formStr[0]}.add(${formStr[1]}).add(` + formStr.slice(2).join(').add(') + ')'
+//         }
+//         console.log(formStr)
+//     return eval(`(function(x){return ${formStr}})`)
+//   }
+
+
+
+</script>

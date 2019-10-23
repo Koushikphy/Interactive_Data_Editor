@@ -103,6 +103,7 @@ function repeatMirror() {
 
 var start='', stop='', step='';
 function dataFiller() {
+    saveOldData()
     start= parseFloat($("#fstart").val());
     stop = parseFloat($("#fend").val());
     step = parseFloat($("#fstep").val());
@@ -110,11 +111,14 @@ function dataFiller() {
     var allowRegression = $("#expSel")[0].selectedIndex ? true : false;
 
     var cols_wo_y = []   // on which columns to fill the data
-    for (let i = 0; i < data[0].length; i++) if ((i != col.y) & (i != col.x)) cols_wo_y.push(i)
+    if(ddd){
+        for (let i = 0; i < data[0].length; i++) if ((i != col.y) & (i != col.x)) cols_wo_y.push(i)
+    }else { // no col.x remove in 2d 
+        for (let i = 0; i < data[0].length; i++) if (i != col.y) cols_wo_y.push(i)
+    }
+    
 
-    var fullArr = []    // new filled x values to interpolate along
-    for (let i = start; i <= stop; i = i + step)  fullArr.push(i)
-
+    var fullArr = Plotly.d3.range(start, stop,step)
     data = data.map(dat => {
         if (fullArr.length == dat[0].length) return dat; // no interpolation required
         var xs = dat[col.y].slice()
@@ -126,7 +130,9 @@ function dataFiller() {
             backRegRequired = fullArr[fullArr.length-1]>xs[xs.length-1]
         }
 
+
         for (let tc of cols_wo_y) {
+
             newArr = [];
             var ys = dat[tc].slice();
             spl = new Spline(xs, ys)
@@ -165,8 +171,9 @@ function dataFiller() {
             }
             dat[tc] = newArr;
         }
+
         dat[col.y] = fullArr;
-        dat[col.x] = new Array(fullArr.length).fill(dat[col.x][0])
+        if(ddd) dat[col.x] = new Array(fullArr.length).fill(dat[col.x][0])
         return dat;
     })
 
