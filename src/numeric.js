@@ -2,7 +2,6 @@
 // functions here are all pure, i.e. 
 //doesnot depend on the outside parameter, and solely depend on the given argument
 
-
 function parseData(strDps) {
     var newdat = [],
         blocks = [];
@@ -76,7 +75,21 @@ function expRotate(tmpData, i, j) {
 
 
 
-
+function matmul(a,b){
+    // column and row length
+    if (a[0].length != b.length) return
+    // a is of length nxm,,, b is of mxp so  res is of the length nxp
+    var n = a.length, p = b[0].length, m = b.length
+    res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
+    for(let k=0; k<m; k++){
+        for (let i=0; i<n; i++){
+            for(let j =0; j<p ; j++){
+                res[i][j] += a[i][k]* b[k][j]
+            }
+        }
+    }
+    return res
+}
 
 
 function transpose(m) {

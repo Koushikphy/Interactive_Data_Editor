@@ -10,6 +10,7 @@ import { inverse, Matrix } from 'ml-matrix';
  * @param {function} paramFunction - The parameters and returns a function with the independent variable as a parameter
  * @return {Matrix}
  */
+
 function gradientFunction(
   data,
   evaluatedData,

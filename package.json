@@ -25,12 +25,12 @@
       "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}"
     ],
     "nsis": {
-      "oneClick" : false , 
-      "allowToChangeInstallationDirectory": true, 
-      "perMachine" : false ,
-      "differentialPackage":true,
-      "displayLanguageSelector":true
-  },
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "differentialPackage": true,
+      "displayLanguageSelector": true
+    },
     "dmg": {
       "contents": [
         {
@@ -46,14 +46,20 @@
       ]
     },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "category": "Office",
       "desktop": {
         "Encoding": "UTF-8"
       }
     },
     "win": {
-      "target": ["msi", "nsis"]
+      "target": [
+        "msi",
+        "nsis"
+      ]
     }
   },
   "devDependencies": {
@@ -67,6 +73,8 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
+    "ml-levenberg-marquardt": "^2.0.0",
+    "ml-regression-polynomial": "^2.0.0",
     "particles.js": "^2.0.0",
     "plotly.js-gl3d-dist": "^1.50.0",
     "request": "^2.88.0"
