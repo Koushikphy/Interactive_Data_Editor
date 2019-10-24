@@ -111,6 +111,7 @@ function hypotenuse(a, b) {
     return 0;
   }
 
+
 function solve(A,x){// solves a system of linear equations using QR decomposition
     var qr = JSON.parse(JSON.stringify(A))
     var X  = JSON.parse(JSON.stringify(x))
@@ -146,6 +147,7 @@ function solve(A,x){// solves a system of linear equations using QR decompositio
       }
       rdiag[k] = -nrm;
     }
+
     //solve the equations
     for (k = 0; k < n; k++) {
         s = 0;
@@ -165,6 +167,36 @@ function solve(A,x){// solves a system of linear equations using QR decompositio
     }
     return X.slice(0,n)
   }
+
+
+//   let count = X[0].length;
+
+//   for (k = 0; k < n; k++) {
+//     for (j = 0; j < count; j++) {
+//       s = 0;
+//       for (i = k; i < m; i++) {
+//         s += qr[i][k] * X[i][j];
+//       }
+//       s = -s / qr[k][k];
+//       for (i = k; i < m; i++) {
+//           X[i][j] += s*qr[i][k]
+//       }
+//     }
+//   }
+//   for (k = n - 1; k >= 0; k--) {
+//     for (j = 0; j < count; j++) {
+//         X[k][j] /= rdiag[k] 
+//     }
+//     for (i = 0; i < k; i++) {
+//       for (j = 0; j < count; j++) {
+//           X[i][j] -=X[k][j]*qr[i][k]
+//       }
+//     }
+//   }
+
+
+
+
 
 
 class Regression{

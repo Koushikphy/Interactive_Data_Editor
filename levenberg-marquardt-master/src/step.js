@@ -1,15 +1,4 @@
-import { inverse, Matrix } from 'ml-matrix';
 
-/**
- * Difference of the matrix function over the parameters
- * @ignore
- * @param {{x:Array<number>, y:Array<number>}} data - Array of points to fit in the format [x1, x2, ... ], [y1, y2, ... ]
- * @param {Array<number>} evaluatedData - Array of previous evaluated function values
- * @param {Array<number>} params - Array of previous parameter values
- * @param {number} gradientDifference - Adjustment for decrease the damping parameter
- * @param {function} paramFunction - The parameters and returns a function with the independent variable as a parameter
- * @return {Matrix}
- */
 
 function gradientFunction(
   data,
@@ -33,16 +22,10 @@ function gradientFunction(
       ans[param][point] = evaluatedData[point] - funcParam(data.x[point]);
     }
   }
-  return new Matrix(ans);
+  return new ML.Matrix(ans);
 }
 
-/**
- * Matrix function over the samples
- * @ignore
- * @param {{x:Array<number>, y:Array<number>}} data - Array of points to fit in the format [x1, x2, ... ], [y1, y2, ... ]
- * @param {Array<number>} evaluatedData - Array of previous evaluated function values
- * @return {Matrix}
- */
+
 function matrixFunction(data, evaluatedData) {
   const m = data.x.length;
 
@@ -52,20 +35,11 @@ function matrixFunction(data, evaluatedData) {
     ans[point] = [data.y[point] - evaluatedData[point]];
   }
 
-  return new Matrix(ans);
+  return new ML.Matrix(ans);
 }
 
-/**
- * Iteration for Levenberg-Marquardt
- * @ignore
- * @param {{x:Array<number>, y:Array<number>}} data - Array of points to fit in the format [x1, x2, ... ], [y1, y2, ... ]
- * @param {Array<number>} params - Array of previous parameter values
- * @param {number} damping - Levenberg-Marquardt parameter
- * @param {number} gradientDifference - Adjustment for decrease the damping parameter
- * @param {function} parameterizedFunction - The parameters and returns a function with the independent variable as a parameter
- * @return {Array<number>}
- */
-export default function step(
+
+function step(
   data,
   params,
   damping,
@@ -90,7 +64,7 @@ export default function step(
     identity.add(gradientFunc.mmul(gradientFunc.transpose()))
   );
 
-  params = new Matrix([params]);
+  params = new ML.Matrix([params]);
   params = params.sub(
     inverseMatrix
       .mmul(gradientFunc)
