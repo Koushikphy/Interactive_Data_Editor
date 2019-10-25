@@ -240,8 +240,6 @@ class Spline{
 
 
 
-
-
 // functions for lmfit
 
 
@@ -404,6 +402,40 @@ function step( dat, parameters, damping, gradDiff, myfunc ) {
     return parms2
 }
 
+
 function myfunc([f,a,b,c,d,e]) {
 return (x) => f*(1+a*x+b*x**2 +c*x**3)*Math.exp(-d*x) +e // Math.sin(b * t);
+}
+
+str  = 'a*(1+b*x+c*x**2+d*x**2)*exp(-e*x)'
+pa = 'a,b,c,d,e'
+
+function formulaParser(str, pa){
+    funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
+    for(let func of funcList){
+        str = str.replace(func, 'Math.'+func)
+    }
+    return eval(`(function(${pa}){return (x)=> ${str}})`)
+}
+
+
+function initialSetup() {
+    // set an predifned damping, error tol, error convergence, step size
+    var parLen = paramList.length
+    if(initialValue){
+        if(!initialValue.length==parLen) throw 'Wrong initial values'
+    } else{
+        initialValue = new Array(parLen).fill(0)
+    }
+    if(minValue){
+        if(!minValue.length==parLen) throw 'Wrong minimum values'
+    } else{
+        minValue = new Array(parLen).fill(Number.MIN_SAFE_INTEGER)
+    }
+    if(maxvalues){
+        if(!maxvalues.length==parLen) throw 'Wrong maximum values'
+    } else{
+        maxvalues = new Array(parLen).fill(Number.MAX_SAFE_INTEGER)
+    }
+    if(dampingFactor<0) throw 'Damping factor must be positive'
 }
