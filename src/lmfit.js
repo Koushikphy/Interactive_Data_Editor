@@ -13,6 +13,8 @@ function hypotenuse(a, b) {
 
 
 
+
+
 // inverse of a 
 function inverse(A){// solves a system of linear equations using QR decomposition
   var qr = JSON.parse(JSON.stringify(A))
@@ -24,58 +26,50 @@ function inverse(A){// solves a system of linear equations using QR decompositio
   for(let i =0; i<m;i++) X[i][i] = 1.0
 
   for (k = 0; k < n; k++) {
-    var nrm = 0;
-    for (i = k; i < m; i++) {
-      nrm =hypotenuse(nrm, qr[i][k]);
-    }
-    if (nrm !== 0) {
-      if (qr[k][k] < 0) {
-        nrm = -nrm;
+      var nrm = 0;
+      for (i = k; i < m; i++) nrm =hypotenuse(nrm, qr[i][k])
+
+      if (nrm !== 0) {
+          if (qr[k][k] < 0) nrm = -nrm
+          for (i = k; i < m; i++) qr[i][k] /= nrm;
+          qr[k][k] +=1  
+          for (j = k + 1; j < n; j++) {
+              s = 0;
+              for (i = k; i < m; i++) s += qr[i][k] * qr[i][j];
+              s = -s / qr[k][k];
+              for (i = k; i < m; i++) qr[i][j] += s * qr[i][k] ;
+          }
       }
-      for (i = k; i < m; i++) {
-        qr[i][k] /= nrm
-      }
-      qr[k][k] +=1  
-      for (j = k + 1; j < n; j++) {
-        s = 0;
-        for (i = k; i < m; i++) {
-          s += qr[i][k] * qr[i][j]
-        }
-        s = -s / qr[k][k];
-        for (i = k; i < m; i++) {
-          qr[i][j] += s * qr[i][k] 
-        }
-      }
-    }
-    rdiag[k] = -nrm;
+      rdiag[k] = -nrm;
   }
 
   let count = X[0].length;
 
   for (k = 0; k < n; k++) {
-    for (j = 0; j < count; j++) {
+      for (j = 0; j < count; j++) {
       s = 0;
-      for (i = k; i < m; i++) {
-        s += qr[i][k] * X[i][j];
-      }
+          for (i = k; i < m; i++) {
+              s += qr[i][k] * X[i][j];
+          }
       s = -s / qr[k][k];
       for (i = k; i < m; i++) {
           X[i][j] += s*qr[i][k]
       }
-    }
+      }
   }
   for (k = n - 1; k >= 0; k--) {
-    for (j = 0; j < count; j++) {
-        X[k][j] /= rdiag[k] 
-    }
-    for (i = 0; i < k; i++) {
+  for (j = 0; j < count; j++) {
+  X[k][j] /= rdiag[k] 
+  }
+  for (i = 0; i < k; i++) {
       for (j = 0; j < count; j++) {
           X[i][j] -=X[k][j]*qr[i][k]
       }
-    }
+  }
   }
   return X
 }
+
 
 
 function eyemat(m,v){
@@ -198,11 +192,12 @@ function matrixFunction(data, evaluatedData) {
           matmul(inverseMatrix, gradientFunc),
         matrixFunc), 
       gradientDifference)
-    )
+    )[0]
+
     var mnp = parameters.length
     var parms2 =  new Array(mnp)
     for(let i=0; i<mnp; i++){
-      parms2[i] = parameters[i]-minp[0][i]
+      parms2[i] = parameters[i]-minp[i]
     }
     return parms2
   }

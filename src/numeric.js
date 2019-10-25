@@ -169,36 +169,6 @@ function solve(A,x){// solves a system of linear equations using QR decompositio
   }
 
 
-//   let count = X[0].length;
-
-//   for (k = 0; k < n; k++) {
-//     for (j = 0; j < count; j++) {
-//       s = 0;
-//       for (i = k; i < m; i++) {
-//         s += qr[i][k] * X[i][j];
-//       }
-//       s = -s / qr[k][k];
-//       for (i = k; i < m; i++) {
-//           X[i][j] += s*qr[i][k]
-//       }
-//     }
-//   }
-//   for (k = n - 1; k >= 0; k--) {
-//     for (j = 0; j < count; j++) {
-//         X[k][j] /= rdiag[k] 
-//     }
-//     for (i = 0; i < k; i++) {
-//       for (j = 0; j < count; j++) {
-//           X[i][j] -=X[k][j]*qr[i][k]
-//       }
-//     }
-//   }
-
-
-
-
-
-
 class Regression{
     constructor(xs,ys,n){
         //fit x,y with a polynomial of order n 
@@ -266,4 +236,174 @@ class Spline{
         b=(x-this.xs[i])/h
         return a*this.ys[i]+b*this.ys[i+1]+ ((a**3-a)*this.diff[i]+(b**3-b)*this.diff[i+1])*(h**2)/6.0
     }
+}
+
+
+
+
+
+// functions for lmfit
+
+
+// inverse of a 
+function inverse(A){// solves a system of linear equations using QR decomposition
+    var qr = JSON.parse(JSON.stringify(A))
+    var m = qr.length
+    var n = qr[0].length
+    var rdiag = new Array(n);
+    var i, j, k, s;
+    var X = new Array(m).fill(0).map(_ => new Array(m).fill(0))
+    for(let i =0; i<m;i++) X[i][i] = 1.0
+
+    for (k = 0; k < n; k++) {
+        var nrm = 0;
+        for (i = k; i < m; i++) nrm =hypotenuse(nrm, qr[i][k])
+        if (nrm !== 0) {
+            if (qr[k][k] < 0) nrm = -nrm
+            for (i = k; i < m; i++) qr[i][k] /= nrm;
+            qr[k][k] +=1  
+            for (j = k + 1; j < n; j++) {
+                s = 0;
+                for (i = k; i < m; i++) s += qr[i][k] * qr[i][j];
+                s = -s / qr[k][k];
+                for (i = k; i < m; i++) qr[i][j] += s * qr[i][k] ;
+            }
+        }
+        rdiag[k] = -nrm;
+    }
+
+    let count = X[0].length;
+
+    for (k = 0; k < n; k++) {
+        for (j = 0; j < count; j++) {
+            s = 0;
+            for (i = k; i < m; i++) s += qr[i][k] * X[i][j];
+            s = -s / qr[k][k];
+            for (i = k; i < m; i++) X[i][j] += s*qr[i][k]
+        }
+    }
+    for (k = n - 1; k >= 0; k--) {
+        for (j = 0; j < count; j++)  X[k][j] /= rdiag[k] 
+        for (i = 0; i < k; i++) {
+            for (j = 0; j < count; j++) X[i][j] -=X[k][j]*qr[i][k]
+        }
+    }
+    return X
+}
+
+function eyemat(m,v){
+    var X = new Array(m).fill(0).map(_ => new Array(m).fill(0))
+    for(let i =0; i<m;i++) X[i][i] = v
+    return X
+}
+
+
+function matmul(a,b){
+    // column and row length
+    if (a[0].length != b.length) return
+    // a is of length nxm,,, b is of mxp so  res is of the length nxp
+    var n = a.length, p = b[0].length, m = b.length
+    res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
+    for(let k=0; k<m; k++){
+        for (let i=0; i<n; i++){
+            for(let j =0; j<p ; j++){
+                res[i][j] += a[i][k]* b[k][j]
+            }
+        }
+    }
+    return res
+}
+
+
+
+function matadd(a,b){
+    var m = a.length, n = a[0].length;
+    var res = new Array(m).fill(0).map(_ => new Array(n).fill(0))
+    for(let i=0;i<m;i++){
+        for(let j=0;j<n;j++){
+            res[i][j] = a[i][j] + b[i][j]
+        }
+    }
+    return res
+}
+
+
+function matmulscalar(a,b){
+    var m = a.length, n = a[0].length;
+    var res = new Array(m).fill(0).map(_ => new Array(n).fill(0))
+    for(let i=0;i<m;i++){
+        for(let j=0;j<n;j++){
+            res[i][j] = a[i][j]*b
+        }
+    }
+    return res
+}
+
+
+
+function errorCalculation( data, parameters, myfunc) {
+    var error = 0;
+    const func = myfunc(parameters);
+    for (var i = 0; i < data.x.length; i++) {
+        error += Math.abs(data.y[i] - func(data.x[i]));
+    }
+    return error;
+}
+
+
+function gradientFunction(data, evDat,params, gradDiff, paramFunction ) {
+    const n = params.length;
+    const m = data.x.length;
+    var ans = new Array(n);
+
+    for (var param = 0; param < n; param++) {
+        ans[param] = new Array(m);
+        var auxParams = params.concat();
+        auxParams[param] += gradDiff;
+        var funcParam = paramFunction(auxParams);
+        for (var point = 0; point < m; point++) {
+            ans[param][point] = evDat[point] - funcParam(data.x[point]);
+        }
+    }
+    return ans;
+}
+
+
+
+
+function matrixFunction(data, evDat) {
+    const m = data.x.length;
+    var ans = new Array(m);
+    for (var point = 0; point < m; point++) ans[point] = [data.y[point] - evDat[point]]
+    return ans;
+}
+
+
+function step( dat, parameters, damping, gradDiff, myfunc ) {
+    var value = damping * gradDiff * gradDiff;
+    var identity =eyemat(parameters.length, value)
+    var evDat = dat.x.map((e) => myfunc(parameters)(e));
+    var gradientFunc = gradientFunction( dat, evDat, parameters, gradDiff, myfunc);
+
+    var matrixFunc = matrixFunction(dat, evDat);
+    var inverseMatrix = inverse( matadd(identity, matmul(gradientFunc, transpose(gradientFunc))))
+
+    var minp = transpose(
+        matmulscalar(
+            matmul(
+            matmul(inverseMatrix, gradientFunc),
+                matrixFunc), 
+        gradDiff)
+    )[0]
+
+    var mnp = parameters.length
+    var parms2 =  new Array(mnp)
+    for(let i=0; i<mnp; i++){
+        parms2[i] = parameters[i]-minp[i]
+    }
+    return parms2
+}
+
+function myfunc([f,a,b,c,d,e]) {
+return (x) => f*(1+a*x+b*x**2 +c*x**3)*Math.exp(-d*x) +e // Math.sin(b * t);
 }
