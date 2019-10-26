@@ -33,7 +33,7 @@ var dpsy = [2.41115000,2.17944000,1.97250000,1.78737000,0.76178300,0.67076600,0.
   var coeffList = [a1,a2,a3,a4,a5,a6]
 
   const learningRate = 0.05;
-  const optimizer = tf.train.adagrad(learningRate);
+  const optimizer = tf.train.sgd(learningRate);
 
 
 var dat = [{
@@ -69,57 +69,12 @@ var dat = [{
   lossFunc = (prediction, labels)=> prediction.sub(labels).square().mean()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   function predict(x) {
     return tf.tidy(function() {
       // return tf.exp(a2.add(a3.mul(x)).add(a4.mul(x.pow(tf.scalar(1)))).add(a4.mul(x.pow(tf.scalar(2))))).mul(a1).add(a6)
-      return tf.scalar(1.0).add(a1.mul(x)).add(a2.mul(x.pow(tf.scalar(1)))).add(a3.mul(x.pow(tf.scalar(2)))).add(a4.mul(x.pow(tf.scalar(3)))).mul(tf.exp(x.mul(a5).mul(tf.scalar(-1)))).add(a6)
+      return tf.scalar(1.0).add(a2.mul(x)).add(a3.mul(x.pow(tf.scalar(2)))).add(a4.mul(x.pow(tf.scalar(3)))).mul(tf.exp(x.mul(a5).mul(tf.scalar(-1)))).mul(a1).add(a6)
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -133,12 +88,12 @@ var dat = [{
           x: [trainX],
           y: [yss.dataSync()],
       },1)
-    //   var values = ''
-    //   for (let val of coeffList){
-    //     values+= `${val.name} : ${val.val.dataSync()[0]},<br>`
-    //   }
-    //   values += `loss : ${lossVal.dataSync()[0]}`
-    //   Plotly.relayout(fig , {title: values})
+      var values = ''
+      for (let val of coeffList){
+        values+= `${val.dataSync()[0]},<br>`
+      }
+      values += `loss : ${lossVal.dataSync()[0]}`
+      Plotly.relayout(fig , {title: values})
       yss.dispose()
       lossVal.dispose()
   }
