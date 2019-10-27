@@ -1,63 +1,68 @@
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.7"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto;
+  grid-gap: 5px;
+}
+
+.grid-container input{
+  width: 85%;
+  margin-right: 15%;
+}
+.grid-container span{
+  margin-left: .5pc;
+}
+
+    .oneparams1{
+      margin-bottom: 7px;;
+    }
+
+
+    </style>
+</head>
+
+<div style="margin-bottom: 7px;">
+  <span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a*x+b*x**2"></span>
+  <span style="margin-left: 3%;"> Parameters List: <input style=" height: 1.5pc; width: 10%;" id='paramList'type="text" value="a,b"></span>
+  <button style=" height: 1.7pc; float: right;margin-right: 1.4%;">Close</button>
+  <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
+</div>
+
+<div class="grid-container">
+     Max Iterations: <input id='iterationVal' type="text" value='10'>
+     <span>Initial Values: </span> <input id='intVal' type="text">
+     <span>Max Values:</span> <input id='maxVal' type="text">
+     <span>Min Values: </span><input id='minVal' type="text">
+     Damping factor: <input id='dampVal' type="text" value="1.5">
+    <span>Step Size:</span> <input id='stepVal' type="text" value='1e-2'>
+    <span>Error Tolerance: </span><input id='etVal' type="text" value='1e-5'>
+    <span>Error gradient:</span> <input id='egVal' type="text" value='1e-5'>  
+  </div>
+<div id="figurecontainer"></div>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<input type="text" id ='formInput' value="a0*cos(x)+a1*x**2">
-<button onclick="startTrain()">Start Training</button>
-<button onclick="clearInterval(loop)">Stop Training</button><br>
-Function <input type="text"><br>
-Parameters List <input type="text">
-Initial Values  <input type="text"><br>
-Minimum Values <input type="text">
-Maximum Values <input type="text"><br>
-Damping factor  <input type="text">
-Step Size <input type="text">
-Error convergence threshold <input type="text">
-Error Tolerance <input type="text">
-
-<div id="fig"></div>
-
-
-
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <script>
 
 
-var xxxx = [0.32778100,0.32790579,0.34300503,0.37058297,0.41815181,0.66807700,0.69377300,0.71946800,0.74516300,0.77085900,1.00791600,1.04668200,1.08544800,1.12421400,1.16298000,1.34706300,1.39887300,1.45068300,1.50249400,1.55430400,1.68528700,1.75010600,1.81492500,1.87974400,1.94456200,2.02235700,2.10014000,2.17792300,2.25570600,2.33348900,2.35804000,2.44873400,2.53942800,2.63012200,2.69210700,2.72081500,2.79565000,2.89919200,3.00273500,3.10627800,3.14065000,3.25697000,3.37329000,3.48961100,3.61251600,3.74153400,3.87055300,4.24884100]
-var yyyyy = [12.3393000,11.5302396,10.4757025,8.47946970,6.30244125,2.65924000,2.41115000,2.17944000,1.97250000,1.78737000,0.76178300,0.67076600,0.59290400,0.52627500,0.46925000,0.29020600,0.25843000,0.23218700,0.21037700,0.19205800,0.15658600,0.14297700,0.13094500,0.12005900,0.11002700,0.09888300,0.08871100,0.07935700,0.07078600,0.06295000,0.06060100,0.05265800,0.04457000,0.04390400,0.03127600,0.03274400,0.02770300,0.02547200,0.02337700,0.01636200,0.01447100,0.01297800,0.01025300,0.00847500,0.00657900,0.00515400,0.00320700,0.00000000]
+var dpsx = [0.32778100,0.32790579,0.34300503,0.37058297,0.41815181,0.66807700,0.69377300,0.71946800,0.74516300,0.77085900,1.00791600,1.04668200,1.08544800,1.12421400,1.16298000,1.34706300,1.39887300,1.45068300,1.50249400,1.55430400,1.68528700,1.75010600,1.81492500,1.87974400,1.94456200,2.02235700,2.10014000,2.17792300,2.25570600,2.33348900,2.35804000,2.44873400,2.53942800,2.63012200,2.69210700,2.72081500,2.79565000,2.89919200,3.00273500,3.10627800,3.14065000,3.25697000,3.37329000,3.48961100,3.61251600,3.74153400,3.87055300,4.24884100]
+var dpsy = [12.3393000,11.5302396,10.4757025,8.47946970,6.30244125,2.65924000,2.41115000,2.17944000,1.97250000,1.78737000,0.76178300,0.67076600,0.59290400,0.52627500,0.46925000,0.29020600,0.25843000,0.23218700,0.21037700,0.19205800,0.15658600,0.14297700,0.13094500,0.12005900,0.11002700,0.09888300,0.08871100,0.07935700,0.07078600,0.06295000,0.06060100,0.05265800,0.04457000,0.04390400,0.03127600,0.03274400,0.02770300,0.02547200,0.02337700,0.01636200,0.01447100,0.01297800,0.01025300,0.00847500,0.00657900,0.00515400,0.00320700,0.00000000]
 
-
-
-
-
-
-
-const optiont = {
-  damping: 1.5,
-  initialValues: [0,0,0],
-  gradientDifference: 10e-2,
-  maxIterations: 100,
-  errorTolerance: 10e-3
-};
-
-
-
-
-  tmp = Plotly.d3.range(10,721,1)
-  const tfx = tf.tensor1d(tmp).mul(tf.scalar(Math.PI/180.0))
-  const tfy = tfx.pow(tf.scalar(-1.5))
-  const trainX = tfx.dataSync()
-  const trainY = tfy.dataSync()
-
-  var coeffList = []
-
-  const learningRate = 0.1;
-  const optimizer = tf.train.adadelta(learningRate);
-// modify power
-// not working for more than 3
-// var c = a0.mul(x.cos()).add(a1.mul(x.sin()).add(a3.mul(pow(x,2)))
-
+dpsx = [1,2,3,4,5,6,7]
+dpsy = [1,4,9,16,25,36,49]
 var dat = [{
-    x: trainX,
-    y: trainY,
+    x: dpsx,
+    y: dpsy,
     text : 'fvugherguierui',
     type: 'scatter',
     mode: 'markers',
@@ -67,101 +72,398 @@ var dat = [{
         size: 3,
         opacity: 1
     }
-  },
-  {
-    x: [[0]],
-    y: [[0]],
+  }]
+
+Plotly.newPlot(figurecontainer, dat,{}, {editable:true})
+
+
+
+
+// inverse of a 
+function inverse(A){// solves a system of linear equations using QR decomposition
+    var qr = JSON.parse(JSON.stringify(A))
+    var m = qr.length
+    var n = qr[0].length
+    var rdiag = new Array(n);
+    var i, j, k, s;
+    var X = new Array(m).fill(0).map(_ => new Array(m).fill(0))
+    for(let i =0; i<m;i++) X[i][i] = 1.0
+
+    for (k = 0; k < n; k++) {
+        var nrm = 0;
+        for (i = k; i < m; i++) nrm =hypotenuse(nrm, qr[i][k])
+        if (nrm !== 0) {
+            if (qr[k][k] < 0) nrm = -nrm
+            for (i = k; i < m; i++) qr[i][k] /= nrm;
+            qr[k][k] +=1  
+            for (j = k + 1; j < n; j++) {
+                s = 0;
+                for (i = k; i < m; i++) s += qr[i][k] * qr[i][j];
+                s = -s / qr[k][k];
+                for (i = k; i < m; i++) qr[i][j] += s * qr[i][k] ;
+            }
+        }
+        rdiag[k] = -nrm;
+    }
+
+    let count = X[0].length;
+
+    for (k = 0; k < n; k++) {
+        for (j = 0; j < count; j++) {
+            s = 0;
+            for (i = k; i < m; i++) s += qr[i][k] * X[i][j];
+            s = -s / qr[k][k];
+            for (i = k; i < m; i++) X[i][j] += s*qr[i][k]
+        }
+    }
+    for (k = n - 1; k >= 0; k--) {
+        for (j = 0; j < count; j++)  X[k][j] /= rdiag[k] 
+        for (i = 0; i < k; i++) {
+            for (j = 0; j < count; j++) X[i][j] -=X[k][j]*qr[i][k]
+        }
+    }
+    return X
+}
+
+function eyemat(m,v){
+    var X = new Array(m).fill(0).map(_ => new Array(m).fill(0))
+    for(let i =0; i<m;i++) X[i][i] = v
+    return X
+}
+
+
+function matmul(a,b){
+    // column and row length
+    if (a[0].length != b.length) return
+    // a is of length nxm,,, b is of mxp so  res is of the length nxp
+    var n = a.length, p = b[0].length, m = b.length
+    res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
+    for(let k=0; k<m; k++){
+        for (let i=0; i<n; i++){
+            for(let j =0; j<p ; j++){
+                res[i][j] += a[i][k]* b[k][j]
+            }
+        }
+    }
+    return res
+}
+
+
+
+function matadd(a,b){
+    var m = a.length, n = a[0].length;
+    var res = new Array(m).fill(0).map(_ => new Array(n).fill(0))
+    for(let i=0;i<m;i++){
+        for(let j=0;j<n;j++){
+            res[i][j] = a[i][j] + b[i][j]
+        }
+    }
+    return res
+}
+
+
+function matmulscalar(a,b){
+    var m = a.length, n = a[0].length;
+    var res = new Array(m).fill(0).map(_ => new Array(n).fill(0))
+    for(let i=0;i<m;i++){
+        for(let j=0;j<n;j++){
+            res[i][j] = a[i][j]*b
+        }
+    }
+    return res
+}
+
+
+
+function errorCalculation( xs, ys, parameters, myfunc) {
+    var error = 0;
+    const func = myfunc(parameters);
+    for (var i = 0; i < xs.length; i++) {
+        error += Math.abs(ys[i] - func(xs[i]));
+    }
+    return error;
+}
+
+
+function gradientFunction(xs, evDat, params, gradDiff, paramFunction ) {
+    const n = params.length;
+    const m = xs.length;
+    var ans = new Array(n);
+
+    for (var param = 0; param < n; param++) {
+        ans[param] = new Array(m);
+        var auxParams = params.concat();
+        auxParams[param] += gradDiff;
+        var funcParam = paramFunction(auxParams);
+        for (var point = 0; point < m; point++) {
+            ans[param][point] = evDat[point] - funcParam(xs[point]);
+        }
+    }
+    return ans;
+}
+
+
+
+
+function matrixFunction(ys, evDat) {
+    const m = ys.length;
+    var ans = new Array(m);
+    for (var point = 0; point < m; point++) ans[point] = [ys[point] - evDat[point]]
+    return ans;
+}
+
+
+function step( xs, ys, parameters, damping, gradDiff, myfunc ) {
+    var value    = damping * gradDiff * gradDiff;
+    var identity = eyemat(parameters.length, value);
+    var evDat    = xs.map((e) => myfunc(parameters)(e));
+    var gradientFunc = gradientFunction( xs, evDat, parameters, gradDiff, myfunc);
+    var matrixFunc    = matrixFunction(ys, evDat);
+    var inverseMatrix = inverse( matadd(identity, matmul(gradientFunc, transpose(gradientFunc))))
+
+    var minp = transpose(
+        matmulscalar(
+            matmul(
+            matmul(inverseMatrix, gradientFunc),
+                matrixFunc), 
+        gradDiff)
+    )[0]
+    var mnp = parameters.length
+    var parms2 =  new Array(mnp)
+    for(let i=0; i<mnp; i++){
+        parms2[i] = parameters[i]-minp[i]
+    }
+    return parms2
+}
+
+
+
+
+function transpose(m) {
+    return m[0].map((_, i) => m.map(x => x[i]));
+};
+
+function hypotenuse(a, b) {
+    var r = 0;
+    if (Math.abs(a) > Math.abs(b)) {
+      r = b / a;
+      return Math.abs(a) * Math.sqrt(1 + r * r);
+    }
+    if (b !== 0) {
+      r = a / b;
+      return Math.abs(b) * Math.sqrt(1 + r * r);
+    }
+    return 0;
+  }
+
+
+function myfunc([f,a,b,c,d,e]) {
+return (x) => f*(1+a*x+b*x**2 +c*x**3)*Math.exp(-d*x) +e // Math.sin(b * t);
+}
+
+// str  = 'a*(1+b*x+c*x**2+d*x**2)*exp(-e*x)'
+// pa = 'a,b,c,d,e'
+
+function formulaParser(str, pa){
+    funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
+    for(let func of funcList){
+        str = str.replace(func, 'Math.'+func)
+    }
+    return eval(`(function([${pa}]){return (x)=> ${str}})`)
+}
+
+
+function initialSetup() {
+    var funcStr  =$('#funcStr').val()
+    var paramList=$('#paramList').val().split(',')
+    var iterationVal=parseInt($('#iterationVal').val())
+    var intVal   =$('#intVal').val().split(',').map(x=>parseFloat(x))
+    var maxVal   =$('#maxVal').val().split(',').map(x=>parseFloat(x))
+    var minVal   =$('#minVal').val().split(',').map(x=>parseFloat(x))
+    var dampVal  =parseFloat($('#dampVal').val())
+    var stepVal  =parseFloat($('#stepVal').val())
+    var etVal    =parseFloat($('#etVal').val())
+    var egVal    =parseFloat($('#egVal').val())
+    if (!funcStr) throw 'Funtion is required.'
+    if (!paramList) throw 'Prameters list is required'
+    if (!iterationVal) throw 'Maximum iteraion number is required'
+    // set an predifned damping, error tol, error convergence, step size
+    var parLen = paramList.length
+    if(!isNaN(intVal[0])){
+      console.log(intVal)
+        if(intVal.length!=parLen) throw 'Wrong number of initial values'
+    } else{
+        intVal = new Array(parLen).fill(0)
+    }
+    if(!isNaN(minVal[0])){
+        if(!minVal.length!=parLen) throw 'Wrong number of minimum values'
+    } else{
+        minVal = new Array(parLen).fill(Number.MIN_SAFE_INTEGER)
+    }
+    if(!isNaN(maxVal[0])){
+        if(!maxVal.length!=parLen) throw 'Wrong number of maximum values'
+    } else{
+        maxVal = new Array(parLen).fill(Number.MAX_SAFE_INTEGER)
+    }
+    if(dampVal){
+        if(dampVal<0) throw 'Damping factor must be positive'
+    } else{
+        dampVal = 1.5
+    }
+    if(!stepVal) stepVal = 1e-2
+    if(!etVal) etVal = 1e-5
+    if(!egVal) egVal = 1e-5
+    try {
+        funcStr = formulaParser(funcStr, paramList)
+    } catch (error) {
+        throw "Can't parse the formula."
+    }
+    return [funcStr, iterationVal, intVal ,maxVal ,minVal ,dampVal ,stepVal ,etVal, egVal]
+}
+
+
+
+var polyFitLive = false, ddd=false
+function lmfit(){
+    if (!polyFitLive) {
+        if(ddd){
+            alert('Regression fitting is only supported for 2D data.'); return
+        }
+        if(figurecontainer.data.length>1){
+            alert('Supported only for one plot at time.'); return
+        }
+    }
+    try{
+      var [func,maxIter, parameters, maxVal ,minVal ,dampval ,stepVal ,etVal, egVal] = initialSetup()// params means initial values of parameters
+    } catch(err){
+      alert(err); return ;
+    }
+
+    var olderror = Number.MIN_SAFE_INTEGER
+    var converged = false
+    xs = dpsx.slice(); ys = dpsy.slice()
+    try {
+      func(parameters)(xs[0])
+    } catch (error) {
+      alert("Something wrong, can't use the formula"); console.log(error);return ;
+    }
+    for (let iteraion=0;iteraion<maxIter && !converged; iteraion++) {
+         parameters = step( xs, ys, parameters, dampval, stepVal, func);
+      for (let k = 0; k < parameters.length; k++) {
+        parameters[k] = Math.min( Math.max(minVal[k], parameters[k]),  maxVal[k]);
+      }
+
+      var error = 0, fity=[];
+    const tfunc = func(parameters);
+    for (var i = 0; i < xs.length; i++) {
+        tmp  = tfunc(xs[i])
+        error += Math.abs(ys[i] - tmp);
+        fity.push(tmp)
+    }
+    // return error;
+    converged = Math.abs(error- olderror) <= egVal || error <=etVal;
+    olderror = error
+  }
+
+  var dat = [{
+    x: dpsx,
+    y: fity,
+    text : 'fvugherguierui',
     type: 'scatter',
     mode: 'lines',
-    line: {
-        width: 2,
-        color: "#1e77b4",
-        dash: 0,
-        shape: 'linear'
+    marker: {
+        symbol: "circle-dot",
+        color: '#b00',
+        size: 3,
+        opacity: 1
+    },line:{
+      shape: 'spline'
     }
-}]
+  }]
+        Plotly.addTraces(figurecontainer, dat)
+        anotText =  `y = ${$('#funcStr').val()}<br>
+        parameters = ${parameters.map(x=>x.toPrecision(5))}
+        <br>error=${error.toPrecision(5)}`
 
-
-  Plotly.newPlot(fig, dat, {title:'ebrguerbgeubg'})
-
-
-  lossFunc = (prediction, labels)=> prediction.sub(labels).square().mean()
-
-
-  function updatePlot(){
-    
-      lossVal = optimizer.minimize(()=> lossFunc(predict(tfx), tfy),true)  //train model
-      console.log(lossVal.dataSync()[0], tf.memory().numTensors)
-      yss = predict(tfx)
-      Plotly.restyle(fig, {
-          x: [trainX],
-          y: [yss.dataSync()],
-      },1)
-      var values = ''
-      for (let val of coeffList){
-        values+= `${val.name} : ${val.val.dataSync()[0]},<br>`
-      }
-      values += `loss : ${lossVal.dataSync()[0]}`
-      Plotly.relayout(fig , {title: values})
-      yss.dispose()
-      lossVal.dispose()
-  }
+        Plotly.relayout(figurecontainer, {annotations: [
+    {
+      xref: 'paper',
+      x: 0,
+      yref: 'paper',
+      y: 1,
+      text: anotText,
+      showarrow:false
+    }
+  ]})
+}
 
 
 
-  var predict, loop;
-  function startTrain(){
-    ff = getFuncFromStr()
-    predict = (x)=> tf.tidy( function(){return ff(x)}) 
-    loop = setInterval(updatePlot,100)
-  }
 
 
-// var tt = a0.mul(x.cos()).add(a1.mul(x.sin())).add(a3.mul(x.cos()))
 
 
-  function getFuncFromStr(){
-    var str = document.getElementById('formInput').value
-    var ss = str.replace('**', 'pow')
-        var ss = ss.trim().split('+').map(x=>x.trim().split('*'))
-        var coeffPatter = /(a\d+)/
-        var funcPattern=/([a-z]+\(x\))/
 
-        var funcList = ['abs','acos','acosh','asin','asinh','atan','atanh','cos','cosh','exp','log','sin','sinh','sqrt','tan','tanh']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   function getFuncFromStr(){
+//     var str = document.getElementById('formInput').value
+//     var ss = str.replace('**', 'pow')
+//         var ss = ss.trim().split('+').map(x=>x.trim().split('*'))
+//         var coeffPatter = /(a\d+)/
+//         var funcPattern=/([a-z]+\(x\))/
+
+//         var funcList = ['abs','acos','acosh','asin','asinh','atan','atanh','cos','cosh','exp','log','sin','sinh','sqrt','tan','tanh']
         
-        var formStr = ss.map(term=>term.map(part=>{
-            if(coeffPatter.test(part)){ //this is a coefficient
-                eval(`${part}=tf.variable(tf.scalar(0))`)
-                coeffList.push({name: part,val: eval(part)})
-                return part
-            } else if (funcPattern.test(part)){//this is a function
-                func = part.replace('(x)','')
-                if(funcList.includes(func)){
-                    return `x.${func}()`
-                }
-            } else if(/xpow\(?[+-]?\d+\)?/.test(part)){//this is power term
-                return `x.pow(tf.scalar(${part.replace('xpow','')}))`
-            }else if (part=='x'){
-              return part
-            }else{
-                throw "Can't parse the formula."
-            }
-        })).map(x=>{
-          if(x.length==1){
-            return x
-          }else{
-            return `${x[0]}.mul(${x[1]}).mul(` + x.slice(2).join(').mul(') + ')'
-          }
-        })
-        console.log(formStr)
-        if(formStr.length==1){
-          formStr = formStr[0]
-        }else{
-          formStr = `${formStr[0]}.add(${formStr[1]}).add(` + formStr.slice(2).join(').add(') + ')'
-        }
-        console.log(formStr)
-    return eval(`(function(x){return ${formStr}})`)
-  }
+//         var formStr = ss.map(term=>term.map(part=>{
+//             if(coeffPatter.test(part)){ //this is a coefficient
+//                 eval(`${part}=tf.variable(tf.scalar(0))`)
+//                 coeffList.push({name: part,val: eval(part)})
+//                 return part
+//             } else if (funcPattern.test(part)){//this is a function
+//                 func = part.replace('(x)','')
+//                 if(funcList.includes(func)){
+//                     return `x.${func}()`
+//                 }
+//             } else if(/xpow\(?[+-]?\d+\)?/.test(part)){//this is power term
+//                 return `x.pow(tf.scalar(${part.replace('xpow','')}))`
+//             }else if (part=='x'){
+//               return part
+//             }else{
+//                 throw "Can't parse the formula."
+//             }
+//         })).map(x=>{
+//           if(x.length==1){
+//             return x
+//           }else{
+//             return `${x[0]}.mul(${x[1]}).mul(` + x.slice(2).join(').mul(') + ')'
+//           }
+//         })
+//         console.log(formStr)
+//         if(formStr.length==1){
+//           formStr = formStr[0]
+//         }else{
+//           formStr = `${formStr[0]}.add(${formStr[1]}).add(` + formStr.slice(2).join(').add(') + ')'
+//         }
+//         console.log(formStr)
+//     return eval(`(function(x){return ${formStr}})`)
+//   }
 
 
 

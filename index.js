@@ -244,13 +244,6 @@ const homeMenuTemplate = [{
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
         },{
-            label: "Regression Fitting",
-            enabled: false,
-            id:"rgft",
-            click() {
-                mainWindow.webContents.send("menuTrigger", "rgft")
-            }
-        },{
             label: "Points movable horaizontally",
             // enabled: false,
             checked: false,
@@ -270,12 +263,26 @@ const homeMenuTemplate = [{
             }
         },  ]
     },
-    // {
-    //     label: "Data",
-    //     submenu: [
-
-    //     ]
-    // },
+    {
+        label: "Fitting",
+        submenu: [
+            {
+                label: "Polynomial Regression Fitting",
+                enabled: false,
+                id:"rgft",
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "rgft")
+                }
+            },{
+                label: "Levenberg-Marquardt Fitting",
+                enabled: false,
+                id :"lmfit",
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "lmfit")
+                }
+            }
+        ]
+    },
     {
         label: "Window",
         submenu: [{

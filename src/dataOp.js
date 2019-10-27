@@ -370,11 +370,9 @@ function polyfit(n){
     if(n>=dpsx.length) {
         showStatus(`Fitting of order ${n} is not possible.`); return
     }
-    var xs = dpsx.slice(), ys = dpsy.slice(), fitx=[],fity=[];
+    var xs = dpsx.slice(), ys = dpsy.slice(), fity=[];
     var poly = new Regression(xs,ys,n, true)
-    var tmp = (xs.length-1)/n/4
-    for(let i=0;i<=n*4;i++) fitx.push(xs[parseInt(tmp*i)])
-    for(let xx of fitx) fity.push(poly.val(xx))
+    for(let xx of dpsx) fity.push(poly.val(xx))
     if(!polyFitLive){ // initiate the plot in not started
         polyFitLive = true
         let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
@@ -382,11 +380,11 @@ function polyfit(n){
         thisTrace.line.color = '#207104'
         thisTrace.line.shape = 'spline'
         thisTrace.name = 'Fitted line'
-        thisTrace.x = fitx
+        thisTrace.x = dpsx
         thisTrace.y = fity
         Plotly.addTraces(figurecontainer, thisTrace)
     } else{
-        Plotly.restyle(figurecontainer, {'x':[fitx], 'y': [fity]}, 1)
+        Plotly.restyle(figurecontainer, {'x':[dpsx], 'y': [fity]}, 1)
     }
     var formulaStr = 'y = '+ poly.cf[0].toPrecision(5)
     for(let i=1;i<=n;i++){
@@ -396,6 +394,100 @@ function polyfit(n){
     document.getElementById('formulaStr').innerHTML = formulaStr;
     return true // to be parsed by the menutrigger
 }
+
+
+
+function initLMfit(){
+    if(ddd){
+        alert('Regression fitting is only supported for 2D data.'); return
+    }
+    if(figurecontainer.data.length>1){
+        alert('Supported only for one plot at time.'); return
+    }
+    let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
+    thisTrace.mode = 'lines'
+    thisTrace.line.color = '#207104'
+    thisTrace.line.shape = 'spline'
+    thisTrace.name = 'Fitted line'
+    thisTrace.x = [dpsx[0]]
+    thisTrace.y = [dpsy[0]]
+    Plotly.addTraces(figurecontainer, thisTrace);
+    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+}
+
+
+function closeLMfit(){
+    // close the dialog box
+    Plotly.deleteTraces(figurecontainer, 1)
+    Plotly.relayout(figurecontainer, {annotations:[{text:'', showarrow:false}]})
+    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
+    resizePlot()
+}
+
+
+function lmfit(){
+    setTimeout(()=>{ // don't block the main event loop during iteration
+    try{
+        var [func,maxIter, parameters, maxVal ,minVal ,dampval ,stepVal ,etVal, egVal] = initialSetup()// params means initial values of parameters
+    } catch(err){
+        alert(err); return ;
+    }
+
+    var olderror = Number.MIN_SAFE_INTEGER
+    var converged = false
+    xs = dpsx.slice(); ys = dpsy.slice()
+    try {
+        func(parameters)(xs[0])  // check if the function is usable
+    } catch (error) {
+        alert("Something wrong, can't use the formula"); console.log(error);return ;
+    }
+    for (let iteraion=0;iteraion<maxIter && !converged; iteraion++) {
+        parameters = stepAhed( xs, ys, parameters, dampval, stepVal, func);
+        for (let k = 0; k < parameters.length; k++) {
+            parameters[k] = Math.min( Math.max(minVal[k], parameters[k]),  maxVal[k]);
+        }
+
+        var error = 0, fity=[];
+        const tfunc = func(parameters);
+        for (var i = 0; i < xs.length; i++) {
+            tmp  = tfunc(xs[i])
+            error += Math.abs(ys[i] - tmp);
+            fity.push(tmp)
+        }
+        converged = Math.abs(error- olderror) <= egVal || error <=etVal;
+        olderror = error
+    }
+
+
+    Plotly.restyle(figurecontainer, {x:[dpsx], y:[fity]},1)
+    anotText =  `y = ${$('#funcStr').val()}<br>Parameters = ${parameters.map(x=>x.toPrecision(5))}<br>Abs. Error = ${error.toPrecision(5)}`
+    Plotly.relayout(figurecontainer, {annotations: [
+        {
+            xref: 'paper', x: 1,
+            yref: 'paper', y: 0,
+            showarrow:false,
+            text: anotText,
+            bordercolor : '#000000'
+        }
+    ]})
+    showStatus('Data fitting done')
+    },1)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function endJobs({resize=false, updateAll = false, startdrag=false, clearIndex=false}={}){

@@ -150,14 +150,13 @@ function fileReader(fname) {
 
 
     //setup the column selector and menu.
-    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf', 'rgft']
+    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf', 'rgft', 'lmfit']
     if (ddd) { //3
         $(".3D").show()
         var fl = JSON.parse(localStorage.getItem("cols3d"));
         if (fl !== null) {
             col = fl;
         }
-        enableMenu.splice(enableMenu.indexOf('rgft'),1);
         enableMenu.push('pax', 'wire', 'surf');
 
     } else { //2d

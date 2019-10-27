@@ -387,3 +387,19 @@ a {
 #formulaStr{
     margin-left: 2.7pc
 }
+
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+    grid-gap: 5px;
+}
+  
+.grid-container input{
+    width: 85%;
+    margin-right: 15%;
+}
+.grid-container span{
+    margin-left: .5pc;
+}

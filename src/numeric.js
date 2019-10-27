@@ -349,9 +349,9 @@ function errorCalculation( data, parameters, myfunc) {
 }
 
 
-function gradientFunction(data, evDat,params, gradDiff, paramFunction ) {
+function gradientFunction(xs, evDat, params, gradDiff, paramFunction ) {
     const n = params.length;
-    const m = data.x.length;
+    const m = xs.length;
     var ans = new Array(n);
 
     for (var param = 0; param < n; param++) {
@@ -360,7 +360,7 @@ function gradientFunction(data, evDat,params, gradDiff, paramFunction ) {
         auxParams[param] += gradDiff;
         var funcParam = paramFunction(auxParams);
         for (var point = 0; point < m; point++) {
-            ans[param][point] = evDat[point] - funcParam(data.x[point]);
+            ans[param][point] = evDat[point] - funcParam(xs[point]);
         }
     }
     return ans;
@@ -369,21 +369,21 @@ function gradientFunction(data, evDat,params, gradDiff, paramFunction ) {
 
 
 
-function matrixFunction(data, evDat) {
-    const m = data.x.length;
+function matrixFunction(ys, evDat) {
+    const m = ys.length;
     var ans = new Array(m);
-    for (var point = 0; point < m; point++) ans[point] = [data.y[point] - evDat[point]]
+    for (var point = 0; point < m; point++) ans[point] = [ys[point] - evDat[point]]
     return ans;
 }
 
 
-function step( dat, parameters, damping, gradDiff, myfunc ) {
-    var value = damping * gradDiff * gradDiff;
-    var identity =eyemat(parameters.length, value)
-    var evDat = dat.x.map((e) => myfunc(parameters)(e));
-    var gradientFunc = gradientFunction( dat, evDat, parameters, gradDiff, myfunc);
+function stepAhed( xs, ys, parameters, damping, gradDiff, myfunc ) {
+    var value    = damping * gradDiff * gradDiff;
+    var identity = eyemat(parameters.length, value);
+    var evDat    = xs.map((e) => myfunc(parameters)(e));
+    var gradientFunc = gradientFunction( xs, evDat, parameters, gradDiff, myfunc);
 
-    var matrixFunc = matrixFunction(dat, evDat);
+    var matrixFunc    = matrixFunction(ys, evDat);
     var inverseMatrix = inverse( matadd(identity, matmul(gradientFunc, transpose(gradientFunc))))
 
     var minp = transpose(
@@ -403,39 +403,65 @@ function step( dat, parameters, damping, gradDiff, myfunc ) {
 }
 
 
-function myfunc([f,a,b,c,d,e]) {
-return (x) => f*(1+a*x+b*x**2 +c*x**3)*Math.exp(-d*x) +e // Math.sin(b * t);
-}
-
-str  = 'a*(1+b*x+c*x**2+d*x**2)*exp(-e*x)'
-pa = 'a,b,c,d,e'
 
 function formulaParser(str, pa){
     funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
     for(let func of funcList){
         str = str.replace(func, 'Math.'+func)
     }
-    return eval(`(function(${pa}){return (x)=> ${str}})`)
+    return eval(`(function([${pa}]){return (x)=> ${str}})`)
 }
+
 
 
 function initialSetup() {
+    var funcStr  =$('#funcStr').val()
+    var paramList=$('#paramList').val().split(',')
+    var iterationVal=parseInt($('#iterationVal').val())
+    var intVal   =$('#intVal').val().split(',').map(x=>parseFloat(x))
+    var maxVal   =$('#maxVal').val().split(',').map(x=>parseFloat(x))
+    var minVal   =$('#minVal').val().split(',').map(x=>parseFloat(x))
+    var dampVal  =parseFloat($('#dampVal').val())
+    var stepVal  =parseFloat($('#stepVal').val())
+    var etVal    =parseFloat($('#etVal').val())
+    var egVal    =parseFloat($('#egVal').val())
+    if (!funcStr) throw 'Funtion is required.'
+    if (!paramList) throw 'Prameters list is required'
+    if (!iterationVal) throw 'Maximum iteraion number is required'
     // set an predifned damping, error tol, error convergence, step size
     var parLen = paramList.length
-    if(initialValue){
-        if(!initialValue.length==parLen) throw 'Wrong initial values'
+    if(!isNaN(intVal[0])){
+      console.log(intVal)
+        if(intVal.length!=parLen) throw 'Wrong number of initial values'
     } else{
-        initialValue = new Array(parLen).fill(0)
+        intVal = new Array(parLen).fill(0)
     }
-    if(minValue){
-        if(!minValue.length==parLen) throw 'Wrong minimum values'
+    if(!isNaN(minVal[0])){
+        if(!minVal.length!=parLen) throw 'Wrong number of minimum values'
     } else{
-        minValue = new Array(parLen).fill(Number.MIN_SAFE_INTEGER)
+        minVal = new Array(parLen).fill(Number.MIN_SAFE_INTEGER)
     }
-    if(maxvalues){
-        if(!maxvalues.length==parLen) throw 'Wrong maximum values'
+    if(!isNaN(maxVal[0])){
+        if(!maxVal.length!=parLen) throw 'Wrong number of maximum values'
     } else{
-        maxvalues = new Array(parLen).fill(Number.MAX_SAFE_INTEGER)
+        maxVal = new Array(parLen).fill(Number.MAX_SAFE_INTEGER)
     }
-    if(dampingFactor<0) throw 'Damping factor must be positive'
+    if(dampVal){
+        if(dampVal<0) throw 'Damping factor must be positive'
+    } else{
+        dampVal = 1.5
+    }
+    if(!stepVal) stepVal = 1e-2
+    if(!etVal) etVal = 1e-5
+    if(!egVal) egVal = 1e-5
+    try {
+        funcStr = formulaParser(funcStr, paramList)
+    } catch (error) {
+        throw "Can't parse the formula."
+    }
+    return [funcStr, iterationVal, intVal ,maxVal ,minVal ,dampVal ,stepVal ,etVal, egVal]
 }
+
+
+
+

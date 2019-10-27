@@ -61,12 +61,28 @@ Extend by: <select style="margin-left: 18px;" id="repSel" >
 Order of polynomial: &ensp;</span> 
 <input style="height: 1.4pc" id="polyInp" type="number" value="1" min="1" oninput="polyfit(this.value)"> &ensp; 
 <input type="submit" value="Close" onclick="closeThis(this);revertPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
-Fitted Equation: <span id='formulaStr'></span>`
+Fitted Equation: <span id='formulaStr'></span>`,
+'lmfit':`<div style="margin-bottom: 7px;">
+<span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a+b*x"></span>
+<span style="margin-left: 3%;"> Parameters List: <input style=" height: 1.5pc; width: 10%;" id='paramList'type="text" value="a,b"></span>
+<button style=" height: 1.7pc; float: right;margin-right: 2.1%;"onclick="closeThis();closeLMfit()" >Close</button>
+<button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
+</div>
+<div class="grid-container">
+   Max Iterations: <input id='iterationVal' type="text" value='10'>
+   <span>Initial Values: </span> <input id='intVal' type="text">
+   <span>Max Values:</span> <input id='maxVal' type="text">
+   <span>Min Values: </span><input id='minVal' type="text">
+   Damping factor: <input id='dampVal' type="text" value="1.5">
+  <span>Step Size:</span> <input id='stepVal' type="text" value='1e-2'>
+  <span>Error Tolerance: </span><input id='etVal' type="text" value='1e-5'>
+  <span>Error gradient:</span> <input id='egVal' type="text" value='1e-5'>  
+</div>`
 }
 
 
 function closeThis(m){
-    $(m).parent().slideUp();
+    $('#extendutils').slideUp();
     resizePlot();
 }
 
@@ -149,6 +165,12 @@ ipcRenderer.on("menuTrigger", function (e, d) {
                 for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
             }
             break;
+        case 'lmfit':
+                document.getElementById('extendutils').innerHTML = extendUtils['lmfit']; 
+                $('#extendutils').slideDown();
+                resizePlot()
+                initLMfit()
+        break;
         case 'pdash':
             if ($('#sidebar2').width()) {
                 closeNav2();
