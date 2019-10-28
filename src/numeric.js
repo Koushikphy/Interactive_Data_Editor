@@ -404,64 +404,6 @@ function stepAhed( xs, ys, parameters, damping, gradDiff, myfunc ) {
 
 
 
-function formulaParser(str, pa){
-    funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
-    for(let func of funcList){
-        str = str.replace(func, 'Math.'+func)
-    }
-    return eval(`(function([${pa}]){return (x)=> ${str}})`)
-}
-
-
-
-function initialSetup() {
-    var funcStr  =$('#funcStr').val()
-    var paramList=$('#paramList').val().split(',')
-    var iterationVal=parseInt($('#iterationVal').val())
-    var intVal   =$('#intVal').val().split(',').map(x=>parseFloat(x))
-    var maxVal   =$('#maxVal').val().split(',').map(x=>parseFloat(x))
-    var minVal   =$('#minVal').val().split(',').map(x=>parseFloat(x))
-    var dampVal  =parseFloat($('#dampVal').val())
-    var stepVal  =parseFloat($('#stepVal').val())
-    var etVal    =parseFloat($('#etVal').val())
-    var egVal    =parseFloat($('#egVal').val())
-    if (!funcStr) throw 'Funtion is required.'
-    if (!paramList) throw 'Prameters list is required'
-    if (!iterationVal) throw 'Maximum iteraion number is required'
-    // set an predifned damping, error tol, error convergence, step size
-    var parLen = paramList.length
-    if(!isNaN(intVal[0])){
-      console.log(intVal)
-        if(intVal.length!=parLen) throw 'Wrong number of initial values'
-    } else{
-        intVal = new Array(parLen).fill(0)
-    }
-    if(!isNaN(minVal[0])){
-        if(!minVal.length!=parLen) throw 'Wrong number of minimum values'
-    } else{
-        minVal = new Array(parLen).fill(Number.MIN_SAFE_INTEGER)
-    }
-    if(!isNaN(maxVal[0])){
-        if(!maxVal.length!=parLen) throw 'Wrong number of maximum values'
-    } else{
-        maxVal = new Array(parLen).fill(Number.MAX_SAFE_INTEGER)
-    }
-    if(dampVal){
-        if(dampVal<0) throw 'Damping factor must be positive'
-    } else{
-        dampVal = 1.5
-    }
-    if(!stepVal) stepVal = 1e-2
-    if(!etVal) etVal = 1e-5
-    if(!egVal) egVal = 1e-5
-    try {
-        funcStr = formulaParser(funcStr, paramList)
-    } catch (error) {
-        throw "Can't parse the formula."
-    }
-    return [funcStr, iterationVal, intVal ,maxVal ,minVal ,dampVal ,stepVal ,etVal, egVal]
-}
-
 
 
 

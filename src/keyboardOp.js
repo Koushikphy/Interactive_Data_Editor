@@ -166,11 +166,12 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             }
             break;
         case 'lmfit':
+            if(initLMfit()) {
                 document.getElementById('extendutils').innerHTML = extendUtils['lmfit']; 
                 $('#extendutils').slideDown();
                 resizePlot()
-                initLMfit()
-        break;
+            }
+            break;
         case 'pdash':
             if ($('#sidebar2').width()) {
                 closeNav2();

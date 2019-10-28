@@ -6,11 +6,11 @@ function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
     // if (data[th_in][0].length != t1.length){
     if(!t1.every((v,i)=>v===data[th_in][col.y][i])){
-        alert("Copy paste between different data set is not supported!"); 
+        alert("Copy paste between different data set is not supported!");
         return;
     }
     saveOldData();
-    data[th_in][col.y] = t1 
+    data[th_in][col.y] = t1
     data[th_in][col.z] = t2
     endJobs()
 }
@@ -113,10 +113,10 @@ function dataFiller() {
     var cols_wo_y = []   // on which columns to fill the data
     if(ddd){
         for (let i = 0; i < data[0].length; i++) if ((i != col.y) & (i != col.x)) cols_wo_y.push(i)
-    }else { // no col.x remove in 2d 
+    }else { // no col.x remove in 2d
         for (let i = 0; i < data[0].length; i++) if (i != col.y) cols_wo_y.push(i)
     }
-    
+
 
     var fullArr = Plotly.d3.range(start, stop,step)
     data = data.map(dat => {
@@ -243,7 +243,7 @@ function deleteExtrapolate(){
 
 
 function dataSupEnd(){
-    if (!index.length) return 
+    if (!index.length) return
     first = index[0]
     if(first==0) return
     let xs= dpsx.slice(Math.max(first-3,0),first)
@@ -256,7 +256,7 @@ function dataSupEnd(){
 }
 
 function dataSupStart(){
-    if (!index.length) return 
+    if (!index.length) return
     last = index[index.length - 1]
     if(last==dpsx.length-1) return
     let xs= dpsx.slice(last+1,last+4)
@@ -397,9 +397,91 @@ function polyfit(n){
 
 
 
+// function formulaParser(str, pa){
+//     funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
+//     for(let func of funcList){
+//         str = str.replace(func, 'Math.'+func)
+//     }
+//     return eval(`(function([${pa}]){return (x)=> ${str}})`)
+// }
+
+//########################### LM FIT ##############################
+
+function initialSetup() {
+    var funcStr      = $('#funcStr').val()
+    var paramList    = $('#paramList').val().split(',')
+    var iterationVal = parseInt($('#iterationVal').val())
+    var intVal       = $('#intVal').val().split(',').map(x=>parseFloat(x))
+    var maxVal       = $('#maxVal').val().split(',').map(x=>parseFloat(x))
+    var minVal       = $('#minVal').val().split(',').map(x=>parseFloat(x))
+    var dampVal      = parseFloat($('#dampVal').val())
+    var stepVal      = parseFloat($('#stepVal').val())
+    var etVal        = parseFloat($('#etVal').val())
+    var egVal        = parseFloat($('#egVal').val())
+
+
+    if (!funcStr) throw 'Funtion is required.'
+    if (!paramList) throw 'Prameters list is required'
+    if (!iterationVal) throw 'Maximum iteraion number is required'
+    // set an predifned damping, error tol, error convergence, step size
+    var parLen = paramList.length
+    if(!isNaN(intVal[0])){
+        console.log(intVal)
+        if(intVal.length!=parLen) throw 'Wrong number of initial values'
+    } else{
+        intVal = new Array(parLen).fill(0)
+    }
+    if(!isNaN(minVal[0])){
+        if(!minVal.length!=parLen) throw 'Wrong number of minimum values'
+    } else{
+        minVal = new Array(parLen).fill(Number.MIN_SAFE_INTEGER)
+    }
+    if(!isNaN(maxVal[0])){
+        if(!maxVal.length!=parLen) throw 'Wrong number of maximum values'
+    } else{
+        maxVal = new Array(parLen).fill(Number.MAX_SAFE_INTEGER)
+    }
+    if(dampVal){
+        if(dampVal<0) throw 'Damping factor must be positive'
+    } else{
+        dampVal = 1.5
+    }
+    if(!stepVal) stepVal = 1e-2
+    if(!etVal) etVal = 1e-5
+    if(!egVal) egVal = 1e-5
+
+    try {// parse the formula
+        funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
+        for(let func of funcList){
+            funcStr = funcStr.split(func).join('Math.'+func)//  .replace(func, 'Math.'+func)
+        }
+        func= eval(`(function([${paramList}]){return (x)=> ${funcStr}})`)
+    } catch (error) {
+        throw "Can't parse the formula."
+    }
+
+        // save the attributes for agin use
+    $('#funcStr').attr('value', $('#funcStr').val())
+    $('#paramList').attr('value', $('#paramList').val())
+    $('#iterationVal').attr('value', $('#iterationVal').val())
+    $('#intVal').attr('value', $('#intVal').val())
+    $('#maxVal').attr('value', $('#maxVal').val())
+    $('#minVal').attr('value',$('#minVal').val())
+    $('#dampVal').attr('value', $('#dampVal').val())
+    $('#stepVal').attr('value', $('#stepVal').val())
+    $('#etVal').attr('value', $('#etVal').val())
+    $('#egVal').attr('value', $('#egVal').val())
+    extendUtils['lmfit'] = $('#extendutils').html()
+    return [func, iterationVal, intVal ,maxVal ,minVal ,dampVal ,stepVal ,etVal, egVal]
+}
+
+
+
+
+
 function initLMfit(){
     if(ddd){
-        alert('Regression fitting is only supported for 2D data.'); return
+        alert('Data fitting is only supported for 2D data.'); return
     }
     if(figurecontainer.data.length>1){
         alert('Supported only for one plot at time.'); return
@@ -413,6 +495,7 @@ function initLMfit(){
     thisTrace.y = [dpsy[0]]
     Plotly.addTraces(figurecontainer, thisTrace);
     for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+    return true
 }
 
 
@@ -427,8 +510,8 @@ function closeLMfit(){
 
 function lmfit(){
     setTimeout(()=>{ // don't block the main event loop during iteration
-    try{
-        var [func,maxIter, parameters, maxVal ,minVal ,dampval ,stepVal ,etVal, egVal] = initialSetup()// params means initial values of parameters
+    try{// params means initial values of parameters
+        var [func,maxIter, parameters, maxVal ,minVal ,dampval ,stepVal ,etVal, egVal] = initialSetup()
     } catch(err){
         alert(err); return ;
     }
@@ -463,7 +546,7 @@ function lmfit(){
     anotText =  `y = ${$('#funcStr').val()}<br>Parameters = ${parameters.map(x=>x.toPrecision(5))}<br>Abs. Error = ${error.toPrecision(5)}`
     Plotly.relayout(figurecontainer, {annotations: [
         {
-            xref: 'paper', x: 1,
+            xref: 'paper', x: 0,
             yref: 'paper', y: 0,
             showarrow:false,
             text: anotText,

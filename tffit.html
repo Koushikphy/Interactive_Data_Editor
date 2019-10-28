@@ -32,14 +32,14 @@
 </head>
 
 <div style="margin-bottom: 7px;">
-  <span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a*x+b*x**2"></span>
-  <span style="margin-left: 3%;"> Parameters List: <input style=" height: 1.5pc; width: 10%;" id='paramList'type="text" value="a,b"></span>
+  <span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a*(1+b*x+c*x**2+d*x**3)*exp(-e*x)+f"></span>
+  <span style="margin-left: 3%;"> Parameters List: <input style=" height: 1.5pc; width: 10%;" id='paramList'type="text" value="a,b,c,d,e,f"></span>
   <button style=" height: 1.7pc; float: right;margin-right: 1.4%;">Close</button>
   <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
 </div>
 
 <div class="grid-container">
-     Max Iterations: <input id='iterationVal' type="text" value='10'>
+     Max Iterations: <input id='iterationVal' type="text" value='10000'>
      <span>Initial Values: </span> <input id='intVal' type="text">
      <span>Max Values:</span> <input id='maxVal' type="text">
      <span>Min Values: </span><input id='minVal' type="text">
@@ -58,8 +58,13 @@
 var dpsx = [0.32778100,0.32790579,0.34300503,0.37058297,0.41815181,0.66807700,0.69377300,0.71946800,0.74516300,0.77085900,1.00791600,1.04668200,1.08544800,1.12421400,1.16298000,1.34706300,1.39887300,1.45068300,1.50249400,1.55430400,1.68528700,1.75010600,1.81492500,1.87974400,1.94456200,2.02235700,2.10014000,2.17792300,2.25570600,2.33348900,2.35804000,2.44873400,2.53942800,2.63012200,2.69210700,2.72081500,2.79565000,2.89919200,3.00273500,3.10627800,3.14065000,3.25697000,3.37329000,3.48961100,3.61251600,3.74153400,3.87055300,4.24884100]
 var dpsy = [12.3393000,11.5302396,10.4757025,8.47946970,6.30244125,2.65924000,2.41115000,2.17944000,1.97250000,1.78737000,0.76178300,0.67076600,0.59290400,0.52627500,0.46925000,0.29020600,0.25843000,0.23218700,0.21037700,0.19205800,0.15658600,0.14297700,0.13094500,0.12005900,0.11002700,0.09888300,0.08871100,0.07935700,0.07078600,0.06295000,0.06060100,0.05265800,0.04457000,0.04390400,0.03127600,0.03274400,0.02770300,0.02547200,0.02337700,0.01636200,0.01447100,0.01297800,0.01025300,0.00847500,0.00657900,0.00515400,0.00320700,0.00000000]
 
-dpsx = [1,2,3,4,5,6,7]
-dpsy = [1,4,9,16,25,36,49]
+
+var dpsx = [-1.036230,-1.010530,-0.984837,-0.959141,-0.722084,-0.683318,-0.644552,-0.605786,-0.567020,-0.382937,-0.331127,-0.279317,-0.227506,-0.175696,-0.044713,0.0201060,0.0849250,0.1497440,0.2145620,0.2923570,0.3701400,0.4479230,0.5257060,0.6034890,0.6280400,0.7187340,0.8094280,0.9001220,0.9621070,0.9908150,1.0656500,1.1691900,1.2727300,1.3762800,1.4106500,1.5269700,1.6432900,1.7596100,1.8825200,2.0115300,2.1405500,2.5188400,3.0     	,4.0     	,5.0     	,6.0     	,7.0     	,8.0     	,9.0     	,10.0     ]
+var dpsy = [2.41115000,2.17944000,1.97250000,1.78737000,0.76178300,0.67076600,0.59290400,0.52627500,0.46925000,0.29020600,0.25843000,0.23218700,0.21037700,0.19205800,0.15658600,0.14297700,0.13094500,0.12005900,0.11002700,0.09888300,0.08871100,0.07935700,0.07078600,0.06295000,0.06060100,0.05265800,0.04457000,0.04390400,0.03127600,0.03274400,0.02770300,0.02547200,0.02337700,0.01636200,0.01447100,0.01297800,0.01025300,0.00847500,0.00657900,0.00515400,0.00320700,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000,0.00000000]
+
+
+// dpsx = [1,2,3,4,5,6,7]
+// dpsy = [1,4,9,16,25,36,49]
 var dat = [{
     x: dpsx,
     y: dpsy,
@@ -325,12 +330,14 @@ function initialSetup() {
 
 var polyFitLive = false, ddd=false
 function lmfit(){
+    
     if (!polyFitLive) {
         if(ddd){
             alert('Regression fitting is only supported for 2D data.'); return
         }
         if(figurecontainer.data.length>1){
-            alert('Supported only for one plot at time.'); return
+            // alert('Supported only for one plot at time.'); return
+            Plotly.deleteTraces(figurecontainer, 1)
         }
     }
     try{
@@ -363,6 +370,7 @@ function lmfit(){
     // return error;
     converged = Math.abs(error- olderror) <= egVal || error <=etVal;
     olderror = error
+    console.log(iteraion)
   }
 
   var dat = [{
