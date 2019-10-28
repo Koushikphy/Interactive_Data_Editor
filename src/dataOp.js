@@ -353,11 +353,7 @@ function revertPloyFit(){
     for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
 }
 
-
-var polyFitLive = false
-function polyfit(n){
-    //if 2d return
-    if(!n) return
+function initPolyfit(){
     if (!polyFitLive) {
         if(ddd){
             alert('Regression fitting is only supported for 2D data.'); return
@@ -366,7 +362,14 @@ function polyfit(n){
             alert('Supported only for one plot at time.'); return
         }
     }
+    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+    return true
+}
 
+var polyFitLive = false
+function polyfit(n){
+    //if 2d return
+    if(!n) return
     if(n>=dpsx.length) {
         showStatus(`Fitting of order ${n} is not possible.`); return
     }

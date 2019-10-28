@@ -158,11 +158,11 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             resizePlot()
             break;
         case 'rgft':
-            document.getElementById('extendutils').innerHTML = extendUtils['rgfit']
-            if(polyfit(1)){
+            if(initPolyfit()){
+                document.getElementById('extendutils').innerHTML = extendUtils['rgfit']
                 $('#extendutils').slideDown();
                 resizePlot()
-                for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+                polyfit(1)
             }
             break;
         case 'lmfit':
