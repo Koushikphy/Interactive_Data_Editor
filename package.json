@@ -73,8 +73,6 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
-    "ml-levenberg-marquardt": "^2.0.0",
-    "ml-regression-polynomial": "^2.0.0",
     "particles.js": "^2.0.0",
     "plotly.js-gl3d-dist": "^1.50.0",
     "request": "^2.88.0"
