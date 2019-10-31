@@ -24,7 +24,7 @@ function versionCheck() {
         function (_, _, body) {
             var new_ver = JSON.parse(body).name
             if (new_ver != `v${require('../package.json').version}`) {
-                var txt = `A new version of the software ${new_ver} is available.\n Do you wnat to download it now?`
+                var txt = `A new version of the software ${new_ver} is available.\n Do you want to download it now?`
                 var res = dialog.showMessageBox({
                     type: "question",
                     title: "Update available!!!",
