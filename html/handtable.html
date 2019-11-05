@@ -8,8 +8,10 @@
         <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
         <script src="../lib/jquery.min.js"></script>
         <script src="../lib/jquery-ui.min.js"></script>
-        <script src="../handsontable/dist/handsontable.full.min.js"></script>
-        <link href="../handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+        <script src="../src/jsuites.js"></script>
+        <script src="../src/jexcel.min.js"></script>
+        <link rel="stylesheet" href="../src/jexcel.min.css" type="text/css" />
+        <link rel="stylesheet" href="../src/jsuites.css" type="text/css" />
     </head>
 
 <body>
@@ -27,7 +29,7 @@
         const { remote, ipcRenderer } = require('electron');
         const { dialog, BrowserWindow, Menu } = remote;
         var full = document.getElementById("fullS");
-        var xcol = [], data = [], hot, columns = [], xName;
+        var xcol = [], data = [], hot, columns = [], xName, mytable;
         var btn = document.getElementById("btn");
         btn.style.visibility = "hidden";
         var event, th_in = 0,
@@ -60,34 +62,27 @@
                 document.getElementById("container").offsetTop - 2 -
                 document.getElementById("table").offsetTop;
 
-
-            // for (var i = data[0][0].length; i > 0; i--) {
-            //     columns.push({ type: "numeric" })
-            // };
             $ch.text(xName + '=' + data[0][0][xcol]);
-            hot = new Handsontable(document.getElementById("table"), {
-                data: data[0],
-                height: height,
-                // columns: columns,
-                rowHeaders: true,
-                colHeaders: true,
-                contextMenu: true,
-                columnSorting: true,
-                manualColumnResize: true,
-                manualRowResize: true,
-                formulas:true,
-                afterChange: function change(e, d) {
-                     if (d != "loadData") btn.style.visibility = "visible" ;
-                     
-                    }
-            });
-
-        })
+            var wit = (window.innerWidth-450)/data[0][0].length
+            mytable = jexcel(document.getElementById('table'), {
+                        copyCompatibility:true,
+                        data:data[0],
+                        tableOverflow:true,
+                        defaultColWidth:wit>120?120:wit,
+                        lazyLoading:true,
+                        allowRenameColumn:true,
+                        columnDrag :true,
+                        rowDrag:true,
+                        tableWidth :window.innerWidth-100,
+                    onload:_=>$('.jexcel_content').height(window.innerHeight-100),
+                    onchange:_=>btn.style.visibility = "visible"})
+            })
+            
 
 
         function sliderChanged() {
             $ch.text(xName + '=' + data[th_in][0][xcol]);
-            hot.updateSettings({ data: data[th_in] })
+            mytable.setData(data[th_in] )
         };
 
         function transpose(m) {
@@ -98,7 +93,7 @@
 
         function updateData() {
             btn.style.visibility = "hidden";
-            ipcRenderer.send("back", data);
+            ipcRenderer.send("back", data); 
         }
 
 
