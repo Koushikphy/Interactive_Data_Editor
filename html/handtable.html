@@ -5,11 +5,13 @@
         <title>Interactive Data Editor</title>
         <link href="../lib/style.min.css" rel="stylesheet">
         <link rel="stylesheet" href="../lib/jquery-ui.min.css">
-        <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+        <script>
+        if (typeof module === 'object') { window.module = module; module = undefined; }
+        </script>
         <script src="../lib/jquery.min.js"></script>
         <script src="../lib/jquery-ui.min.js"></script>
         <script src="../src/jsuites.js"></script>
-        <script src="../src/jexcel.min.js"></script>
+        <script src="../src/jexcel.js"></script>
         <link rel="stylesheet" href="../src/jexcel.min.css" type="text/css" />
         <link rel="stylesheet" href="../src/jsuites.css" type="text/css" />
     </head>
@@ -37,7 +39,7 @@
             $slider = $("#slider");
 
         ipcRenderer.on("slider", function (e, d) {
-            e.sender.send("test", "2u3i")
+            // e.sender.send("test", "2u3i")
             var [t, _, _] = d;
             xName = t;
             xcol = d[1];
@@ -93,6 +95,7 @@
 
         function updateData() {
             btn.style.visibility = "hidden";
+            data[th_in] = mytable.getData();
             ipcRenderer.send("back", data); 
         }
 
