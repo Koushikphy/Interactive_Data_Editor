@@ -9,8 +9,10 @@
 
 var tab = jexcel(document.getElementById('spreadsheet'), {
     data:[[1,2,3,'=C1+10'],[1,2,35,4],[1,2,12,4]],
-    copyCompatibility:true,
-});
+    copyCompatibility:false,
+    updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ?  'red' :  '#000000'}
+    }
+        );
 console.log(tab.getData()[0][3])
 </script>
 </html>

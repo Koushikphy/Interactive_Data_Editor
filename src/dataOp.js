@@ -544,9 +544,15 @@ function lmfit(){
         olderror = error
     }
 
+    var chiError = 0; tfunc = func(parameters);
+    for (var i = 0; i < xs.length; i++) {
+        tmp  = tfunc(xs[i])
+        yy = ys[i]
+        if(yy>Number.EPSILON) chiError += (yy-tmp)**2/tmp
+    }
 
     Plotly.restyle(figurecontainer, {x:[dpsx], y:[fity]},1)
-    anotText =  `y = ${$('#funcStr').val()}<br>Parameters = ${parameters.map(x=>x.toPrecision(5))}<br>Abs. Error = ${error.toPrecision(5)}`
+    anotText = `y = ${$('#funcStr').val()}<br>Parameters = ${parameters.map(x=>x.toPrecision(5))}<br>&#967;<sup>2</sup> Error = ${chiError.toPrecision(5)}`
     Plotly.relayout(figurecontainer, {annotations: [
         {
             xref: 'paper', x: 0,

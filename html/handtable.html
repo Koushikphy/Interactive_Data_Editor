@@ -12,7 +12,7 @@
         <script src="../lib/jquery-ui.min.js"></script>
         <script src="../src/jsuites.js"></script>
         <script src="../src/jexcel.js"></script>
-        <link rel="stylesheet" href="../src/jexcel.min.css" type="text/css" />
+        <link rel="stylesheet" href="../src/jexcel.css" type="text/css" />
         <link rel="stylesheet" href="../src/jsuites.css" type="text/css" />
     </head>
 
@@ -34,9 +34,7 @@
         var xcol = [], data = [], hot, columns = [], xName, mytable;
         var btn = document.getElementById("btn");
         btn.style.visibility = "hidden";
-        var event, th_in = 0,
-            $ch = $("#custom-handle"),
-            $slider = $("#slider");
+        var event, th_in = 0, $ch = $("#custom-handle"), $slider = $("#slider");
 
         ipcRenderer.on("slider", function (e, d) {
             // e.sender.send("test", "2u3i")
@@ -44,7 +42,7 @@
             xName = t;
             xcol = d[1];
             data = d[2].map(x => transpose(x));
-            if (data.length != 1) {
+            if (data.length != 1) { // if data is 3d show the slider
                 full.innerHTML = `Drag the slider to change "${xName}" value:`
                 $slider.show()
                 $(function () {
@@ -65,21 +63,23 @@
                 document.getElementById("table").offsetTop;
 
             $ch.text(xName + '=' + data[0][0][xcol]);
+
             var wit = (window.innerWidth-450)/data[0][0].length
             mytable = jexcel(document.getElementById('table'), {
-                        copyCompatibility:true,
+                        // copyCompatibility:true,
                         data:data[0],
                         tableOverflow:true,
                         defaultColWidth:wit>120?120:wit,
                         lazyLoading:true,
-                        allowRenameColumn:true,
+                        // allowRenameColumn:true,//not supported in electron
                         columnDrag :true,
                         rowDrag:true,
                         tableWidth :window.innerWidth-100,
-                    onload:_=>$('.jexcel_content').height(window.innerHeight-100),
-                    onchange:_=>btn.style.visibility = "visible"})
+                        updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ?  'red' :  '#000000'},
+                        onload:_=> $('.jexcel_content').height(window.innerHeight-100),
+                        onchange:_=>btn.style.visibility = "visible"})
             })
-            
+
 
 
         function sliderChanged() {
@@ -95,7 +95,8 @@
 
         function updateData() {
             btn.style.visibility = "hidden";
-            data[th_in] = mytable.getData();
+            // data[th_in] = mytable.getData();  //<<- not working
+            data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML));  //<< working
             ipcRenderer.send("back", data); 
         }
 
