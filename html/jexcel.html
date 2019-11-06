@@ -1,14 +1,14 @@
 <html>
 <script src="../src/jexcel.js"></script>
-<script src="https://bossanova.uk/jsuites/v2/jsuites.js"></script>
-<link rel="stylesheet" href="https://bossanova.uk/jexcel/v3/jexcel.css" type="text/css" />
-<link rel="stylesheet" href="https://bossanova.uk/jsuites/v2/jsuites.css" type="text/css" />
+<script src="../src/jsuites.js"></script>
+<link rel="stylesheet" href="../src/jexcel.css" type="text/css" />
+<link rel="stylesheet" href="../src/jsuites.css" type="text/css" />
 <div id="spreadsheet"></div>
 
 <script>
 
 var tab = jexcel(document.getElementById('spreadsheet'), {
-    data:[[1,2,3,'=C1+10'],[1,2,3,4],[1,2,3,4]],
+    data:[[1,2,3,'=C1+10'],[1,2,35,4],[1,2,12,4]],
     copyCompatibility:true,
 });
 console.log(tab.getData()[0][3])
