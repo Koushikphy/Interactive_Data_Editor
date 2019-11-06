@@ -400,14 +400,6 @@ function polyfit(n){
 
 
 
-// function formulaParser(str, pa){
-//     funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
-//     for(let func of funcList){
-//         str = str.replace(func, 'Math.'+func)
-//     }
-//     return eval(`(function([${pa}]){return (x)=> ${str}})`)
-// }
-
 //########################### LM FIT ##############################
 
 function initialSetup() {
