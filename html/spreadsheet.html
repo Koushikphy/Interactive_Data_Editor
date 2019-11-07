@@ -3,21 +3,17 @@
 
     <head>
         <title>Interactive Data Editor</title>
-        <link rel="stylesheet" href="../lib/style.min.css">
-        <link rel="stylesheet" href="../src/jexcel.css" type="text/css" />
-        <link rel="stylesheet" href="../src/jsuites.css" type="text/css" />
+        <link rel="stylesheet" href='../lib/spreadsheet.min.css'>
         <link rel="stylesheet" href="../lib/jquery-ui.min.css">
         <script>
             if (typeof module === 'object') { window.module = module; module = undefined; }
         </script>
         <script src="../lib/jquery.min.js"></script>
         <script src="../lib/jquery-ui.min.js"></script>
-        <script src="../src/jsuites.js"></script>
-        <script src="../src/jexcel.js"></script>
+        <script src="../lib/spreadsheet.min.js"></script>
     </head>
 
 <body>
-
 
     <div id="container">
         <label id="fullS" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
@@ -75,16 +71,15 @@
                         columnDrag :true,
                         rowDrag:true,
                         tableWidth :window.innerWidth-100,
-                        updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ?  'red' :  '#000000'},
-                        onload:_=> $('.jexcel_content').height(window.innerHeight-100),
+                        updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ? 'red' : '#000000'},
+                        onload:_=>setTimeout(_=>{let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)},1), 
                         onchange:_=>btn.style.visibility = "visible"})
             })
 
 
-
         function sliderChanged() {
             $ch.text(xName + '=' + data[th_in][0][xcol]);
-            mytable.setData(data[th_in] )
+            mytable.setData(data[th_in])
         };
 
         function transpose(m) {

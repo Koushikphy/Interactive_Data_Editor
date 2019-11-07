@@ -14,10 +14,10 @@
 
 'use strict';
 
-if (! jSuites && typeof(require) === 'function') {
-    var jSuites = require('jsuites');
-    require('jsuites/dist/jsuites.css');
-}
+// if (! jSuites && typeof(require) === 'function') {
+//     var jSuites = require('jsuites');
+//     require('jsuites/dist/jsuites.css');
+// }
 
 var jexcel = (function(el, options) {
     // Create jexcel object
@@ -252,24 +252,24 @@ var jexcel = (function(el, options) {
      * use programmatically : table.fullscreen(); or table.fullscreen(true); or table.fullscreen(false);
      * @Param {boolean} activate
      */
-    obj.fullscreen = function(activate) {
-        // If activate not defined, get reverse options.fullscreen
-        if (activate == null) {
-            activate = ! obj.options.fullscreen;
-        }
+    // obj.fullscreen = function(activate) {
+    //     // If activate not defined, get reverse options.fullscreen
+    //     if (activate == null) {
+    //         activate = ! obj.options.fullscreen;
+    //     }
 
-        // If change
-        if (obj.options.fullscreen != activate) {
-            obj.options.fullscreen = activate;
+    //     // If change
+    //     if (obj.options.fullscreen != activate) {
+    //         obj.options.fullscreen = activate;
 
-            // Test LazyLoading conflict
-            if (activate == true) {
-                el.classList.add('fullscreen');
-            } else {
-                el.classList.remove('fullscreen');
-            }
-        } 
-    }
+    //         // Test LazyLoading conflict
+    //         if (activate == true) {
+    //             el.classList.add('fullscreen');
+    //         } else {
+    //             el.classList.remove('fullscreen');
+    //         }
+    //     } 
+    // }
 
     /**
      * Prepare the jexcel table
@@ -1139,251 +1139,251 @@ var jexcel = (function(el, options) {
         }
     }
 
-    /**
-     * Merge cells
-     * @param cellName
-     * @param colspan
-     * @param rowspan
-     * @param ignoreHistoryAndEvents
-     */
-    obj.setMerge = function(cellName, colspan, rowspan, ignoreHistoryAndEvents) {
-        var test = false;
+    // /**
+    //  * Merge cells
+    //  * @param cellName
+    //  * @param colspan
+    //  * @param rowspan
+    //  * @param ignoreHistoryAndEvents
+    //  */
+    // obj.setMerge = function(cellName, colspan, rowspan, ignoreHistoryAndEvents) {
+    //     var test = false;
 
-        if (! cellName) {
-            if (! obj.highlighted.length) {
-                alert(obj.options.text.noCellsSelected);
-                return null;
-            } else {
-                var x1 = parseInt(obj.highlighted[0].getAttribute('data-x'));
-                var y1 = parseInt(obj.highlighted[0].getAttribute('data-y'));
-                var x2 = parseInt(obj.highlighted[obj.highlighted.length-1].getAttribute('data-x'));
-                var y2 = parseInt(obj.highlighted[obj.highlighted.length-1].getAttribute('data-y'));
-                var cellName = jexcel.getColumnNameFromId([ x1, y1 ]);
-                var colspan = (x2 - x1) + 1;
-                var rowspan = (y2 - y1) + 1;
-            }
-        }
+    //     if (! cellName) {
+    //         if (! obj.highlighted.length) {
+    //             alert(obj.options.text.noCellsSelected);
+    //             return null;
+    //         } else {
+    //             var x1 = parseInt(obj.highlighted[0].getAttribute('data-x'));
+    //             var y1 = parseInt(obj.highlighted[0].getAttribute('data-y'));
+    //             var x2 = parseInt(obj.highlighted[obj.highlighted.length-1].getAttribute('data-x'));
+    //             var y2 = parseInt(obj.highlighted[obj.highlighted.length-1].getAttribute('data-y'));
+    //             var cellName = jexcel.getColumnNameFromId([ x1, y1 ]);
+    //             var colspan = (x2 - x1) + 1;
+    //             var rowspan = (y2 - y1) + 1;
+    //         }
+    //     }
 
-        var cell = jexcel.getIdFromColumnName(cellName, true);
+    //     var cell = jexcel.getIdFromColumnName(cellName, true);
 
-        if (obj.options.mergeCells[cellName]) {
-            if (obj.records[cell[1]][cell[0]].getAttribute('data-merged')) {
-                test = obj.options.text.cellAlreadyMerged;
-            }
-        } else if ((! colspan || colspan < 2) && (! rowspan || rowspan < 2)) {
-            test = obj.options.text.invalidMergeProperties;
-        } else {
-            var cells = [];
-            for (var j = cell[1]; j < cell[1] + rowspan; j++) {
-                for (var i = cell[0]; i < cell[0] + colspan; i++) {
-                    var columnName = jexcel.getColumnNameFromId([i, j]);
-                    if (obj.records[j][i].getAttribute('data-merged')) {
-                        test = obj.options.text.thereIsAConflictWithAnotherMergedCell;
-                    }
-                }
-            }
-        }
+    //     if (obj.options.mergeCells[cellName]) {
+    //         if (obj.records[cell[1]][cell[0]].getAttribute('data-merged')) {
+    //             test = obj.options.text.cellAlreadyMerged;
+    //         }
+    //     } else if ((! colspan || colspan < 2) && (! rowspan || rowspan < 2)) {
+    //         test = obj.options.text.invalidMergeProperties;
+    //     } else {
+    //         var cells = [];
+    //         for (var j = cell[1]; j < cell[1] + rowspan; j++) {
+    //             for (var i = cell[0]; i < cell[0] + colspan; i++) {
+    //                 var columnName = jexcel.getColumnNameFromId([i, j]);
+    //                 if (obj.records[j][i].getAttribute('data-merged')) {
+    //                     test = obj.options.text.thereIsAConflictWithAnotherMergedCell;
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        if (test) {
-            alert(test);
-        } else {
-            // Add property
-            if (colspan > 1) {
-                obj.records[cell[1]][cell[0]].setAttribute('colspan', colspan);
-            } else {
-                colspan = 1;
-            }
-            if (rowspan > 1) {
-                obj.records[cell[1]][cell[0]].setAttribute('rowspan', rowspan);
-            } else {
-                rowspan = 1;
-            }
-            // Keep links to the existing nodes
-            obj.options.mergeCells[cellName] = [ colspan, rowspan, [] ];
-            // Mark cell as merged
-            obj.records[cell[1]][cell[0]].setAttribute('data-merged', 'true');
-            // Overflow
-            obj.records[cell[1]][cell[0]].style.overflow = 'hidden';
-            // History data
-            var data = [];
-            // Adjust the nodes
-            for (var y = cell[1]; y < cell[1] + rowspan; y++) {
-                for (var x = cell[0]; x < cell[0] + colspan; x++) {
-                    if (! (cell[0] == x && cell[1] == y)) {
-                        data.push(obj.options.data[y][x]);
-                        obj.updateCell(x, y, '', true);
-                        obj.options.mergeCells[cellName][2].push(obj.records[y][x]);
-                        obj.records[y][x].style.display = 'none';
-                        obj.records[y][x] = obj.records[cell[1]][cell[0]];
-                    }
-                }
-            }
-            // In the initialization is not necessary keep the history
-            obj.updateSelection(obj.records[cell[1]][cell[0]]);
+    //     if (test) {
+    //         alert(test);
+    //     } else {
+    //         // Add property
+    //         if (colspan > 1) {
+    //             obj.records[cell[1]][cell[0]].setAttribute('colspan', colspan);
+    //         } else {
+    //             colspan = 1;
+    //         }
+    //         if (rowspan > 1) {
+    //             obj.records[cell[1]][cell[0]].setAttribute('rowspan', rowspan);
+    //         } else {
+    //             rowspan = 1;
+    //         }
+    //         // Keep links to the existing nodes
+    //         obj.options.mergeCells[cellName] = [ colspan, rowspan, [] ];
+    //         // Mark cell as merged
+    //         obj.records[cell[1]][cell[0]].setAttribute('data-merged', 'true');
+    //         // Overflow
+    //         obj.records[cell[1]][cell[0]].style.overflow = 'hidden';
+    //         // History data
+    //         var data = [];
+    //         // Adjust the nodes
+    //         for (var y = cell[1]; y < cell[1] + rowspan; y++) {
+    //             for (var x = cell[0]; x < cell[0] + colspan; x++) {
+    //                 if (! (cell[0] == x && cell[1] == y)) {
+    //                     data.push(obj.options.data[y][x]);
+    //                     obj.updateCell(x, y, '', true);
+    //                     obj.options.mergeCells[cellName][2].push(obj.records[y][x]);
+    //                     obj.records[y][x].style.display = 'none';
+    //                     obj.records[y][x] = obj.records[cell[1]][cell[0]];
+    //                 }
+    //             }
+    //         }
+    //         // In the initialization is not necessary keep the history
+    //         obj.updateSelection(obj.records[cell[1]][cell[0]]);
 
-            if (! ignoreHistoryAndEvents) {
-                obj.setHistory({
-                    action:'setMerge',
-                    column:cellName,
-                    colspan:colspan,
-                    rowspan:rowspan,
-                    data:data,
-                });
+    //         if (! ignoreHistoryAndEvents) {
+    //             obj.setHistory({
+    //                 action:'setMerge',
+    //                 column:cellName,
+    //                 colspan:colspan,
+    //                 rowspan:rowspan,
+    //                 data:data,
+    //             });
 
-                if (typeof(obj.options.onmerge) == 'function') {
-                    obj.options.onmerge(el, cellName, colspan, rowspan);
-                }
-            }
-        }
-    }
+    //             if (typeof(obj.options.onmerge) == 'function') {
+    //                 obj.options.onmerge(el, cellName, colspan, rowspan);
+    //             }
+    //         }
+    //     }
+    // }
 
-    /**
-     * Merge cells
-     * @param cellName
-     * @param colspan
-     * @param rowspan
-     * @param ignoreHistoryAndEvents
-     */
-    obj.getMerge = function(cellName) {
-        var data = {};
-        if (cellName) {
-            if (obj.options.mergeCells[cellName]) {
-                data = [ obj.options.mergeCells[cellName][0], obj.options.mergeCells[cellName][1] ];
-            } else {
-                data = null;
-            }
-        } else {
-            if (obj.options.mergeCells) {
-                var mergedCells = obj.options.mergeCells;
-                var keys = Object.keys(obj.options.mergeCells);
-                for (var i = 0; i < keys.length; i++) {
-                    data[keys[i]] = [ obj.options.mergeCells[keys[i]][0], obj.options.mergeCells[keys[i]][1] ];
-                }
-            }
-        }
+    // /**
+    //  * Merge cells
+    //  * @param cellName
+    //  * @param colspan
+    //  * @param rowspan
+    //  * @param ignoreHistoryAndEvents
+    //  */
+    // obj.getMerge = function(cellName) {
+    //     var data = {};
+    //     if (cellName) {
+    //         if (obj.options.mergeCells[cellName]) {
+    //             data = [ obj.options.mergeCells[cellName][0], obj.options.mergeCells[cellName][1] ];
+    //         } else {
+    //             data = null;
+    //         }
+    //     } else {
+    //         if (obj.options.mergeCells) {
+    //             var mergedCells = obj.options.mergeCells;
+    //             var keys = Object.keys(obj.options.mergeCells);
+    //             for (var i = 0; i < keys.length; i++) {
+    //                 data[keys[i]] = [ obj.options.mergeCells[keys[i]][0], obj.options.mergeCells[keys[i]][1] ];
+    //             }
+    //         }
+    //     }
 
-        return data;
-    }
+    //     return data;
+    // }
 
-    /**
-     * Remove merge by cellname
-     * @param cellName
-     */
-    obj.removeMerge = function(cellName, data, keepOptions) {
-        if (obj.options.mergeCells[cellName]) {
-            var cell = jexcel.getIdFromColumnName(cellName, true);
-            obj.records[cell[1]][cell[0]].removeAttribute('colspan');
-            obj.records[cell[1]][cell[0]].removeAttribute('rowspan');
-            obj.records[cell[1]][cell[0]].removeAttribute('data-merged');
-            var info = obj.options.mergeCells[cellName];
+    // /**
+    //  * Remove merge by cellname
+    //  * @param cellName
+    //  */
+    // obj.removeMerge = function(cellName, data, keepOptions) {
+    //     if (obj.options.mergeCells[cellName]) {
+    //         var cell = jexcel.getIdFromColumnName(cellName, true);
+    //         obj.records[cell[1]][cell[0]].removeAttribute('colspan');
+    //         obj.records[cell[1]][cell[0]].removeAttribute('rowspan');
+    //         obj.records[cell[1]][cell[0]].removeAttribute('data-merged');
+    //         var info = obj.options.mergeCells[cellName];
 
-            var index = 0;
-            for (var j = 0; j < info[1]; j++) {
-                for (var i = 0; i < info[0]; i++) {
-                    if (j > 0 || i > 0) {
-                        obj.records[cell[1]+j][cell[0]+i] = info[2][index];
-                        obj.records[cell[1]+j][cell[0]+i].style.display = '';
-                        // Recover data
-                        if (data && data[index]) {
-                            obj.updateCell(cell[0]+i, cell[1]+j, data[index]);
-                        }
-                        index++;
-                    }
-                }
-            }
+    //         var index = 0;
+    //         for (var j = 0; j < info[1]; j++) {
+    //             for (var i = 0; i < info[0]; i++) {
+    //                 if (j > 0 || i > 0) {
+    //                     obj.records[cell[1]+j][cell[0]+i] = info[2][index];
+    //                     obj.records[cell[1]+j][cell[0]+i].style.display = '';
+    //                     // Recover data
+    //                     if (data && data[index]) {
+    //                         obj.updateCell(cell[0]+i, cell[1]+j, data[index]);
+    //                     }
+    //                     index++;
+    //                 }
+    //             }
+    //         }
 
-            // Update selection
-            obj.updateSelection(obj.records[cell[1]][cell[0]], obj.records[cell[1]+j-1][cell[0]+i-1]);
+    //         // Update selection
+    //         obj.updateSelection(obj.records[cell[1]][cell[0]], obj.records[cell[1]+j-1][cell[0]+i-1]);
 
-            if (! keepOptions) {
-                delete(obj.options.mergeCells[cellName]);
-            }
-        }
-    }
+    //         if (! keepOptions) {
+    //             delete(obj.options.mergeCells[cellName]);
+    //         }
+    //     }
+    // }
 
-    /**
-     * Remove all merged cells
-     */
-    obj.destroyMerged = function(keepOptions) {
-        // Remove any merged cells
-        if (obj.options.mergeCells) {
-            var mergedCells = obj.options.mergeCells;
-            var keys = Object.keys(obj.options.mergeCells);
-            for (var i = 0; i < keys.length; i++) {
-                obj.removeMerge(keys[i], null, keepOptions);
-            }
-        }
-    }
+    // /**
+    //  * Remove all merged cells
+    //  */
+    // obj.destroyMerged = function(keepOptions) {
+    //     // Remove any merged cells
+    //     if (obj.options.mergeCells) {
+    //         var mergedCells = obj.options.mergeCells;
+    //         var keys = Object.keys(obj.options.mergeCells);
+    //         for (var i = 0; i < keys.length; i++) {
+    //             obj.removeMerge(keys[i], null, keepOptions);
+    //         }
+    //     }
+    // }
 
-    /**
-     * Is column merged
-     */
-    obj.isColMerged = function(x, insertBefore) {
-        var cols = [];
-        // Remove any merged cells
-        if (obj.options.mergeCells) {
-            var keys = Object.keys(obj.options.mergeCells);
-            for (var i = 0; i < keys.length; i++) {
-                var info = jexcel.getIdFromColumnName(keys[i], true);
-                var colspan = obj.options.mergeCells[keys[i]][0];
-                var x1 = info[0];
-                var x2 = info[0] + (colspan > 1 ? colspan - 1 : 0);
+    // /**
+    //  * Is column merged
+    //  */
+    // obj.isColMerged = function(x, insertBefore) {
+    //     var cols = [];
+    //     // Remove any merged cells
+    //     if (obj.options.mergeCells) {
+    //         var keys = Object.keys(obj.options.mergeCells);
+    //         for (var i = 0; i < keys.length; i++) {
+    //             var info = jexcel.getIdFromColumnName(keys[i], true);
+    //             var colspan = obj.options.mergeCells[keys[i]][0];
+    //             var x1 = info[0];
+    //             var x2 = info[0] + (colspan > 1 ? colspan - 1 : 0);
 
-                if (insertBefore == null) {
-                    if ((x1 <= x && x2 >= x)) {
-                        cols.push(keys[i]);
-                    }
-                } else {
-                    if (insertBefore) {
-                        if ((x1 < x && x2 >= x)) {
-                            cols.push(keys[i]);
-                        }
-                    } else {
-                        if ((x1 <= x && x2 > x)) {
-                            cols.push(keys[i]);
-                        }
-                    }
-                }
-            }
-        }
+    //             if (insertBefore == null) {
+    //                 if ((x1 <= x && x2 >= x)) {
+    //                     cols.push(keys[i]);
+    //                 }
+    //             } else {
+    //                 if (insertBefore) {
+    //                     if ((x1 < x && x2 >= x)) {
+    //                         cols.push(keys[i]);
+    //                     }
+    //                 } else {
+    //                     if ((x1 <= x && x2 > x)) {
+    //                         cols.push(keys[i]);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        return cols;
-    }
+    //     return cols;
+    // }
 
-    /**
-     * Is rows merged
-     */
-    obj.isRowMerged = function(y, insertBefore) {
-        var rows = [];
-        // Remove any merged cells
-        if (obj.options.mergeCells) {
-            var keys = Object.keys(obj.options.mergeCells);
-            for (var i = 0; i < keys.length; i++) {
-                var info = jexcel.getIdFromColumnName(keys[i], true);
-                var rowspan = obj.options.mergeCells[keys[i]][1];
-                var y1 = info[1];
-                var y2 = info[1] + (rowspan > 1 ? rowspan - 1 : 0);
+    // /**
+    //  * Is rows merged
+    //  */
+    // obj.isRowMerged = function(y, insertBefore) {
+    //     var rows = [];
+    //     // Remove any merged cells
+    //     if (obj.options.mergeCells) {
+    //         var keys = Object.keys(obj.options.mergeCells);
+    //         for (var i = 0; i < keys.length; i++) {
+    //             var info = jexcel.getIdFromColumnName(keys[i], true);
+    //             var rowspan = obj.options.mergeCells[keys[i]][1];
+    //             var y1 = info[1];
+    //             var y2 = info[1] + (rowspan > 1 ? rowspan - 1 : 0);
 
-                if (insertBefore == null) {
-                    if ((y1 <= y && y2 >= y)) {
-                        rows.push(keys[i]);
-                    }
-                } else {
-                    if (insertBefore) {
-                        if ((y1 < y && y2 >= y)) {
-                            rows.push(keys[i]);
-                        }
-                    } else {
-                        if ((y1 <= y && y2 > y)) {
-                            rows.push(keys[i]);
-                        }
-                    }
-                }
-            }
-        }
+    //             if (insertBefore == null) {
+    //                 if ((y1 <= y && y2 >= y)) {
+    //                     rows.push(keys[i]);
+    //                 }
+    //             } else {
+    //                 if (insertBefore) {
+    //                     if ((y1 < y && y2 >= y)) {
+    //                         rows.push(keys[i]);
+    //                     }
+    //                 } else {
+    //                     if ((y1 <= y && y2 > y)) {
+    //                         rows.push(keys[i]);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        return rows;
-    }
+    //     return rows;
+    // }
 
     /**
      * Open the editor
@@ -7569,115 +7569,115 @@ var utils = (function() {
 jexcel.methods = {};
 
 
-jexcel.methods.logical = (function() {
-    var exports = {};
+// jexcel.methods.logical = (function() {
+//     var exports = {};
 
-    exports.AND = function() {
-        var args = utils.flatten(arguments);
-        var result = true;
-        for (var i = 0; i < args.length; i++) {
-            if (!args[i]) {
-                result = false;
-            }
-        }
-        return result;
-    };
+//     exports.AND = function() {
+//         var args = utils.flatten(arguments);
+//         var result = true;
+//         for (var i = 0; i < args.length; i++) {
+//             if (!args[i]) {
+//                 result = false;
+//             }
+//         }
+//         return result;
+//     };
 
-    exports.CHOOSE = function() {
-        if (arguments.length < 2) {
-            return error.na;
-        }
+//     exports.CHOOSE = function() {
+//         if (arguments.length < 2) {
+//             return error.na;
+//         }
 
-        var index = arguments[0];
-        if (index < 1 || index > 254) {
-            return error.value;
-        }
+//         var index = arguments[0];
+//         if (index < 1 || index > 254) {
+//             return error.value;
+//         }
 
-        if (arguments.length < index + 1) {
-            return error.value;
-        }
+//         if (arguments.length < index + 1) {
+//             return error.value;
+//         }
 
-        return arguments[index];
-    };
+//         return arguments[index];
+//     };
 
-    exports.FALSE = function() {
-        return false;
-    };
+//     exports.FALSE = function() {
+//         return false;
+//     };
 
-    exports.IF = function(test, then_value, otherwise_value) {
-        return test ? then_value : otherwise_value;
-    };
+//     exports.IF = function(test, then_value, otherwise_value) {
+//         return test ? then_value : otherwise_value;
+//     };
 
-    exports.IFERROR = function(value, valueIfError) {
-        if (ISERROR(value)) {
-            return valueIfError;
-        }
-        return value;
-    };
+//     exports.IFERROR = function(value, valueIfError) {
+//         if (ISERROR(value)) {
+//             return valueIfError;
+//         }
+//         return value;
+//     };
 
-    exports.IFNA = function(value, value_if_na) {
-        return value === error.na ? value_if_na : value;
-    };
+//     exports.IFNA = function(value, value_if_na) {
+//         return value === error.na ? value_if_na : value;
+//     };
 
-    exports.NOT = function(logical) {
-        return !logical;
-    };
+//     exports.NOT = function(logical) {
+//         return !logical;
+//     };
 
-    exports.OR = function() {
-        var args = utils.flatten(arguments);
-        var result = false;
-        for (var i = 0; i < args.length; i++) {
-            if (args[i]) {
-                result = true;
-            }
-        }
-        return result;
-    };
+//     exports.OR = function() {
+//         var args = utils.flatten(arguments);
+//         var result = false;
+//         for (var i = 0; i < args.length; i++) {
+//             if (args[i]) {
+//                 result = true;
+//             }
+//         }
+//         return result;
+//     };
 
-    exports.TRUE = function() {
-        return true;
-    };
+//     exports.TRUE = function() {
+//         return true;
+//     };
 
-    exports.XOR = function() {
-        var args = utils.flatten(arguments);
-        var result = 0;
-        for (var i = 0; i < args.length; i++) {
-            if (args[i]) {
-                result++;
-            }
-        }
-        return (Math.floor(Math.abs(result)) & 1) ? true : false;
-    };
+//     exports.XOR = function() {
+//         var args = utils.flatten(arguments);
+//         var result = 0;
+//         for (var i = 0; i < args.length; i++) {
+//             if (args[i]) {
+//                 result++;
+//             }
+//         }
+//         return (Math.floor(Math.abs(result)) & 1) ? true : false;
+//     };
 
-    exports.SWITCH = function() {
-        var result;
-        if (arguments.length > 0)  {
-            var targetValue = arguments[0];
-            var argc = arguments.length - 1;
-            var switchCount = Math.floor(argc / 2);
-            var switchSatisfied = false;
-            var defaultClause = argc % 2 === 0 ? null : arguments[arguments.length - 1];
+//     exports.SWITCH = function() {
+//         var result;
+//         if (arguments.length > 0)  {
+//             var targetValue = arguments[0];
+//             var argc = arguments.length - 1;
+//             var switchCount = Math.floor(argc / 2);
+//             var switchSatisfied = false;
+//             var defaultClause = argc % 2 === 0 ? null : arguments[arguments.length - 1];
 
-            if (switchCount) {
-                for (var index = 0; index < switchCount; index++) {
-                    if (targetValue === arguments[index * 2 + 1]) {
-                      result = arguments[index * 2 + 2];
-                      switchSatisfied = true;
-                      break;
-                    }
-                }
-            }
+//             if (switchCount) {
+//                 for (var index = 0; index < switchCount; index++) {
+//                     if (targetValue === arguments[index * 2 + 1]) {
+//                       result = arguments[index * 2 + 2];
+//                       switchSatisfied = true;
+//                       break;
+//                     }
+//                 }
+//             }
 
-            if (!switchSatisfied && defaultClause) {
-                result = defaultClause;
-            }
-        }
+//             if (!switchSatisfied && defaultClause) {
+//                 result = defaultClause;
+//             }
+//         }
 
-        return result;
-    };
+//         return result;
+//     };
 
-    return exports;
-})();
+//     return exports;
+// })();
 
 jexcel.methods.math = (function() {
     var exports = {};
@@ -8564,7 +8564,7 @@ jexcel.methods.math = (function() {
 jexcel.methods.stats = (function() {
     var exports = {};
 
-    var SQRT2PI = 2.5066282746310002;
+    // var SQRT2PI = 2.5066282746310002;
 
     exports.AVEDEV = null;
 
@@ -8580,634 +8580,634 @@ jexcel.methods.stats = (function() {
         return sum / count;
     };
 
-    exports.AVERAGEA = function() {
-        var range = utils.flatten(arguments);
-        var n = range.length;
-        var sum = 0;
-        var count = 0;
-        for (var i = 0; i < n; i++) {
-            var el = range[i];
-            if (typeof el === 'number') {
-                sum += el;
-            }
-            if (el === true) {
-                sum++;
-            }
-            if (el !== null) {
-                count++;
-            }
-        }
-        return sum / count;
-    };
+    // exports.AVERAGEA = function() {
+    //     var range = utils.flatten(arguments);
+    //     var n = range.length;
+    //     var sum = 0;
+    //     var count = 0;
+    //     for (var i = 0; i < n; i++) {
+    //         var el = range[i];
+    //         if (typeof el === 'number') {
+    //             sum += el;
+    //         }
+    //         if (el === true) {
+    //             sum++;
+    //         }
+    //         if (el !== null) {
+    //             count++;
+    //         }
+    //     }
+    //     return sum / count;
+    // };
 
-    exports.AVERAGEIF = function(range, criteria, average_range) {
-        average_range = average_range || range;
-        range = utils.flatten(range);
-        average_range = utils.parseNumberArray(utils.flatten(average_range));
-        if (average_range instanceof Error) {
-            return average_range;
-        }
-        var average_count = 0;
-        var result = 0;
-        for (var i = 0; i < range.length; i++) {
-            if (eval(range[i] + criteria)) { // jshint ignore:line
-                result += average_range[i];
-                average_count++;
-            }
-        }
-        return result / average_count;
-    };
+    // exports.AVERAGEIF = function(range, criteria, average_range) {
+    //     average_range = average_range || range;
+    //     range = utils.flatten(range);
+    //     average_range = utils.parseNumberArray(utils.flatten(average_range));
+    //     if (average_range instanceof Error) {
+    //         return average_range;
+    //     }
+    //     var average_count = 0;
+    //     var result = 0;
+    //     for (var i = 0; i < range.length; i++) {
+    //         if (eval(range[i] + criteria)) { // jshint ignore:line
+    //             result += average_range[i];
+    //             average_count++;
+    //         }
+    //     }
+    //     return result / average_count;
+    // };
 
-    exports.AVERAGEIFS = null;
+    // exports.AVERAGEIFS = null;
 
-    exports.COUNT = function() {
-        return utils.numbers(utils.flatten(arguments)).length;
-    };
+    // exports.COUNT = function() {
+    //     return utils.numbers(utils.flatten(arguments)).length;
+    // };
 
-    exports.COUNTA = function() {
-        var range = utils.flatten(arguments);
-        return range.length - exports.COUNTBLANK(range);
-    };
+    // exports.COUNTA = function() {
+    //     var range = utils.flatten(arguments);
+    //     return range.length - exports.COUNTBLANK(range);
+    // };
 
-    exports.COUNTIN = function (range, value) {
-        var result = 0;
-        for (var i = 0; i < range.length; i++) {
-            if (range[i] === value) {
-                result++;
-            }
-        }
-        return result;
-    };
+    // exports.COUNTIN = function (range, value) {
+    //     var result = 0;
+    //     for (var i = 0; i < range.length; i++) {
+    //         if (range[i] === value) {
+    //             result++;
+    //         }
+    //     }
+    //     return result;
+    // };
 
-    exports.COUNTBLANK = function() {
-        var range = utils.flatten(arguments);
-        var blanks = 0;
-        var element;
-        for (var i = 0; i < range.length; i++) {
-            element = range[i];
-            if (element === null || element === '') {
-                blanks++;
-            }
-        }
-        return blanks;
-    };
+    // exports.COUNTBLANK = function() {
+    //     var range = utils.flatten(arguments);
+    //     var blanks = 0;
+    //     var element;
+    //     for (var i = 0; i < range.length; i++) {
+    //         element = range[i];
+    //         if (element === null || element === '') {
+    //             blanks++;
+    //         }
+    //     }
+    //     return blanks;
+    // };
 
-    exports.COUNTIF = function(range, criteria) {
-        range = utils.flatten(range);
-        if (!/[<>=!]/.test(criteria)) {
-            criteria = '=="' + criteria + '"';
-        }
-        var matches = 0;
-        for (var i = 0; i < range.length; i++) {
-            if (typeof range[i] !== 'string') {
-                if (eval(range[i] + criteria)) { // jshint ignore:line
-                    matches++;
-                }
-            } else {
-                if (eval('"' + range[i] + '"' + criteria)) { // jshint ignore:line
-                    matches++;
-                }
-            }
-        }
-        return matches;
-    };
+    // exports.COUNTIF = function(range, criteria) {
+    //     range = utils.flatten(range);
+    //     if (!/[<>=!]/.test(criteria)) {
+    //         criteria = '=="' + criteria + '"';
+    //     }
+    //     var matches = 0;
+    //     for (var i = 0; i < range.length; i++) {
+    //         if (typeof range[i] !== 'string') {
+    //             if (eval(range[i] + criteria)) { // jshint ignore:line
+    //                 matches++;
+    //             }
+    //         } else {
+    //             if (eval('"' + range[i] + '"' + criteria)) { // jshint ignore:line
+    //                 matches++;
+    //             }
+    //         }
+    //     }
+    //     return matches;
+    // };
 
-    exports.COUNTIFS = function() {
-        var args = utils.argsToArray(arguments);
-        var results = new Array(utils.flatten(args[0]).length);
-        for (var i = 0; i < results.length; i++) {
-            results[i] = true;
-        }
-        for (i = 0; i < args.length; i += 2) {
-            var range = utils.flatten(args[i]);
-            var criteria = args[i + 1];
-            if (!/[<>=!]/.test(criteria)) {
-                criteria = '=="' + criteria + '"';
-            }
-            for (var j = 0; j < range.length; j++) {
-                if (typeof range[j] !== 'string') {
-                    results[j] = results[j] && eval(range[j] + criteria); // jshint ignore:line
-                } else {
-                    results[j] = results[j] && eval('"' + range[j] + '"' + criteria); // jshint ignore:line
-                }
-            }
-        }
-        var result = 0;
-        for (i = 0; i < results.length; i++) {
-            if (results[i]) {
-                result++;
-            }
-        }
-        return result;
-    };
+    // exports.COUNTIFS = function() {
+    //     var args = utils.argsToArray(arguments);
+    //     var results = new Array(utils.flatten(args[0]).length);
+    //     for (var i = 0; i < results.length; i++) {
+    //         results[i] = true;
+    //     }
+    //     for (i = 0; i < args.length; i += 2) {
+    //         var range = utils.flatten(args[i]);
+    //         var criteria = args[i + 1];
+    //         if (!/[<>=!]/.test(criteria)) {
+    //             criteria = '=="' + criteria + '"';
+    //         }
+    //         for (var j = 0; j < range.length; j++) {
+    //             if (typeof range[j] !== 'string') {
+    //                 results[j] = results[j] && eval(range[j] + criteria); // jshint ignore:line
+    //             } else {
+    //                 results[j] = results[j] && eval('"' + range[j] + '"' + criteria); // jshint ignore:line
+    //             }
+    //         }
+    //     }
+    //     var result = 0;
+    //     for (i = 0; i < results.length; i++) {
+    //         if (results[i]) {
+    //             result++;
+    //         }
+    //     }
+    //     return result;
+    // };
 
-    exports.COUNTUNIQUE = function () {
-        return UNIQUE.apply(null, utils.flatten(arguments)).length;
-    };
+    // exports.COUNTUNIQUE = function () {
+    //     return UNIQUE.apply(null, utils.flatten(arguments)).length;
+    // };
 
-    exports.FISHER = function(x) {
-        x = utils.parseNumber(x);
-        if (x instanceof Error) {
-            return x;
-        }
-        return Math.log((1 + x) / (1 - x)) / 2;
-    };
+    // exports.FISHER = function(x) {
+    //     x = utils.parseNumber(x);
+    //     if (x instanceof Error) {
+    //         return x;
+    //     }
+    //     return Math.log((1 + x) / (1 - x)) / 2;
+    // };
 
-    exports.FISHERINV = function(y) {
-        y = utils.parseNumber(y);
-        if (y instanceof Error) {
-            return y;
-        }
-        var e2y = Math.exp(2 * y);
-        return (e2y - 1) / (e2y + 1);
-    };
+    // exports.FISHERINV = function(y) {
+    //     y = utils.parseNumber(y);
+    //     if (y instanceof Error) {
+    //         return y;
+    //     }
+    //     var e2y = Math.exp(2 * y);
+    //     return (e2y - 1) / (e2y + 1);
+    // };
 
-    exports.FREQUENCY = function(data, bins) {
-        data = utils.parseNumberArray(utils.flatten(data));
-        bins = utils.parseNumberArray(utils.flatten(bins));
-        if (utils.anyIsError(data, bins)) {
-            return error.value;
-        }
-        var n = data.length;
-        var b = bins.length;
-        var r = [];
-        for (var i = 0; i <= b; i++) {
-            r[i] = 0;
-            for (var j = 0; j < n; j++) {
-                if (i === 0) {
-                    if (data[j] <= bins[0]) {
-                        r[0] += 1;
-                    }
-                } else if (i < b) {
-                    if (data[j] > bins[i - 1] && data[j] <= bins[i]) {
-                        r[i] += 1;
-                    }
-                } else if (i === b) {
-                    if (data[j] > bins[b - 1]) {
-                        r[b] += 1;
-                    }
-                }
-            }
-        }
-        return r;
-    };
+    // exports.FREQUENCY = function(data, bins) {
+    //     data = utils.parseNumberArray(utils.flatten(data));
+    //     bins = utils.parseNumberArray(utils.flatten(bins));
+    //     if (utils.anyIsError(data, bins)) {
+    //         return error.value;
+    //     }
+    //     var n = data.length;
+    //     var b = bins.length;
+    //     var r = [];
+    //     for (var i = 0; i <= b; i++) {
+    //         r[i] = 0;
+    //         for (var j = 0; j < n; j++) {
+    //             if (i === 0) {
+    //                 if (data[j] <= bins[0]) {
+    //                     r[0] += 1;
+    //                 }
+    //             } else if (i < b) {
+    //                 if (data[j] > bins[i - 1] && data[j] <= bins[i]) {
+    //                     r[i] += 1;
+    //                 }
+    //             } else if (i === b) {
+    //                 if (data[j] > bins[b - 1]) {
+    //                     r[b] += 1;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return r;
+    // };
 
-    exports.LARGE = function(range, k) {
-        range = utils.parseNumberArray(utils.flatten(range));
-        k = utils.parseNumber(k);
-        if (utils.anyIsError(range, k)) {
-            return range;
-        }
-        return range.sort(function(a, b) {
-            return b - a;
-        })[k - 1];
-    };
+    // exports.LARGE = function(range, k) {
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     k = utils.parseNumber(k);
+    //     if (utils.anyIsError(range, k)) {
+    //         return range;
+    //     }
+    //     return range.sort(function(a, b) {
+    //         return b - a;
+    //     })[k - 1];
+    // };
 
     exports.MAX = function() {
         var range = utils.numbers(utils.flatten(arguments));
         return (range.length === 0) ? 0 : Math.max.apply(Math, range);
     };
 
-    exports.MAXA = function() {
-        var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
-        return (range.length === 0) ? 0 : Math.max.apply(Math, range);
-    };
+    // exports.MAXA = function() {
+    //     var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
+    //     return (range.length === 0) ? 0 : Math.max.apply(Math, range);
+    // };
 
     exports.MIN = function() {
         var range = utils.numbers(utils.flatten(arguments));
         return (range.length === 0) ? 0 : Math.min.apply(Math, range);
     };
 
-    exports.MINA = function() {
-        var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
-        return (range.length === 0) ? 0 : Math.min.apply(Math, range);
-    };
+    // exports.MINA = function() {
+    //     var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
+    //     return (range.length === 0) ? 0 : Math.min.apply(Math, range);
+    // };
 
-    exports.MODE = {};
+    // exports.MODE = {};
 
-    exports.MODE.MULT = function() {
-        // Credits: Roönaän
-        var range = utils.parseNumberArray(utils.flatten(arguments));
-        if (range instanceof Error) {
-            return range;
-        }
-        var n = range.length;
-        var count = {};
-        var maxItems = [];
-        var max = 0;
-        var currentItem;
+    // exports.MODE.MULT = function() {
+    //     // Credits: Roönaän
+    //     var range = utils.parseNumberArray(utils.flatten(arguments));
+    //     if (range instanceof Error) {
+    //         return range;
+    //     }
+    //     var n = range.length;
+    //     var count = {};
+    //     var maxItems = [];
+    //     var max = 0;
+    //     var currentItem;
 
-        for (var i = 0; i < n; i++) {
-            currentItem = range[i];
-            count[currentItem] = count[currentItem] ? count[currentItem] + 1 : 1;
-            if (count[currentItem] > max) {
-                max = count[currentItem];
-                maxItems = [];
-            }
-            if (count[currentItem] === max) {
-                maxItems[maxItems.length] = currentItem;
-            }
-        }
-        return maxItems;
-    };
+    //     for (var i = 0; i < n; i++) {
+    //         currentItem = range[i];
+    //         count[currentItem] = count[currentItem] ? count[currentItem] + 1 : 1;
+    //         if (count[currentItem] > max) {
+    //             max = count[currentItem];
+    //             maxItems = [];
+    //         }
+    //         if (count[currentItem] === max) {
+    //             maxItems[maxItems.length] = currentItem;
+    //         }
+    //     }
+    //     return maxItems;
+    // };
 
-    exports.MODE.SNGL = function() {
-        var range = utils.parseNumberArray(utils.flatten(arguments));
-        if (range instanceof Error) {
-            return range;
-        }
-        return exports.MODE.MULT(range).sort(function(a, b) {
-            return a - b;
-        })[0];
-    };
+    // exports.MODE.SNGL = function() {
+    //     var range = utils.parseNumberArray(utils.flatten(arguments));
+    //     if (range instanceof Error) {
+    //         return range;
+    //     }
+    //     return exports.MODE.MULT(range).sort(function(a, b) {
+    //         return a - b;
+    //     })[0];
+    // };
 
-    exports.PERCENTILE = {};
+    // exports.PERCENTILE = {};
 
-    exports.PERCENTILE.EXC = function(array, k) {
-        array = utils.parseNumberArray(utils.flatten(array));
-        k = utils.parseNumber(k);
-        if (utils.anyIsError(array, k)) {
-            return error.value;
-        }
-        array = array.sort(function(a, b) {
-            {
-                return a - b;
-            }
-        });
-        var n = array.length;
-        if (k < 1 / (n + 1) || k > 1 - 1 / (n + 1)) {
-            return error.num;
-        }
-        var l = k * (n + 1) - 1;
-        var fl = Math.floor(l);
-        return utils.cleanFloat((l === fl) ? array[l] : array[fl] + (l - fl) * (array[fl + 1] - array[fl]));
-    };
+    // exports.PERCENTILE.EXC = function(array, k) {
+    //     array = utils.parseNumberArray(utils.flatten(array));
+    //     k = utils.parseNumber(k);
+    //     if (utils.anyIsError(array, k)) {
+    //         return error.value;
+    //     }
+    //     array = array.sort(function(a, b) {
+    //         {
+    //             return a - b;
+    //         }
+    //     });
+    //     var n = array.length;
+    //     if (k < 1 / (n + 1) || k > 1 - 1 / (n + 1)) {
+    //         return error.num;
+    //     }
+    //     var l = k * (n + 1) - 1;
+    //     var fl = Math.floor(l);
+    //     return utils.cleanFloat((l === fl) ? array[l] : array[fl] + (l - fl) * (array[fl + 1] - array[fl]));
+    // };
 
-    exports.PERCENTILE.INC = function(array, k) {
-        array = utils.parseNumberArray(utils.flatten(array));
-        k = utils.parseNumber(k);
-        if (utils.anyIsError(array, k)) {
-            return error.value;
-        }
-        array = array.sort(function(a, b) {
-            return a - b;
-        });
-        var n = array.length;
-        var l = k * (n - 1);
-        var fl = Math.floor(l);
-        return utils.cleanFloat((l === fl) ? array[l] : array[fl] + (l - fl) * (array[fl + 1] - array[fl]));
-    };
+    // exports.PERCENTILE.INC = function(array, k) {
+    //     array = utils.parseNumberArray(utils.flatten(array));
+    //     k = utils.parseNumber(k);
+    //     if (utils.anyIsError(array, k)) {
+    //         return error.value;
+    //     }
+    //     array = array.sort(function(a, b) {
+    //         return a - b;
+    //     });
+    //     var n = array.length;
+    //     var l = k * (n - 1);
+    //     var fl = Math.floor(l);
+    //     return utils.cleanFloat((l === fl) ? array[l] : array[fl] + (l - fl) * (array[fl + 1] - array[fl]));
+    // };
 
-    exports.PERCENTRANK = {};
+    // exports.PERCENTRANK = {};
 
-    exports.PERCENTRANK.EXC = function(array, x, significance) {
-        significance = (significance === undefined) ? 3 : significance;
-        array = utils.parseNumberArray(utils.flatten(array));
-        x = utils.parseNumber(x);
-        significance = utils.parseNumber(significance);
-        if (utils.anyIsError(array, x, significance)) {
-            return error.value;
-        }
-        array = array.sort(function(a, b) {
-            return a - b;
-        });
-        var uniques = UNIQUE.apply(null, array);
-        var n = array.length;
-        var m = uniques.length;
-        var power = Math.pow(10, significance);
-        var result = 0;
-        var match = false;
-        var i = 0;
-        while (!match && i < m) {
-            if (x === uniques[i]) {
-                result = (array.indexOf(uniques[i]) + 1) / (n + 1);
-                match = true;
-            } else if (x >= uniques[i] && (x < uniques[i + 1] || i === m - 1)) {
-                result = (array.indexOf(uniques[i]) + 1 + (x - uniques[i]) / (uniques[i + 1] - uniques[i])) / (n + 1);
-                match = true;
-            }
-            i++;
-        }
-        return Math.floor(result * power) / power;
-    };
+    // exports.PERCENTRANK.EXC = function(array, x, significance) {
+    //     significance = (significance === undefined) ? 3 : significance;
+    //     array = utils.parseNumberArray(utils.flatten(array));
+    //     x = utils.parseNumber(x);
+    //     significance = utils.parseNumber(significance);
+    //     if (utils.anyIsError(array, x, significance)) {
+    //         return error.value;
+    //     }
+    //     array = array.sort(function(a, b) {
+    //         return a - b;
+    //     });
+    //     var uniques = UNIQUE.apply(null, array);
+    //     var n = array.length;
+    //     var m = uniques.length;
+    //     var power = Math.pow(10, significance);
+    //     var result = 0;
+    //     var match = false;
+    //     var i = 0;
+    //     while (!match && i < m) {
+    //         if (x === uniques[i]) {
+    //             result = (array.indexOf(uniques[i]) + 1) / (n + 1);
+    //             match = true;
+    //         } else if (x >= uniques[i] && (x < uniques[i + 1] || i === m - 1)) {
+    //             result = (array.indexOf(uniques[i]) + 1 + (x - uniques[i]) / (uniques[i + 1] - uniques[i])) / (n + 1);
+    //             match = true;
+    //         }
+    //         i++;
+    //     }
+    //     return Math.floor(result * power) / power;
+    // };
 
-    exports.PERCENTRANK.INC = function(array, x, significance) {
-        significance = (significance === undefined) ? 3 : significance;
-        array = utils.parseNumberArray(utils.flatten(array));
-        x = utils.parseNumber(x);
-        significance = utils.parseNumber(significance);
-        if (utils.anyIsError(array, x, significance)) {
-            return error.value;
-        }
-        array = array.sort(function(a, b) {
-            return a - b;
-        });
-        var uniques = UNIQUE.apply(null, array);
-        var n = array.length;
-        var m = uniques.length;
-        var power = Math.pow(10, significance);
-        var result = 0;
-        var match = false;
-        var i = 0;
-        while (!match && i < m) {
-            if (x === uniques[i]) {
-                result = array.indexOf(uniques[i]) / (n - 1);
-                match = true;
-            } else if (x >= uniques[i] && (x < uniques[i + 1] || i === m - 1)) {
-                result = (array.indexOf(uniques[i]) + (x - uniques[i]) / (uniques[i + 1] - uniques[i])) / (n - 1);
-                match = true;
-            }
-            i++;
-        }
-        return Math.floor(result * power) / power;
-    };
+    // exports.PERCENTRANK.INC = function(array, x, significance) {
+    //     significance = (significance === undefined) ? 3 : significance;
+    //     array = utils.parseNumberArray(utils.flatten(array));
+    //     x = utils.parseNumber(x);
+    //     significance = utils.parseNumber(significance);
+    //     if (utils.anyIsError(array, x, significance)) {
+    //         return error.value;
+    //     }
+    //     array = array.sort(function(a, b) {
+    //         return a - b;
+    //     });
+    //     var uniques = UNIQUE.apply(null, array);
+    //     var n = array.length;
+    //     var m = uniques.length;
+    //     var power = Math.pow(10, significance);
+    //     var result = 0;
+    //     var match = false;
+    //     var i = 0;
+    //     while (!match && i < m) {
+    //         if (x === uniques[i]) {
+    //             result = array.indexOf(uniques[i]) / (n - 1);
+    //             match = true;
+    //         } else if (x >= uniques[i] && (x < uniques[i + 1] || i === m - 1)) {
+    //             result = (array.indexOf(uniques[i]) + (x - uniques[i]) / (uniques[i + 1] - uniques[i])) / (n - 1);
+    //             match = true;
+    //         }
+    //         i++;
+    //     }
+    //     return Math.floor(result * power) / power;
+    // };
 
-    exports.PERMUT = function(number, number_chosen) {
-        number = utils.parseNumber(number);
-        number_chosen = utils.parseNumber(number_chosen);
-        if (utils.anyIsError(number, number_chosen)) {
-            return error.value;
-        }
-        return FACT(number) / FACT(number - number_chosen);
-    };
+    // exports.PERMUT = function(number, number_chosen) {
+    //     number = utils.parseNumber(number);
+    //     number_chosen = utils.parseNumber(number_chosen);
+    //     if (utils.anyIsError(number, number_chosen)) {
+    //         return error.value;
+    //     }
+    //     return FACT(number) / FACT(number - number_chosen);
+    // };
 
-    exports.PERMUTATIONA = function(number, number_chosen) {
-        number = utils.parseNumber(number);
-        number_chosen = utils.parseNumber(number_chosen);
-        if (utils.anyIsError(number, number_chosen)) {
-            return error.value;
-        }
-        return Math.pow(number, number_chosen);
-    };
+    // exports.PERMUTATIONA = function(number, number_chosen) {
+    //     number = utils.parseNumber(number);
+    //     number_chosen = utils.parseNumber(number_chosen);
+    //     if (utils.anyIsError(number, number_chosen)) {
+    //         return error.value;
+    //     }
+    //     return Math.pow(number, number_chosen);
+    // };
 
-    exports.PHI = function(x) {
-        x = utils.parseNumber(x);
-        if (x instanceof Error) {
-            return error.value;
-        }
-        return Math.exp(-0.5 * x * x) / SQRT2PI;
-    };
+    // exports.PHI = function(x) {
+    //     x = utils.parseNumber(x);
+    //     if (x instanceof Error) {
+    //         return error.value;
+    //     }
+    //     return Math.exp(-0.5 * x * x) / SQRT2PI;
+    // };
 
-    exports.PROB = function(range, probability, lower, upper) {
-        if (lower === undefined) {
-            return 0;
-        }
-        upper = (upper === undefined) ? lower : upper;
+    // exports.PROB = function(range, probability, lower, upper) {
+    //     if (lower === undefined) {
+    //         return 0;
+    //     }
+    //     upper = (upper === undefined) ? lower : upper;
 
-        range = utils.parseNumberArray(utils.flatten(range));
-        probability = utils.parseNumberArray(utils.flatten(probability));
-        lower = utils.parseNumber(lower);
-        upper = utils.parseNumber(upper);
-        if (utils.anyIsError(range, probability, lower, upper)) {
-            return error.value;
-        }
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     probability = utils.parseNumberArray(utils.flatten(probability));
+    //     lower = utils.parseNumber(lower);
+    //     upper = utils.parseNumber(upper);
+    //     if (utils.anyIsError(range, probability, lower, upper)) {
+    //         return error.value;
+    //     }
 
-        if (lower === upper) {
-            return (range.indexOf(lower) >= 0) ? probability[range.indexOf(lower)] : 0;
-        }
+    //     if (lower === upper) {
+    //         return (range.indexOf(lower) >= 0) ? probability[range.indexOf(lower)] : 0;
+    //     }
 
-        var sorted = range.sort(function(a, b) {
-            return a - b;
-        });
-        var n = sorted.length;
-        var result = 0;
-        for (var i = 0; i < n; i++) {
-            if (sorted[i] >= lower && sorted[i] <= upper) {
-                result += probability[range.indexOf(sorted[i])];
-            }
-        }
-        return result;
-    };
+    //     var sorted = range.sort(function(a, b) {
+    //         return a - b;
+    //     });
+    //     var n = sorted.length;
+    //     var result = 0;
+    //     for (var i = 0; i < n; i++) {
+    //         if (sorted[i] >= lower && sorted[i] <= upper) {
+    //             result += probability[range.indexOf(sorted[i])];
+    //         }
+    //     }
+    //     return result;
+    // };
 
-    exports.QUARTILE = {};
+    // exports.QUARTILE = {};
 
-    exports.QUARTILE.EXC = function(range, quart) {
-        range = utils.parseNumberArray(utils.flatten(range));
-        quart = utils.parseNumber(quart);
-        if (utils.anyIsError(range, quart)) {
-            return error.value;
-        }
-        switch (quart) {
-            case 1:
-                return exports.PERCENTILE.EXC(range, 0.25);
-            case 2:
-                return exports.PERCENTILE.EXC(range, 0.5);
-            case 3:
-                return exports.PERCENTILE.EXC(range, 0.75);
-            default:
-                return error.num;
-        }
-    };
+    // exports.QUARTILE.EXC = function(range, quart) {
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     quart = utils.parseNumber(quart);
+    //     if (utils.anyIsError(range, quart)) {
+    //         return error.value;
+    //     }
+    //     switch (quart) {
+    //         case 1:
+    //             return exports.PERCENTILE.EXC(range, 0.25);
+    //         case 2:
+    //             return exports.PERCENTILE.EXC(range, 0.5);
+    //         case 3:
+    //             return exports.PERCENTILE.EXC(range, 0.75);
+    //         default:
+    //             return error.num;
+    //     }
+    // };
 
-    exports.QUARTILE.INC = function(range, quart) {
-        range = utils.parseNumberArray(utils.flatten(range));
-        quart = utils.parseNumber(quart);
-        if (utils.anyIsError(range, quart)) {
-            return error.value;
-        }
-        switch (quart) {
-            case 1:
-                return exports.PERCENTILE.INC(range, 0.25);
-            case 2:
-                return exports.PERCENTILE.INC(range, 0.5);
-            case 3:
-                return exports.PERCENTILE.INC(range, 0.75);
-            default:
-                return error.num;
-        }
-    };
+    // exports.QUARTILE.INC = function(range, quart) {
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     quart = utils.parseNumber(quart);
+    //     if (utils.anyIsError(range, quart)) {
+    //         return error.value;
+    //     }
+    //     switch (quart) {
+    //         case 1:
+    //             return exports.PERCENTILE.INC(range, 0.25);
+    //         case 2:
+    //             return exports.PERCENTILE.INC(range, 0.5);
+    //         case 3:
+    //             return exports.PERCENTILE.INC(range, 0.75);
+    //         default:
+    //             return error.num;
+    //     }
+    // };
 
-    exports.RANK = {};
+    // exports.RANK = {};
 
-    exports.RANK.AVG = function(number, range, order) {
-        number = utils.parseNumber(number);
-        range = utils.parseNumberArray(utils.flatten(range));
-        if (utils.anyIsError(number, range)) {
-            return error.value;
-        }
-        range = utils.flatten(range);
-        order = order || false;
-        var sort = (order) ? function(a, b) {
-            return a - b;
-        } : function(a, b) {
-            return b - a;
-        };
-        range = range.sort(sort);
+    // exports.RANK.AVG = function(number, range, order) {
+    //     number = utils.parseNumber(number);
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     if (utils.anyIsError(number, range)) {
+    //         return error.value;
+    //     }
+    //     range = utils.flatten(range);
+    //     order = order || false;
+    //     var sort = (order) ? function(a, b) {
+    //         return a - b;
+    //     } : function(a, b) {
+    //         return b - a;
+    //     };
+    //     range = range.sort(sort);
 
-        var length = range.length;
-        var count = 0;
-        for (var i = 0; i < length; i++) {
-            if (range[i] === number) {
-                count++;
-            }
-        }
+    //     var length = range.length;
+    //     var count = 0;
+    //     for (var i = 0; i < length; i++) {
+    //         if (range[i] === number) {
+    //             count++;
+    //         }
+    //     }
 
-        return (count > 1) ? (2 * range.indexOf(number) + count + 1) / 2 : range.indexOf(number) + 1;
-    };
+    //     return (count > 1) ? (2 * range.indexOf(number) + count + 1) / 2 : range.indexOf(number) + 1;
+    // };
 
-    exports.RANK.EQ = function(number, range, order) {
-        number = utils.parseNumber(number);
-        range = utils.parseNumberArray(utils.flatten(range));
-        if (utils.anyIsError(number, range)) {
-            return error.value;
-        }
-        order = order || false;
-        var sort = (order) ? function(a, b) {
-            return a - b;
-        } : function(a, b) {
-            return b - a;
-        };
-        range = range.sort(sort);
-        return range.indexOf(number) + 1;
-    };
+    // exports.RANK.EQ = function(number, range, order) {
+    //     number = utils.parseNumber(number);
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     if (utils.anyIsError(number, range)) {
+    //         return error.value;
+    //     }
+    //     order = order || false;
+    //     var sort = (order) ? function(a, b) {
+    //         return a - b;
+    //     } : function(a, b) {
+    //         return b - a;
+    //     };
+    //     range = range.sort(sort);
+    //     return range.indexOf(number) + 1;
+    // };
 
-    exports.RSQ = function(data_x, data_y) { // no need to flatten here, PEARSON will take care of that
-        data_x = utils.parseNumberArray(utils.flatten(data_x));
-        data_y = utils.parseNumberArray(utils.flatten(data_y));
-        if (utils.anyIsError(data_x, data_y)) {
-            return error.value;
-        }
-        return Math.pow(exports.PEARSON(data_x, data_y), 2);
-    };
+    // exports.RSQ = function(data_x, data_y) { // no need to flatten here, PEARSON will take care of that
+    //     data_x = utils.parseNumberArray(utils.flatten(data_x));
+    //     data_y = utils.parseNumberArray(utils.flatten(data_y));
+    //     if (utils.anyIsError(data_x, data_y)) {
+    //         return error.value;
+    //     }
+    //     return Math.pow(exports.PEARSON(data_x, data_y), 2);
+    // };
 
-    exports.SMALL = function(range, k) {
-        range = utils.parseNumberArray(utils.flatten(range));
-        k = utils.parseNumber(k);
-        if (utils.anyIsError(range, k)) {
-            return range;
-        }
-        return range.sort(function(a, b) {
-            return a - b;
-        })[k - 1];
-    };
+    // exports.SMALL = function(range, k) {
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     k = utils.parseNumber(k);
+    //     if (utils.anyIsError(range, k)) {
+    //         return range;
+    //     }
+    //     return range.sort(function(a, b) {
+    //         return a - b;
+    //     })[k - 1];
+    // };
 
-    exports.STANDARDIZE = function(x, mean, sd) {
-        x = utils.parseNumber(x);
-        mean = utils.parseNumber(mean);
-        sd = utils.parseNumber(sd);
-        if (utils.anyIsError(x, mean, sd)) {
-            return error.value;
-        }
-        return (x - mean) / sd;
-    };
+    // exports.STANDARDIZE = function(x, mean, sd) {
+    //     x = utils.parseNumber(x);
+    //     mean = utils.parseNumber(mean);
+    //     sd = utils.parseNumber(sd);
+    //     if (utils.anyIsError(x, mean, sd)) {
+    //         return error.value;
+    //     }
+    //     return (x - mean) / sd;
+    // };
 
-    exports.STDEV = {};
+    // exports.STDEV = {};
 
-    exports.STDEV.P = function() {
-        var v = exports.VAR.P.apply(this, arguments);
-        return Math.sqrt(v);
-    };
+    // exports.STDEV.P = function() {
+    //     var v = exports.VAR.P.apply(this, arguments);
+    //     return Math.sqrt(v);
+    // };
 
-    exports.STDEV.S = function() {
-        var v = exports.VAR.S.apply(this, arguments);
-        return Math.sqrt(v);
-    };
+    // exports.STDEV.S = function() {
+    //     var v = exports.VAR.S.apply(this, arguments);
+    //     return Math.sqrt(v);
+    // };
 
-    exports.STDEVA = function() {
-        var v = exports.VARA.apply(this, arguments);
-        return Math.sqrt(v);
-    };
+    // exports.STDEVA = function() {
+    //     var v = exports.VARA.apply(this, arguments);
+    //     return Math.sqrt(v);
+    // };
 
-    exports.STDEVPA = function() {
-        var v = exports.VARPA.apply(this, arguments);
-        return Math.sqrt(v);
-    };
+    // exports.STDEVPA = function() {
+    //     var v = exports.VARPA.apply(this, arguments);
+    //     return Math.sqrt(v);
+    // };
 
-    exports.VAR = {};
+    // exports.VAR = {};
 
-    exports.VAR.P = function() {
-        var range = utils.numbers(utils.flatten(arguments));
-        var n = range.length;
-        var sigma = 0;
-        var mean = exports.AVERAGE(range);
-        for (var i = 0; i < n; i++) {
-            sigma += Math.pow(range[i] - mean, 2);
-        }
-        return sigma / n;
-    };
+    // exports.VAR.P = function() {
+    //     var range = utils.numbers(utils.flatten(arguments));
+    //     var n = range.length;
+    //     var sigma = 0;
+    //     var mean = exports.AVERAGE(range);
+    //     for (var i = 0; i < n; i++) {
+    //         sigma += Math.pow(range[i] - mean, 2);
+    //     }
+    //     return sigma / n;
+    // };
 
-    exports.VAR.S = function() {
-        var range = utils.numbers(utils.flatten(arguments));
-        var n = range.length;
-        var sigma = 0;
-        var mean = exports.AVERAGE(range);
-        for (var i = 0; i < n; i++) {
-            sigma += Math.pow(range[i] - mean, 2);
-        }
-        return sigma / (n - 1);
-    };
+    // exports.VAR.S = function() {
+    //     var range = utils.numbers(utils.flatten(arguments));
+    //     var n = range.length;
+    //     var sigma = 0;
+    //     var mean = exports.AVERAGE(range);
+    //     for (var i = 0; i < n; i++) {
+    //         sigma += Math.pow(range[i] - mean, 2);
+    //     }
+    //     return sigma / (n - 1);
+    // };
 
-    exports.VARA = function() {
-        var range = utils.flatten(arguments);
-        var n = range.length;
-        var sigma = 0;
-        var count = 0;
-        var mean = exports.AVERAGEA(range);
-        for (var i = 0; i < n; i++) {
-            var el = range[i];
-            if (typeof el === 'number') {
-                sigma += Math.pow(el - mean, 2);
-            } else if (el === true) {
-                sigma += Math.pow(1 - mean, 2);
-            } else {
-                sigma += Math.pow(0 - mean, 2);
-            }
+    // exports.VARA = function() {
+    //     var range = utils.flatten(arguments);
+    //     var n = range.length;
+    //     var sigma = 0;
+    //     var count = 0;
+    //     var mean = exports.AVERAGEA(range);
+    //     for (var i = 0; i < n; i++) {
+    //         var el = range[i];
+    //         if (typeof el === 'number') {
+    //             sigma += Math.pow(el - mean, 2);
+    //         } else if (el === true) {
+    //             sigma += Math.pow(1 - mean, 2);
+    //         } else {
+    //             sigma += Math.pow(0 - mean, 2);
+    //         }
 
-            if (el !== null) {
-                count++;
-            }
-        }
-        return sigma / (count - 1);
-    };
+    //         if (el !== null) {
+    //             count++;
+    //         }
+    //     }
+    //     return sigma / (count - 1);
+    // };
 
-    exports.VARPA = function() {
-        var range = utils.flatten(arguments);
-        var n = range.length;
-        var sigma = 0;
-        var count = 0;
-        var mean = exports.AVERAGEA(range);
-        for (var i = 0; i < n; i++) {
-            var el = range[i];
-            if (typeof el === 'number') {
-                sigma += Math.pow(el - mean, 2);
-            } else if (el === true) {
-                sigma += Math.pow(1 - mean, 2);
-            } else {
-                sigma += Math.pow(0 - mean, 2);
-            }
+    // exports.VARPA = function() {
+    //     var range = utils.flatten(arguments);
+    //     var n = range.length;
+    //     var sigma = 0;
+    //     var count = 0;
+    //     var mean = exports.AVERAGEA(range);
+    //     for (var i = 0; i < n; i++) {
+    //         var el = range[i];
+    //         if (typeof el === 'number') {
+    //             sigma += Math.pow(el - mean, 2);
+    //         } else if (el === true) {
+    //             sigma += Math.pow(1 - mean, 2);
+    //         } else {
+    //             sigma += Math.pow(0 - mean, 2);
+    //         }
 
-            if (el !== null) {
-                count++;
-            }
-        }
-        return sigma / count;
-    };
+    //         if (el !== null) {
+    //             count++;
+    //         }
+    //     }
+    //     return sigma / count;
+    // };
 
-    exports.WEIBULL = {};
+    // exports.WEIBULL = {};
 
-    exports.WEIBULL.DIST = function(x, alpha, beta, cumulative) {
-        x = utils.parseNumber(x);
-        alpha = utils.parseNumber(alpha);
-        beta = utils.parseNumber(beta);
-        if (utils.anyIsError(x, alpha, beta)) {
-            return error.value;
-        }
-        return (cumulative) ? 1 - Math.exp(-Math.pow(x / beta, alpha)) : Math.pow(x, alpha - 1) * Math.exp(-Math.pow(x / beta, alpha)) * alpha / Math.pow(beta, alpha);
-    };
+    // exports.WEIBULL.DIST = function(x, alpha, beta, cumulative) {
+    //     x = utils.parseNumber(x);
+    //     alpha = utils.parseNumber(alpha);
+    //     beta = utils.parseNumber(beta);
+    //     if (utils.anyIsError(x, alpha, beta)) {
+    //         return error.value;
+    //     }
+    //     return (cumulative) ? 1 - Math.exp(-Math.pow(x / beta, alpha)) : Math.pow(x, alpha - 1) * Math.exp(-Math.pow(x / beta, alpha)) * alpha / Math.pow(beta, alpha);
+    // };
 
-    exports.Z = {};
+    // exports.Z = {};
 
-    exports.Z.TEST = function(range, x, sd) {
-        range = utils.parseNumberArray(utils.flatten(range));
-        x = utils.parseNumber(x);
-        if (utils.anyIsError(range, x)) {
-            return error.value;
-        }
+    // exports.Z.TEST = function(range, x, sd) {
+    //     range = utils.parseNumberArray(utils.flatten(range));
+    //     x = utils.parseNumber(x);
+    //     if (utils.anyIsError(range, x)) {
+    //         return error.value;
+    //     }
 
-        sd = sd || exports.STDEV.S(range);
-        var n = range.length;
-        return 1 - exports.NORM.S.DIST((exports.AVERAGE(range) - x) / (sd / Math.sqrt(n)), true);
-    };
+    //     sd = sd || exports.STDEV.S(range);
+    //     var n = range.length;
+    //     return 1 - exports.NORM.S.DIST((exports.AVERAGE(range) - x) / (sd / Math.sqrt(n)), true);
+    // };
 
     return exports;
 })();
@@ -9225,6 +9225,6 @@ for (var i = 0; i < Object.keys(jexcel.methods).length; i++) {
     }
 }
 
-if (typeof exports === 'object' && typeof module !== 'undefined') {
-    module.exports = jexcel;
-}
+// if (typeof exports === 'object' && typeof module !== 'undefined') {
+//     module.exports = jexcel;
+// }

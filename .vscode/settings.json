@@ -18,6 +18,8 @@
         "particles.js": true,
         "particles.json": true,
         "yarn.lock": true,
+        "src/jexcel.css" : true,
+        "src/jsuites.css":true,
         "app.iss":true
     }
 }

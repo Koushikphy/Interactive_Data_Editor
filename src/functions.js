@@ -846,7 +846,7 @@ function spreadsheet() {
     });
     editorWindow.maximize();
     editorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "handtable.html"),
+        pathname: path.join(__dirname, "spreadsheet.html"),
         protocol: 'file:',
         slashes: true
     }));

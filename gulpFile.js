@@ -54,10 +54,29 @@ function compressCSS() {
         .pipe(dest('./lib'))
 }
 
+function compressSpredSheetCSS() {
+    return src(['src/style.css','./src/jexcel.css','./src/jsuites.css'])
+        .pipe(concat('spreadsheet.css'))
+        .pipe(cleanCSS())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(dest('./lib'))
+}
 
+function compressCombineJS() {
+    return src(['./src/jexcel.js','./src/jsuites.js'])
+        .pipe(concat('spreadsheet.js'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(dest('./lib'))
+}
 
-
-exports.default = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
+exports.spread =  parallel(compressSpredSheetCSS, compressCombineJS)
+// exports.default = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
+exports.default = parallel(compressJS, compressCombineJS, compressCombineJSp);
 
 exports.watch = function () {
     watch('./src/*.*', parallel('default'));

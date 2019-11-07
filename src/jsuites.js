@@ -9,16 +9,16 @@
  * MIT License
  *
  */
-;(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    global.jSuites = factory();
+// ;(function (global, factory) {
+//     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+//     typeof define === 'function' && define.amd ? define(factory) :
+//     global.jSuites = factory();
 
-    // Keep compatibility with jtools legacy
-    global.jApp = global.jSuites;
-}(this, (function () {
+//     // Keep compatibility with jtools legacy
+//     global.jApp = global.jSuites;
+// }(this, (function () {
 
-    'use strict';
+//     'use strict';
 
 var jSuites = function(options) {
     var obj = {}
@@ -521,8 +521,6 @@ var jSuites = function(options) {
 
 jSuites.files = [];
 
-
-
 jSuites.contextmenu = (function(el, options) {
     var obj = {};
     obj.options = {};
@@ -633,8 +631,6 @@ jSuites.contextmenu = (function(el, options) {
 
     return obj;
 });
+//     return jSuites;
 
-
-    return jSuites;
-
-})));
+// })//));
