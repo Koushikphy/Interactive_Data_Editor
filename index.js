@@ -523,6 +523,7 @@ const plotMenuTemplate = [{
                     slashes: true
                 }));
                 childWindow.setMenuBarVisibility(false);
+                childWindow.webContents.openDevTools()
             }
         },
     ]

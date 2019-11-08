@@ -11,7 +11,7 @@
     "postinstall": "electron-builder install-app-deps",
     "start": "gulp && electron .",
     "startwatch": "gulp && electron . | gulp watch",
-    "dist": "gulp && build",
+    "dist": "gulp && electron-builder",
     "watch": "gulp watch",
     "uplib": "gulp default"
   },
@@ -63,8 +63,8 @@
     }
   },
   "devDependencies": {
-    "electron": "^4.0.0",
-    "electron-builder": "^20.38.4",
+    "electron": "^7.1.1",
+    "electron-builder": "^21.2.0",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.0.0",
     "gulp-concat": "^2.6.1",
@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "particles.js": "^2.0.0",
-    "plotly.js-gl3d-dist": "^1.50.0",
+    "plotly.js-gl3d-dist": "^1.51.1",
     "request": "^2.88.0"
   }
 }

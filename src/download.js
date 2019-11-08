@@ -6,11 +6,11 @@ function triggerDownload(){
     div.innerHTML = `<div class='jjjj'><b> Save the image</b><br></div>
                     &ensp; File Name: <input type="text" id= "dfileName"><br>
                     &ensp; File Type:<select id="fileFormat">
-                            <option>JPEG</option>
+                    <option>PDF</option>
+                    <option>JPEG</option>
                             <option>PNG</option>
                             <option>SVG</option>
                             <option>WEBP</option>
-                            <option>PDF</option>
                         </select><br>
                     &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080" list="resl" >
                     <datalist id="resl">
@@ -47,15 +47,6 @@ function triggerDownload(){
 
 
 
-
-
-
-
-
-
-
-
-
 function downloadImage(){
     var fileName = $('#dfileName').val()
     var res = $('#imRes').val().split("x")
@@ -64,7 +55,9 @@ function downloadImage(){
     if (type =='pdf'){
         fileName+='.pdf'
         exportPDF({width: parseFloat(res[0]), height:parseFloat(res[1])}).then(pdfData=>{
-            var tmp_name = dialog.showSaveDialog({
+
+            // var tmp_name = dialog.showSaveDialog({
+            var tmp_name = dialog.showSaveDialogSync({
                 title: "Save As:",
                 defaultPath: path.join(recentLocation, fileName),
                 filters: [{
@@ -72,6 +65,7 @@ function downloadImage(){
                     extensions: ['pdf']
                   }]
             });
+            console.log(tmp_name)
             if (tmp_name === undefined) return
             fs.writeFileSync(tmp_name, pdfData)
         })
@@ -95,14 +89,14 @@ function exportPDF({ width=1920, height=1080}={}){
         var html =  window.encodeURIComponent(`<!DOCTYPE html>
         <html>
         <head>
-            <meta charset="UTF-8">
-            <style>
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: 'rgba(0,0,0,0)'
-            }
-            </style>
+        <meta charset="UTF-8">
+        <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: 'rgba(0,0,0,0)'
+        }
+        </style>
         </head>
         <body><img/></body>
         </html>`);
@@ -110,26 +104,31 @@ function exportPDF({ width=1920, height=1080}={}){
             var win = new remote.BrowserWindow({width, height, show: false})
             win.on('closed', () => {win = null})
             win.loadURL(`data:text/html,${html}`);
-
+            
             win.webContents.executeJavaScript(`new Promise((resolve, reject) => {
                 const img = document.body.firstChild
                 img.onload = resolve
                 img.onerror = reject
                 img.src = "${imgdata}"
                 setTimeout(() => reject(new Error('too long to load image')), ${3000})
-                })`).then(()=>{
-                    win.webContents.printToPDF(printOpts, (err, pdfData) => { 
-                        win.close();
-                        if(err) {
-                            reject(err)
-                        }else{
-                            // fs.writeFileSync(fileName, pdfData)
-                            // resolve(`PDF file ${fileName} export done`)
-                            resolve(pdfData)
-                        }
-                    })
+            })`).then(()=>{
+                // win.webContents.printToPDF(printOpts, (err, pdfData) => { 
+                //         console.log(pdfData);
+                //         win.close();
+                //         if(err) {
+                //             reject(err)
+                //         }else{
+                //             console.log('here')
+                //             fs.writeFileSync('fefwe', pdfData)
+                //             // resolve(`PDF file ${fileName} export done`)
+                //             resolve(pdfData)
+                //         }
+                //     })
+                // changes for electron upgrade
+                win.webContents.printToPDF(printOpts).then(pdfData=>resolve(pdfData)).catch(err=>reject(err))
                 }).catch((err) => {
                     reject(err)
+                    console.log(err)
                     win.close()
                 })
         })

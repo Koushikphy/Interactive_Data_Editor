@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="375 300 580 170" height="170" width="580" xml:space="preserve" id="svg2" version="1.1">
+    <metadata id="metadata8">
+        <rdf:RDF>
+            <cc:Work rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <g transform="matrix(1.3333333,0,0,-1.3333333,0,793.70133)" id="g10">
+        <text id="text144" style="letter-spacing:4px;font-size:96px;font-family:'Oswald';fill:#808285;" textLength="1200" transform="matrix(0.62441865,0,0,-1,286.584,291.5059)">
+            <tspan id="tspan138" y="0" x="0">jExcel</tspan>
+            <tspan id="tspan142" y="0" x="240" style="fill:#308aa8;">CE</tspan>
+        </text>
+        <text id="text148" style="letter-spacing:6px;font-size:22px;font-family:'Oswald';fill:#999;" textLength="600" transform="matrix(0.81000051,0,0,-1,291.5869,252.8994)">
+            <tspan id="tspan146" y="0" x="0">THE JAVASCRIPT SPREADSHEET</tspan>
+        </text>
+    </g>
+</svg>

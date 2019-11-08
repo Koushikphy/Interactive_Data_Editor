@@ -71,7 +71,7 @@ document.body.ondrop = (ev) => {
 
 
 function fileLoader() {
-    const fname = dialog.showOpenDialog({
+    const fname = dialog.showOpenDialogSync({
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -81,7 +81,7 @@ function fileLoader() {
 
 function fileReader(fname) {
     //check if other file is open
-    if (!saved) var res = dialog.showMessageBox({
+    if (!saved) var res = dialog.showMessageBoxSync({
         type: "warning",
         title: "Unsaved data found!!!",
         message: "There are some modified data, that you haven't saved yet.\n Are you sure to open a new file without saving?",
@@ -236,7 +236,7 @@ function selUpdate() {
 
 function addNewFileDialog() {
     if (swapperIsOn) {
-        dialog.showMessageBox({
+        dialog.showMessageBoxSync({
             type: "warning",
             title: "Can't add the file!!!",
             message: "Plot along X before adding a new file.",
@@ -244,7 +244,7 @@ function addNewFileDialog() {
         });
         return
     }
-    var fname = dialog.showOpenDialog({
+    var fname = dialog.showOpenDialogSync({
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -258,7 +258,7 @@ function addNewFile(fname) {
     data = parseData(fs.readFileSync(fname, "utf8"))
     if(data==undefined) return
     if (fullData[0].length != data.length) {
-        dialog.showMessageBox({
+        dialog.showMessageBoxSync({
             type: "warning",
             title: "Can't add the file!!!",
             message: "Trying to open a file with different grid.\nThis is not supported for 3D data.",
@@ -510,7 +510,7 @@ function exitSwapper() {
 
 
 function saveAs() {
-    var tmp_name = dialog.showSaveDialog({
+    var tmp_name = dialog.showSaveDialogSync({
         title: "Save As:",
         defaultPath: saveNames[0]
     });
@@ -559,7 +559,7 @@ function isswap() {
             [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
             fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
         }
-        dialog.showMessageBox({
+        dialog.showMessageBoxSync({
             type: "warning",
             title: "Can't Plot along Y!!!",
             message: "File(s) have different grid points along the Y axis\nFree version doesn't allow plotting such data",
@@ -832,7 +832,6 @@ function updateOnServer() {
         resolve();
     })
 };
-
 
 
 

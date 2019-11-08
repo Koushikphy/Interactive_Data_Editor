@@ -18,7 +18,7 @@ ipcRenderer.on("back", function (e, d) {
 
 
 ipcRenderer.on('checkClose', function (e, d) {
-    if (!saved) var res = dialog.showMessageBox({
+    if (!saved) var res = dialog.showMessageBoxSync({
         type: "warning",
         title: "Unsaved data found!!!",
         message: "There are some modified data, that you haven't saved yet.\n Are you sure to quit without saving?",

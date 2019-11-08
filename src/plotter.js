@@ -204,7 +204,7 @@ Plotly.newPlot(figurecontainer, [trace], layout, mode);
 
 
 function fileLoader(){
-    fname = dialog.showOpenDialog({ properties: ['openFile'], defaultPath: recentLocation });
+    fname = dialog.showOpenDialogSync({ properties: ['openFile'], defaultPath: recentLocation });
     if (fname === undefined) return
     fname = fname[0]
     recentLocation = path.dirname(fname)
@@ -684,7 +684,7 @@ ipcRenderer.on("menuTrigger", function (e, d) {
 
 
 function saveConfig(){
-    var tmp_name = dialog.showSaveDialog({
+    var tmp_name = dialog.showSaveDialogSync({
         title: "Save Configuration",
         filters: [{
             name: 'JSON',
@@ -748,7 +748,7 @@ function saveConfig(){
 
 function loadConfig(){
     removeExtraTraces()
-    const tfname = dialog.showOpenDialog({
+    const tfname = dialog.showOpenDialogSync({
         properties: ['openFile'],
         filters: [{
             name: 'JSON',

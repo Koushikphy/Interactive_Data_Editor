@@ -25,7 +25,7 @@ function versionCheck() {
             var new_ver = JSON.parse(body).name
             if (new_ver != `v${require('../package.json').version}`) {
                 var txt = `A new version of the software ${new_ver} is available.\n Do you want to download it now?`
-                var res = dialog.showMessageBox({
+                var res = dialog.showMessageBoxSync({
                     type: "question",
                     title: "Update available!!!",
                     message: txt,
@@ -37,7 +37,6 @@ function versionCheck() {
             }
         })
 };
-
 
 function replaceWithHome(name) {
     var home = process.env.HOME || process.env.USERPROFILE;

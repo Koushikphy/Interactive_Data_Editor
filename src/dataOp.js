@@ -27,7 +27,6 @@ function swapData() {
     endJobs()
 }
 
-
 function moveReflect(key, mod){
     saveOldData();
     var ind = index[index.length-1]+1;
@@ -56,7 +55,7 @@ function repeatMirror() {
     }
 
     for (let i = 0; i < data.length; i++) {
-        if (!(data[0][col.y].indexOf(last) + 1)) {
+        if (!(data[i][col.y].indexOf(last) + 1)) {
             alert("Endpoint must exist !!!");
             $("#extend").slideUp();
             return;

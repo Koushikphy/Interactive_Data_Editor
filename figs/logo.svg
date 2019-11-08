@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 900 700" style="enable-background:new 0 0 900 700;" xml:space="preserve">
+    <style type="text/css">
+        .st0{ fill:#308aa8;}
+        .st1{fill:#FFFFFF;}
+        .st2{fill:#17113F;}
+        .st3{fill:url(#SVGID_1_);}
+        .st4{fill:url(#SVGID_2_);}
+        .st5{fill:url(#SVGID_3_);}
+        .st6{fill:url(#SVGID_4_);}
+        .st7{fill:url(#SVGID_5_);}
+        .st8{font-family:'Calibri';}
+        .st9{font-size:120px;}
+        .st10{font-size:60px;}
+    </style>
+    <defs>
+      <filter id="shadow">
+          <feDropShadow dx="10" dy="10" stdDeviation="15" flood-opacity="0.8"/>
+      </filter>
+    </defs>
+    <path class="st0" d="M814.2,516.7c0,82.8-67.2,150-150,150H317.4c-82.8,0-150-67.2-150-150V191.3c0-82.8,67.2-150,150-150h346.8 c82.8,0,150,67.2,150,150L814.2,516.7L814.2,516.7z" style="stroke:#ffffff;stroke-width:1;filter:url(#shadow);"/>
+    <g>
+        <g>
+            <g>
+                <polygon class="st1" points="276.1,155.5 222.9,583.3 824.7,672.2 855.7,197.4 " style="stroke:#222222;stroke-width:1;" />
+                <path class="st2" d="M276.1,155.5l-53.1,427.8l-0.2-0.2l601.9,88.7l-0.5,0.4l31.2-474.8l0.2,0.3L276.1,155.5z M276.1,155.5
+                    l579.6,41.9l0,0l0,0l-31,474.8l0,0.1l-0.1,0l-601.8-88.9l0,0l0,0L276.1,155.5z" fill="#ccc" />
+            </g>
+        </g>
+    </g>
+    <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="418.6" y1="-478.1359" x2="556.8" y2="-478.1359" gradientTransform="matrix(1 0 0 1 233 751.3799)">
+        <stop  offset="3.230000e-02" style="stop-color:#308aa8"/>
+        <stop  offset="1" style="stop-color:#308aa8"/>
+    </linearGradient>
+    <polygon class="st3" points="657,224.9 789.8,234.6 784.1,321.6 651.6,310.3 "/>
+    <linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="394.3261" y1="-199.5299" x2="540.3" y2="-199.5299" gradientTransform="matrix(1 0 0 1 233 751.3799)">
+        <stop  offset="0" style="stop-color:#308aa8"/>
+        <stop  offset="1" style="stop-color:#308aa8"/>
+    </linearGradient>
+    <polygon class="st4" points="637.6,484.2 627.3,599.6 764.4,619.5 773.3,499.9 "/>
+    <linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="407" y1="-346.6799" x2="548.7" y2="-346.6799" gradientTransform="matrix(1 0 0 1 233 751.3799)">
+        <stop  offset="3.230000e-02" style="stop-color:#308aa8"/>
+        <stop  offset="1" style="stop-color:#308aa8"/>
+    </linearGradient>
+    <polygon class="st5" points="647.8,352.7 640,440.7 776.3,456.7 781.7,364.4 "/>
+    <linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="209.6084" y1="-224.1035" x2="353.8222" y2="-224.1035" gradientTransform="matrix(1 0 0 1 233 751.3799)">
+        <stop  offset="0" style="stop-color:#308aa8"/>
+        <stop  offset="0.9892" style="stop-color:#308aa8"/>
+    </linearGradient>
+    <polyline class="st6" points="452.3,462.3 586.8,477.8 577,592.3 442.6,572.8 450.2,490.4 "/>
+    <linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="43.1263" y1="-247.3849" x2="168.9028" y2="-247.3849" gradientTransform="matrix(1 0 0 1 233 751.3799)">
+        <stop  offset="0" style="stop-color:#308aa8"/>
+        <stop  offset="1" style="stop-color:#308aa8"/>
+    </linearGradient>
+    <polygon class="st7" points="288,443 276.1,547.3 393.2,565 401.9,456.1 "/>
+    <g id="Layer_9">
+        <text transform="matrix(1.0193 0.1441 -0.1343 0.9909 312.7843 286.8541)" class="st8 st9">jExcel</text>
+    </g>
+    <text transform="matrix(1.0432 0.113 -0.1084 0.9941 277.8503 370.1799)" class="st8 st10">=SUM(A1:A9)</text>
+</svg>
