@@ -67,9 +67,9 @@
                         tableOverflow:true,
                         defaultColWidth:wit>120?120:wit,
                         lazyLoading:true,
-                        // allowRenameColumn:true,//not supported in electron
                         columnDrag :true,
                         rowDrag:true,
+                        csvFileName : 'data.csv',
                         tableWidth :window.innerWidth-100,
                         updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ? 'red' : '#000000'},
                         onload:_=>setTimeout(_=>{let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)},1), 
@@ -78,6 +78,7 @@
 
 
         function sliderChanged() {
+            $slider.slider("value", th_in)
             $ch.text(xName + '=' + data[th_in][0][xcol]);
             mytable.setData(data[th_in])
         };
@@ -88,11 +89,12 @@
 
 
 
-        function updateData() {
+        function updateData() { //parse the formulas during the return 
             btn.style.visibility = "hidden";
-            // data[th_in] = mytable.getData();  //<<- not working
-            data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML));  //<< working
-            ipcRenderer.send("back", data); 
+            var dat = data.map(blocks=> blocks.map(line=>line.map(elem=>{
+                if (('' + elem).substr(0,1) == '=')  return mytable.executeFormula(elem); return elem
+            })))
+            ipcRenderer.send("back", dat); 
         }
 
 
@@ -104,13 +106,11 @@
                 case ",":
                     if (th_in == 0) break;
                     th_in = th_in - 1
-                    $slider.slider("value", th_in)
                     sliderChanged();
                     break;
                 case ".":
                     if (th_in == data.length - 1) break;
                     th_in = th_in + 1
-                    $slider.slider("value", th_in)
                     sliderChanged();
                     break;
             };

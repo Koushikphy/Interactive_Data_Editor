@@ -8,6 +8,8 @@ ipcRenderer.on("adrf", function (e, d) {
 
 ipcRenderer.on("back", function (e, d) {
     data = d.map(x => transpose(x))
+    console.log(data)
+    console.log('data')
     updatePlot(1);
     selUpdate()
     startDragBehavior();
