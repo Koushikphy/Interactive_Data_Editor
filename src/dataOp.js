@@ -116,6 +116,12 @@ function dataFiller() {
         for (let i = 0; i < data[0].length; i++) if (i != col.y) cols_wo_y.push(i)
     }
 
+    for(let dt of data){
+        if(dt[0]>=dt[1]){
+            alert('Monotonically increasing values required for interpolation.\n NOTE: You can use the spreadsheet to sort the data')
+            return
+        }
+    }
 
     var fullArr = Plotly.d3.range(start, stop,step)
     data = data.map(dat => {

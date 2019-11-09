@@ -283,6 +283,7 @@ function addNewPlot(){
     document.getElementById('trace').selectedIndex = thisInd
     Plotly.addTraces(figurecontainer,trace)
     updateThisPlot()
+    updateJSON()
 }
 
 

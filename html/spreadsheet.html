@@ -69,11 +69,14 @@
                         lazyLoading:true,
                         columnDrag :true,
                         rowDrag:true,
-                        csvFileName : 'data.csv',
+                        csvFileName : 'data',
                         tableWidth :window.innerWidth-100,
                         updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ? 'red' : '#000000'},
                         onload:_=>setTimeout(_=>{let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)},1), 
-                        onchange:_=>btn.style.visibility = "visible"})
+                        onchange:_=>btn.style.visibility = "visible",
+                        onsort:_=>{data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML));btn.style.visibility = "visible"}
+                    })
+                        mytable.setData(data[0])
             })
 
 
