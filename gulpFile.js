@@ -64,7 +64,7 @@ function compressSpredSheetCSS() {
         .pipe(dest('./lib'))
 }
 
-function compressCombineJS() {
+function compressCombineSheetJS() {
     return src(['./src/jexcel.js','./src/jsuites.js'])
         .pipe(concat('spreadsheet.js'))
         .pipe(uglify())
@@ -74,7 +74,7 @@ function compressCombineJS() {
         .pipe(dest('./lib'))
 }
 
-exports.spread =  parallel(compressSpredSheetCSS, compressCombineJS)
+exports.spread =  parallel(compressSpredSheetCSS, compressCombineSheetJS)
 // exports.default = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
 exports.default = parallel(compressJS, compressCombineJS, compressCombineJSp, compressCSS);
 
