@@ -22,6 +22,7 @@
         "src/jexcel.js" : true,
         "src/jsuites.js" : true,
         "src/jsuites.css":true,
+        "src/notify.js":true,
         "app.iss":true
     }
 }

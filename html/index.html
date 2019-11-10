@@ -51,7 +51,6 @@
     </div>
 
     <div id="full" >
-        <!-- <div id="header"> Interactive Data Editor </div> -->
         <div class="borders column" id="container">
             &nbsp;Data Column ⇒ &ensp;
             X :<select id="xCol" onchange="updateData();"></select>&ensp;
@@ -71,18 +70,6 @@
 
     </div>
 
-    
-    <div class="custom-cm">
-        <div class="custom-cm__item" onclick="exectuteContext()">Change Value</div>
-        <div class="custom-cm__item" onclick="cm.hide();changeSign();">Change Sign <span class="signsk">C</span> </div>
-        <div class="custom-cm__item" onclick="subm.hide();cm.hide();removeBadData()">Remove data<span class="signsk">X</span></div>
-        <div class="custom-cm__item  submen">Smooth Out <span class="signs">&#9658;</span></div>
-      </div>
-    <div class="submenu">
-        <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteInterpolate()">Cubic Spline <span class="signsk">D</span></div>
-        <div class="custom-cm__item" onclick="autoSmooth()">Mooving Average <span class="signsk">M</span></div>
-        <div class="custom-cm__item" onclick="subm.hide();cm.hide();deleteExtrapolate()" >Regression Fitting <span class="signsk">E</span></div>
-    </div>
     <script>
         document.getElementById('versionname').innerHTML =`Version ${require('../package.json').version}` 
     </script>

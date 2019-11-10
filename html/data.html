@@ -2,9 +2,10 @@
 <html>
 <head>
 	<style type="text/css">
-		.links{
+		a{
 			margin: 9px;
-			margin-bottom: 13px;
+			margin-bottom: 17px;
+			padding-bottom: 20px;
 			font-size: larger;
 			font-weight: bold;
 		}
@@ -13,9 +14,11 @@
 </head>
 <body>
 <div style="font-size: xx-large;font-weight: bold;margin: 13px"><u>Sample Data:</u> </div>
-&nbsp;1.<a class="links" href="javascript:void(0)" onclick="save('../Data/2D.dat');">2D</a><br>
-&nbsp;2.<a class="links" href="javascript:void(0)" onclick="save('../Data/3D_1.dat');">3D</a><br>
-&nbsp;3.<a class="links" href="javascript:void(0)" onclick="save('../Data/3D_2.dat');">3D_1</a><br>
+&nbsp;1.<a href="javascript:void(0)" onclick="save('../Data/StraightLine.dat');">Straight Line</a><br>
+&nbsp;2.<a href="javascript:void(0)" onclick="save('../Data/GaussianLine.dat');">Gaussian Function</a><br>
+&nbsp;3.<a href="javascript:void(0)" onclick="save('../Data/Morse.dat');">Morse Function</a><br>
+&nbsp;4.<a href="javascript:void(0)" onclick="save('../Data/3D2.dat');">Sin(sqrt(x**2+y**2))/sqrt(x**2+y**2)</a><br>
+&nbsp;5.<a href="javascript:void(0)" onclick="save('../Data/3D2.dat');">Sin(x)*Cos(y)</a><br>
 <script >
 	const fs = require("fs");        
 	const { remote } = require('electron');

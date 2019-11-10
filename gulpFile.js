@@ -14,7 +14,16 @@ const cleanCSS = require('gulp-clean-css');
 
 
 function compressCombineJS() {
-    return src(['./src/functions.js','./src/download.js', './src/dataOp.js', './src/keyboardOp.js', './src/nav.js','./src/plotSetup.js','./src/numeric.js' , './src/notify.js'])
+    return src([
+        './src/plotSetup.js',
+        './src/functions.js',
+        './src/keyboardOp.js', 
+        './src/numeric.js' , 
+        './src/dataOp.js', 
+        './src/nav.js',
+        './src/download.js', 
+            './src/notify.js'
+        ])
         .pipe(concat('funcs.js'))
         .pipe(uglify())
         .pipe(rename({
@@ -75,9 +84,9 @@ function compressCombineSheetJS() {
 }
 
 exports.spread =  parallel(compressSpredSheetCSS, compressCombineSheetJS)
-// exports.default = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
-exports.default = parallel(compressJS, compressCombineJS, compressCombineJSp, compressCSS);
+exports.all = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
+exports.default = parallel(compressCombineJS );
 
 exports.watch = function () {
-    watch('./src/*.*', parallel('default'));
+    watch('./src/*.*', parallel('all'));
 }

@@ -282,39 +282,6 @@ ol{
     width: 76px
 }
 
-.custom-cm, .submenu {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-    display: none;
-    padding: 10px 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 150px;
-  }
-
-  .submenu{
-      width: 175px
-  }
-
-  /* .custom-cm:active~.submenu{
-      display: block;
-  } */
-
-  
-  .custom-cm__item {
-    cursor: pointer;
-    padding-top: 5px;
-    padding-right: 0px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-  }
-  
-  .custom-cm__item:hover {
-    background-color: #f8f8f8;
-    /* box-shadow: -10px 0px 20px 0 #ccc */
-  }
   
   .signs{
       float: right;
@@ -324,9 +291,7 @@ ol{
     margin-right: 15px;
 }
 
-  .custom-cm__divider {
-    border-bottom: 1px solid #eeeeee;
-  }
+
 
 
 #download,#setval{

@@ -56,10 +56,7 @@
       }
     },
     "win": {
-      "target": [
-        "msi",
-        "nsis"
-      ]
+
     }
   },
   "devDependencies": {

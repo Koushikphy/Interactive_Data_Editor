@@ -207,17 +207,8 @@ const homeMenuTemplate = [{
                 }
             },
             {
-                label: "Toggle Fullscreen",
-                accelerator: "F11",
-                click() {
-                    if (mainWindow.isFullScreen()) {
-                        mainWindow.setFullScreen(false);
-                    } else {
-                        mainWindow.setFullScreen(true);
-                    }
-                    mainWindow.webContents.send("menuTrigger", "fullscreen")
-
-                }
+                role:'togglefullscreen',
+                click(){ mainWindow.webContents.send("menuTrigger", "fullscreen")}
             }
         ]
     },

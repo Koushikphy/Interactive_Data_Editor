@@ -1,4 +1,4 @@
-const req = require("request");
+require('v8-compile-cache');
 const {
     remote,
     ipcRenderer,
@@ -15,6 +15,7 @@ var recentLocation, recentFiles = [];
 
 
 function versionCheck() {
+    let req = require("request");
     req({
             'url': "https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/releases/latest",
             'headers': {

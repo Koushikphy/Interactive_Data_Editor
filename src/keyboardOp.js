@@ -71,14 +71,14 @@ Fitted Equation: <span id='formulaStr'></span>`,
 <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
 </div>
 <div class="grid-container">
-   Max Iterations: <input id='iterationVal' type="text" value='10'>
+   Max Iterations: <input id='iterationVal' type="text" value='1000'>
    <span>Initial Values: </span> <input id='intVal' type="text">
    <span>Max Values:</span> <input id='maxVal' type="text">
    <span>Min Values: </span><input id='minVal' type="text">
    Damping factor: <input id='dampVal' type="text" value="1.5">
   <span>Step Size:</span> <input id='stepVal' type="text" value='1e-2'>
-  <span>Error Tolerance: </span><input id='etVal' type="text" value='1e-5'>
-  <span>Error gradient:</span> <input id='egVal' type="text" value='1e-5'>  
+  <span>Error Tolerance: </span><input id='etVal' type="text" value='1e-7'>
+  <span>Error gradient:</span> <input id='egVal' type="text" value='1e-7'>  
 </div>`
 }
 
@@ -210,6 +210,7 @@ keepTrackIndex = 0
 
 function hotKeys(e) {
     if (document.activeElement.type == "text") return
+    // console.log(e)
     switch (e.key) {
         case " ":
             Plotly.relayout(figurecontainer, {
@@ -318,38 +319,38 @@ function hotKeys(e) {
 };
 
 
-var cm = $('.custom-cm');
-var sub = $(".submen")
-var subm = $(".submenu")
+// var cm = $('.custom-cm');
+// var sub = $(".submen")
+// var subm = $(".submenu")
 
 
-function contextMenuFuncs(e) {
-    if(!index.length) return
-    e.preventDefault();
+// function contextMenuFuncs(e) {
+//     if(!index.length) return
+//     e.preventDefault();
     
-    ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;
-    lll = e.clientX + cm.width() > window.innerWidth-5 ? window.innerWidth - cm.width()-5 : e.clientX;
-    cm.css({ top: ttt, left: lll })
+//     ttt  = e.clientY + cm.height()+50 > window.innerHeight ? window.innerHeight - cm.height() -50: e.clientY;
+//     lll = e.clientX + cm.width() > window.innerWidth-5 ? window.innerWidth - cm.width()-5 : e.clientX;
+//     cm.css({ top: ttt, left: lll })
 
-    lll += 147
-    // ttt += 65
-    ttt = ttt+84+65 > window.innerHeight ? ttt : ttt+65 
-    lll = lll+175> window.innerWidth  ? lll-172-147 : lll;
-    $(".submenu").css({top:ttt, left:lll})
-    cm.show();
-};
-// $('#figurecontainer').contextmenu(contextMenuFuncs)
+//     lll += 147
+//     // ttt += 65
+//     ttt = ttt+84+65 > window.innerHeight ? ttt : ttt+65 
+//     lll = lll+175> window.innerWidth  ? lll-172-147 : lll;
+//     $(".submenu").css({top:ttt, left:lll})
+//     cm.show();
+// };
+// // $('#figurecontainer').contextmenu(contextMenuFuncs)
 
 
-function resetClicks(e) {
-    cm.hide();
-    if (e.target.tagName == "rect") {
-        Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-        index = [];
-        del_dat = [];
-    }
+// function resetClicks(e) {
+//     cm.hide();
+//     if (e.target.tagName == "rect") {
+//         Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+//         index = [];
+//         del_dat = [];
+//     }
 
-}
+// }
 
 function exectuteContext() {
     cm.hide();
@@ -364,34 +365,95 @@ function exectuteContext() {
 }
 
 
-$(window).keydown(hotKeys);
-$(window).keyup(hotDKeys);
-$('#figurecontainer').contextmenu(contextMenuFuncs)
-$('#figurecontainer').click(resetClicks)
 
 
 
-sub.mouseover(function () {
-    subm.show()
-});
+
+// sub.mouseover(function () {
+//     subm.show()
+// });
 
 
-subm.mouseover(function () {
-    subm.show()
-});
+// subm.mouseover(function () {
+//     subm.show()
+// });
 
 
-sub.mouseleave(function () {
-    if (!$('.submen:hover').length & !$('.submenu:hover').length) {
-        setTimeout(function(){subm.hide()} , 200) 
+// sub.mouseleave(function () {
+//     if (!$('.submen:hover').length & !$('.submenu:hover').length) {
+//         setTimeout(function(){subm.hide()} , 200) 
+//     }
+// });
+
+// subm.mouseleave(function () {
+//     if (!$('.submen:hover').length & !$('.submenu:hover').length) {
+//         setTimeout(function(){subm.hide()} , 200) 
+//     }
+// });
+
+
+//for rendering the contextmenu
+const conMenu = Menu.buildFromTemplate([
+    {
+        label: 'Change Value',
+        click(){
+            console.log('Change Value')
+            var div = document.createElement('div');
+            div.id = 'setval'
+            div.innerHTML = `Set a value for the selected points <br>
+                <input type="text" id="valinput" onchange="setValue();"><br>
+                <input type="button" value="OK" onclick="setValue();">
+                <input type="button" value="Cancel" onclick="$('#setval').remove();">`.trim()
+            document.body.appendChild(div)
+        }
+    },{
+        label: 'Change Sign',
+        accelerator : 'C',
+        click(){
+            document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "C"}))
+        } 
+    },{
+        label: 'Remove Data',
+        accelerator: 'X',
+        click(){
+            document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "X"}))
+        } 
+    },{
+        label: 'Smooth Data',
+        submenu:[
+            {
+                label : 'Cubic Spline',
+                accelerator : 'D',
+                click(){
+                    document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "D"}))
+                }
+            },{
+                label : 'Mooving Average',
+                accelerator : 'M',
+                click(){
+                    document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "M"}))
+
+                }
+            },{
+                label : 'Regression Fitting',
+                accelerator : 'E',
+                click(){
+                    document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "E"}))
+                }
+            },
+        ]
     }
-});
+]
+)
 
-subm.mouseleave(function () {
-    if (!$('.submen:hover').length & !$('.submenu:hover').length) {
-        setTimeout(function(){subm.hide()} , 200) 
-    }
-});
-
-
-
+window.onkeydown = hotKeys;
+window.onkeyup = hotDKeys;
+figurecontainer.oncontextmenu= ()=>{
+    if(index.length) conMenu.popup()
+}
+figurecontainer.onclick= (e)=>{
+    if (e.target.tagName == "rect") {
+            Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+            index = [];
+            del_dat = [];
+        }}
