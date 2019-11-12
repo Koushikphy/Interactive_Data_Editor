@@ -70,6 +70,7 @@
                         columnDrag :true,
                         rowDrag:true,
                         csvFileName : 'data',
+                        csvDelimiter:'\t',
                         tableWidth :window.innerWidth-100,
                         updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ? 'red' : '#000000'},
                         onload:_=>setTimeout(_=>{let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)},1), 

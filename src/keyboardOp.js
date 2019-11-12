@@ -353,7 +353,7 @@ function hotKeys(e) {
 // }
 
 function exectuteContext() {
-    cm.hide();
+    // cm.hide();
     //setValue function available in dataOp.js
     var div = document.createElement('div');
     div.id = 'setval'

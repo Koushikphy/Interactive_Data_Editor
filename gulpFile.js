@@ -83,8 +83,8 @@ function compressCombineSheetJS() {
         .pipe(dest('./lib'))
 }
 
-exports.spread =  parallel(compressSpredSheetCSS, compressCombineSheetJS)
-exports.all = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
+exports.spread  = parallel(compressSpredSheetCSS, compressCombineSheetJS)
+exports.all     = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
 exports.default = parallel(compressCombineJS );
 
 exports.watch = function () {

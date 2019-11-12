@@ -11,7 +11,7 @@
  * Frozen columns
  * Meta information
  */
-
+// MODIFIED:: Line 5236, file extension as dat
 'use strict';
 
 // if (! jSuites && typeof(require) === 'function') {
@@ -5233,7 +5233,8 @@ var jexcel = (function(el, options) {
             var blob = new Blob([data], {type: 'text/csv;charset=utf-8;'});
             var url = URL.createObjectURL(blob);
             pom.href = url;
-            pom.setAttribute('download', obj.options.csvFileName + '.csv');
+            pom.setAttribute('download', obj.options.csvFileName + '.dat');
+            // pom.setAttribute('download', obj.options.csvFileName + '.csv');
             document.body.appendChild(pom);
             pom.click();
             pom.parentNode.removeChild(pom);
