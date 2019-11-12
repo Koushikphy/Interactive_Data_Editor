@@ -530,30 +530,32 @@ function lmfit(){
             parameters[k] = Math.min( Math.max(minVal[k], parameters[k]),  maxVal[k]);
         }
 
-        var error = 0, fity=[];
+        var error = 0, fity=[], chiError = 0;;
         const tfunc = func(parameters);
         for (var i = 0; i < xs.length; i++) {
             tmp  = tfunc(xs[i])
             error += Math.abs(ys[i] - tmp);
-            fity.push(tmp)
         }
         converged = Math.abs(error- olderror) <= egVal || error <=etVal;
         olderror = error
     }
 
-    var chiError = 0; tfunc = func(parameters);
+    var  tfunc = func(parameters);
     for (var i = 0; i < xs.length; i++) {
         tmp  = tfunc(xs[i])
+        fity.push(tmp)
         yy = ys[i]
         if(yy>Number.EPSILON) chiError += (yy-tmp)**2/tmp
     }
 
     Plotly.restyle(figurecontainer, {x:[dpsx], y:[fity]},1)
-    anotText = `y = ${$('#funcStr').val()}<br>Parameters = ${parameters.map(x=>x.toPrecision(5))}<br>&#967;<sup>2</sup> Error = ${chiError.toPrecision(5)}`
+    anotText = `y = ${$('#funcStr').val()}<br>
+                ${$('#paramList').val().split(',').join(', ')} = ${parameters.map(x=>x.toPrecision(5)).join(', ')}
+                <br>&#967;<sup>2</sup> Error = ${chiError.toPrecision(5)}`
     Plotly.relayout(figurecontainer, {annotations: [
         {
-            xref: 'paper', x: 0,
-            yref: 'paper', y: 0,
+            xref: 'paper', x: 0.5,
+            yref: 'paper', y: 1,
             showarrow:false,
             text: anotText,
             bordercolor : '#000000'
@@ -562,17 +564,6 @@ function lmfit(){
     showStatus('Data fitting done')
     },1)
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

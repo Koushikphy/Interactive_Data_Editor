@@ -266,7 +266,7 @@
 <div class="text">
     This software has a lot of features for various useful data operations including,
     <ol>
-    <li><b><i> Dragging data points.</i></b> You can edit a single or multiple data points by dragging it with mouse or
+    <li><b><i> Dragging data points.</i></b> You can edit a data points by dragging it with mouse or
         using the keyboard Up/Down navigation keys. To drag multiple points select the points and just drag any of them.
         By default data points are movable only along vertical direction. If you want to move the data points along
         horizontal direction too, then uncheck <label for="" class="dom">Edit > Points not movable horizontally</label>.
@@ -279,6 +279,13 @@
             for="" class="dom">M</label> to apply moving average multiple times. These two methods can not be applied to the end points.
             For that, a local quadratic regression method can be employed to extrapolate and smooth out by pressing <label class="dom">E</label>.
             This method can be applied to intermediate data points too. These methods are also available through the right click context menu.<p></p>
+    </li>
+    <li>
+        <b><i>Data fitting. </i></b> Data can be fitted with any given functional, although at the moment this software only support fitting 2D data. Two types of data
+        fitting options are provided with this software. First, a simple regression type fitting, to fit the data with a polynomial of any 
+        arbitrary order. This fitting method is adaptive to any changes to the data meaning, when any edit is made to the data the 
+        fitted polynomial will be reevaluated automatically. Second is a general functional fitting using Levenberg-Marquardt algorithm,
+        one can provide any desired function to fit using this method.
     </li>
 
     <li><b><i>2D and 3D support.</i></b> This software supports both 2D and 3D data editing, but for 3D editing data
