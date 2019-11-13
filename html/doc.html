@@ -168,19 +168,27 @@
                 <li> Edit/Refine data along with many useful data operations.</li>
                 <li> Fit a function to the data</li>
             </ol>
-
-            Interactive Data Editor is developed to edit data easily and efficiently. This software can be used to plot and edit/refine 
-            any 2D as well as gridded 3D data. 
-            This software is developed for making data editing easy and can be used to interactively edit and
-            plot any 2D or gridded 3D data, along with many useful data operations. On opening the software you are
-            greeted with the home screen. Load a file and you will land on the main editor window. In case of 3D data,
-            the data will be projected on a 2D-plane for any particular X or Y-value of your choice which can be changed
-            through the provided slider. NOTE: By 'X'-column here I mean the column by which the blocks are written in
-            the 3D data file. Check the sample 3D data files provided with this software to get an idea about the input
-            data format. All the useful data operations are discussed in detailed in the following sections. Apart from
-            the editings this software can be used just as a data plotter too.
+            To get started load your data file ( in plain text format and space delimitted) from menu <label class="dom"> File > Open file</label>
+            or by keyboard shortcut Ctrl+O and select the proper column. In case of 3D data the graph will be plotted as the projection
+            for a single 'X' value which can be cahneged using the provided slider. NOTE: 'X'-column means the column by which the blocks are written in
+            the 3D data file. Check the sample data files to get an idea. Now the plot window can be used to make all the edits to the data and utilize the 
+            different data operations as required. To simultaneously edit multiple data file or multiple columns of the same file one can add the data through 
+            <label class="dom">File > Add File</label>. Although all the editing features are available only for one line at a moment, 
+            and others lines can be selected alternatively to edit from <label class="dom">Files Dashboard</label> or by
+            pressing <label class="dom">Ctrl+TAB</label>.
         </p>
-                </div>`,
+        <p>
+            If you are on a terminal, then the quickest way to open the software and load a file is just to run
+            <label class="dom"> executable file_name </label>, where the <label class="dom">executable</label> for
+            linux is <label class="dom">interactive-data-editor</label> and for windows its the <label
+            class="dom">Interactive Data Editor.exe</label> file inside the installation folder. This will open the
+            software and directly load the file.
+        </p>
+
+        <p>
+
+        </p>
+        </div>`,
             `
                 <div class='title'>User Interface</div>
 <div class="text">
@@ -219,25 +227,6 @@
 `, `
     <div class='title'> Working with Files</div>
     <div class="text">
-        <p>Load your data (in text file format) file through <label class="dom"> File > Open file</label>.
-            Columns in the data file must be space delimitted. Files can  also be opened quickly from <label class="dom">File > Recent Files </label> too. 
-            On start the data will be plotted along the 'Y' values. To plot along 'X' values go to <label class="dom">View > Plot along
-            X</label> and vice versa.
-        </p>
-
-        <p>
-            Instead of opening the file through menubar or using keyboard shortcut, you can just drag and drop file inside 
-            the application window to load the data. This works with mounted files too. So, to directly edit a remote file, mount
-            the file and just drag and drop here.
-        </p>
-        <p>
-            But if you are on a terminal, then the quickest way to open the software and load a file is just to run
-            <label class="dom"> executable file_name </label>, where the <label class="dom">executable</label> for
-            linux is <label class="dom">interactive-data-editor</label> and for windows its the <label
-                class="dom">Interactive Data Editor.exe</label> file inside the installation folder. This will open the
-            software and directly load the file.
-        </p>
-
         <p>Multiple files can be opened together for editing using <label class="dom">File
                 > Add File</label> or using <label class="dom">File > Add Recent File</label>, though all the
             editing

@@ -1,7 +1,9 @@
+require('v8-compile-cache');
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
 var mainWindow;
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 process.env.NODE_ENV = 'production';
 
 const {

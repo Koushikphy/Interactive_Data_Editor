@@ -920,11 +920,11 @@ var jexcel = (function(el, options) {
             td.appendChild(element);
             // Make sure the values are correct
             obj.options.data[j][i] = element.checked;
-        } else if (obj.options.columns[i].type == 'calendar') {
-            // Try formatted date
-            var formatted = jSuites.calendar.extractDateFromString(value, obj.options.columns[i].options.format);
-            // Create calendar cell
-            td.innerHTML = jSuites.calendar.getDateString(formatted ? formatted : value, obj.options.columns[i].options.format);
+        // } else if (obj.options.columns[i].type == 'calendar') {
+        //     // Try formatted date
+        //     var formatted = jSuites.calendar.extractDateFromString(value, obj.options.columns[i].options.format);
+        //     // Create calendar cell
+        //     td.innerHTML = jSuites.calendar.getDateString(formatted ? formatted : value, obj.options.columns[i].options.format);
         } else if (obj.options.columns[i].type == 'dropdown' || obj.options.columns[i].type == 'autocomplete') {
             // Create dropdown cell
             td.classList.add('dropdown');

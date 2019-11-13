@@ -1,3 +1,4 @@
+require('v8-compile-cache');
 var figurecontainer = document.getElementById("figurecontainer"),
     data = [],
     ranges = [],
