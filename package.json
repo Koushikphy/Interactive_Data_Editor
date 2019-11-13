@@ -5,7 +5,7 @@
   "description": "A Software to interactively edit data in a graphical manner.",
   "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
   "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
-  "copyright": "Copyright © April,2019 Koushik Naskar",
+  "copyright": "Copyright © November,2019 Koushik Naskar",
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",

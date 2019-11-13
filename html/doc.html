@@ -139,10 +139,9 @@
     <div class="sidenav">
         <a href="javascript:void(0)" onclick="Change(0);">Getting Started</a>
         <a href="javascript:void(0)" onclick="Change(1);">User Interface</a>
-        <a href="javascript:void(0)" onclick="Change(2);">Working &ensp;with Files</a>
-        <a href="javascript:void(0)" onclick="Change(3);">Features</a>
-        <a href="javascript:void(0)" onclick="Change(4);">Keyboard Shortcuts</a>
-        <a href="javascript:void(0)" onclick="Change(5);">Feedback</a>
+        <a href="javascript:void(0)" onclick="Change(2);">Features</a>
+        <a href="javascript:void(0)" onclick="Change(3);">Keyboard Shortcuts</a>
+        <a href="javascript:void(0)" onclick="Change(4);">Feedback</a>
     </div>
     <div style="height:20px; background-color:#3f3e3e;position:fixed;width:100%"></div>
     <div class="main"></div>
@@ -158,7 +157,6 @@
         }
         var allText = [
             ` <div class="title">Getting Started</div>
-
                 <div class="text">
         <p>We have all worked with data at some point of our time. Now, depending on the source, sometimes the data may not always be regular,
             smooth and uniform and requires refinement before applying for any practical use. This software lets you do that very easily and 
@@ -166,7 +164,7 @@
             <ol>
                 <li> Plot any 2D and gridded 3D data. </li>
                 <li> Edit/Refine data along with many useful data operations.</li>
-                <li> Fit a function to the data</li>
+                <li> Fit a function to the data.</li>
             </ol>
             To get started load your data file ( in plain text format and space delimitted) from menu <label class="dom"> File > Open file</label>
             or by keyboard shortcut Ctrl+O and select the proper column. In case of 3D data the graph will be plotted as the projection
@@ -186,7 +184,11 @@
         </p>
 
         <p>
-
+                After edits you can save your modified data from <label class="dom">File > Save</label>. When
+            saving for first time, the application will ask for name and location of the file to save the data. 
+            Any consecutive saves will save the data in that same file. 
+            As usual use <label class="dom">File > Save As</label> to save in a  different file.
+            If you are working with multiple files then this will save the primary working file only.
         </p>
         </div>`,
             `
@@ -224,32 +226,7 @@
         to plot and view 3D data. It supports multiple surfaces with basic plot configurations.
         </p>
 </div>
-`, `
-    <div class='title'> Working with Files</div>
-    <div class="text">
-        <p>Multiple files can be opened together for editing using <label class="dom">File
-                > Add File</label> or using <label class="dom">File > Add Recent File</label>, though all the
-            editing
-            features are available only for one line at a moment, and others lines can be selected alternatively
-            to edit
-            from <label class="dom">Files Dashboard</label> or by
-            pressing <label class="dom">Ctrl+TAB</label>. The editable line or the primary line is easy to
-            notice as
-            it's always plotted, by default, as blue line with red marker and is always on the top of the legend
-            and
-            Files Dashboard. To open together different column of the same file click <label class="dom">C</label> of
-            the corresponding file in <label class="dom">FIles Dashboard</label>, while click <label class="dom">X</label>
-            to close the file.
-        </p>
-
-        <p>After edits you can save your modified data from <label class="dom">File > Save</label>. When
-            saving for first time, the application will ask for name and location of the file to save the data. 
-            Any consecutive saves will save the data in that same file. 
-            As usual use <label class="dom">File > Save As</label> to save in a  different file.
-            If you are working with multiple files then this will save the primary working file only.
-        </p>
-    </div>
-                `,
+`,
             `
 <div class="title">Features</div>
 <div class="text">
