@@ -238,7 +238,7 @@ function removeExtraTraces(){
 function fileReader(fname) {
     removeExtraTraces()
     var strDps = fs.readFileSync(fname, "utf8");
-    strDps = strDps.trim().split(/\t\t\t\t\t|\n\n/);
+    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
     col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
     data = [...Array(col)].map(_ => Array());
     for (var i = 0; i < strDps.length; i++) {
@@ -680,6 +680,8 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         } else {
             openNav();
         }
+    }else if(d=='trigdown'){
+        triggerDownload();
     }
 })
 

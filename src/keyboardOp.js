@@ -188,9 +188,11 @@ ipcRenderer.on("menuTrigger", function (e, d) {
                 openNav();
             }
             break;
+        case 'trigdown':
+            triggerDownload();
+            break
     }
 });
-
 
 
 function hotDKeys(e) {

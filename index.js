@@ -118,8 +118,13 @@ const homeMenuTemplate = [{
                 click() {
                     mainWindow.webContents.send("menuTrigger", "saveas");
                 }
+            }
+            ,{
+                label : "Export as image",
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "trigdown");
+                }
             },
-
             {
                 type: 'separator'
             },
@@ -209,8 +214,17 @@ const homeMenuTemplate = [{
                 }
             },
             {
-                role:'togglefullscreen',
-                click(){ mainWindow.webContents.send("menuTrigger", "fullscreen")}
+                label: "Toggle Fullscreen",
+                accelerator: "F11",
+                click() {
+                    if (mainWindow.isFullScreen()) {
+                        mainWindow.setFullScreen(false);
+                    } else {
+                        mainWindow.setFullScreen(true);
+                    }
+                    mainWindow.webContents.send("menuTrigger", "fullscreen")
+    
+                }
             }
         ]
     },
@@ -397,7 +411,12 @@ const plotMenuTemplate = [{
             click() {
                 mainWindow.webContents.send("menuTrigger", "scon");
             }
-        },        {
+        },{
+            label : "Export as image",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "trigdown");
+            }
+        },{
             type: 'separator'
         },
         {

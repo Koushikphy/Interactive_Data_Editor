@@ -65,7 +65,7 @@ function downloadImage(){
                     extensions: ['pdf']
                   }]
             });
-            console.log(tmp_name)
+            // console.log(tmp_name)
             if (tmp_name === undefined) return
             fs.writeFileSync(tmp_name, pdfData)
         })

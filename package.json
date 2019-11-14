@@ -55,9 +55,7 @@
         "Encoding": "UTF-8"
       }
     },
-    "win": {
-
-    }
+    "win": {}
   },
   "devDependencies": {
     "electron": "^7.1.1",
@@ -72,6 +70,7 @@
   "dependencies": {
     "particles.js": "^2.0.0",
     "plotly.js-gl3d-dist": "^1.51.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "v8-compile-cache": "^2.1.0"
   }
 }

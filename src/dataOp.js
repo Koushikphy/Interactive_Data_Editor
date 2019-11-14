@@ -426,7 +426,7 @@ function initialSetup() {
     // set an predifned damping, error tol, error convergence, step size
     var parLen = paramList.length
     if(!isNaN(intVal[0])){
-        console.log(intVal)
+        // console.log(intVal)
         if(intVal.length!=parLen) throw 'Wrong number of initial values'
     } else{
         intVal = new Array(parLen).fill(0)
