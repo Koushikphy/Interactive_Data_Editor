@@ -1318,72 +1318,72 @@ var jexcel = (function(el, options) {
     // /**
     //  * Is column merged
     //  */
-    // obj.isColMerged = function(x, insertBefore) {
-    //     var cols = [];
-    //     // Remove any merged cells
-    //     if (obj.options.mergeCells) {
-    //         var keys = Object.keys(obj.options.mergeCells);
-    //         for (var i = 0; i < keys.length; i++) {
-    //             var info = jexcel.getIdFromColumnName(keys[i], true);
-    //             var colspan = obj.options.mergeCells[keys[i]][0];
-    //             var x1 = info[0];
-    //             var x2 = info[0] + (colspan > 1 ? colspan - 1 : 0);
+    obj.isColMerged = function(x, insertBefore) {
+        var cols = [];
+        // Remove any merged cells
+        if (obj.options.mergeCells) {
+            var keys = Object.keys(obj.options.mergeCells);
+            for (var i = 0; i < keys.length; i++) {
+                var info = jexcel.getIdFromColumnName(keys[i], true);
+                var colspan = obj.options.mergeCells[keys[i]][0];
+                var x1 = info[0];
+                var x2 = info[0] + (colspan > 1 ? colspan - 1 : 0);
 
-    //             if (insertBefore == null) {
-    //                 if ((x1 <= x && x2 >= x)) {
-    //                     cols.push(keys[i]);
-    //                 }
-    //             } else {
-    //                 if (insertBefore) {
-    //                     if ((x1 < x && x2 >= x)) {
-    //                         cols.push(keys[i]);
-    //                     }
-    //                 } else {
-    //                     if ((x1 <= x && x2 > x)) {
-    //                         cols.push(keys[i]);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
+                if (insertBefore == null) {
+                    if ((x1 <= x && x2 >= x)) {
+                        cols.push(keys[i]);
+                    }
+                } else {
+                    if (insertBefore) {
+                        if ((x1 < x && x2 >= x)) {
+                            cols.push(keys[i]);
+                        }
+                    } else {
+                        if ((x1 <= x && x2 > x)) {
+                            cols.push(keys[i]);
+                        }
+                    }
+                }
+            }
+        }
 
-    //     return cols;
-    // }
+        return cols;
+    }
 
-    // /**
-    //  * Is rows merged
-    //  */
-    // obj.isRowMerged = function(y, insertBefore) {
-    //     var rows = [];
-    //     // Remove any merged cells
-    //     if (obj.options.mergeCells) {
-    //         var keys = Object.keys(obj.options.mergeCells);
-    //         for (var i = 0; i < keys.length; i++) {
-    //             var info = jexcel.getIdFromColumnName(keys[i], true);
-    //             var rowspan = obj.options.mergeCells[keys[i]][1];
-    //             var y1 = info[1];
-    //             var y2 = info[1] + (rowspan > 1 ? rowspan - 1 : 0);
+    /**
+     * Is rows merged
+     */
+    obj.isRowMerged = function(y, insertBefore) {
+        var rows = [];
+        // Remove any merged cells
+        if (obj.options.mergeCells) {
+            var keys = Object.keys(obj.options.mergeCells);
+            for (var i = 0; i < keys.length; i++) {
+                var info = jexcel.getIdFromColumnName(keys[i], true);
+                var rowspan = obj.options.mergeCells[keys[i]][1];
+                var y1 = info[1];
+                var y2 = info[1] + (rowspan > 1 ? rowspan - 1 : 0);
 
-    //             if (insertBefore == null) {
-    //                 if ((y1 <= y && y2 >= y)) {
-    //                     rows.push(keys[i]);
-    //                 }
-    //             } else {
-    //                 if (insertBefore) {
-    //                     if ((y1 < y && y2 >= y)) {
-    //                         rows.push(keys[i]);
-    //                     }
-    //                 } else {
-    //                     if ((y1 <= y && y2 > y)) {
-    //                         rows.push(keys[i]);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
+                if (insertBefore == null) {
+                    if ((y1 <= y && y2 >= y)) {
+                        rows.push(keys[i]);
+                    }
+                } else {
+                    if (insertBefore) {
+                        if ((y1 < y && y2 >= y)) {
+                            rows.push(keys[i]);
+                        }
+                    } else {
+                        if ((y1 <= y && y2 > y)) {
+                            rows.push(keys[i]);
+                        }
+                    }
+                }
+            }
+        }
 
-    //     return rows;
-    // }
+        return rows;
+    }
 
     /**
      * Open the editor

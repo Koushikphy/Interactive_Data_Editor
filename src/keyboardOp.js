@@ -266,7 +266,6 @@ function hotKeys(e) {
         case "M":
             autoSmooth();
             break;
-
         case "c":
         case "C":
             if (e.ctrlKey) {
@@ -289,7 +288,7 @@ function hotKeys(e) {
             break
         case 'o':
         case 'O':
-            if (!app.isPackaged) sSwapper();
+            if (!app.isPackaged && ddd) sSwapper();
             break
         case 'x':
         case 'X':
@@ -352,17 +351,17 @@ function hotKeys(e) {
 
 // }
 
-function exectuteContext() {
-    // cm.hide();
-    //setValue function available in dataOp.js
-    var div = document.createElement('div');
-    div.id = 'setval'
-    div.innerHTML = `Set a value for the selected points <br>
-        <input type="text" id="valinput" onchange="setValue();"><br>
-        <input type="button" value="OK" onclick="setValue();">
-        <input type="button" value="Cancel" onclick="$('#setval').remove();">`.trim()
-    document.body.appendChild(div)
-}
+// function exectuteContext() {
+//     // cm.hide();
+//     //setValue function available in dataOp.js
+//     var div = document.createElement('div');
+//     div.id = 'setval'
+//     div.innerHTML = `Set a value for the selected points <br>
+//         <input type="text" id="valinput" onchange="setValue();"><br>
+//         <input type="button" value="OK" onclick="setValue();">
+//         <input type="button" value="Cancel" onclick="$('#setval').remove();">`.trim()
+//     document.body.appendChild(div)
+// }
 
 
 
@@ -397,9 +396,9 @@ const conMenu = Menu.buildFromTemplate([
     {
         label: 'Change Value',
         click(){
-            console.log('Change Value')
+            // console.log('Change Value')
             var div = document.createElement('div');
-            div.id = 'setval'
+            div.id = 'setval' //function setval is available in dataOp.js
             div.innerHTML = `Set a value for the selected points <br>
                 <input type="text" id="valinput" onchange="setValue();"><br>
                 <input type="button" value="OK" onclick="setValue();">
@@ -451,8 +450,11 @@ window.onkeyup = hotDKeys;
 figurecontainer.oncontextmenu= ()=>{
     if(index.length) conMenu.popup()
 }
+
 figurecontainer.onclick= (e)=>{
+    // console.log(e)
     if (e.target.tagName == "rect") {
+            // console.log('reset')
             Plotly.restyle(figurecontainer, {selectedpoints: [null]});
             index = [];
             del_dat = [];
