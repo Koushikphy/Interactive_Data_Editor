@@ -448,7 +448,7 @@ function initialSetup() {
     }
     if(!stepVal) stepVal = 1e-2
     if(!etVal) etVal = 1e-5
-    if(!egVal) egVal = 1e-5
+    if(!egVal) egVal = 1e-8
 
     try {// parse the formula
         funcList = ['sin','asin','sinh','cos','acos','cosh','tan','tanh','atan','exp','sqrt','log']
@@ -484,7 +484,7 @@ function initLMfit(){
         alert('Data fitting is only supported for 2D data.'); return
     }
     if(figurecontainer.data.length>1){
-        alert('Supported only for one plot at time.'); return
+        alert('Supported only for one plot at a time.'); return
     }
     let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
     thisTrace.mode = 'lines'
@@ -540,7 +540,7 @@ function lmfit(){
         olderror = error
     }
 
-    var  tfunc = func(parameters);
+    var tfunc = func(parameters);
     for (var i = 0; i < xs.length; i++) {
         tmp  = tfunc(xs[i])
         fity.push(tmp)

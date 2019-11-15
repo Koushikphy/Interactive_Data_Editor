@@ -75,21 +75,21 @@ function expRotate(tmpData, i, j) {
 
 
 
-function matmul(a,b){
-    // column and row length
-    if (a[0].length != b.length) return
-    // a is of length nxm,,, b is of mxp so  res is of the length nxp
-    var n = a.length, p = b[0].length, m = b.length
-    res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
-    for(let k=0; k<m; k++){
-        for (let i=0; i<n; i++){
-            for(let j =0; j<p ; j++){
-                res[i][j] += a[i][k]* b[k][j]
-            }
-        }
-    }
-    return res
-}
+// function matmul(a,b){
+//     // column and row length
+//     if (a[0].length != b.length) return
+//     // a is of length nxm,,, b is of mxp so  res is of the length nxp
+//     var n = a.length, p = b[0].length, m = b.length
+//     res = new Array(n).fill(0).map(_ => new Array(p).fill(0))
+//     for(let k=0; k<m; k++){
+//         for (let i=0; i<n; i++){
+//             for(let j =0; j<p ; j++){
+//                 res[i][j] += a[i][k]* b[k][j]
+//             }
+//         }
+//     }
+//     return res
+// }
 
 
 function transpose(m) {
@@ -242,9 +242,8 @@ class Spline{
 
 // functions for lmfit
 
-
-// inverse of a 
-function inverse(A){// solves a system of linear equations using QR decomposition
+// returns the inverse of A using QR decomposition
+function inverse(A){
     var qr = JSON.parse(JSON.stringify(A))
     var m = qr.length
     var n = qr[0].length

@@ -77,8 +77,8 @@ Fitted Equation: <span id='formulaStr'></span>`,
    <span>Min Values: </span><input id='minVal' type="text">
    Damping factor: <input id='dampVal' type="text" value="1.5">
   <span>Step Size:</span> <input id='stepVal' type="text" value='1e-2'>
-  <span>Error Tolerance: </span><input id='etVal' type="text" value='1e-7'>
-  <span>Error gradient:</span> <input id='egVal' type="text" value='1e-7'>  
+  <span>Error Tolerance: </span><input id='etVal' type="text" value='1e-5'>
+  <span>Error gradient:</span> <input id='egVal' type="text" value='1e-8'>  
 </div>`
 }
 

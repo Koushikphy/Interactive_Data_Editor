@@ -158,12 +158,12 @@
         var allText = [
             ` <div class="title">Getting Started</div>
                 <div class="text">
-        <p>We have all worked with data at some point of our work. Now, depending on the source, sometimes the data may not always be regular,
+        <p>We have all worked with data at some point of our work. Now, depending on the source, sometimes the data may not be regular,
             smooth and uniform and requires refinement before applying for any practical use. This software lets you do that very easily and 
-            efficiently using a graphical way. Using Interactive Data Editor one can
+            efficiently in a graphical way. Using Interactive Data Editor one can
             <ol>
                 <li> Plot any 2D and gridded 3D data. </li>
-                <li> Edit/Refine data along with many useful data operations.</li>
+                <li> Edit/Refine data including many useful data operations.</li>
                 <li> Fit a function to the data.</li>
             </ol>
             To get started load your data file ( in plain text format and space delimitted) from menu <label class="dom"> File > Open file</label>
@@ -172,7 +172,7 @@
             the 3D data file. Check the sample data files to get an idea. Now the plot window can be used to make all the edits to the data and utilize the 
             different data operations as required. To simultaneously edit multiple data file or multiple columns of the same file one can add the data through 
             <label class="dom">File > Add File</label>. Although all the editing features are available only for one line at a moment, 
-            and others lines can be selected alternatively to edit from <label class="dom">Files Dashboard</label> or by
+            others lines can be selected alternatively to edit, from <label class="dom">Files Dashboard</label> or by
             pressing <label class="dom">Ctrl+TAB</label>.
         </p>
         <p>
@@ -196,7 +196,7 @@
                 <div class='title'>User Interface</div>
 <div class="text">
     <p> The main window has basically 4 parts, Menu bar, Tool bar, Side bar and the Plot area. 
-        Most of the menubar options are self-explanatory and aredetailed in the following sections.
+        Most of the menubar options are self-explanatory and are detailed in the following sections.
         Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. 
         The slider, available only when working with 3D data, is used
         to change the X/Y value for which the corresponding 2D cut is plotted.
@@ -251,7 +251,7 @@
         fitting options are provided with this software. First, a simple regression type fitting, to fit the data with a polynomial of any 
         arbitrary order. This fitting method is adaptive to any changes to the data meaning, when any edit is made to the data the 
         fitted polynomial will be reevaluated automatically. Second is a general functional fitting using Levenberg-Marquardt algorithm,
-        one can provide any desired function to fit using this method.
+        one can provide any desired function to fit using this method.<p></p>
     </li>
 
     <li><b><i>2D and 3D support.</i></b> This software supports both 2D and 3D data editing, but for 3D editing data
@@ -265,7 +265,7 @@
         <p></p>
     </li>
 
-    <li><b><i>Configure plot window.</i></b> Configure the plot window as you like through <label for="" class="dom">
+    <li><b><i>Configure plot.</i></b> Configure the plot window as you like through <label for="" class="dom">
             View > Toggle plot settings</label>. Here you can choose the line and marker style of the plot, change
         legend, tiltle, axis label etc. A detailed description about this given in the next section.<p></p>
     </li>
@@ -275,7 +275,9 @@
         for simplicity no option provided to directly open remote files. <p></p>
     </li>
 
-    <li><b><i>Fill missing values.</i></b> Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start, stop and step values to fill the missing values in the data. Intermediate points will be filled using a Cubic spline and outside values will just be copied from the nearest available value. No complicated extrapolation method is used to fill outside values as that can be very uncertain depending on the data.<p></p></li>
+    <li><b><i>Fill missing values.</i></b> Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start, stop and step values to fill the missing values in the data. Intermediate points will be filled using a Cubic spline and outside values will just be copied from the nearest available value or by fitting a quadratic regression function.<p></p></li>
+
+    <li><b><i>Remove bad data.</i></b> Bad data points can be removed by selecting the data points and pressing <label for="" class="dom">X</label> or from the right-click context menu<p></p></li>
 
     <li><b><i>Repeat & mirror.</i></b> Go to <label for="" class="dom">Data > Extend Data</label> and fill the range, method and number of times to repeat/mirror and press OK. The start and end values must exist to use this feature.<p></p></li>
 
@@ -292,7 +294,7 @@
 
     <li><b><i>General 3D plotter.</i></b> A general plotter to plot 3D data is provided and can be accessed through <label for="" class="dom">File > 3D Plotter</label><p></p></li>
 
-    <li><b><i>Spreadsheet.</i></b> This software includes a spreadsheet like editor and can be opened through <label for="" class="dom">Windows > Spreadsheet</label> with some of basic features like that of MS Excel. This can be used to view, edit, copy-paste data directly. <p></p></li>
+    <li><b><i>Spreadsheet.</i></b> This software includes a spreadsheet like editor and can be opened through <label for="" class="dom">Windows > Spreadsheet</label> with some of basic features like that of MS Excel including formula support. This can be used to view, edit, copy-paste data directly. <p></p></li>
 
     And many more...
     </ol>
@@ -332,7 +334,6 @@
     <li><label class="key">Ctrl+V</label> Paste copied values.</li>
     <li><label class="key">Ctrl+ Left/Right Arrow</label> Repeat selected points to left or right.</li>
     <li><label class="key">Shift+Left/Right Arrow</label> Mirror selected points to left or right.</li>
-
     </ol>
 </div>`,
             `    <div class="title">Feedback</div>
@@ -340,7 +341,7 @@
     Thank you for using my software. I would really like to hear your experience of using this software. Found a bug or
     want a new feature to include, contact me directly or open an <a href="javascript:void(0)"
         onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor/issues');">issue here</a>. Also keep an eye on the project <a
-        href="javascript:void(0)" onclick="op('https://koushikphy.github.io/Interactive-Data-Editor/');">homepage</a> for the latest development of the software.
+        href="javascript:void(0)" onclick="op('https://koushikphy.github.io/ide/');">homepage</a> for the latest development of the software.
     You can reach me here,
     <div style="text-align:center; margin-top:21px">
         <div style=" margin-bottom: 10px; font-weight: 600; font-style:italic;">

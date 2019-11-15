@@ -11,7 +11,7 @@
     "postinstall": "electron-builder install-app-deps",
     "start": "gulp && electron .",
     "startwatch": "gulp && electron . | gulp watch",
-    "dist": "gulp && electron-builder",
+    "dist": "gulp all && electron-builder",
     "watch": "gulp watch",
     "uplib": "gulp default"
   },
