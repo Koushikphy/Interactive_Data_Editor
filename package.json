@@ -55,7 +55,11 @@
         "Encoding": "UTF-8"
       }
     },
-    "win": {}
+    "win": {      
+      "target": [
+      "msi",
+      "nsis"
+    ]}
   },
   "devDependencies": {
     "electron": "^7.1.1",
