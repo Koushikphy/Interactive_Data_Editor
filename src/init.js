@@ -94,13 +94,12 @@ if (fl !== null) {
 
 
 //in dev mode don't load animation directly go to plot
-// const particlesJS = require('particles.js');
-// window.particlesJS.load('particle', '../lib/particles.json');
 if (app.isPackaged) {
     versionCheck();
     if (remote.process.argv.length > 1) {
         window.onload = function () {
-            fileReader(remote.process.argv[1])
+            let fileName = path.resolve(process.cwd(),remote.process.argv[1])
+            fileReader(fileName)
         };
     } else {
         const particlesJS = require('particles.js');
@@ -112,7 +111,8 @@ if (app.isPackaged) {
     document.getElementById('full').style.display = 'block';
     if (remote.process.argv.length > 2) {
         window.onload = function () {
-            fileReader(remote.process.argv[2])
+            let fileName = path.resolve(process.cwd(),remote.process.argv[2] )
+            fileReader(fileName)
         };
     };
 }
