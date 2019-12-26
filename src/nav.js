@@ -76,7 +76,7 @@ function closeNav2() {
 
 function updateJSON() {
     if (!$('#sidebar2').width()) return // dont call if its not visible
-    console.log('called')
+    // console.log('called')
     var Plots = [];
     var tmpLeg = []
     for (let trace of figurecontainer.data) {

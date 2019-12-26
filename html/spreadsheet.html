@@ -29,8 +29,8 @@
         const { dialog, BrowserWindow, Menu } = remote;
         var full = document.getElementById("fullS");
         var xcol = [], data = [], hot, columns = [], xName, mytable;
-        var btn = document.getElementById("btn");
-        btn.style.visibility = "hidden";
+        // var btn = document.getElementById("btn");
+        // btn.style.visibility = "hidden";
         var event, th_in = 0, $ch = $("#custom-handle"), $slider = $("#slider");
 
         ipcRenderer.on("slider", function (e, d) {
@@ -76,10 +76,11 @@
                         allowRenameColumn : false,
                         updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ? 'red' : '#000000'},
                         onload:_=>setTimeout(_=>{let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)},1), 
-                        onchange:_=>btn.style.visibility = "visible",
-                        onsort:_=>{data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML));btn.style.visibility = "visible"}
+                        // onchange:_=>btn.style.visibility = "visible",
+                        // oninsertrow:_=>btn.style.visibility = "visible",
+                        onsort:_=>{data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML))}//;btn.style.visibility = "visible"}
                     })
-                        mytable.setData(data[0])
+                    mytable.setData(data[0])
             })
 
 
@@ -93,10 +94,8 @@
             return m[0].map((_, i) => m.map(x => x[i]));
         };
 
-
-
         function updateData() { //parse the formulas during the return 
-            btn.style.visibility = "hidden";
+            // btn.style.visibility = "hidden";
             var dat = data.map(blocks=> blocks.map(line=>line.map(elem=>{
                 if (('' + elem).substr(0,1) == '=')  return mytable.executeFormula(elem); return elem
             })))

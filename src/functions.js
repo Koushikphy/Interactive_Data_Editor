@@ -37,7 +37,7 @@ function updateData() {
         col2dChanged()
     };
     fullDataCols[0] = JSON.parse(JSON.stringify(col));
-    updatePlot(1);
+    updatePlot();
     makeRows();
     startDragBehavior();
     updateOnServer();
@@ -88,7 +88,6 @@ function fileReader(fname) {
         buttons: ['Yes', "No"]
     });
     if (res) return;
-
     // parse the file and data
     data = parseData(fs.readFileSync(fname, "utf8"))
     if(data==undefined) return
@@ -120,7 +119,7 @@ function fileReader(fname) {
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $("#full").show();
     $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
-    if (figurecontainer.data.length > 2){
+    if (figurecontainer.data.length > 1){
         let tt = [];
         for(let i=1;i<figurecontainer.data.length;i++){
             tt.push(i)
