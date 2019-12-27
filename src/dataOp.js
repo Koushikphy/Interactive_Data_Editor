@@ -40,12 +40,12 @@ function moveReflect(key, mod){
 };
 
 
-var last = '', times=''
+var mirror = 0;
 function repeatMirror() {
     last  = parseFloat($("#einp").val());
     times = parseFloat($("#etime").val());
     if(!last|!times) { showStatus('Invalid inputs.'); return}
-    var mirror = $("#repSel")[0].selectedIndex;
+    mirror = $("#repSel")[0].selectedIndex;
 
     var cols_wo_y = []
     var tmp = data[0].length
@@ -63,7 +63,6 @@ function repeatMirror() {
     }
 
     data = data.map(dat => {
-
         var ind = dat[col.y].indexOf(last) + 1
         var newy = dat[col.y].slice(0, ind)
         var tmp = newy.slice()
@@ -95,12 +94,14 @@ function repeatMirror() {
     endJobs({resize:true, startdrag:true})
     var tmp = mirror ? 'mirrored' : 'repeated'
     showStatus(`Data ${tmp} ${times} times...`)
+    $('#einp').attr('value',last)
+    $('#etime').attr('value',times)
+    extendUtils['extend'] = $('#extendutils').html()
 }
 
 
 
 
-var start='', stop='', step='';
 function dataFiller() {
     saveOldData()
     start= parseFloat($("#fstart").val());
@@ -136,9 +137,7 @@ function dataFiller() {
             backRegRequired = fullArr[fullArr.length-1]>xs[xs.length-1]
         }
 
-
         for (let tc of cols_wo_y) {
-
             newArr = [];
             var ys = dat[tc].slice();
             spl = new Spline(xs, ys)
@@ -185,6 +184,10 @@ function dataFiller() {
 
     endJobs({resize:true, startdrag:true})
     showStatus('Missing values are filled...');
+    $('#fstart').attr('value',start)
+    $('#fend').attr('value',stop)
+    $('#fstep').attr('value',step)
+    extendUtils['filler'] = $('#extendutils').html()
 }
 
 

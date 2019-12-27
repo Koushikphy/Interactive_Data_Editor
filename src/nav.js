@@ -76,7 +76,6 @@ function closeNav2() {
 
 function updateJSON() {
     if (!$('#sidebar2').width()) return // dont call if its not visible
-    // console.log('called')
     var Plots = [];
     var tmpLeg = []
     for (let trace of figurecontainer.data) {
@@ -235,6 +234,7 @@ var options = {
             line.push(trace.Line)
             marker.push(trace.Marker)
         }
+        // if(mode.includes("lines")) showStatus('NOTE: Interactive data editing is not available in "lines" mode.')
         legendNames = name;
         Plotly.update(figurecontainer, { name, mode, line, marker}, json.Layout)
         makeRows();

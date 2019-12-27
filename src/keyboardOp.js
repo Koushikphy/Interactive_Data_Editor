@@ -141,16 +141,12 @@ ipcRenderer.on("menuTrigger", function (e, d) {
             break;
         case "edat":
             document.getElementById('extendutils').innerHTML = extendUtils['extend']
-            $("#einp").val(last)
-            $("#etime").val(times)
+            document.getElementById('repSel').selectedIndex = mirror
             $("#extendutils").slideDown();
             resizePlot();
             break;
         case 'fill':
             document.getElementById('extendutils').innerHTML = extendUtils['filler']
-            $("#fstart").val(start)
-            $("#fend").val(stop)
-            $("#fstep").val(step)
             $("#extendutils").slideDown();
             resizePlot()
             break;
