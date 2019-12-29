@@ -42,7 +42,7 @@
             if (data.length != 1) { // if data is 3d show the slider
                 full.innerHTML = `Drag the slider to change "${xName}" value:`
                 $slider.show()
-                $(function () {
+                // $(function () {
                     $slider.slider({
                         min: 0, max: data.length - 1, step: 1,
                         slide: function (event, ui) {
@@ -50,7 +50,7 @@
                             sliderChanged();
                         }
                     });
-                });
+                // });
 
             } else {
                 full.style.display = "none";

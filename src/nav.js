@@ -52,6 +52,7 @@ function closeNav() {
     resizePlot()
 }
 
+
 function openNav2() {
     closeNav();
     $('#split-bar2').width(5);
@@ -62,6 +63,7 @@ function openNav2() {
 }
 
 
+
 function closeNav2() {
     if (!$('#sidebar2').width()) return
     $('#split-bar2,#sidebar2').width(0);
@@ -69,8 +71,6 @@ function closeNav2() {
     $('#jsoneditor').width(195);
     resizePlot()
 }
-
-
 
 
 
@@ -257,6 +257,8 @@ var options = {
     schema: schema
 };
 
+const JSONEditor = require("../lib/jsoneditor.min.js")
+
 var jsoneditor = document.getElementById('jsoneditor')
 var editor = new JSONEditor(
     jsoneditor,
@@ -275,15 +277,16 @@ function getInd(input) {
 function removeRow(row) {
     if (fullData.length == 1) return
     var index = $('.closefile').index(row)
+    console.log(index)
     fullData.splice(index, 1);
     fullDataCols.splice(index, 1);
     fileNames.splice(index, 1);
     saveNames.splice(index, 1);
     legendNames.splice(index, 1);
+    col = fullDataCols[0]
     Plotly.deleteTraces(figurecontainer, index);
     makeRows();
     makeEditable();
-    var col = fullDataCols[0]
     if (ddd) {
         xCol.selectedIndex = col.x;
         yCol.selectedIndex = col.y;
@@ -319,7 +322,7 @@ function removeRow(row) {
                 shape: 'linear'
             })
         }
-        col = fullDataCols[0];
+        // col = fullDataCols[0];
         Plotly.restyle(figurecontainer, {
             line,
             marker

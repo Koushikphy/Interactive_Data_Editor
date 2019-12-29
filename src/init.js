@@ -24,6 +24,8 @@ function versionCheck() {
         },
         function (_, _, body) {
             var new_ver = JSON.parse(body).name
+            var body = JSON.parse(body).body
+            console.log(body, new_ver)
             if (new_ver != `v${require('../package.json').version}`) {
                 var txt = `A new version of the software ${new_ver} is available.\n Do you want to download it now?`
                 var res = dialog.showMessageBoxSync({
@@ -95,7 +97,7 @@ if (fl !== null) {
 
 //in dev mode don't load animation directly go to plot
 if (app.isPackaged) {
-    versionCheck();
+    setTimeout(versionCheck,5000)
     if (remote.process.argv.length > 1) {
         window.onload = function () {
             let fileName = path.resolve(process.cwd(),remote.process.argv[1])
@@ -116,8 +118,3 @@ if (app.isPackaged) {
         };
     };
 }
-
-
-
-
-

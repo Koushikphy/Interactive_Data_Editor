@@ -2,35 +2,6 @@
 // functions here are all pure, i.e. 
 //doesnot depend on the outside parameter, and solely depend on the given argument
 
-function parseData(strDps) {
-    var newdat = [],
-        blocks = [];
-    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
-    try{
-        for (let i of strDps) {
-            blocks = i.trim().split("\n");
-            for (var j = 0; j < blocks.length; j++) {
-                blocks[j] = blocks[j].trim().split(/[\s\t]+/);
-                blocks[j] = blocks[j].map(x => {
-                    y = parseFloat(x)
-                    if(isNaN(y)){
-                        throw "badData"
-                    } else{
-                        return y
-                    }
-                });
-            };
-            newdat.push(transpose(blocks));
-        }
-    } catch(err){
-        if(err='badData'){
-            alert("Bad data found !!!\nCheck the file before openning.")
-        }
-        return
-    }
-    return newdat;
-};
-
 
 function expRotate(tmpData, i, j) {
     //Bunch up on i-th column and sort along j-th column
@@ -74,10 +45,6 @@ function expRotate(tmpData, i, j) {
 
 
 
-
-function transpose(m) {
-    return m[0].map((_, i) => m.map(x => x[i]));
-};
 
 
 

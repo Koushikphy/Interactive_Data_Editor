@@ -1,50 +1,5 @@
 //downloads the image called from main and also from the plotter
 
-function triggerDownload(){
-    var div = document.createElement('div');
-    div.id = 'download'
-    div.innerHTML = `<div class='jjjj'><b> Save the image</b><br></div>
-                    &ensp; File Name: <input type="text" id= "dfileName"><br>
-                    &ensp; File Type:<select id="fileFormat">
-                    <option>PDF</option>
-                    <option>JPEG</option>
-                            <option>PNG</option>
-                            <option>SVG</option>
-                            <option>WEBP</option>
-                        </select><br>
-                    &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080" list="resl" >
-                    <datalist id="resl">
-                    <option value="640×480">
-                    <option value="800×600">
-                    <option value="960×720">
-                    <option value="1280×720">
-                    <option value="1600×900">
-                    <option value="1280×960">
-                    <option value="1920×1080">
-                    <option value="1440×1080">
-                    <option value="1600×1200">
-                    <option value="1856×1392">
-                    <option value="1920×1440">
-                    <option value="2560×1440">
-                    <option value="2048×1536">
-                    <option value="3840×2160">
-                  </datalist>
-                    <br>
-                    <div  class='jjjj'>
-                        <input type="button" value="OK" onclick="downloadImage();$('#download').remove();">
-                        <input type="button" value="Cancel" onclick="$('#download').remove();">
-                    </div>`.trim()
-    document.body.appendChild(div)
-}
-
-
-
-
-
-
-
-
-
 
 
 function downloadImage(){
@@ -134,3 +89,7 @@ function exportPDF({ width=1920, height=1080}={}){
         })
     })
 }
+
+// console.log('hello there')
+
+// module.exports = downloadImage

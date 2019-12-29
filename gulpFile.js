@@ -18,11 +18,7 @@ function compressCombineJS() {
         './src/plotSetup.js',
         './src/functions.js',
         './src/keyboardOp.js', 
-        './src/numeric.js' , 
-        './src/dataOp.js', 
-        './src/nav.js',
-        './src/download.js', 
-            './src/notify.js'
+        './src/notify.js'
         ])
         .pipe(concat('funcs.js'))
         .pipe(uglify())
@@ -31,6 +27,28 @@ function compressCombineJS() {
         }))
         .pipe(dest('./lib'))
 }
+
+
+
+function compressCombineDelayJS() {
+    return src([
+        './src/dataOp.js',
+        './src/download.js',
+        './src/numeric.js',
+        './src/nav.js',
+        './src/delayedKey.js',
+        './src/delayedFunc.js'
+        ])
+        .pipe(concat('delay.js'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(dest('./lib'))
+}
+
+
+
 
 function compressCombineJSp() {
     return src(['./src/plotter.js','./src/download.js'])
@@ -83,9 +101,8 @@ function compressCombineSheetJS() {
         .pipe(dest('./lib'))
 }
 
-exports.spread  = parallel(compressSpredSheetCSS, compressCombineSheetJS)
-exports.all     = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
-exports.default = parallel(compressCombineJS );
+exports.all     = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp, compressCombineDelayJS, compressSpredSheetCSS, compressCombineSheetJS);
+exports.default = parallel(compressCombineJS,compressCombineDelayJS );
 
 exports.watch = function () {
     watch('./src/*.*', parallel('all'));

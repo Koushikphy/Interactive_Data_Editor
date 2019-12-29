@@ -29,8 +29,17 @@ a {
     cursor: pointer; 
 }
 
-#custom-handle{
+
+#custom-handle {
     cursor: grab;
+    width: fit-content;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
+    background: #4CAF50;
+    color: #ffffff;
 }
 
 #custom-handle:active{
@@ -149,16 +158,7 @@ input[type=text] {
 }
 
 
-#custom-handle {
-    width: 3em;
-    height: 1.6em;
-    top: 50%;
-    margin-top: -.8em;
-    text-align: center;
-    line-height: 1.6em;
-    background: #4CAF50;
-    color: #ffffff;
-}
+
 
 
 #slider {

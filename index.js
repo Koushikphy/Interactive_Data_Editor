@@ -40,6 +40,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         show: false,
         minWidth: 1200,
+        title: "Interactive Data Editor",
         icon: path.join(__dirname, "figs/charts.png"),
         webPreferences: {
             nodeIntegration: true
@@ -66,7 +67,6 @@ app.on('ready', function () {
 
 
 const homeMenuTemplate = [{
-
         label: 'File',
         submenu: [{
                 label: "Open file",
@@ -231,7 +231,7 @@ const homeMenuTemplate = [{
     {
         label: "Edit",
         submenu: [{
-            label: "Fill Missing Values",
+            label: "Fill Values",
             enabled: false,
             id: "fill",
             click() {
@@ -260,16 +260,18 @@ const homeMenuTemplate = [{
             click() {
                 mainWindow.webContents.send("menuTrigger", "pamh")
             }
-        },{
-            label: "Ranged selector",
-            // enabled: false,
-            checked: false,
-            type: "checkbox",
-            id:"rsch",
-            click() {
-                mainWindow.webContents.send("menuTrigger", "rsch")
-            }
-        },  ]
+        },
+        // {
+        //     label: "Ranged selector",
+        //     // enabled: false,
+        //     checked: false,
+        //     type: "checkbox",
+        //     id:"rsch",
+        //     click() {
+        //         mainWindow.webContents.send("menuTrigger", "rsch")
+        //     }
+        // },
+      ]
     },
     {
         label: "Fitting",

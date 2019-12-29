@@ -100,6 +100,21 @@ function repeatMirror() {
 }
 
 
+// function makeArray(start, stop, step){
+//     var newx = []
+//     for (let xx of data[0][col.y]){
+//         if(xx>=start) break
+//         newx.push(xx)
+//     }
+//     let ttt = Plotly.d3.range(start, stop+step, step)
+//     newx = newx.concat(ttt)
+//     for (let xx of data[0][col.y]){
+//         if(xx<=stop) continue
+//         newx.push(xx)
+//     }
+//     return newx
+// }
+
 
 
 function dataFiller() {
@@ -119,13 +134,30 @@ function dataFiller() {
 
     for(let dt of data[0][col.y]){
         if(dt[0]>=dt[1]){
-            console.log(dt[0],dt[1])
+            // console.log(dt[0],dt[1])
             alert('Monotonically increasing values required for interpolation.\n NOTE: You can use the spreadsheet to sort the data')
             return
         }
     }
 
-    var fullArr = Plotly.d3.range(start, stop,step)
+    var setAsGrid = document.getElementById('setAsGrid').checked
+    var fullArr = []
+    var ttt = Plotly.d3.range(start, stop+step, step)
+    if(setAsGrid){
+        var fullArr = ttt
+    } else{
+        for (let xx of data[0][col.y]){
+            if(xx>=start) break
+            fullArr.push(xx)
+        }
+        fullArr = fullArr.concat(ttt)
+        for (let xx of data[0][col.y]){
+            if(xx<=stop) continue
+            fullArr.push(xx)
+        }
+    }
+    // console.log(fullArr)
+
     data = data.map(dat => {
         if (fullArr.length == dat[0].length) return dat; // no interpolation required
         var xs = dat[col.y].slice()
