@@ -154,16 +154,11 @@ function fileReader(fname) {
     $("#full").show();
     $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
     if (figurecontainer.data.length > 1){
-        let tt = Plotly.d3.range(1,figurecontainer.data.length)// [];
-        // for(let i=1;i<figurecontainer.data.length;i++){
-        //     tt.push(i)
-        // }
+        let tt = Plotly.d3.range(1,figurecontainer.data.length)
         Plotly.deleteTraces(figurecontainer, tt);
     }
     if (figurecontainer.layout.selectdirection != 'any') {
-        Plotly.relayout(figurecontainer, {
-            selectdirection: 'any'
-        });
+        Plotly.relayout(figurecontainer, { selectdirection:'any'});
     }
     xCol = document.getElementById("xCol");
     yCol = document.getElementById("yCol");
@@ -175,12 +170,8 @@ function fileReader(fname) {
 
     for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
 
-
-
-
     ddd = data.length != 1;
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
-
 
     //setup the column selector and menu.
     var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf', 'rgft', 'lmfit']
@@ -207,13 +198,12 @@ function fileReader(fname) {
     };
     for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
     for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-    
+
 
     xCol.selectedIndex = col.x;
     yCol.selectedIndex = col.y;
     zCol.selectedIndex = col.z;
     sCol.selectedIndex = col.s;
-
 
     fullDataCols.push(JSON.parse(JSON.stringify(col)));
     fullData.push(data);
@@ -229,7 +219,6 @@ function fileReader(fname) {
     // plot here
     updateData();
 
-
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
     recentMenu();
@@ -237,10 +226,11 @@ function fileReader(fname) {
     resizePlot();
     showStatus('Data file loaded ...');
 
+    // load all scripts here
     if(notLoaded){ // this seems pretty bad, replace with require in future
         $.getScript('../lib/delay.min.js')
         notLoaded = false
-    } 
+    }
 
 }
 var notLoaded = true
@@ -268,7 +258,7 @@ function selUpdate() {
 
 // this will be the new update plot function
 function updatePlot(all = true) {
-    //current true means just update the current plot i.e. 0th 
+    //current true means just update the current plot i.e. 0th
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];

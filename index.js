@@ -328,6 +328,7 @@ const homeMenuTemplate = [{
                 click() {
                     var childWindow = new BrowserWindow({
                         show: false,
+                        title: "Interactive Data Editor - Documentation",
                         icon: path.join(__dirname, 'figs/charts.png'),
                         webPreferences: {
                             nodeIntegration: true
@@ -347,6 +348,7 @@ const homeMenuTemplate = [{
                 click() {
                     var childWindow = new BrowserWindow({
                         icon: path.join(__dirname, 'figs/charts.png'),
+                        title: "Interactive Data Editor - Sample Data",
                         webPreferences: {
                             nodeIntegration: true
                         }
@@ -372,6 +374,7 @@ const homeMenuTemplate = [{
                 click() {
                     var childWindow = new BrowserWindow({
                         icon: path.join(__dirname, 'figs/charts.png'),
+                        title: "Interactive Data Editor",
                         webPreferences: {
                             nodeIntegration: true
                         },
@@ -484,6 +487,7 @@ const plotMenuTemplate = [{
             click() {
                 var childWindow = new BrowserWindow({
                     show: false,
+                    title: "Interactive Data Editor - Documentation",
                     icon: path.join(__dirname, 'figs/charts.png'),
                     webPreferences: {
                         nodeIntegration: true
@@ -503,6 +507,7 @@ const plotMenuTemplate = [{
             click() {
                 var childWindow = new BrowserWindow({
                     icon: path.join(__dirname, 'figs/charts.png'),
+                    title: "Interactive Data Editor - Sample Data",
                     webPreferences: {
                         nodeIntegration: true
                     }
@@ -527,6 +532,7 @@ const plotMenuTemplate = [{
             click() {
                 var childWindow = new BrowserWindow({
                     icon: path.join(__dirname, 'figs/charts.png'),
+                    title: "Interactive Data Editor",
                     webPreferences: {
                         nodeIntegration: true
                     }

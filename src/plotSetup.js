@@ -213,30 +213,3 @@ $slider.slider({
         sliderChanged();
     }
 });
-
-
-
-
-// figurecontainer.on("plotly_selected", selectEvent);
-// figurecontainer.on("plotly_relayout", updateJSON);
-// figurecontainer.on("plotly_legendclick", function(){
-//     var tmpLeg=[]
-//     for (let trace of figurecontainer.data) {
-//         tmpLeg.push(trace.name)
-//     }
-//     legendNames = tmpLeg;
-//     updateJSON()
-// });
-
-
-// $(function () {
-//     $slider.slider({
-//         min: 0,
-//         max: 0,
-//         step: 1,
-//         slide: function (event, ui) {
-//             th_in = ui.value;
-//             sliderChanged();
-//         }
-//     });
-// });

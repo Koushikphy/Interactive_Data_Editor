@@ -332,6 +332,7 @@ function selectEvent(event) {
 function spreadsheet() {
     editorWindow = new BrowserWindow({
         minWidth: 1200,
+        title: "Interactive Data Editor",
         show: false,
         webPreferences: {
             nodeIntegration: true
@@ -361,6 +362,7 @@ function openViewer(x) {
 
     viewerWindow = new BrowserWindow({
         show: false,
+        title: "Interactive Data Editor",
         minWidth: 1200,
         webPreferences: {
             nodeIntegration: true
