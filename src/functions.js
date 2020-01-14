@@ -30,7 +30,7 @@ function updateData() {
         col.z = col.y;
         col.y = col.x;
         col.x = 0
-        col2dChanged()
+        // col2dChanged()
     };
     fullDataCols[0] = JSON.parse(JSON.stringify(col));
     updatePlot();
@@ -49,7 +49,6 @@ function updateData() {
             }
             localStorage.setItem("cols2d", JSON.stringify(tmp));
         }
-
     }
 };
 
