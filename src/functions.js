@@ -33,6 +33,10 @@ function updateData() {
         // col2dChanged()
     };
     fullDataCols[0] = JSON.parse(JSON.stringify(col));
+
+
+
+
     updatePlot();
     // makeRows();
     startDragBehavior();
@@ -51,6 +55,8 @@ function updateData() {
         }
     }
 };
+
+
 
 
 function parseData(strDps) {
@@ -191,6 +197,13 @@ function fileReader(fname) {
         }
     }
 
+    //a precaution here for the 
+    let tmpL = data[0].length
+    if(col.x>tmpL) col.x = 0
+    if(col.y>tmpL) col.y = 0
+    if(col.z>tmpL) col.z = 0
+    if(col.s>tmpL) col.s = 0
+
     var op = "";
     for (var i = 1; i <= data[0].length; i++) {
         op += '<option>' + i + '</option>';
@@ -214,6 +227,7 @@ function fileReader(fname) {
     var save_name = path.join(dirname, filename + "_new" + extn);
     saveNames.push(save_name);
     legendNames.push(path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`)
+
 
     // plot here
     updateData();
