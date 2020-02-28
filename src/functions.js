@@ -269,9 +269,8 @@ function selUpdate() {
 }
 
 
-// this will be the new update plot function
 function updatePlot(all = true) {
-    //current true means just update the current plot i.e. 0th
+    //true means just update the current plot i.e. 0th
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
@@ -318,8 +317,8 @@ function sliderChanged() {
     $("#custom-handle").blur()
     $slider.slider("value", th_in)
     $ch.text(xName + '=' + data[th_in][col.x][0])
-    startDragBehavior();
     updatePlot()
+    startDragBehavior();
 };
 
 
@@ -529,17 +528,19 @@ function doIt() {
 function updateOnServer() {
     if (!serve) return;
     return new Promise((resolve, reject)=>{
-        var x_list = [],
+        let x_list = [],
             y_list = [],
             z_list = [];
+
+        let [a,b,c] = swapped ? [col.y, col.x,col.z] :  [col.x, col.y,col.z]
+        
         for (let i of data) {
-            x_list.push(i[col.x]);
-            y_list.push(i[col.y]);
-            z_list.push(i[col.z]);
+            x_list.push(i[a]);
+            y_list.push(i[b]);
+            z_list.push(i[c]);
         };
         var s_data = [x_list, y_list, z_list];
-        var c2s = []
-        for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, swapped, Object.values(col)]);
+        for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, Object.values(col)]);
         resolve();
     })
 };

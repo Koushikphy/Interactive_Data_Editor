@@ -8,13 +8,13 @@
     <script>
         if (typeof module === 'object') { window.module = module; module = undefined; }
     </script>
-    <script src="../lib/jquery.min.js"></script>
+    <!-- <script src="../lib/jquery.min.js"></script> -->
 </head>
 
 <body>
     <div class="basediv" id="figurecontainer"></div>
     <div class="floatdiv">
-    <div id="status"><i><b>Waiting to get Update...</b><br />Any changes made in the 3D_Editor will be updated here on real time.</i></div>
+    <div id="status"><i><b>Requesting data. Please wait...</b></div>
     <form><input id="is_mark" onclick="mark_clicked(this)" type="checkbox" /> Markers </form>
     <div class="borders">
         Axes Ranges ⇒
@@ -23,7 +23,7 @@
         Z : <input onchange="setRange(this.value,2)" type="text" id='zInp' />
     </div>
     </div>
-    <!-- <script src="../lib/viewer.m/in.js"></script> -->
+    <!-- <script src="../lib/viewer.min.js"></script> -->
     <script>
         require('v8-compile-cache');
         var xxx = [], yyy = [], zzz = [], check = true;
@@ -31,26 +31,25 @@
             data = [],
             swapped = false,
             newCol = [0, 0, 0],
+            first = true,
             curCol = false;
         const {ipcRenderer} = require('electron');
         const Plotly = require('plotly.js-gl3d-dist');
 
-        Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
+        // Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
 
         ipcRenderer.on("sdata", function (e, d) {
-            [data, swapped, newCol] = d;
+            [data, newCol] = d;
             updatePlot();
             if (!curCol) curCol = newCol;
             if (newCol[0] !== curCol[0]) {
-                curCol[0] = newCol[0];
-                setRange($("#xInp").val(),0);
+                setRange(document.getElementById("xInp").val(),0);
             } else if (newCol[1] !== curCol[1]) {
-                curCol[1] = newCol[1];
-                setRange($("#yInp").val(),1);
+                setRange(document.getElementById("yInp").val(),1);
             } else if (newCol[2] !== curCol[2]) {
-                curCol[2] = newCol[2];
-                setRange($("#zInp").val(),2);
+                setRange(document.getElementById("zInp").val(),2);
             }
+            curCol = newCol
         })
 
 
@@ -73,29 +72,27 @@
             xxx = data[0].concat(xxx),
             yyy = data[1].concat(yyy),
             zzz = data[2].concat(zzz);
-            if (figurecontainer.data.length != xxx.length) {
-                Plotly.newPlot(figurecontainer, initData(xxx.length), layout);
+            if ( first || figurecontainer.data.length != xxx.length) {
+                Plotly.newPlot(figurecontainer, initData(xxx.length), layout, { displaylogo: false });
+                first = false
             };
-            if (swapped) {
-                Plotly.restyle(figurecontainer, { 'y': xxx, 'x': yyy, 'z': zzz });
-            } else {
-                Plotly.restyle(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz });
-            }
-            $("#status").html("<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>");
+            Plotly.restyle(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz });
+            document.getElementById('status').innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
         };
 
 
         function setRange(lim, axis){
-            var tmp = "scene."
-            if(axis==0){
-                tmp+="xaxis."
-            } else if(axis==1){
-                tmp+="yaxis."
-            } else{
-                tmp+="zaxis."
-            }
+            var tmp = "scene." + ["xaxis.", "yaxis.", "zaxis."][axis]
+            console.log(tmp)
+            // if(axis==0){
+            //     tmp+="xaxis."
+            // } else if(axis==1){
+            //     tmp+="yaxis."
+            // } else{
+            //     tmp+="zaxis."
+            // }
             if (lim == "") {
-                Plotly.relayout(figurecontainer, { [tmp+"autorange"]: true  })
+                Plotly.relayout(figurecontainer, { [tmp+"autorange"]: true})
             }else {
                 lim = lim.split(",").map(x => parseFloat(x))
                 if(isNaN(lim[0]) || isNaN(lim[1])){
@@ -118,8 +115,7 @@
 
 
         function makeRotation() {
-            var issame = true,
-                b = data[0][0].length;
+            var issame = true, b = data[0][0].length;
             for (let a of data[0]) {
                 if (a.length != b) {
                     issame = false;

@@ -208,37 +208,42 @@ const conMenu = Menu.buildFromTemplate([
     },{
         label: 'Change Sign',
         accelerator : 'C',
-        click(){
-            document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "C"}))
-        } 
+        click : changeSign
+        // click(){
+        //     changeSign()
+        // document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "C"}))
+        // } 
     },{
         label: 'Remove Data',
         accelerator: 'X',
-        click(){
-            document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "X"}))
-        } 
+        click : removeBadData
+        // click(){
+        //     document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "X"}))
+        // } 
     },{
         label: 'Smooth Data',
         submenu:[
             {
                 label : 'Cubic Spline',
                 accelerator : 'D',
-                click(){
-                    document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "D"}))
-                }
+                click : deleteInterpolate
+                // click(){
+                //     document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "D"}))
+                // }
             },{
                 label : 'Mooving Average',
                 accelerator : 'M',
-                click(){
-                    document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "M"}))
-
-                }
+                click : autoSmooth
+                // click(){
+                //     document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "M"}))
+                // }
             },{
                 label : 'Regression Fitting',
                 accelerator : 'E',
-                click(){
-                    document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "E"}))
-                }
+                click : deleteExtrapolate
+                // click(){
+                //     document.dispatchEvent( new KeyboardEvent('keydown', {bubbles: true,key: "E"}))
+                // }
             },
         ]
     }
@@ -252,38 +257,8 @@ figurecontainer.oncontextmenu= ()=>{
 }
 
 figurecontainer.onclick= (e)=>{
-    // console.log(e)
     if (e.target.tagName == "rect") {
-            // console.log('reset')
             Plotly.restyle(figurecontainer, {selectedpoints: [null]});
             index = [];
             del_dat = [];
 }}
-
-
-
-
-
-// var em2px = $ch.width() / 3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
