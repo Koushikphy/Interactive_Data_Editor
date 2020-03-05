@@ -1,7 +1,7 @@
 {
   "particles": {
     "number": {
-      "value": 99,
+      "value": 73,
       "density": {
         "enable": true,
         "value_area": 900
@@ -26,7 +26,7 @@
       }
     },
     "opacity": {
-      "value": 0.9,
+      "value": 0.8,
       "random": false,
       "anim": {
         "enable": false,
@@ -49,12 +49,12 @@
       "enable": true,
       "distance": 150,
       "color": "#1522f5",
-      "opacity": 1,
+      "opacity": 0.75,
       "width": 1.3
     },
     "move": {
       "enable": true,
-      "speed": 2.1,
+      "speed": 1.3,
       "direction": "none",
       "random": false,
       "straight": false,

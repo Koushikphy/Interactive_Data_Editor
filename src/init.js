@@ -96,25 +96,29 @@ if (fl !== null) {
 
 
 //in dev mode don't load animation directly go to plot
-if (app.isPackaged) {
-    setTimeout(versionCheck,5000)
-    if (remote.process.argv.length > 1) {
-        window.onload = function () {
-            let fileName = path.resolve(process.cwd(),remote.process.argv[1])
-            fileReader(fileName)
-        };
-    } else {
+// if (app.isPackaged) {
+//     setTimeout(versionCheck,5000)
+//     if (remote.process.argv.length > 1) {
+//         window.onload = function () {
+//             let fileName = path.resolve(process.cwd(),remote.process.argv[1])
+//             fileReader(fileName)
+//         };
+//     } else {
         const particlesJS = require('particles.js');
-        window.particlesJS.load('particle', '../lib/particles.json');
-    }
-} else {
-    document.getElementById("branding").remove()
-    document.getElementById('particle').remove();
-    document.getElementById('full').style.display = 'block';
-    if (remote.process.argv.length > 2) {
-        window.onload = function () {
-            let fileName = path.resolve(process.cwd(),remote.process.argv[2] )
-            fileReader(fileName)
-        };
-    };
-}
+        // window.particlesJS.load('particle', '../lib/particles.json');
+        window.particlesJS('particle', require('../lib/particles.json'));
+//     }
+// } else {
+//     document.getElementById("branding").remove()
+//     document.getElementById('particle').remove();
+//     document.getElementById('full').style.display = 'block';
+//     if (remote.process.argv.length > 2) {
+//         window.onload = function () {
+//             let fileName = path.resolve(process.cwd(),remote.process.argv[2] )
+//             fileReader(fileName)
+//         };
+//     };
+// }
+tmp = document.getElementsByClassName('container')[0]
+tmp.style.opacity=1
+// document.getElementsByClassName('basediv')[0].getElementsByClassName.opacity = 1
