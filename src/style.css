@@ -97,8 +97,6 @@ input[type=text] {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 5s linear;
 }
 
 
@@ -107,6 +105,8 @@ input[type=text] {
     width: 100%;
     height: 100%;
     text-align: center;
+    opacity: 0;
+    transition: opacity 2s linear;
 }
 
 .floatdiv {
