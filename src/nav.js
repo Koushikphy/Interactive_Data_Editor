@@ -254,7 +254,9 @@ var options = {
         }).show();
     },
     mode: 'form',
-    schema: schema
+    schema: schema,
+    "mainMenuBar":false,
+    "navigationBar":false
 };
 
 const JSONEditor = require("../lib/jsoneditor.min.js")
