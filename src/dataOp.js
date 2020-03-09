@@ -100,23 +100,6 @@ function repeatMirror() {
 }
 
 
-// function makeArray(start, stop, step){
-//     var newx = []
-//     for (let xx of data[0][col.y]){
-//         if(xx>=start) break
-//         newx.push(xx)
-//     }
-//     let ttt = Plotly.d3.range(start, stop+step, step)
-//     newx = newx.concat(ttt)
-//     for (let xx of data[0][col.y]){
-//         if(xx<=stop) continue
-//         newx.push(xx)
-//     }
-//     return newx
-// }
-
-
-
 function dataFiller() {
     saveOldData()
     start= parseFloat($("#fstart").val());
@@ -507,7 +490,7 @@ function initialSetup() {
     $('#stepVal').attr('value', $('#stepVal').val())
     $('#etVal').attr('value', $('#etVal').val())
     $('#egVal').attr('value', $('#egVal').val())
-    extendUtils['lmfit'] = $('#extendutils').html()
+    extendUtils['lmfit'] = $('#extendUtils2d').html()
     return [func, iterationVal, intVal ,maxVal ,minVal ,dampVal ,stepVal ,etVal, egVal]
 }
 

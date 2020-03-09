@@ -1,5 +1,4 @@
 
-
 var extendUtils = {
     'filter': ` Condition:<select id="flSel">
     <option>&lt;</option>
@@ -8,18 +7,18 @@ var extendUtils = {
 </select>
 <input type="text" id="flc"> <br>
 Fill with &nbsp;: <input type="text" id="flf">
-<input type="submit" value="OK" onclick="filterData();closeThis(this)" style="width: 5pc;height: 1.9pc">
-<input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc">
+<input type="submit" value="OK" onclick="filterData();closeThis()" style="width: 5pc;height: 1.9pc">
+<input type="submit" value="Cancel" onclick="closeThis()" style="width: 5pc;height: 1.9pc">
 &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
 Columns : <input type="text" id="flcl">`,
 'filler': `            Start : <input type="text" id="fstart">
-Extrapolate: <select  id="expSel">
+Extrapolate <select  id="expSel">
     <option>Closest</option>
     <option>Regression</option>
 </select> <br>
 End &nbsp;: <input type="text" id="fend">
-<input type="submit" value="OK" onclick="dataFiller();closeThis(this)" style="width: 5pc;height: 1.7pc;margin-right: 2px">
-<input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.7pc">
+<input type="submit" value="OK" onclick="dataFiller();closeThis()" style="width: 5.15pc;height: 1.7pc;margin: 2px">
+<input type="submit" value="Cancel" onclick="closeThis()" style="width: 5.15pc;height: 1.7pc">
 &ensp; &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
 Step : <input type="text" id="fstep">
 <input id='setAsGrid' type="checkbox"> Set as grid`
@@ -27,21 +26,21 @@ Step : <input type="text" id="fstep">
 ,
 'extend': `Extend from : 0 to <input type="text" id="einp"> <br>
 Extend times: <input type="text" id="etime">
-<input type="submit" value="OK" onclick="repeatMirror();closeThis(this)" style="width: 5pc;height: 1.9pc">
-<input type="submit" value="Cancel" onclick="closeThis(this)" style="width: 5pc;height: 1.9pc"> <br>
-Extend by: <select style="margin-left: 18px;" id="repSel" >
+<input type="submit" value="OK" onclick="repeatMirror();closeThis()" style="width: 5pc;height: 1.9pc">
+<input type="submit" value="Cancel" onclick="closeThis()" style="width: 5pc;height: 1.9pc"> <br>
+Extend by: <select id="repSel" >
     <option>Repeat</option>
     <option>Mirror</option>
 </select><br>`,
 'rgfit': `<span style="display: inline-block; margin-bottom: .4pc"> 
 Order of polynomial: &ensp;</span> 
 <input style="height: 1.4pc" id="polyInp" type="number" value="1" min="1" oninput="polyfit(this.value)"> &ensp; 
-<input type="submit" value="Close" onclick="closeThis(this);revertPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
+<input type="submit" value="Close" onclick="closeThis2d();revertPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
 Fitted Equation: <span id='formulaStr'></span>`,
 'lmfit':`<div style="margin-bottom: 7px;">
 <span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a+b*x"></span>
-<span style="margin-left: 3%;"> Parameters List: <input style=" height: 1.5pc; width: 10%;" id='paramList'type="text" value="a,b"></span>
-<button style=" height: 1.7pc; float: right;margin-right: 2.1%;"onclick="closeThis();closeLMfit()" >Close</button>
+<span style="margin-left: .2%;"> Parameters List: <input style=" height: 1.5pc; width: 11.3%;" id='paramList'type="text" value="a,b"></span>
+<button style=" height: 1.7pc; float: right;margin-right: 2.1%;"onclick="closeThis2d();closeLMfit()" >Close</button>
 <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
 </div>
 <div class="grid-container">
@@ -57,9 +56,23 @@ Fitted Equation: <span id='formulaStr'></span>`,
 }
 
 
-function closeThis(m){
-    $('#extendutils').slideUp();
-    resizePlot();
+function extendUtilities(name){
+    document.getElementById('extendutils').innerHTML = extendUtils[name]
+    $('#filler').show();
+    $("#extendutils").slideDown();
+}
+function closeThis(){
+    $("#extendutils").slideUp(200, ()=>$('#filler').hide())
+}
+
+function extendUtilities2d(name){
+    document.getElementById('extendUtils2d').innerHTML = extendUtils[name]
+    $("#extendUtils2d").slideDown();
+    resizePlot()
+}
+function closeThis2d(){
+    $("#extendUtils2d").slideUp();
+    resizePlot()
 }
 
 
@@ -78,7 +91,6 @@ function hotDKeys(e) {
 
 
 keepTrackIndex = 0
-
 function hotKeys(e) {
     if (document.activeElement.type == "text") return
     // console.log(e)
@@ -189,9 +201,107 @@ function hotKeys(e) {
 };
 
 
-// can lazy load the following
+function ipcTrigger(e,d){
+    if (show) console.log(e, d);
+    switch (d) {
+        case 'add':
+            addNewFileDialog();
+            break;
+        case "save":
+            if (firstSave) {
+                saveAs()
+            } else {
+                saveData()
+            }
+            break;
+        case "saveas":
+            saveAs();
+            break;
+        case "wire":
+            openViewer(0);
+            break;
+        case "surface":
+            openViewer(1);
+            break;
+        case "spread":
+            spreadsheet();
+            break;
+        case "pa":
+            isswap();
+            break;
+        case "pamh":
+            lockXc = menu.getMenuItemById("pamh").checked ? 0 : 1;
+            break;
 
-//for rendering the contextmenu
+        case "fullscreen":
+            resizePlot();
+            break;
+        case 'tswap':
+            if (!swapperIsOn) {
+                openSwapper()
+            } else {
+                exitSwapper()
+            }
+            break;
+        case "edat":
+            extendUtilities('extend')
+            // document.getElementById('extendutils').innerHTML = extendUtils['extend']
+            document.getElementById('repSel').selectedIndex = mirror
+            // $("#extendutils").slideDown();
+            // resizePlot();
+            break;
+        case 'fill':
+            extendUtilities('filler')
+            // document.getElementById('extendutils').innerHTML = extendUtils['filler']
+            // $("#extendutils").slideDown();
+            // resizePlot()
+            break;
+        case 'filter':
+            extendUtilities('filter')
+            // document.getElementById('extendutils').innerHTML = extendUtils['filter']
+            // $('#extendutils').slideDown();
+            // resizePlot()
+            break;
+        case 'rgft':
+            if(initPolyfit()){
+                extendUtilities2d('rgfit')
+                // document.getElementById('extendutils').innerHTML = extendUtils['rgfit']
+                // $('#extendutils').slideDown();
+                // resizePlot()
+                polyfit(1)
+            }
+            break;
+        case 'lmfit':
+            if(initLMfit()) {
+                extendUtilities2d('lmfit')
+                // document.getElementById('extendutils').innerHTML = extendUtils['lmfit']; 
+                // $('#extendutils').slideDown();
+                // resizePlot()
+            }
+            break;
+        case 'pdash':
+            if ($('#sidebar2').width()) {
+                closeNav2();
+            } else {
+                openNav2();
+            }
+            break;
+        case 'fdash':
+            if ($('#sidebar').width()) {
+                closeNav();
+            } else {
+                openNav();
+                makeRows();
+            }
+            break;
+        case 'trigdown':
+            triggerDownload();
+            break
+    }
+}
+
+
+
 const conMenu = Menu.buildFromTemplate([
     {
         label: 'Change Value',
@@ -201,8 +311,8 @@ const conMenu = Menu.buildFromTemplate([
             div.id = 'setval' //function setval is available in dataOp.js
             div.innerHTML = `Set a value for the selected points <br>
                 <input type="text" id="valinput" onchange="setValue();"><br>
-                <input type="button" value="OK" onclick="setValue();">
-                <input type="button" value="Cancel" onclick="$('#setval').remove();">`.trim()
+                <input type="submit" value="OK" onclick="setValue();">
+                <input type="submit" value="Cancel" onclick="$('#setval').remove();">`.trim()
             document.body.appendChild(div)
         }
     },{
@@ -262,3 +372,15 @@ figurecontainer.onclick= (e)=>{
             index = [];
             del_dat = [];
 }}
+
+ipcRenderer.on("back", (e, d) =>{
+    data = d.map(x => transpose(x))
+    updatePlot(1);
+    selUpdate()
+    startDragBehavior();
+    updateOnServer();
+})
+
+
+ipcRenderer.on("menuTrigger", ipcTrigger)
+ipcRenderer.on("adrf", (_, d)=> addNewFile(d))

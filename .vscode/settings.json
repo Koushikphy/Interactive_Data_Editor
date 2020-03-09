@@ -3,10 +3,6 @@
         ".gitignore": true,
         ".vscode": true,
         "**/.DS_Store": false,
-        // "**/*.min.css": true,
-        // "**/*.min.js": true,
-        "handsontable": true,
-        "JsCSS_to_be_removed": true,
         "build": true,
         "charts.png": true,
         "Data": true,
@@ -15,14 +11,12 @@
         "figs": true,
         "node_modules": true,
         "package-lock.json": true,
-        "particles.js": true,
-        "particles.json": true,
         "yarn.lock": true,
+        "src/particles.js": true,
         "src/jexcel.css" : true,
         "src/jexcel.js" : true,
         "src/jsuites.js" : true,
         "src/jsuites.css":true,
         "src/notify.js":true,
-        "app.iss":true
     }
 }

@@ -148,8 +148,10 @@ function makeEditable() {
         yCol.selectedIndex = col.z;
         sCol.selectedIndex = col.s;
     }
-    pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-    points = pointscontainer.getElementsByTagName("path");
+    // pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
+    // points = figurecontainer.querySelector(".trace:first-of-type .points").getElementsByTagName("path");
+    points = figurecontainer.getElementsByClassName('points')[0].getElementsByTagName('path')
+
     data = fullData[0]
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
@@ -173,7 +175,7 @@ function makeEditable() {
 var swapperIsOn = false
 function openSwapper() {
     swapperIsOn = true;
-    $("#sCol").show();
+    $("#sCol, #sColInp").show();
     col.s = sCol.selectedIndex;
     let len = figurecontainer.data.length
     if (len > 2) {
@@ -199,8 +201,7 @@ function openSwapper() {
     Plotly.relayout(figurecontainer, {
         selectdirection: 'h'
     });
-    menu.getMenuItemById("af").enabled = false;
-    menu.getMenuItemById("arf").enabled = false;
+    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
     $('#files').addClass('disabled')
     updateJSON();
 }
@@ -224,8 +225,7 @@ function exitSwapper() {
     updatePlot(all = true);
     makeEditable()
     updateJSON();
-    menu.getMenuItemById("af").enabled = true;
-    menu.getMenuItemById("arf").enabled = true;
+    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
     $('#files').removeClass('disabled')
 }
 

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interactive Data Editor - Documentation</title>
+    <link rel="stylesheet" href="../lib/pure-min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+            margin: 0px;
+        }
+
+        .title {
+            font-size: 2pc;
+            padding-top: 2.5pc;
+            padding-bottom: 3pc;
+            font-weight: bold;
+            padding-left: 5px;
+
+        }
+
+        .text {
+            font-size: 1.3pc;
+            text-align: justify;
+            padding-left: 15px;
+            padding-right: 7px;
+        }
+
+        .dom {
+            font-family: "Courier New";
+            font-size: 1.2pc;
+            background-color: #e9e9e9;
+            font-weight: 500;
+        }
+
+        .key {
+            font-family: "Courier New";
+            font-weight: bold;
+            font-size: 1.2pc;
+            display: inline-block;
+            width: 17pc;
+            font-weight: bold;
+        }
+
+        .keys li {
+            background: rgb(255, 255, 255);
+            padding-left: 5px;
+        }
+
+        .keys li:nth-child(odd) {
+            background: #f1f1f2;
+        }
+
+        .keys li:hover {
+            background: #dadada;
+        }
+
+        li {
+            padding-top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0b00a7;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #3f3e3e;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 10px 5px 10px 10px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #f8f7f7;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #020202;
+            background-color: #4ea8e4;
+            /* color:#b3b3b3 */
+        }
+
+        .main {
+            margin-left: 160px;
+            font-size: 28px;
+            padding: 0px 10px;
+        }
+
+        .sidenote {
+            padding-top: 2.2pc;
+            /* padding-bottom: 1.5pc; */
+            font-weight: bold;
+            font-size: 1.5pc;
+            text-align: justify;
+            padding-right: 7px;
+        }
+
+        /* @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        } */
+
+        .sidenav a {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            -webkit-user-select: none;
+        }
+
+
+
+        button,select{
+            font-family: inherit;
+        font-size: 100%;
+        padding: .2em .5em;
+        color: #444;
+        color: rgba(0,0,0,.8);
+        border: 1px solid #999;
+        /* border: none transparent; */
+        background-color: #e6e6e6;
+        text-decoration: none;
+        border-radius: 2px;
+        display: inline-block;
+        zoom: 1;
+        line-height: normal;
+        white-space: nowrap;
+        vertical-align: middle;
+        text-align: center;
+        cursor: pointer;
+        }
+
+
+    button:hover,
+    select:hover,
+    select:focus,
+    button:focus {
+        background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(40%, rgba(0,0,0, 0.05)), to(rgba(0,0,0, 0.10)));
+        background-image: -webkit-linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
+        background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
+        outline: 0;
+    }
+
+
+    select:active,
+    button:active {
+        -webkit-box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
+                box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
+        border-color: #000;
+    }
+
+    input[type=text]{
+
+        padding: 0.5em 0.6em;
+        display: inline-block;
+        border: 1px solid #ccc;
+        -webkit-box-shadow: inset 0 1px 3px #ddd;
+                box-shadow: inset 0 1px 3px #ddd;
+        border-radius: 4px;
+        vertical-align: middle;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+
+    }
+
+    input[type=text]:focus {
+    outline: 0;
+    border-color: #129FEA;
+}
+
+    </style>
+    <script>
+        if (typeof module === "object") {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="sidenav">
+        <a href="javascript:void(0)" onclick="Change(0);">Getting Started</a>
+        <a href="javascript:void(0)" onclick="Change(1);">User Interface</a>
+        <a href="javascript:void(0)" onclick="Change(2);">Features</a>
+    </div>
+     <div class="main"><!--<br><br><br> -->
+
+
+    </div>
+    <script src="../lib/jquery.min.js"></script>
+    <script>
+        // const {
+        //     shell
+        // } = require("electron");
+
+        // function op(link) {
+        //     shell.openExternal(link);
+        // }
+
+
+
+
+
+
+//         var allText = [
+//             ` <div class="title">Getting Started</div>
+//                 <div class="text">
+//         <p>We have all worked with data at some point of our work. Now, depending on the source, sometimes the data may not be regular,
+//             smooth and uniform and requires refinement before applying for any practical use. This software lets you do that very easily and 
+//             efficiently in a graphical way. Using Interactive Data Editor one can
+//             <ol>
+//                 <li> Plot any 2D and gridded 3D data. </li>
+//                 <li> Edit/Refine data including many useful data operations.</li>
+//                 <li> Fit a function to the data.</li>
+//             </ol>
+//             To get started load your data file ( in plain text format and space delimitted) from menu <label class="dom"> File > Open file</label>
+//             or by keyboard shortcut <label class="dom">Ctrl+O</label> and select the proper column. In case of 3D data the graph will be plotted as the projection
+//             for a single 'X' value which can be changed using the provided slider. NOTE: 'X'-column means the column by which the blocks are written in
+//             the 3D data file. Check the sample data files to get an idea. Now the plot window can be used to make all the edits to the data and utilize the 
+//             different data operations as required. To simultaneously edit multiple data file or multiple columns of the same file one can add the data through 
+//             <label class="dom">File > Add File</label>. Although all the editing features are available only for one line at a moment, 
+//             others lines can be selected alternatively to edit, from <label class="dom">Files Dashboard</label> or by
+//             pressing <label class="dom">Ctrl+TAB</label>.
+//         </p>
+//         <p>
+//             If you are on a terminal, then the quickest way to open the software and load a file is just to run
+//             <label class="dom"> executable file_name </label>, where the <label class="dom">executable</label> for
+//             linux is <label class="dom">interactive-data-editor</label> and for windows its the <label
+//             class="dom">Interactive Data Editor.exe</label> file inside the installation folder. This will open the
+//             software and directly load the file.
+//         </p>
+
+//         <p>
+//                 After edits you can save your modified data from <label class="dom">File > Save</label>. When
+//             saving for first time, the application will ask for name and location of the file to save the data. 
+//             Any consecutive saves will save the data in that same file. 
+//             As usual use <label class="dom">File > Save As</label> to save in a  different file.
+//             If you are working with multiple files then this will save the primary working file only. Also Images can
+//         be exported in any desired resolutions in five file formats namely, pdf, jpeg, png, svg and webp.
+//         </p>
+//         </div>`,
+//             `
+//                 <div class='title'>User Interface</div>
+// <div class="text">
+//     <p> The main window has basically 4 parts, Menu bar, Tool bar, Side bar and the Plot area. 
+//         Most of the menubar options are self-explanatory and are detailed in the following sections.
+//         Tool bar contains the column selector and slider. Appropriate columns can be set from the Column selector. 
+//         The slider, available only when working with 3D data, is used
+//         to change the X/Y value for which the corresponding 2D cut is plotted.
+//     </p>
+
+//     <p> The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become
+//         visible when the mouse is over this area. Hover over them to view theirs functions. These buttons includes
+//         features like saving plot as image, Panning, Zoom, selections etc. 
+//     </p>
+//     <p>
+//         The application side bar contains the <label class='dom'>Files Dashboard</label> and <label class='dom'>
+//         Plot Settings</label>, and can be opened or minimized through <label class="dom"> View > Toggle Files Dashboard</label>
+//         and <label class="dom"> View > Toggle Plot Settings</label> respectively. 
+//         While the <label class='dom'>Files Dashboard</label> contains the list of the currently opened
+//         files, different properties of the graph can be on the go tweaked from <label for="" class="dom">Plot Settings</label> sidebar. 
+//         Note, this application supports LaTeX rendering, so any valid LaTeX text can be used as title, axis labels or in legends.
+//     </p>
+//     <p>
+//         Apart from the main window this application has three external windows and accessed from the Windows menu. 
+//         Using the <label class='dom'>3D Wireframe Plot</label> and <label class='dom'>3D Surface Plot</label> one can
+//         view the complete 3D plot in real time as you edit the the 2D projection on main window.
+//         On the otherhand with <label class='dom'>Spreadsheet</label> one can check the data in spreadsheet like editor, 
+//         with all basic excel like feature e.g. editing, sorting, applying formulas etc..
+//     </p>
+//     <p>
+//         A genaral 3D plotter for plotting surfaces is also provided and can be opened from <label for="" class="dom"> Files > 3D Plotter</label> 
+//         to plot and view 3D data. It supports multiple surfaces with basic plot configurations.
+//         </p>
+// </div>
+// `,
+//             `
+// <div class="title">Features</div>
+// <div class="text">
+//     This software has a lot of features for various useful data operations including,
+//     <ol>
+//     <li><b><i> Dragging data points.</i></b> You can edit a data points by dragging it with mouse or
+//         using the keyboard Up/Down navigation keys. To drag multiple points select the points and just drag any of them.
+//         By default data points are movable only along vertical direction. If you want to move the data points along
+//         horizontal direction too, then uncheck <label for="" class="dom">Edit > Points not movable horizontally</label>.
+//         <p></p>
+//     </li>
+
+//     <li><b><i>Smooth out.</i></b> Automatically smooth out data using spline and linear kernel(Moving Average) smoother.
+//         To smooth out select the portion of the data and press <label class="dom">D</label> or <label
+//             class="dom">M</label> to smooth out using spline and moving average respectively. Press and hold <label
+//             for="" class="dom">M</label> to apply moving average multiple times. These two methods can not be applied to the end points.
+//             For that, a local quadratic regression method is added to extrapolate and smooth out by pressing <label class="dom">E</label>.
+//             This method can be applied to intermediate data points too. These methods are also available through the right click context menu.<p></p>
+//     </li>
+//     <li>
+//         <b><i>Data fitting. </i></b> Data can be fitted with any given functional, although at the moment this software only support fitting 2D data. Two types of data
+//         fitting options are provided with this software. First, a simple regression type fitting, to fit the data with a polynomial of any 
+//         arbitrary order. This fitting method is adaptive to any changes to the data meaning, when any edit is made to the data the 
+//         fitted polynomial will be reevaluated automatically. Second is a general functional fitting using Levenberg-Marquardt algorithm,
+//         one can provide any desired function to fit using this method.<p></p>
+//     </li>
+
+//     <li><b><i>2D and 3D support.</i></b> This software supports both 2D and 3D data editing, but for 3D editing data
+//         must be on a rectangular grid and data file must in blocks for 'X' values. Data file can have missing grid
+//         points.<p></p>
+//     </li>
+
+//     <li><b><i>Edit multiple data simultaneously.</i></b> You can edit multiple columns of the same or different files
+//         simultaneously. After loading a file additional files can be added through <label for="" class="dom">File > Add
+//             File</label>, or you can just use different column of the same file from the <label for="" class="dom">Files Dashboard</label>.
+//         <p></p>
+//     </li>
+
+//     <li><b><i>Configure plot.</i></b> Configure the plot window as you like through <label for="" class="dom">
+//             View > Toggle plot settings</label>. Here you can choose the line and marker style of the plot, change
+//         legend, tiltle, axis label etc. A detailed description about this given in the next section.<p></p>
+//     </li>
+
+//     <li><b><i>Drag and Drop.</i></b> Instead of openning through the menu, files can be opened just by simply drag and
+//         dropping inside the software window. This can be used to open a remote file by mounting the remote folder and dropping the file from there, as
+//         for simplicity no option provided to directly open remote files. <p></p>
+//     </li>
+
+//     <li><b><i>Fill missing values.</i></b> Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start, stop and step values to fill the missing values in the data. Intermediate points will be filled using a Cubic spline and outside values will just be copied from the nearest available value or by fitting a quadratic regression function.<p></p></li>
+
+//     <li><b><i>Remove bad data.</i></b> Bad data points can be removed by selecting the data points and pressing <label for="" class="dom">X</label> or from the right-click context menu<p></p></li>
+
+//     <li><b><i>Repeat & mirror.</i></b> Go to <label for="" class="dom">Data > Extend Data</label> and fill the range, method and number of times to repeat/mirror and press OK. The start and end values must exist to use this feature.<p></p></li>
+
+//     <li><b><i>Filter data.</i></b> You can apply basic filter/cut off to the data. <label for="" class="dom">Data > Filter Data</label> and fill values and fill the column numbers separated by comma to apply the filter. <p></p></li>
+
+//     <li><b><i>Swap data.</i></b> Go to <label for="" class="dom">View > Toggle Swapper</label> to open the swapper mode. This will add a second line to swap with the primary editable one. Select the portion and press <label for="" class="dom">P</label> to swap values. All other features like dragging, smoothing out etc. are still usable in this mode but applicable only to the first line. After you are done close this mode by <label for="" class="dom">View > Toggle Swapper </label>. Also swapping data only between the different columns of the same file is allowed<p></p></li>
+
+
+//     <li><b><i>Undo/Redo.</i></b> Any immediate modification can be undone by pressing <label for="" class="dom">Ctrl+Z</label> or can be redone by <label for="" class="dom">Shift+Ctrl+Z</label>. At this moment undo/redo only supports up to 10 steps<p></p></li>
+
+//     <li><b><i>Change sign.</i></b> Select data points and press <label for="" class="dom">C</label> to change sign of the selected points.<p></p></li>
+
+//     <li><b><i>Copy/Paste.</i></b> You can copy all data for a particular projection and paste to others.<p></p></li>
+
+//     <li><b><i>General 3D plotter.</i></b> A general plotter to plot 3D data is provided and can be accessed through <label for="" class="dom">File > 3D Plotter</label><p></p></li>
+
+//     <li><b><i>Spreadsheet.</i></b> This software includes a spreadsheet like editor and can be opened through <label for="" class="dom">Windows > Spreadsheet</label> with some of basic features like that of MS Excel including formula support. This can be used to view, edit, copy-paste data directly. <p></p></li>
+
+//     And many more...
+//     </ol>
+// </div>
+// `,
+//             `    <div class="title">Keyboard Shortcuts</div>
+// <div class="text keys">
+//     The followings keybindings are available for this software.
+//     <ol>
+//     <li><label class="key">Ctrl+O</label> Open file.</li>
+//     <li><label class='key'>Shift+Ctrl+O</label> Add new file. </li>
+//     <li><label class="key">Ctrl+S</label> Save file.</li>
+//     <li><label class="key">Shfit+Ctrl+S</label> Save in a different file.</li>
+//     <li><label class="key">Ctrl+R</label> Reload the window.</li>
+//     <li><label class="key">Ctrl+Q</label> Quit the application.</li>
+//     <li><label class="key">F11</label> Toggle fullscreen.</li>
+//     <li><label class="key">Ctrl+K</label> Toggle Plot Settings sidebar.</li>
+//     <li><label class="key">Ctrl+B</label> Toggle Files Dashboard sidebar.</li>
+//     <li><label class="key">Ctrl+TAB</label> Change editable line.</li>
+//     <li><label class="key">Ctrl+W</label> Toggle axis of projection for 3D data.</li>
+//     <li><label class="key">&lt;space></label> Auto-scale both axes.</li>
+//     <li><label class="key">Z</label> Zoom mode.</li>
+//     <li><label class="key">S</label> Selection mode.</li>
+//     <li><label class="key">Arrow Up</label> Move up selected points.</li>
+//     <li><label class="key">Arrow Down</label> Move down selected points.</li>
+//     <li><label class="key">D</label> Smooth Out using Spline Interpolation.</li>
+//     <li><label class="key">M</label> Smooth Out  using Moving Average method. </li>
+//     <li><label class="key">E</label> Smooth Out using a local Quadratic function.</li>
+//     <li><label class="key">C</label> Change Sign.</li>
+//     <li><label class="key">X</label> Remove selected data.</li>
+//     <li><label class="key">Ctrl+Z</label> Undo.</li>
+//     <li><label class="key">Shift+Ctrl+Z</label> Redo.</li>
+//     <li><label class="key">&lt;dot></dot></label> Move slider up.</li>
+//     <li><label class="key">&lt;comma></label> Move slider down.</li>
+//     <li><label class="key">P</label> Swap data between two lines or surface.</li>
+//     <li><label class="key">Ctrl+C</label> Copy values from current 2D projection.</li>
+//     <li><label class="key">Ctrl+V</label> Paste copied values.</li>
+//     <li><label class="key">Ctrl+ Left/Right Arrow</label> Repeat selected points to left or right.</li>
+//     <li><label class="key">Shift+Left/Right Arrow</label> Mirror selected points to left or right.</li>
+//     </ol>
+// </div>`,
+//             `    <div class="title">Feedback</div>
+// <div class="text">
+//     Thank you for using my software. I would really like to hear your experience of using this software. Found a bug or
+//     want a new feature to include, contact me directly or open an <a href="javascript:void(0)"
+//         onclick="op('https://github.com/Koushikphy/Interactive-Data-Editor/issues');">issue here</a>. Also keep an eye on the project <a
+//         href="javascript:void(0)" onclick="op('https://koushikphy.github.io/ide/');">homepage</a> for the latest development of the software.
+//     You can reach me here,
+//     <div style="text-align:center; margin-top:21px">
+//         <div style=" margin-bottom: 10px; font-weight: 600; font-style:italic;">
+//             <a style="margin: 5px; text-decoration: underline; color: black" href="javascript:void(0)" onclick="op('https://koushikphy.github.io/');">koushikphy.github.io</a>
+//         </div>
+//         <a href="javascript:void(0)" onclick="op('https://www.facebook.com/koushik.naskar3');"><img src="../figs/facebook.png" width="30" height="30"></a>
+//         <a style="margin-right:15px; margin-left:15px" href="javascript:void(0)" onclick="op('https://github.com/Koushikphy');"><img src="../figs/github.png"            width="30" height="30"></a>
+//         <a href="javascript:void(0)" onclick="op('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../figs/gmail.png" width="30" height="30"></a>
+//     </div>
+
+// </div>`
+//         ];
+
+        // function Change(m) {
+        //     var tmp = $(".sidenav a");
+        //     tmp.css("background-color", "#3f3e3e");
+        //     tmp.css("color", "#ffffff");
+        //     tmp.mouseover(function () {
+        //         this.style.backgroundColor = "#ffffff";
+        //         this.style.color = "#000000";
+        //     });
+        //     tmp.mouseleave(function () {
+        //         this.style.backgroundColor = "#3f3e3e";
+        //         this.style.color = "#ffffff";
+        //     });
+
+        //     tmp[m].style.background = "#ffffff";
+        //     tmp[m].style.color = "#000000";
+
+        //     $(tmp[m]).mouseleave(function () {
+        //         this.style.backgroundColor = "#ffffff";
+        //         this.style.color = "#000000";
+        //     });
+        //     $(".main").html(allText[m]);
+        // }
+
+        // Change(0);
+    </script>
+</body>
+
+</html>

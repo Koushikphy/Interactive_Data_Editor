@@ -173,29 +173,25 @@ function fileReader(fname) {
     menu.getMenuItemById("pay").visible = false;
     menu.getMenuItemById("swapen").visible = true;
 
-    for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
 
     ddd = data.length != 1;
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
 
     //setup the column selector and menu.
-    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf', 'rgft', 'lmfit']
+    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf']
     if (ddd) { //3
         $(".3D").show()
         var fl = JSON.parse(localStorage.getItem("cols3d"));
-        if (fl !== null) {
-            col = fl;
-        }
         enableMenu.push('pax', 'wire', 'surf');
-
     } else { //2d
         serve = 0;
         $(".3D").hide()
         var fl = JSON.parse(localStorage.getItem("cols2d"));
-        if (fl !== null) {
-            col = fl;
-        }
+        enableMenu.push('rgft', 'lmfit')
+        for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
+
     }
+    if (fl !== null) col = fl
 
     //a precaution here for the 
     let tmpL = data[0].length
@@ -210,7 +206,6 @@ function fileReader(fname) {
     };
     for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
     for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-
 
     xCol.selectedIndex = col.x;
     yCol.selectedIndex = col.y;
@@ -228,9 +223,10 @@ function fileReader(fname) {
     saveNames.push(save_name);
     legendNames.push(path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`)
 
-
+    // console.log(points)
     // plot here
     updateData();
+    // console.log(points)
 
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
@@ -244,7 +240,6 @@ function fileReader(fname) {
         $.getScript('../lib/delay.min.js')
         notLoaded = false
     }
-
 }
 var notLoaded = true
 
@@ -279,9 +274,15 @@ function updatePlot(all = true) {
         name = [legendNames[0]];
     //! put another for swapper
     if (swapperIsOn) {
+        let lname = path.basename(fileNames[0])
+        let name=[
+            lname + ` ${col.y+1}:${col.z+1}`,
+            lname + ` ${col.y+1}:${col.s+1}`
+        ]
         Plotly.restyle(figurecontainer, {
             x: [data[th_in][col.y], data[th_in][col.y]],
             y: [data[th_in][col.z], data[th_in][col.s]],
+            name
         })
     } else if (all) {
         for (let i = 1; i < fullData.length; i++) {
@@ -311,8 +312,6 @@ function updatePlot(all = true) {
 }
 
 
-
-
 function sliderChanged() {
     $("#custom-handle").blur()
     $slider.slider("value", th_in)
@@ -323,18 +322,6 @@ function sliderChanged() {
 
 
 
-function colsChanged(value) {
-    col.s = value;
-    updatePlot();
-    let lname = path.basename(fileNames[0])
-    Plotly.restyle(figurecontainer, {
-        name: [
-            lname + ` ${col.y+1}:${col.z+1}`,
-            lname + ` ${col.y+1}:${col.s+1}`
-        ]
-    })
-    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
-};
 
 function col2dChanged(){
     $("select").blur();
@@ -358,24 +345,33 @@ function colChanged(value) {
 
 
 
-function resizePlot() {
-    setTimeout(function () {
-        var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
-        $("#figurecontainer").height(height - 2);
-        Plotly.relayout(figurecontainer, {
-            autosize: true
-        });
-    }, 330)
-}
+function colsChanged(value) {
+    col.s = value;
+    updatePlot();
+    // let lname = path.basename(fileNames[0])
+    // Plotly.restyle(figurecontainer, {
+    //     name: [
+    //         lname + ` ${col.y+1}:${col.z+1}`,
+    //         lname + ` ${col.y+1}:${col.s+1}`
+    //     ]
+    // })
+    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
+    console.log('cos s chnaged called')
+};
 
 
 function sSwapper() {
+    $("#sColInp").blur();
     [col.s, col.z] = [col.z, col.s]
     sCol.selectedIndex = col.s;
-    zCol.selectedIndex = col.z;
-    updatePlot();
+    if(ddd){
+        zCol.selectedIndex = col.z;
+    } else{
+        yCol.selectedIndex = col.z;
+    }
+    // updatePlot();
+    colsChanged(col.s);
     updateOnServer();
-
 }
 
 
@@ -460,9 +456,9 @@ function startDragBehavior() {
         updateFigure();
         fullData[0] = data;
         updatePlot(all = false)
-        if(polyFitLive) polyfit($("#polyInp").val());    // calls for regression fit
+        if(polyFitLive) polyfit($("#polyInp").val());
         updateOnServer();
-        d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
+        // d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
     });
     d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
 };
@@ -545,3 +541,13 @@ function updateOnServer() {
     })
 };
 
+
+function resizePlot() {
+    setTimeout(function () {
+        var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
+        $("#figurecontainer").height(height - 2);
+        Plotly.relayout(figurecontainer, {
+            autosize: true
+        });
+    }, 330)
+}

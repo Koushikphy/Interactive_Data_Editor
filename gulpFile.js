@@ -17,7 +17,7 @@ function compressCombineJS() {
     return src([
         './src/plotSetup.js',
         './src/functions.js',
-        './src/keyboardOp.js', 
+        // './src/keyboardOp.js', 
         './src/notify.js'
         ])
         .pipe(concat('funcs.js'))

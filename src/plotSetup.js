@@ -9,7 +9,7 @@ var data = [],
     th_in = 0,
     refdat = 1,
     ma = 1,
-    file, points, pointscontainer,
+    file, points,
     serve = 0,
     lockXc = 1,
     swapped = 0,
@@ -174,8 +174,8 @@ function triggerDownload(){
                   </datalist>
                     <br>
                     <div  class='jjjj'>
-                        <input type="button" value="OK" onclick="downloadImage();$('#download').remove();">
-                        <input type="button" value="Cancel" onclick="$('#download').remove();">
+                        <input type="submit" value="OK" onclick="downloadImage();$('#download').remove();">
+                        <input type="submit" value="Cancel" onclick="$('#download').remove();">
                     </div>`.trim()
     document.body.appendChild(div)
 }
@@ -198,8 +198,9 @@ var mode={
 }
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, mode);
 
-pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-points = pointscontainer.getElementsByTagName("path");
+// pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
+// points = figurecontainer.querySelector(".trace:first-of-type .points").getElementsByTagName("path");
+points = figurecontainer.getElementsByClassName('points')[0].getElementsByTagName('path')
 
 
 resizePlot();
@@ -213,3 +214,34 @@ $slider.slider({
         sliderChanged();
     }
 });
+
+
+
+ipcRenderer.on("rf",  (e, d)=> fileReader(d))
+
+ipcRenderer.on('checkClose', function (e, d) {
+    if (!saved) var res = dialog.showMessageBoxSync({
+        type: "warning",
+        title: "Unsaved data found!!!",
+        message: "Do you want to quit without saving the changes ?",
+        buttons: ['Yes', "No"]
+    });
+    if (!res) ipcRenderer.send('checkClose', 'closeIt');
+})
+
+
+ipcRenderer.on("menuTrigger", (e, d) =>{
+    if (show) console.log(e, d);
+    if(d=="open") fileLoader()
+});
+
+
+// function firstWidth(){
+//     let elem = $('#container')
+//     let per = elem.width()*100/elem.parent().width()
+//     // $('#filler').css({'width': per+'%'});
+//     $('#filler').css({'width': $('#container').width()});
+//     // $('#extendutils').css({'width': per+'%'});
+// }
+$('#filler').width($('#container').parent().width())
+window.addEventListener('resize', () => $('#filler').width($('#container').parent().width()));
