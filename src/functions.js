@@ -417,7 +417,6 @@ function startDragBehavior() {
         var transform = d3.select(this).attr("transform");
         var translate = transform.substring(10, transform.length - 1).split(/,| /);
         if (index.length) {
-            // var [_, _, dat] = JSON.parse(olddata);
             oldX = dpsx;
             oldCord = dpsy;
             indd = oldX.indexOf(this.handle.x);

@@ -311,7 +311,9 @@ function selectEvent(event) {
         index = [];
         del_dat = [];
         $('.custom-cm').hide();
+        // console.log(event.points)
         for (let pt of event.points) {
+            console.log(pt.curveNumber, pt.pointIndex)
             // ind = dpsx.findIndex(n => n == pt.x);
             if (dpsy[pt.pointIndex] == pt.y) {
                 index.push(pt.pointIndex);
