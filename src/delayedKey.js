@@ -366,12 +366,12 @@ figurecontainer.oncontextmenu= ()=>{
     if(index.length) conMenu.popup()
 }
 
-figurecontainer.onclick= (e)=>{
-    if (e.target.tagName == "rect") {
-            Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-            index = [];
-            del_dat = [];
-}}
+// figurecontainer.onclick= (e)=>{
+//     if (e.target.tagName == "rect") {
+//             Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+//             index = [];
+//             del_dat = [];
+// }}
 
 ipcRenderer.on("back", (e, d) =>{
     data = d.map(x => transpose(x))

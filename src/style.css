@@ -185,7 +185,7 @@ input[type=text] {
     width: 7pc;
 }
 
-.scatterlayer .trace:first-of-type .points path {
+.points path {
     pointer-events: all;
 }
 

@@ -408,60 +408,90 @@ function clamp(x, lower, upper) {
 };
 
 
-var oldX, oldCord, indd;
+// var dPoints ={x:[],y:[]}
+
+// for(let dat of figurecontainer.data){
+//     dPoints.x.push(dat.x)
+//     dPoints.y.push(dat.y)
+// }
+var curveNumber, pointIndex,dragging=false;
+figurecontainer.on('plotly_hover',e=>{
+    if(!dragging){
+    curveNumber = e.points[0].curveNumber;
+    pointIndex = e.points[0].pointIndex}
+})
+
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
+    var yaxis = figurecontainer._fullLayout.yaxis;
+    var xaxis = figurecontainer._fullLayout.xaxis;
+    var oldX, oldCord, indd,  oldDat={x:[],y:[]}, dPoints = {x:[],y:[]};
+
     drag.origin(function () {
         saveOldData();
-        var transform = d3.select(this).attr("transform");
-        var translate = transform.substring(10, transform.length - 1).split(/,| /);
-        if (index.length) {
-            oldX = dpsx;
-            oldCord = dpsy;
-            indd = oldX.indexOf(this.handle.x);
-        };
-        return {
-            x: translate[0],
-            y: translate[1]
-        };
+        let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
+        // get the curve number and the index of the point being dragged
+        // let len = figurecontainer.data.length
+        // if(len==1){
+        //     curveNumber=0
+        //     pointIndex = figurecontainer.data[0].x.indexOf(this.handle.x)
+        // }else{
+        //     for(let i=0;i<len;i++){
+        //         let ind = figurecontainer.data[i].y.indexOf(this.handle.y)
+        //         // let ind = figurecontainer.data[i].y.indexOf(yaxis.p2l(y))
+        //         if(ind>=0){
+        //             curveNumber = i;
+        //             pointIndex = ind
+        //             break
+        //         }
+        //     }
+        // }
+        dPoints.x = figurecontainer.data[curveNumber].x
+        dPoints.y = figurecontainer.data[curveNumber].y
+        if (index.length) oldDat = JSON.parse(JSON.stringify(dPoints))
+        console.log(x,y,curveNumber,pointIndex)
+        console.log(figurecontainer._hoverdata)
+        dragging = true
+        return {x,y}
     });
     drag.on("drag", function () {
-        var xmouse = d3.event.x,
-            ymouse = d3.event.y;
-        d3.select(this).attr("transform", "translate(" + [xmouse, ymouse] + ")");
-        var handle = this.handle;
-        var yaxis = figurecontainer._fullLayout.yaxis;
-        handle.y = clamp(yaxis.p2l(ymouse), yaxis.range[0], yaxis.range[1]);
+        let xmouse = d3.event.x, ymouse = d3.event.y;
+        let yVal = clamp(yaxis.p2l(ymouse), yaxis.range[0], yaxis.range[1]);
+        dPoints.y[pointIndex] = yVal
         if (index.length) {
-            var moved = handle.y - oldCord[indd];
-            for (let ind of index) {
-                points[ind].handle.y = moved + oldCord[ind];
-            };
+            let shift = yVal - oldDat.y[pointIndex]
+            for (let i of index) dPoints.y[i] = shift + oldDat.y[i]
         };
+        // move in x direction
         if (!lockXc) {
-            var xaxis = figurecontainer._fullLayout.xaxis;
-            handle.x = clamp(xaxis.p2l(xmouse), xaxis.range[0], xaxis.range[1]);
+            let xVal = clamp(xaxis.p2l(xmouse), xaxis.range[0], xaxis.range[1]);
+            dPoints.x[pointIndex] = xVal
             if (index.length) {
-                var moved = handle.x - oldX[indd];
-                for (let ind of index) {
-                    points[ind].handle.x = moved + oldX[ind];
-                };
+                let shift = xVal - oldDat.x[pointIndex]
+                for (let i of index) dPoints.x[i] = shift + oldDat.x[i]//  points[ind].handle.x = shift + oldX[ind];
             };
         };
-        updateFigure();
+        Plotly.restyle(figurecontainer,{
+            x: [dPoints.x],
+            y: [dPoints.y]
+        }, curveNumber)
     });
     drag.on("dragend", function () {
-        updateFigure();
-        fullData[0] = data;
-        updatePlot(all = false)
+        // updateFigure();
+        fullData[curveNumber][th_in][col.z] = dPoints.y
+        if (!lockXc) fullData[curveNumber][th_in][col.y] = dPoints.x
+        // fullData[0] = data;
+        dragging = false
+        // updatePlot(all = false)
         if(polyFitLive) polyfit($("#polyInp").val());
         updateOnServer();
         // d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
     });
-    d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
+    // d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
+    d3.selectAll(".points path").call(drag);
 };
-
+startDragBehavior()
 
 
 function keyBoardDrag(inp) {
