@@ -70,7 +70,6 @@
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.0.0",
     "gulp-uglify": "^3.0.2",
-    "plotly.js-basic-dist": "^1.52.3",
     "uglify-es": "^3.3.9"
   },
   "dependencies": {

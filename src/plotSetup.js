@@ -30,8 +30,7 @@ var data = [],
     xVal = document.getElementById("x_val"),
     figurecontainer = document.getElementById("figurecontainer"),
     $ch = $("#custom-handle")
-// const Plotly = require('plotly.js-gl3d-dist');
-const Plotly = require('plotly.js-basic-dist');
+    const Plotly = require('plotly.js-gl3d-dist');
 
 
 
