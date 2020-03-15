@@ -20,6 +20,7 @@ body {
     float: left;
     width: 98.5%;
     overflow: hidden;
+    font-family: sans-serif;
 }
 a {
     margin: 5px;
@@ -39,7 +40,7 @@ color: #444;
 color: rgba(0,0,0,.8);
 border: 1px solid #999;
 /* border: none transparent; */
-background-color: #e6e6e6;
+background-color: #f9f9f9;
 text-decoration: none;
 border-radius: 2px;
 display: inline-block;
@@ -85,14 +86,14 @@ background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0
 
 
 
-select{
+/* select{
     font-family: inherit;
 font-size: 100%;
 padding: .2em .5em;
 color: #444;
 color: rgba(0,0,0,.8);
 border: 1px solid #999;
-/* border: none transparent; */
+border: none transparent;
 background-color: #e6e6e6;
 text-decoration: none;
 border-radius: 2px;
@@ -103,7 +104,7 @@ white-space: nowrap;
 vertical-align: middle;
 text-align: center;
 cursor: pointer;
-}
+} */
 
 
 
@@ -112,14 +113,14 @@ cursor: pointer;
 
 
 select{
-    font-family: inherit;
+    font-family: sans-serif;
 font-size: 100%;
 padding: .2em .5em;
 color: #444;
 color: rgba(0,0,0,.8);
 border: 1px solid #999;
 /* border: none transparent; */
-background-color: #e6e6e6;
+background-color: #fff;
 text-decoration: none;
 border-radius: 2px;
 display: inline-block;
@@ -185,7 +186,7 @@ input[type=text] {
     width: 7pc;
 }
 
-.points path {
+.scatterlayer .trace:first-of-type .points path {
     pointer-events: all;
 }
 
@@ -197,9 +198,6 @@ input[type=text] {
 }
 
 
-
-
-
 .footer {
     position: fixed;
     left: 0;
@@ -209,8 +207,6 @@ input[type=text] {
     height: 18px;
     font-size: 13px;
 }
-
-
 
 
 .container {
@@ -244,6 +240,9 @@ input[type=text] {
     background-color: white;
 }
 
+#extendUtils2d{
+    font-family: serif;
+}
 #filler{
     background-color: #00000029;
     position: fixed;
@@ -410,6 +409,7 @@ ol{
 #repSel{
     width:5.3pc;
     margin-left: 9px;
+    padding-left: 0;
 }
 #flSel{
     font-weight: bolder; font-size: medium; width: 2pc;

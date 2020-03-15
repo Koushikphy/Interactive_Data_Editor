@@ -198,12 +198,11 @@ var mode={
 }
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, mode);
 
-// pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-// points = figurecontainer.querySelector(".trace:first-of-type .points").getElementsByTagName("path");
-points = figurecontainer.getElementsByClassName('points')[0].getElementsByTagName('path')
+pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
+points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
+// points = figurecontainer.getElementsByClassName('points')[0].getElementsByTagName('path')
 
 
-resizePlot();
 
 $slider.slider({
     min: 0,
@@ -243,5 +242,7 @@ ipcRenderer.on("menuTrigger", (e, d) =>{
 //     $('#filler').css({'width': $('#container').width()});
 //     // $('#extendutils').css({'width': per+'%'});
 // }
+
+resizePlot();
 $('#filler').width($('#container').parent().width())
 window.addEventListener('resize', () => $('#filler').width($('#container').parent().width()));

@@ -9,7 +9,7 @@ function addNewFileDialog() {
         });
         return
     }
-    var fname = dialog.showOpenDialogSync({
+    var fname = dialog.showOpenDialogSync(parentWindow,{
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -23,7 +23,7 @@ function addNewFile(fname) {
     data = parseData(fs.readFileSync(fname, "utf8"))
     if(data==undefined) return
     if (fullData[0].length != data.length) {
-        dialog.showMessageBoxSync({
+        dialog.showMessageBoxSync(parentWindow,{
             type: "warning",
             title: "Can't add the file!!!",
             message: "Trying to open a file with different grid.\nThis is not supported for 3D data.",
@@ -309,21 +309,9 @@ function isswap() {
 function selectEvent(event) {
     if (event != undefined) {
         index = [];
-        del_dat = [];
-        $('.custom-cm').hide();
-        // console.log(event.points)
         for (let pt of event.points) {
-            console.log(pt.curveNumber, pt.pointIndex)
-            // ind = dpsx.findIndex(n => n == pt.x);
-            if (dpsy[pt.pointIndex] == pt.y) {
-                index.push(pt.pointIndex);
-            };
-        };
-        index = [...new Set(index)];
-        // if (rangedSelector) {
-        //     index = Plotly.d3.range(index[0], index[index.length - 1]+1)
-        //     Plotly.restyle(figurecontainer, {selectedpoints: [index]});
-        // }
+            if(pt.curveNumber == 0) index.push(pt.pointIndex);
+        }
     };
 };
 

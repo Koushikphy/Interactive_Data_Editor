@@ -61,15 +61,18 @@ function extendUtilities(name){
     $('#filler').show();
     $("#extendutils").slideDown();
 }
+
 function closeThis(){
     $("#extendutils").slideUp(200, ()=>$('#filler').hide())
 }
 
 function extendUtilities2d(name){
+    closeThis()
     document.getElementById('extendUtils2d').innerHTML = extendUtils[name]
     $("#extendUtils2d").slideDown();
     resizePlot()
 }
+
 function closeThis2d(){
     $("#extendUtils2d").slideUp();
     resizePlot()
@@ -113,13 +116,8 @@ function hotKeys(e) {
             break;
         case "s":
         case "S":
-            if (!e.ctrlKey) {
-                Plotly.relayout(figurecontainer, {
-                    dragmode: "select"
-                });
-            }
+            if (!e.ctrlKey) Plotly.relayout(figurecontainer, {dragmode: "select"});
             break;
-
         case "z":
         case "Z":
             if (e.ctrlKey & !e.shiftKey) {
@@ -159,9 +157,7 @@ function hotKeys(e) {
             break;
         case 'v':
         case "V":
-            if (e.ctrlKey) {
-                pasteThis();
-            }
+            if (e.ctrlKey)pasteThis();
             break;
         case 'ArrowDown':
             keyBoardDrag(0);
@@ -179,16 +175,12 @@ function hotKeys(e) {
         case 'Tab':
             if (e.ctrlKey) {
                 keepTrackIndex += 1
-                if (keepTrackIndex == fullData.length) {
-                    keepTrackIndex = 1
-                }
+                if (keepTrackIndex == fullData.length)keepTrackIndex = 1
                 selectEditable(keepTrackIndex)
             }
             break;
         case "ArrowLeft": case "ArrowRight":
-            if (e.ctrlKey | e.shiftKey){
-                moveReflect(e.keyCode-37, e.shiftKey)
-            };
+            if (e.ctrlKey | e.shiftKey) moveReflect(e.keyCode-37, e.shiftKey)
         case 'k':
         case 'K':
             dataSupStart()
@@ -196,7 +188,6 @@ function hotKeys(e) {
         case 'l':
         case 'L':
             dataSupEnd();
-    
     };
 };
 
@@ -366,12 +357,11 @@ figurecontainer.oncontextmenu= ()=>{
     if(index.length) conMenu.popup()
 }
 
-// figurecontainer.onclick= (e)=>{
-//     if (e.target.tagName == "rect") {
-//             Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-//             index = [];
-//             del_dat = [];
-// }}
+figurecontainer.onclick= (e)=>{
+    if (e.target.tagName == "rect") {
+            Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+            index = [];
+}}
 
 ipcRenderer.on("back", (e, d) =>{
     data = d.map(x => transpose(x))
@@ -380,7 +370,6 @@ ipcRenderer.on("back", (e, d) =>{
     startDragBehavior();
     updateOnServer();
 })
-
 
 ipcRenderer.on("menuTrigger", ipcTrigger)
 ipcRenderer.on("adrf", (_, d)=> addNewFile(d))

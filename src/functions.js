@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
-var undoStack = [],
-    redoStack = [],
+var undoStack = [],redoStack = [],
     editorWindow, viewer = [, , ],
     show = false,
     saved = true,
@@ -12,7 +11,11 @@ var undoStack = [],
     fullDataCols = [],
     fileNames = [],
     saveNames = [],
-    legendNames = [], rangedSelector=0;
+    legendNames = [],
+    rangedSelector=0;
+var parentWindow = remote.getCurrentWindow();
+
+
 
 function updateData() {
     col.x = xCol.selectedIndex;
@@ -35,8 +38,6 @@ function updateData() {
     fullDataCols[0] = JSON.parse(JSON.stringify(col));
 
 
-
-
     updatePlot();
     // makeRows();
     startDragBehavior();
@@ -57,7 +58,7 @@ function updateData() {
 };
 
 
-
+transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
 
 function parseData(strDps) {
     var newdat = [],
@@ -91,16 +92,7 @@ function parseData(strDps) {
 
 
 
-function transpose(m) {
-    return m[0].map((_, i) => m.map(x => x[i]));
-};
-
-
-
-
-document.ondragover = document.ondrop = (ev) => {
-    ev.preventDefault()
-}
+document.ondragover = document.ondrop = (ev) =>     ev.preventDefault()
 
 document.body.ondrop = (ev) => {
     const fname = ev.dataTransfer.files[0].path;
@@ -110,7 +102,7 @@ document.body.ondrop = (ev) => {
 
 
 function fileLoader() {
-    const fname = dialog.showOpenDialogSync({
+    const fname = dialog.showOpenDialogSync(parentWindow,{
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -120,7 +112,7 @@ function fileLoader() {
 
 function fileReader(fname) {
     //check if other file is open
-    if (!saved) var res = dialog.showMessageBoxSync({
+    if (!saved) var res = dialog.showMessageBoxSync(parentWindow,{
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Do you want to open a new file without saving the changes?",
@@ -153,11 +145,8 @@ function fileReader(fname) {
     saveNames = [];
     legendNames = [];
     swapperIsOn = false;
-    $("#sCol, #sColInp").hide();
-    $("#particle").remove();
-    if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
+
     $("#full").show();
-    $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
     if (figurecontainer.data.length > 1){
         let tt = Plotly.d3.range(1,figurecontainer.data.length)
         Plotly.deleteTraces(figurecontainer, tt);
@@ -223,10 +212,8 @@ function fileReader(fname) {
     saveNames.push(save_name);
     legendNames.push(path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`)
 
-    // console.log(points)
-    // plot here
+
     updateData();
-    // console.log(points)
 
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
@@ -240,6 +227,13 @@ function fileReader(fname) {
         $.getScript('../lib/delay.min.js')
         notLoaded = false
     }
+
+    // part of the reset that is performed later
+    $("#sCol, #sColInp").hide();
+    $("#particle").remove();
+    if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
+    $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
+    setTimeout(()=>{closeThis2d();closeThis();},111)
 }
 var notLoaded = true
 
@@ -269,10 +263,7 @@ function updatePlot(all = true) {
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    var xl = [dpsx],
-        yl = [dpsy],
-        name = [legendNames[0]];
-    //! put another for swapper
+    // put another for swapper
     if (swapperIsOn) {
         let lname = path.basename(fileNames[0])
         let name=[
@@ -285,6 +276,7 @@ function updatePlot(all = true) {
             name
         })
     } else if (all) {
+        let xl = [dpsx], yl = [dpsy], name = [legendNames[0]];
         for (let i = 1; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
             yl.push(fullData[i][th_in][fullDataCols[i].z]);
@@ -298,17 +290,12 @@ function updatePlot(all = true) {
         })
     } else {
         Plotly.restyle(figurecontainer, {
-            'x': xl,
-            'y': yl,
-            name
+            'x': [dpsx],
+            'y': [dpsy],
+            "name":[legendNames[0]]
         }, 0)
     }
-    for (var i = 0; i < dpsx.length; i++) {
-        points[i].handle = {
-            x: dpsx[i],
-            y: dpsy[i]
-        };
-    };
+    for (let i = 0; i < dpsx.length; i++) points[i].index = i
 }
 
 
@@ -348,13 +335,6 @@ function colChanged(value) {
 function colsChanged(value) {
     col.s = value;
     updatePlot();
-    // let lname = path.basename(fileNames[0])
-    // Plotly.restyle(figurecontainer, {
-    //     name: [
-    //         lname + ` ${col.y+1}:${col.z+1}`,
-    //         lname + ` ${col.y+1}:${col.s+1}`
-    //     ]
-    // })
     if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
     console.log('cos s chnaged called')
 };
@@ -376,122 +356,68 @@ function sSwapper() {
 
 
 
-function updateFigure() {
-    var y = [],
-        x = [];
-    if (lockXc) {
-        for (let i of points) {
-            y.push(i.handle.y);
-        };
-        Plotly.restyle(figurecontainer, {
-            "y": [y]
-        }, 0);
-        dpsy = data[th_in][col.z] = y;
-    } else {
-        for (let i of points) {
-            x.push(i.handle.x);
-            y.push(i.handle.y);
-        };
-        Plotly.restyle(figurecontainer, {
-            "x": [x],
-            "y": [y]
-        }, 0);
-        dpsy = data[th_in][col.z] = y;
-        dpsx = data[th_in][col.y] = x;
-    };
-};
+// function updateFigure() {
+//     var y = [],
+//         x = [];
+//     if (lockXc) {
+//         for (let i of points) {
+//             y.push(i.handle.y);
+//         };
+//         Plotly.restyle(figurecontainer, {
+//             "y": [y]
+//         }, 0);
+//         dpsy = data[th_in][col.z] = y;
+//     } else {
+//         for (let i of points) {
+//             x.push(i.handle.x);
+//             y.push(i.handle.y);
+//         };
+//         Plotly.restyle(figurecontainer, {
+//             "x": [x],
+//             "y": [y]
+//         }, 0);
+//         dpsy = data[th_in][col.z] = y;
+//         dpsx = data[th_in][col.y] = x;
+//     };
+// };
 
 
 
-function clamp(x, lower, upper) {
-    return Math.max(lower, Math.min(x, upper));
-};
 
 
-// var dPoints ={x:[],y:[]}
-
-// for(let dat of figurecontainer.data){
-//     dPoints.x.push(dat.x)
-//     dPoints.y.push(dat.y)
-// }
-var curveNumber, pointIndex,dragging=false;
-figurecontainer.on('plotly_hover',e=>{
-    if(!dragging){
-    curveNumber = e.points[0].curveNumber;
-    pointIndex = e.points[0].pointIndex}
-})
+clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper))
+clone = (x) => JSON.parse(JSON.stringify(x))
 
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
     var yaxis = figurecontainer._fullLayout.yaxis;
     var xaxis = figurecontainer._fullLayout.xaxis;
-    var oldX, oldCord, indd,  oldDat={x:[],y:[]}, dPoints = {x:[],y:[]};
+    var oldDatX,oldDatY, pIndex;
 
     drag.origin(function () {
         saveOldData();
         let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
-        // get the curve number and the index of the point being dragged
-        // let len = figurecontainer.data.length
-        // if(len==1){
-        //     curveNumber=0
-        //     pointIndex = figurecontainer.data[0].x.indexOf(this.handle.x)
-        // }else{
-        //     for(let i=0;i<len;i++){
-        //         let ind = figurecontainer.data[i].y.indexOf(this.handle.y)
-        //         // let ind = figurecontainer.data[i].y.indexOf(yaxis.p2l(y))
-        //         if(ind>=0){
-        //             curveNumber = i;
-        //             pointIndex = ind
-        //             break
-        //         }
-        //     }
-        // }
-        dPoints.x = figurecontainer.data[curveNumber].x
-        dPoints.y = figurecontainer.data[curveNumber].y
-        if (index.length) oldDat = JSON.parse(JSON.stringify(dPoints))
-        console.log(x,y,curveNumber,pointIndex)
-        console.log(figurecontainer._hoverdata)
-        dragging = true
+        pIndex = this.index
+        if (index.length) {oldDatX = clone(dpsx); oldDatY = clone(dpsy);}
         return {x,y}
-    });
+    })
+
     drag.on("drag", function () {
-        let xmouse = d3.event.x, ymouse = d3.event.y;
-        let yVal = clamp(yaxis.p2l(ymouse), yaxis.range[0], yaxis.range[1]);
-        dPoints.y[pointIndex] = yVal
-        if (index.length) {
-            let shift = yVal - oldDat.y[pointIndex]
-            for (let i of index) dPoints.y[i] = shift + oldDat.y[i]
+        let yVal = clamp(yaxis.p2l(d3.event.y), yaxis.range[0], yaxis.range[1]);
+        dpsy[pIndex] = yVal
+        for (let i of index) dpsy[i] = yVal - oldDatY[pIndex] + oldDatY[i]
+
+        if (!lockXc) {// move in x direction
+            let xVal = clamp(xaxis.p2l(d3.event.x), xaxis.range[0], xaxis.range[1]);
+            dpsx[pIndex] = xVal
+            for (let i of index) dpsx[i] = xVal - oldDatX[pIndex] + oldDatX[i]
         };
-        // move in x direction
-        if (!lockXc) {
-            let xVal = clamp(xaxis.p2l(xmouse), xaxis.range[0], xaxis.range[1]);
-            dPoints.x[pointIndex] = xVal
-            if (index.length) {
-                let shift = xVal - oldDat.x[pointIndex]
-                for (let i of index) dPoints.x[i] = shift + oldDat.x[i]//  points[ind].handle.x = shift + oldX[ind];
-            };
-        };
-        Plotly.restyle(figurecontainer,{
-            x: [dPoints.x],
-            y: [dPoints.y]
-        }, curveNumber)
+        Plotly.restyle(figurecontainer, {x: [dpsx], y: [dpsy]}, 0)
     });
-    drag.on("dragend", function () {
-        // updateFigure();
-        fullData[curveNumber][th_in][col.z] = dPoints.y
-        if (!lockXc) fullData[curveNumber][th_in][col.y] = dPoints.x
-        // fullData[0] = data;
-        dragging = false
-        // updatePlot(all = false)
-        if(polyFitLive) polyfit($("#polyInp").val());
-        updateOnServer();
-        // d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
-    });
-    // d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
-    d3.selectAll(".points path").call(drag);
+    drag.on("dragend", updateOnServer)
+    d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
 };
-startDragBehavior()
 
 
 function keyBoardDrag(inp) {
@@ -503,10 +429,8 @@ function keyBoardDrag(inp) {
     var yaxis = figurecontainer._fullLayout.yaxis;
     var add = yaxis.p2l(1) - yaxis.p2l(0);
     if (inp) add = -add;
-    for (let ind of index) {
-        points[ind].handle.y += add;
-    }
-    updateFigure();
+    for (let ind of index) dpsy[ind] +=add
+    Plotly.restyle(figurecontainer, {y: [dpsy]}, 0)
 }
 
 

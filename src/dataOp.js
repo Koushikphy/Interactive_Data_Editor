@@ -528,7 +528,7 @@ function closeLMfit(){
 
 
 function lmfit(){
-    setTimeout(()=>{ // don't block the main event loop during iteration
+    setTimeout(()=>{ // don't block the main event loop during iteration   THIS is bad
     try{// params means initial values of parameters
         var [func,maxIter, parameters, maxVal ,minVal ,dampval ,stepVal ,etVal, egVal] = initialSetup()
     } catch(err){
@@ -567,14 +567,20 @@ function lmfit(){
         if(yy>Number.EPSILON) chiError += (yy-tmp)**2/tmp
     }
 
+    let anotX=0.5, anotY=1;
+    if(figurecontainer.layout.annotations!= undefined){
+        anotX = figurecontainer.layout.annotations[0].x
+        anotY = figurecontainer.layout.annotations[0].y
+    }
+
     Plotly.restyle(figurecontainer, {x:[dpsx], y:[fity]},1)
     anotText = `y = ${$('#funcStr').val()}<br>
                 ${$('#paramList').val().split(',').join(', ')} = ${parameters.map(x=>x.toPrecision(5)).join(', ')}
                 <br>&#967;<sup>2</sup> Error = ${chiError.toPrecision(5)}`
     Plotly.relayout(figurecontainer, {annotations: [
         {
-            xref: 'paper', x: 0.5,
-            yref: 'paper', y: 1,
+            xref: 'paper', x: anotX,
+            yref: 'paper', y: anotY,
             showarrow:false,
             text: anotText,
             bordercolor : '#000000'
@@ -583,6 +589,7 @@ function lmfit(){
     showStatus('Data fitting done')
     },1)
 }
+
 
 
 
