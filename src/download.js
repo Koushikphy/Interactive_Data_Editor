@@ -1,7 +1,5 @@
 //downloads the image called from main and also from the plotter
 
-
-
 function downloadImage(){
     var fileName = $('#dfileName').val()
     var res = $('#imRes').val().split("x")
@@ -89,7 +87,3 @@ function exportPDF({ width=1920, height=1080}={}){
         })
     })
 }
-
-// console.log('hello there')
-
-// module.exports = downloadImage

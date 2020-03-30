@@ -1,3 +1,5 @@
+// Not mainteained project
+
 require('v8-compile-cache');
 var figurecontainer = document.getElementById("figurecontainer"),
     data = [],
@@ -238,7 +240,6 @@ var mode={
 
 //plotting a dummy surface plot and adding the updateJSON funtion to it
 Plotly.newPlot(figurecontainer, [trace], layout, mode);
-// figurecontainer.on("plotly_relayout", updateJSON);
 
 
 

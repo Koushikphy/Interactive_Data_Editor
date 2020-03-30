@@ -63,18 +63,20 @@
     }
   },
   "devDependencies": {
-    "electron": "^8.0.2",
+    "electron": "^8.2.0",
     "electron-builder": "^22.3.2",
     "gulp": "^4.0.0",
-    "gulp-clean-css": "^4.0.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.0.0",
     "gulp-uglify": "^3.0.2",
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
+    "@sweetalert2/theme-material-ui": "^3.1.4",
     "plotly.js-gl3d-dist": "^1.52.2",
     "request": "^2.88.2",
+    "sweetalert2": "^9.10.2",
     "v8-compile-cache": "^2.1.0"
   }
 }

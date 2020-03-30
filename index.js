@@ -11,13 +11,19 @@ const {
     BrowserWindow,
     Menu,
     ipcMain,
-    shell
+    shell,
+    screen
 } = electron;
 
 
 ipcMain.on("back", function (e, d) {
     mainWindow.webContents.send("back", d);
 })
+
+ipcMain.on("plotsetting", function (e, d) {
+    mainWindow.webContents.send("plotsetting", d);
+})
+
 
 ipcMain.on("rf", function (e, d) {
     mainWindow.webContents.send("rf", d);
@@ -39,6 +45,8 @@ ipcMain.on('checkClose', function (eg, d) {
 app.on('ready', function () {
     mainWindow = new BrowserWindow({
         show: false,
+        // width: screen.getPrimaryDisplay().workAreaSize.width,
+        // height: screen.getPrimaryDisplay().workAreaSize.height,
         minWidth: 1200,
         title: "Interactive Data Editor",
         icon: path.join(__dirname, "figs/charts.png"),
@@ -146,7 +154,7 @@ const homeMenuTemplate = [{
                 click() {
                     mainWindow.reload();
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfd', 'tfs', 'wire', 'surf', "spr", 'af', 'arf',  'pax', 'swapen', "edat", "fill", "filter"]) {
+                    for (let i of ['save', 'saveas', 'tfs', 'wire', 'surf', "spr", 'af', 'arf',  'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     men.getMenuItemById("pax").visible = true;
@@ -167,17 +175,9 @@ const homeMenuTemplate = [{
     },
     {
         label: "View",
-        submenu: [{
-                label: 'Toggle Files dashboard',
-                accelerator: 'CmdOrCtrl+B',
-                id: 'tfd',
-                enabled: false,
-                click() {
-                    mainWindow.webContents.send("menuTrigger", "fdash")
-                }
-            },
+        submenu: [
             {
-                label: 'Toggle Plot Settings',
+                label: 'Open Plot Settings',
                 accelerator: 'CmdOrCtrl+K',
                 id: 'tfs',
                 enabled: false,
@@ -240,7 +240,7 @@ const homeMenuTemplate = [{
         }, {
             label: "Extend Data",
             id: "edat",
-            enabled: "false",
+            enabled: false,
             click() {
                 mainWindow.webContents.send("menuTrigger", "edat")
             }
@@ -386,6 +386,8 @@ const homeMenuTemplate = [{
                         slashes: true
                     }));
                     childWindow.setMenuBarVisibility(false);
+                    childWindow.webContents.openDevTools()
+
                 }
             },
         ]

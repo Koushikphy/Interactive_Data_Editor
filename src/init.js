@@ -95,35 +95,35 @@ if (fl !== null) {
 function getFile(params) {
     console.log(params)
     try {
-        if(params.starswith('-') || params.starswith('---')) return false
+        if(params.starswith('-') || params.starswith('--')) return false
         let file =  path.resolve(process.cwd(),params)
         fileReader(file)
     } catch (error) {
         console.log(error)
     }
-
 }
 
 
 //in dev mode don't load animation directly go to plot
-if (app.isPackaged) {
-    setTimeout(versionCheck,5000)
-    if (remote.process.argv.length > 1) {
-        window.onload = function () {
-            getFile(remote.process.argv[1])
-        };
-    } else {
+// if (app.isPackaged) {
+//     setTimeout(versionCheck,5000)
+//     if (remote.process.argv.length > 1) {
+//         window.onload = function () {
+//             getFile(remote.process.argv[1])
+//         };
+//     } else {
         require('../lib/particles.min.js');
         let tmp = document.getElementsByClassName('basediv')[0]
         tmp.style.opacity=1
-    }
-} else {
-    document.getElementById("branding").remove()
-    document.getElementById('particle').remove();
-    document.getElementById('full').style.display = 'block';
-    if (remote.process.argv.length > 2) {
-        window.onload = function () {
-            getFile(remote.process.argv[2])
-        };
-    };
-}
+    // }
+// } else {
+//     document.getElementById("branding").remove()
+//     document.getElementById('particle').remove();
+//     document.getElementById('full').style.display = 'block';
+//     if (remote.process.argv.length > 2) {
+//         window.onload = function () {
+//             getFile(remote.process.argv[2])
+//         };
+//     };
+    // setTimeout(function(){fileReader("C:\\Users\\Koushik Naskar\\Desktop\\Interactive_Data_Editor\\Data\\Merged.dat")},1000)
+// }

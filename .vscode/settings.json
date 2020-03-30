@@ -18,5 +18,6 @@
         "src/jsuites.js" : true,
         "src/jsuites.css":true,
         "src/notify.js":true,
+        "src/numeric.js":true
     }
 }
