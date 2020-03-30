@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    <div class="basediv" id="figurecontainer"></div>
     <div class="floatdiv">
     <div id="status"><i><b>Requesting data. Please wait...</b></div>
     <form><input id="is_mark" onclick="mark_clicked(this)" type="checkbox" /> Markers </form>
@@ -23,6 +22,7 @@
         Z : <input onchange="setRange(this.value,2)" type="text" id='zInp' />
     </div>
     </div>
+    <div class="basediv3" id="figurecontainer"></div>
     <!-- <script src="../lib/viewer.min.js"></script> -->
     <script>
         require('v8-compile-cache');
@@ -40,6 +40,7 @@
 
         ipcRenderer.on("sdata", function (e, d) {
             [data, newCol] = d;
+
             updatePlot();
             if (!curCol) curCol = newCol;
             if (newCol[0] !== curCol[0]) {

@@ -4,190 +4,84 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Interactive Data Editor - Documentation</title>
-    <link rel="stylesheet" href="../lib/pure-min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <!-- <link rel="stylesheet" href="../lib/pure-min.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"> -->
+    <!-- <link rel="stylesheet" href="../../font-awesome-4.7.0/css/font-awesome.css"> -->
     <style>
-        body {
-            font-family: "Lato", sans-serif;
-            margin: 0px;
-        }
 
-        .title {
-            font-size: 2pc;
-            padding-top: 2.5pc;
-            padding-bottom: 3pc;
-            font-weight: bold;
-            padding-left: 5px;
-
-        }
-
-        .text {
-            font-size: 1.3pc;
-            text-align: justify;
-            padding-left: 15px;
-            padding-right: 7px;
-        }
-
-        .dom {
-            font-family: "Courier New";
-            font-size: 1.2pc;
-            background-color: #e9e9e9;
-            font-weight: 500;
-        }
-
-        .key {
-            font-family: "Courier New";
-            font-weight: bold;
-            font-size: 1.2pc;
-            display: inline-block;
-            width: 17pc;
-            font-weight: bold;
-        }
-
-        .keys li {
-            background: rgb(255, 255, 255);
-            padding-left: 5px;
-        }
-
-        .keys li:nth-child(odd) {
-            background: #f1f1f2;
-        }
-
-        .keys li:hover {
-            background: #dadada;
-        }
-
-        li {
-            padding-top: 10px;
-        }
-
-        a {
-            text-decoration: none;
-            color: #0b00a7;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .sidenav {
-            height: 100%;
-            width: 160px;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #3f3e3e;
-            overflow-x: hidden;
-            padding-top: 20px;
-        }
-
-        .sidenav a {
-            padding: 10px 5px 10px 10px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #f8f7f7;
-            display: block;
-        }
-
-        .sidenav a:hover {
-            color: #020202;
-            background-color: #4ea8e4;
-            /* color:#b3b3b3 */
-        }
-
-        .main {
-            margin-left: 160px;
-            font-size: 28px;
-            padding: 0px 10px;
-        }
-
-        .sidenote {
-            padding-top: 2.2pc;
-            /* padding-bottom: 1.5pc; */
-            font-weight: bold;
-            font-size: 1.5pc;
-            text-align: justify;
-            padding-right: 7px;
-        }
-
-        /* @media screen and (max-height: 450px) {
-            .sidenav {
-                padding-top: 15px;
-            }
-
-            .sidenav a {
-                font-size: 18px;
-            }
-        } */
-
-        .sidenav a {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        * {
-            -webkit-user-select: none;
-        }
-
-
-
-        button,select{
-            font-family: inherit;
-        font-size: 100%;
-        padding: .2em .5em;
-        color: #444;
-        color: rgba(0,0,0,.8);
-        border: 1px solid #999;
-        /* border: none transparent; */
-        background-color: #e6e6e6;
-        text-decoration: none;
-        border-radius: 2px;
+    .row{
+        /* margin-bottom: 5px; */
+        border-style: groove;
+        display:inline-block;
+        width: 75%;
+        padding: 5px;
+        text-align: left;
+    }
+    .index{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: larger;
+        margin-right: 5px;
+    }
+    .filename{
+        font-family:'Times New Roman', Times, serif;
+        font-size: larger;
+        width: 65%;
         display: inline-block;
-        zoom: 1;
-        line-height: normal;
+        overflow: auto;
         white-space: nowrap;
-        vertical-align: middle;
-        text-align: center;
-        cursor: pointer;
-        }
+    }
 
+    button:focus{
+        outline: none;
+    }
 
-    button:hover,
-    select:hover,
-    select:focus,
-    button:focus {
-        background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(40%, rgba(0,0,0, 0.05)), to(rgba(0,0,0, 0.10)));
-        background-image: -webkit-linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
-        background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
-        outline: 0;
+    .tools{
+        float: right;
+        display: inline;
+    }
+    .colselect{
+        display: inline;
+    }
+    .radio{
+        margin-right: 2px;
+        margin-left: 5px;
+    }
+    .lButton{
+        width: 4pc;
+        font-size: large;
+        margin: 5px;
     }
 
 
-    select:active,
-    button:active {
-        -webkit-box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
-                box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
-        border-color: #000;
-    }
 
-    input[type=text]{
 
-        padding: 0.5em 0.6em;
-        display: inline-block;
-        border: 1px solid #ccc;
-        -webkit-box-shadow: inset 0 1px 3px #ddd;
-                box-shadow: inset 0 1px 3px #ddd;
-        border-radius: 4px;
-        vertical-align: middle;
-        -webkit-box-sizing: border-box;
-                box-sizing: border-box;
 
-    }
-
-    input[type=text]:focus {
-    outline: 0;
-    border-color: #129FEA;
+    .copyBtn,.clsBtn{
+    border: none;
+    background: none;
+    text-align: right;
+    font: right;
+    padding-left: 2px;
+    padding-right: 2px;
+    height: 1.5pc;
+    width: 1.5pc;
 }
+
+.clsBtn:hover{
+    background-color: rgb(233, 98, 98);
+}
+.copyBtn:hover{
+    background-color: rgb(179, 223, 252);
+}
+
+    #full-container{
+        border: 2px groove #aaa;
+        border-radius: 1px;
+    }
+    #close{
+        float: right;
+    }
+
 
     </style>
     <script>
@@ -199,19 +93,71 @@
 </head>
 
 <body>
-    <div class="sidenav">
-        <a href="javascript:void(0)" onclick="Change(0);">Getting Started</a>
-        <a href="javascript:void(0)" onclick="Change(1);">User Interface</a>
-        <a href="javascript:void(0)" onclick="Change(2);">Features</a>
-    </div>
-     <div class="main"><!--<br><br><br> -->
-
-
+    <div id = 'full-container'>
+        <button id='close'>close this</button>
+        <br>
+        <div id='main-container' style="text-align: center;">
     </div>
     <script src="../lib/jquery.min.js"></script>
     <script>
+        var fileList = [
+            'File 1 egwef',
+            "File 2",
+            "File 3"
+        ]
+        var fileCols = [
+            [0,1,2],
+            [2,3,4],
+            [1,2,3]
+        ]
+        var checked = 0
+
+
+        function buildDOM(){
+            document.getElementById('main-container').innerHTML = 
+                fileList.map((i,v)=>createCard(i,v)).join('')+
+                `<button class='lButton' title=''>Ok</button>
+                <button class='lButton' title=''>Close</button>
+                `
+        document.getElementsByClassName('radio')[checked].checked = true
+        }
+        buildDOM()
+
+
+        function tools(option,index){
+            console.log(option,index)
+            if(option==0){ //select editable
+                checked = index
+            }else if (option==1) { // clone this
+                fileList.push( fileList[index])
+            }else if(option==2) { // close this
+                fileList.splice(index,1)
+                if(index<checked) checked--
+            }
+            buildDOM()
+        }
+
+        function createCard(fileName, index){
+            let shortName = fileName
+            return `<div class="row">
+                <label class="index">${index+1}.</label>
+                <div class="tools">
+                    <input  class='radio' type="radio" onclick="tools(0,${index})" title='Select this as editable'>
+                    <button class="copyBtn" onclick="tools(1,${index})" title='Use this file'>
+                        <svg viewBox="0 0 1792 1792">
+                            <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
+                        </svg>
+                        </button>
+                    <button class="clsBtn" onclick="tools(2,${index})" title='Remove this file'>
+                        <svg viewBox="0 0 1792 1792">
+                            <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
+                        </svg>
+                    </button>
+                    </div>
+                    <label class="filename" title='${fileName}'>${shortName}</label>
+            </div><br>`
+        }
 
     </script>
 </body>
-
 </html>
