@@ -2,17 +2,35 @@ var copyVar;
 function copyThis() {
     copyVar = JSON.stringify([dpsx, dpsy]);
 }
+
 function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
     // if (data[th_in][0].length != t1.length){
     if(!t1.every((v,i)=>v===data[th_in][col.y][i])){
-        alert("Copy paste between different data set is not supported!");
+        alertElec("Copy paste between different data set is not supported!")
         return;
     }
     saveOldData();
     data[th_in][col.y] = t1
     data[th_in][col.z] = t2
     endJobs()
+}
+
+
+
+function colsChanged(value) {
+    col.s = value;
+    updatePlot();
+    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
+};
+
+
+function sSwapper() {
+    [col.s, col.z] = [col.z, col.s]
+    sCol.selectedIndex = col.s;
+    zCol.selectedIndex = col.z;
+    colsChanged(col.s);
+    updateOnServer();
 }
 
 
@@ -56,7 +74,8 @@ function repeatMirror() {
 
     for (let i = 0; i < data.length; i++) {
         if (!(data[i][col.y].indexOf(last) + 1)) {
-            alert("Endpoint must exist !!!");
+            console.log(`${last} not found in ${i}`)
+            alertElec("Endpoint must exist !!!");
             $("#extend").slideUp();
             return;
         }
@@ -118,7 +137,7 @@ function dataFiller() {
     for(let dt of data[0][col.y]){
         if(dt[0]>=dt[1]){
             // console.log(dt[0],dt[1])
-            alert('Monotonically increasing values required for interpolation.\n NOTE: You can use the spreadsheet to sort the data')
+            alertElec('Monotonically increasing values required for interpolation.\n NOTE: You can use the spreadsheet to sort the data')
             return
         }
     }
@@ -342,7 +361,7 @@ function changeSign() {
 
 
 
-function setValue(){
+function setValue(dat){
     saveOldData();
     var value = parseFloat($("#valinput").val());
     if (isNaN(value) ){
@@ -352,7 +371,6 @@ function setValue(){
     }
     endJobs({clearIndex:true})
     Plotly.restyle(figurecontainer, {selectedpoints: [null]});
-    $('#setval').remove();
 }
 
 
@@ -374,19 +392,19 @@ function removeBadData(){
 function revertPloyFit(){
     Plotly.deleteTraces(figurecontainer, 1);
     polyFitLive = false;
-    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
+    for (let i of ['edat','fill','filter','af','arf','lmfit']) menu.getMenuItemById(i).enabled = true;
 }
 
 function initPolyfit(){
     if (!polyFitLive) {
         if(ddd){
-            alert('Regression fitting is only supported for 2D data.'); return
+            alertElec('Regression fitting is only supported for 2D data.'); return
         }
         if(figurecontainer.data.length>1){
-            alert('Supported only for one plot at time.'); return
+            alertElec('Supported only for one plot at time.'); return
         }
     }
-    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+    for (let i of ['edat','fill','filter','af','arf','lmfit']) menu.getMenuItemById(i).enabled = false;
     return true
 }
 
@@ -500,10 +518,11 @@ function initialSetup() {
 
 function initLMfit(){
     if(ddd){
-        alert('Data fitting is only supported for 2D data.'); return
+        alertElec('Data fitting is only supported for 2D data.'); return
     }
     if(figurecontainer.data.length>1){
-        alert('Supported only for one plot at a time.'); return
+        // if(polyFitLive) alertElec('Close the Polynomial fit first.')
+        alertElec('Supported only for one plot at a time.'); return
     }
     let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
     thisTrace.mode = 'lines'
@@ -513,7 +532,7 @@ function initLMfit(){
     thisTrace.x = [dpsx[0]]
     thisTrace.y = [dpsy[0]]
     Plotly.addTraces(figurecontainer, thisTrace);
-    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+    for (let i of ['edat','fill','filter','af','arf','rgft']) menu.getMenuItemById(i).enabled = false;
     return true
 }
 
@@ -522,17 +541,17 @@ function closeLMfit(){
     // close the dialog box
     Plotly.deleteTraces(figurecontainer, 1)
     Plotly.relayout(figurecontainer, {annotations:[{text:'', showarrow:false}]})
-    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
+    for (let i of ['edat','fill','filter','af','arf','rgft']) menu.getMenuItemById(i).enabled = true;
     resizePlot()
 }
 
 
 function lmfit(){
-    setTimeout(()=>{ // don't block the main event loop during iteration
+    setTimeout(()=>{ // don't block the main event loop during iteration   THIS is bad
     try{// params means initial values of parameters
         var [func,maxIter, parameters, maxVal ,minVal ,dampval ,stepVal ,etVal, egVal] = initialSetup()
     } catch(err){
-        alert(err); return ;
+        alertElec(err); return ;
     }
 
     var olderror = Number.MIN_SAFE_INTEGER
@@ -541,7 +560,7 @@ function lmfit(){
     try {
         func(parameters)(xs[0])  // check if the function is usable
     } catch (error) {
-        alert("Something wrong, can't use the formula"); console.log(error);return ;
+        alertElec("Something wrong, can't use the formula"); console.log(error);return ;
     }
     for (let iteraion=0;iteraion<maxIter && !converged; iteraion++) {
         parameters = stepAhed( xs, ys, parameters, dampval, stepVal, func);
@@ -567,14 +586,20 @@ function lmfit(){
         if(yy>Number.EPSILON) chiError += (yy-tmp)**2/tmp
     }
 
+    let anotX=0.5, anotY=1;
+    if(figurecontainer.layout.annotations!= undefined){
+        anotX = figurecontainer.layout.annotations[0].x
+        anotY = figurecontainer.layout.annotations[0].y
+    }
+
     Plotly.restyle(figurecontainer, {x:[dpsx], y:[fity]},1)
     anotText = `y = ${$('#funcStr').val()}<br>
                 ${$('#paramList').val().split(',').join(', ')} = ${parameters.map(x=>x.toPrecision(5)).join(', ')}
                 <br>&#967;<sup>2</sup> Error = ${chiError.toPrecision(5)}`
     Plotly.relayout(figurecontainer, {annotations: [
         {
-            xref: 'paper', x: 0.5,
-            yref: 'paper', y: 1,
+            xref: 'paper', x: anotX,
+            yref: 'paper', y: anotY,
             showarrow:false,
             text: anotText,
             bordercolor : '#000000'
@@ -583,6 +608,7 @@ function lmfit(){
     showStatus('Data fitting done')
     },1)
 }
+
 
 
 

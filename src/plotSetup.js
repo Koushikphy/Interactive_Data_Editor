@@ -22,16 +22,13 @@ var data = [],
         s: 0
     },
     xName = "X",
-    $slider = $("#slider"),
-    xCol = document.getElementById("xCol"),
-    yCol = document.getElementById("yCol"),
-    zCol = document.getElementById("zCol"),
-    sCol = document.getElementById("sCol"),
-    xVal = document.getElementById("x_val"),
-    figurecontainer = document.getElementById("figurecontainer"),
-    $ch = $("#custom-handle")
+    // $slider = $("#slider"),
+    figurecontainer = document.getElementById("figurecontainer");
+    // $ch = $("#custom-handle")
     const Plotly = require('plotly.js-gl3d-dist');
-
+    // const Plotly = require('plotly.js-basic-dist');
+    const slider = document.getElementById('range');
+    const thumb = document.getElementById('thumb');
 
 
 
@@ -57,12 +54,13 @@ var layout = {
     },
     xaxis: {
         title: '',
+        automargin: true,
         zeroline: false,
         showline: true,
         showgrid: true,
-        automargin: true,
-        // tick0:'',
+        tickformat: " ,.5g",
         dtick:'',
+        hoverformat: " ,.6g",
         titlefont:{
             family:"Droid Sans",
             size:20,
@@ -75,11 +73,10 @@ var layout = {
         automargin: true,
         zeroline: false,
         showline: true,
+        showgrid: true,
         tickformat: " ,.5g",
-        // tick0:'',
         dtick:'',
         hoverformat: " ,.6g",
-        showgrid: true,
         titlefont:{
             family:"Droid Sans",
             size:20,
@@ -120,70 +117,52 @@ var iniPointsD = {
 };
 
 
-var iniPointsC = {
-    x: [1],
-    y: [1],
-    type: 'scatter',
-    opacity: 1,
-    mode: 'markers+lines',
-    marker: {
-        symbol: "circle-dot",
-        color: '#b00',
-        size: 6,
-        opacity: 1
-    },
-    line: {
-        width: 2,
-        color: "#1e77b4",
-        dash: 0,
-        shape: 'linear'
-    },
-    hoverinfo: 'x+y',
-};
+const clone = (x) => JSON.parse(JSON.stringify(x))
 
 
-function triggerDownload(){
-    var div = document.createElement('div');
-    div.id = 'download'
-    div.innerHTML = `<div class='jjjj'><b> Save the image</b><br></div>
-                    &ensp; File Name: <input type="text" id= "dfileName"><br>
-                    &ensp; File Type:<select id="fileFormat">
-                    <option>PDF</option>
-                    <option>JPEG</option>
-                            <option>PNG</option>
-                            <option>SVG</option>
-                            <option>WEBP</option>
-                        </select><br>
-                    &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080" list="resl" >
-                    <datalist id="resl">
-                    <option value="640×480">
-                    <option value="800×600">
-                    <option value="960×720">
-                    <option value="1280×720">
-                    <option value="1600×900">
-                    <option value="1280×960">
-                    <option value="1920×1080">
-                    <option value="1440×1080">
-                    <option value="1600×1200">
-                    <option value="1856×1392">
-                    <option value="1920×1440">
-                    <option value="2560×1440">
-                    <option value="2048×1536">
-                    <option value="3840×2160">
-                  </datalist>
-                    <br>
-                    <div  class='jjjj'>
-                        <input type="submit" value="OK" onclick="downloadImage();$('#download').remove();">
-                        <input type="submit" value="Cancel" onclick="$('#download').remove();">
-                    </div>`.trim()
-    document.body.appendChild(div)
+
+function triggerDownload() {
+    popupbox.innerHTML = `<label class='heading'>Save the Image</label>
+            &ensp; File Name:<input type="text" id= "dfileName"><br>
+            &ensp; File Type:<select id="fileFormat">
+            <option>PDF</option>
+            <option>JPEG</option>
+                    <option>PNG</option>
+                    <option>SVG</option>
+                    <option>WEBP</option>
+                </select><br>
+            &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080" list="resl" >
+            <datalist id="resl">
+                <option value="640×480">
+                <option value="800×600">
+                <option value="960×720">
+                <option value="1280×720">
+                <option value="1600×900">
+                <option value="1280×960">
+                <option value="1920×1080">
+                <option value="1440×1080">
+                <option value="1600×1200">
+                <option value="1856×1392">
+                <option value="1920×1440">
+                <option value="2560×1440">
+                <option value="2048×1536">
+                <option value="3840×2160">
+            </datalist>
+            <br>
+            <div style='text-align:center;margin:7px;margin-top:1pc'>
+                <input type="submit" value="OK" onclick="downloadImage();closePopUp();">
+                <input type="submit" value="Cancel" onclick="closePopUp();">
+            </div>`
+    popupbox.style.width = 'fit-content'
+    popupbox.style.textAlign = 'left'
+    openPopUp()
+    console.log('hello there')
 }
-
-
 
 var mode={
     displaylogo:false,
     editable: true,
+    responsive: true,
     modeBarButtonsToRemove : ["toImage","sendDataToCloud"],
     modeBarButtonsToAdd    : [
         [
@@ -195,24 +174,22 @@ var mode={
         ]
     ]
 }
-Plotly.newPlot(figurecontainer, [iniPointsD], layout, mode);
-
-// pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-// points = figurecontainer.querySelector(".trace:first-of-type .points").getElementsByTagName("path");
-points = figurecontainer.getElementsByClassName('points')[0].getElementsByTagName('path')
+// console.log($('#figurecontainer').height(),$('#figurecontainer').width())
+Plotly.newPlot(figurecontainer, [clone(iniPointsD)], layout, mode);
+points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
 
-resizePlot();
 
-$slider.slider({
-    min: 0,
-    max: 0,
-    step: 1,
-    slide: function (event, ui) {
-        th_in = ui.value;
-        sliderChanged();
-    }
-});
+
+// $slider.slider({
+//     min: 0,
+//     max: 0,
+//     step: 1,
+//     slide: function (event, ui) {
+//         th_in = ui.value;
+//         sliderChanged();
+//     }
+// });
 
 
 
@@ -234,13 +211,10 @@ ipcRenderer.on("menuTrigger", (e, d) =>{
     if(d=="open") fileLoader()
 });
 
+window.addEventListener("resize", function(){
+    $('#filler').width($('#container').parent().width())
+    if(fullData.length && ddd) sliderChanged()
+}) //needed to position the thumb div
 
-// function firstWidth(){
-//     let elem = $('#container')
-//     let per = elem.width()*100/elem.parent().width()
-//     // $('#filler').css({'width': per+'%'});
-//     $('#filler').css({'width': $('#container').width()});
-//     // $('#extendutils').css({'width': per+'%'});
-// }
+// resizePlot();
 $('#filler').width($('#container').parent().width())
-window.addEventListener('resize', () => $('#filler').width($('#container').parent().width()));

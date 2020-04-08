@@ -3,77 +3,90 @@
 
 <head>
     <title>Interactive Data Editor</title>
+    <!-- <link href="../bulma.min.css" rel="stylesheet"> -->
     <link href="../lib/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/jquery-ui.min.css">
-    <link rel="stylesheet" href="../lib/jsoneditor.min.css">
+    <!-- <link rel="stylesheet" href="../lib/jquery-ui.min.css"> -->
     <script> 
         if (typeof module === 'object') { window.module = module; module = undefined;  }
     </script>
+
 </head>
 
 <body>
-    <!-- initial loader -->
-    <div class="basediv" id="particle">
+    <div id="particle">
             <div class="container">
-                <img src="../figs/charts.png" width="75" height="75">
+                <img id='logo' src="../figs/charts.png" width="75" height="75">
                 <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
                 <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">
                     A Software to interactively edit data in a graphical manner
                 </div>
+                <div id='versionname' style="font-size: large;margin-top: 7px">Version 2.8.0 </div>
                 <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">
                     Developed by Koushik Naskar
                 </div>
-                <div id='versionname' style="font-size: large;margin-top: 7px">Version 2.7.0 </div>
                 <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">
-                    Copyright &copy; November, 2019 Koushik Naskar
+                    Copyright &copy; April, 2020 Koushik Naskar
                 </div>
-                <div style="font-size: larger; margin-bottom: 10px; font-weight: 600; font-style:italic">
-                        <a style="margin: 5px; text-decoration: underline; color: black" href="javascript:void(0)" onclick="op('https://koushikphy.github.io/');">koushikphy.github.io</a>
-                </div>
-                <a href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../figs/facebook.png" width="30" height="30"></a>
-                <a href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img  src="../figs/github.png" width="30" height="30"></a>
-                <a href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../figs/gmail.png" width="30" height="30"></a>
-        </div>
-    </div>
 
+                <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io');"><img src="../figs/internet.png" width="30" height="30"></a>
+                <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../figs/facebook.png" width="30" height="30"></a>
+                <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../figs/github.png"            width="30" height="30"></a>
+                <a title="Reach me on Gamil" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../figs/gmail.png" width="30" height="30"></a>
 
-    <div id="sidebar">
-        <div id="split-bar"></div>
-        <div class="closebtn" onclick="closeNav()">&#9746;</div>
-        <div class="sideheader"> Files Dashboard </div>
-        <div id="files"></div>
-    </div>
-    <div id="sidebar2">
-        <div id="split-bar2"></div>
-        <div class="closebtn" onclick="closeNav2()">&#9746;</div>
-        <div class="sideheader"> Plot Settings </div>
-        <div id="jsoneditor"></div>
-    </div>
+            </div>
+    </div> 
 
     <div id="full" >
         <div class="borders column" id="container">
             &nbsp;Data Column ⇒ &ensp;
-            X :<select id="xCol" onchange="updateData();"></select>&ensp;
-            Y :<select id="yCol" onchange="updateData();"></select>&ensp;
-            <span class="3D">Z :<select id="zCol" onchange="colChanged(this.selectedIndex)"></select></span>
-            <input id='sColInp' type="submit" value="&#8644;" onclick='sSwapper()'>
-            <select id="sCol" onchange="colsChanged(this.selectedIndex)"></select>
+            <span id='xLabel'>X</span> <select id="xCol" onchange="updateData();this.blur()"></select>&ensp;
+            <span id='yLabel'>Y</span> <select id="yCol" onchange="updateData();this.blur()"></select>&ensp;
+            <span id='zLabel'>Z</span> <select id="zCol" onchange="colChanged(this.selectedIndex);this.blur()"></select>&ensp;
+            <!-- <input id='sColInp' type="submit" value="&#8644;" onclick='sSwapper()'> -->
+            <button id='sColInp' onclick='sSwapper();'>
+                <svg viewBox="0 0 512 512">
+                    <path d="M0 168v-16c0-13.255 10.745-24 24-24h360V80c0-21.367 25.899-32.042 40.971-16.971l80 80c9.372 9.373 9.372 24.569 0 33.941l-80 80C409.956 271.982 384 261.456 384 240v-48H24c-13.255 0-24-10.745-24-24zm488 152H128v-48c0-21.314-25.862-32.08-40.971-16.971l-80 80c-9.372 9.373-9.372 24.569 0 33.941l80 80C102.057 463.997 128 453.437 128 432v-48h360c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24z"/>
+                </svg>
+            </button>
+            <select id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
+            <button id="plotlist" title="Open List of plots" onclick="plotListPop()">
+                <svg viewBox="0 0 512 512">
+                    <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
+                </svg>
+            </button>
             <div id="drag" class='3D'>&nbsp;Drag the slider to change 'X' value:</div>
-            <div id="slider" class='3D' style="background: #eaeaea">
+            <!-- <div id="slider" class='3D' style="background: #eaeaea">
                 <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
+            </div> -->
+
+
+            <div id="range-div" class='3D' >
+                <input type="range" name="" id="range" min=0 max=10000 step=1 value=0 onclick="this.blur()" onresize='console.log(this)'>
+                <span id="thumb"></span>
+            </div>
+
+
+        </div>
+
+
+        <div id="workarea">
+            <div id="extendUtils2d" class="borders" ></div>
+
+            <div id="figurecontainer"></div> 
+            <div id="filler">
+                <div class="borders" id="extendutils"></div>
             </div>
         </div>
 
-        <div id="extendUtils2d" class="borders data" ></div>
-        <div id="figurecontainer"></div> <!--  main plot container field -->
-        <div id="filler">
-            <div class="borders data" id="extendutils"></div>
+
+        <div id='popupbox'></div>
+
+
+        <div id = "branding">
+            <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')">
+                <i>Developed by</i> <b>Koushik Naskar</b>&ensp;
+            </a><br>
         </div>
-
-
-
-
-        <div id = "branding"> <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br></div>
 
     </div>
 
@@ -83,10 +96,10 @@
 
     <script src='../lib/init.min.js'></script>
     <script defer src="../lib/jquery.min.js"></script>
-    <script defer src="../lib/jquery-ui.min.js"></script>
+    <!-- <script defer src="../lib/jquery-ui.min.js"></script> -->
     <script defer src="../lib/funcs.min.js"></script>
+    <!-- <script defer src="../lib/delay.min.js"></script> -->
     <script defer src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
-
 </body>
 
 </html>

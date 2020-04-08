@@ -59,10 +59,10 @@ function hypotenuse(a, b) {
       return Math.abs(b) * Math.sqrt(1 + r * r);
     }
     return 0;
-  }
+}
 
 
-function solve(A,x){// solves a system of linear equations using QR decomposition
+function solve(A,x){ // solves a system of linear equations using QR decomposition
     var qr = JSON.parse(JSON.stringify(A))
     var X  = JSON.parse(JSON.stringify(x))
 
@@ -350,9 +350,3 @@ function stepAhed( xs, ys, parameters, damping, gradDiff, myfunc ) {
     }
     return parms2
 }
-
-
-
-
-
-

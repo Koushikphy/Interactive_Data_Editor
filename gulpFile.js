@@ -35,9 +35,8 @@ function compressCombineDelayJS() {
         './src/dataOp.js',
         './src/download.js',
         './src/numeric.js',
-        './src/nav.js',
         './src/delayedKey.js',
-        './src/delayedFunc.js'
+        './src/delayedFunc.js',
         ])
         .pipe(concat('delay.js'))
         .pipe(uglify())
@@ -62,7 +61,8 @@ function compressCombineJSp() {
 
 
 function compressJS() {
-    return src(['./src/init.js', './src/plotter.js','./src/particles.js'])
+    // return src(['./src/init.js', './src/plotter.js','./src/particles.js'])
+    return src(['./src/init.js', './src/particles.js'])
         .pipe(uglify())
         .pipe(rename({
             suffix: '.min'

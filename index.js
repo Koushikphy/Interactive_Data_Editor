@@ -11,13 +11,19 @@ const {
     BrowserWindow,
     Menu,
     ipcMain,
-    shell
+    shell,
+    screen
 } = electron;
 
 
 ipcMain.on("back", function (e, d) {
     mainWindow.webContents.send("back", d);
 })
+
+ipcMain.on("plotsetting", function (e, d) {
+    mainWindow.webContents.send("plotsetting", d);
+})
+
 
 ipcMain.on("rf", function (e, d) {
     mainWindow.webContents.send("rf", d);
@@ -39,6 +45,8 @@ ipcMain.on('checkClose', function (eg, d) {
 app.on('ready', function () {
     mainWindow = new BrowserWindow({
         show: false,
+        // width: screen.getPrimaryDisplay().workAreaSize.width,
+        // height: screen.getPrimaryDisplay().workAreaSize.height,
         minWidth: 1200,
         title: "Interactive Data Editor",
         icon: path.join(__dirname, "figs/charts.png"),
@@ -130,6 +138,7 @@ const homeMenuTemplate = [{
             },
             {
                 label: "3D plotter",
+                // enabled: false,
                 click() {
                     mainWindow.loadURL(url.format({
                         pathname: path.join(__dirname, 'html/Plotter.html'),
@@ -146,7 +155,7 @@ const homeMenuTemplate = [{
                 click() {
                     mainWindow.reload();
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfd', 'tfs', 'wire', 'surf', "spr", 'af', 'arf',  'pax', 'swapen', "edat", "fill", "filter"]) {
+                    for (let i of ['save', 'saveas', 'tfs', '3dview', "spr", 'af', 'arf',  'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     men.getMenuItemById("pax").visible = true;
@@ -167,17 +176,9 @@ const homeMenuTemplate = [{
     },
     {
         label: "View",
-        submenu: [{
-                label: 'Toggle Files dashboard',
-                accelerator: 'CmdOrCtrl+B',
-                id: 'tfd',
-                enabled: false,
-                click() {
-                    mainWindow.webContents.send("menuTrigger", "fdash")
-                }
-            },
+        submenu: [
             {
-                label: 'Toggle Plot Settings',
+                label: 'Open Plot Settings',
                 accelerator: 'CmdOrCtrl+K',
                 id: 'tfs',
                 enabled: false,
@@ -240,7 +241,7 @@ const homeMenuTemplate = [{
         }, {
             label: "Extend Data",
             id: "edat",
-            enabled: "false",
+            enabled: false,
             click() {
                 mainWindow.webContents.send("menuTrigger", "edat")
             }
@@ -296,21 +297,28 @@ const homeMenuTemplate = [{
     {
         label: "Window",
         submenu: [{
-                label: "3D Wireframe Plot",
+                label: "3D Plot Viewer",
                 enabled: false,
-                id: "wire",
+                id: "3dview",
                 click() {
-                    mainWindow.webContents.send("menuTrigger", "wire")
+                    mainWindow.webContents.send("menuTrigger", "3dview")
                 }
             },
-            {
-                label: "3D Surface Plot",
-                enabled: false,
-                id: "surf",
-                click() {
-                    mainWindow.webContents.send("menuTrigger", "surface")
-                }
-            },
+            // {
+            //     label: "3D Surface Plot",
+            //     enabled: false,
+            //     id: "surf",
+            //     click() {
+            //         mainWindow.webContents.send("menuTrigger", "surface")
+            //     }
+            // },{
+            //     label: "3D Wireframe Plot",
+            //     enabled: false,
+            //     id: "wire",
+            //     click() {
+            //         mainWindow.webContents.send("menuTrigger", "wire")
+            //     }
+            // },
             {
                 label: "Spreadsheet",
                 enabled: false,
@@ -328,6 +336,8 @@ const homeMenuTemplate = [{
                 click() {
                     var childWindow = new BrowserWindow({
                         show: false,
+                        minWidth: 1200,
+                        minHeight: 700,
                         title: "Interactive Data Editor - Documentation",
                         icon: path.join(__dirname, 'figs/charts.png'),
                         webPreferences: {
@@ -344,6 +354,28 @@ const homeMenuTemplate = [{
                     childWindow.show();
                 }
             }, {
+            //     label: "Keyboard Shortcuts",
+            //     click() {
+            //         var childWindow = new BrowserWindow({
+            //             show: false,
+            //             title: "Interactive Data Editor - Documentation",
+            //             icon: path.join(__dirname, 'figs/charts.png'),
+            //             webPreferences: {
+            //                 nodeIntegration: true
+            //             }
+            //         });
+            //         childWindow.loadURL(url.format({
+            //             pathname: path.join(__dirname, 'html/doc.html'),
+            //             protocol: 'file:',
+            //             slashes: true
+            //         }));
+            //         childWindow.maximize();
+            //         childWindow.setMenuBarVisibility(false);
+            //         childWindow.webContents.openDevTools()
+            //         childWindow.show();
+            //         childWindow.webContents.send('doc','3');
+            //     }
+            // },{
                 label: "Sample Data",
                 click() {
                     var childWindow = new BrowserWindow({
@@ -386,6 +418,8 @@ const homeMenuTemplate = [{
                         slashes: true
                     }));
                     childWindow.setMenuBarVisibility(false);
+                    childWindow.webContents.openDevTools()
+
                 }
             },
         ]
@@ -487,6 +521,7 @@ const plotMenuTemplate = [{
             click() {
                 var childWindow = new BrowserWindow({
                     show: false,
+                    minWidth: 1200,
                     title: "Interactive Data Editor - Documentation",
                     icon: path.join(__dirname, 'figs/charts.png'),
                     webPreferences: {

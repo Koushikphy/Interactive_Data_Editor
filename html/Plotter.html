@@ -5,54 +5,67 @@
     <meta charset="utf-8" />
     <title>3D Plotter</title>
     <link href="../lib/style.min.css" rel="stylesheet" >
-    <link rel="stylesheet" href="../lib/jsoneditor.min.css">
+    <style>
+        body{
+            display: flex;
+            flex-flow: column;
+        }
+        #toolbox{
+            position: absolute;
+            width: fit-content;
+        }
+        #obsolete{
+            position: absolute;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    font-size: x-large;
+    /* transform: translateY(10px); */
+    padding-top: 0%;
+    text-align: center;
+    padding-top: 50px;
+        }
+    </style>
     <script>
         if (typeof module === 'object') { window.module = module; module = undefined; }
     </script>
+
     <script src="../lib/jquery.min.js"></script>
 </head>
 
 <body>
+
+
     <div class="basediv" id="figurecontainer"></div>
-    <div class="floatdiv">
 
-
-        <div class="borders">
-            <label id="file_name1" style="display: inline-block;width: 15pc"> No File Choosen.</label>
-            Surface No:<select id="trace" onclick="traceUpdate()"></select>
-            <button title="Add a new surface" id= "addTrace" onclick="addNewPlot();" >&#x271A;</button>
-            <button title="Remove this surface" id= "removeTrace" onclick="deleteTrace();">&#x2716;</button>
+    <div class="borders" id="toolbox" onchange="updateThisPlot();">
+        Data Column ⇒
+        X <select id="xcol" onchange="updateData()"></select>
+        Y <select id="ycol" onchange="updateData()"></select>
+        Z <select id="zcol" onchange="colChanged()"></select>    
+        <button id="plotlist" title="Open List of plots" onclick="plotListPop()">
+            <svg viewBox="0 0 512 512">
+                <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
+            </svg>
+        </button>
+        <div style="margin-top: 5px;">
+            Axes Ranges ⇒ &nbsp;
+            X <input onchange="setRange(this.value,0)" type="text" />
+            Y <input onchange="setRange(this.value,1)" type="text" />
+            Z <input onchange="setRange(this.value,2)" type="text" />
         </div>
-        <div class="borders" id="colSel" onchange="updateThisPlot();">
-            Data Column ⇒
-            X :<select id="xcol"></select>
-            Y :<select id="ycol"></select>
-            Z :<select id="zcol"></select>    
-        </div>
-        <div class="borders">
-            Axes Ranges ⇒
-            X : <input onchange="setXRange(this.value)" type="text" alt="hwfh"/>
-            Y : <input onchange="setYRange(this.value)" type="text" />
-            Z : <input onchange="setZRange(this.value)" type="text" />
-        </div><br />
     </div>
 
-    <div id="sidebar2">
-        <div id="split-bar2"></div>
-        <div class="closebtn" onclick="closeNav()">&#9746;</div>
-        <div class="sideheader"> Plot Settings </div>
-        <div id="jsoneditor"></div>
-    </div>
+    <div id='popupbox'></div>
 
     <div id = "branding">
          <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br>
     </div>
-
-    <script src="../lib/jsoneditor.min.js"></script>
-    <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
-    <script src="../lib/plot.min.js"></script>
-    <!-- <script src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script> -->
-
+    <label for="" id='obsolete'>
+        This segment of the software is under construction and will be updated soon. <br>
+        Please contact the developer for any queries.
+    </label>
+    <script src="../src/plotter.js"></script>
 </body>
 
 </html>

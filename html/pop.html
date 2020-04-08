@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../lib/jsoneditor/jsoneditor.min.css">
+    <style>
+
+    .topbar{
+        margin-top: 1.5pc;
+        text-align: center;
+        border-bottom-style: double;
+        padding-bottom: 13px;
+    }
+
+    body{
+        overflow-x: hidden;
+    }
+
+    .bottombar{
+        text-align: center;
+        /* margin-top: 1pc; */
+        position: absolute;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        margin-bottom: 13px;
+    }
+    .endbtn{
+        font-size: larger;
+        cursor: pointer;
+        font-size: larger;
+        padding: 3px;
+        width: 4pc;
+    }
+
+    .nav{
+        height: 2.3pc;
+        width: 10pc;
+        font-size: x-large;
+        display: inline-block;
+        padding: 5px;
+        cursor: pointer;
+        border: 1px solid #DCDFE6;
+        background: none;
+        transition: all .3s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+        
+    }
+
+    .nav:focus{
+        outline: none;
+    }
+
+
+    .navfocus{
+        color: white;
+        background-color: #409EFF;
+    }
+
+    #plotselect{
+        font-size: larger;
+        width:70%;
+        border-radius: 4px;
+        margin-bottom: 1pc;
+        padding: 3px;
+    }
+    #plotselect:focus{
+        outline: none;
+    }
+    #pslabel{
+        font-size: x-large;
+        margin-right: 1pc;
+        margin-left:3.5%;
+    }
+
+    #plot{
+        border-radius: 7px 0 0 7px;
+        border-right: 0px !important;
+    }
+
+    #lay{
+        border-radius: 0px 7px 7px 0px;
+    }
+
+    .container{
+        display: block;
+        position: absolute;
+        width: 100%;
+        margin-top: 9px;
+        transition:  all .4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+    }
+
+    #main{
+        display: block;
+        margin: 13px 10% 0 10%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: absolute;
+        border-style: double;
+        border-width: 1.5px;
+        padding-top: 5px;
+        position: absolute;
+        width: 80%;
+        height: 75%;
+    }
+
+    #laycon{
+        left: 100%;
+    }
+    #plotcon{
+        left:5%
+    }
+
+
+    .jsoneditor-field, .jsoneditor-value, .jsoneditor-tree select {
+        font-size: 1.1pc !important;
+        font-family:inherit !important;
+    }
+
+    .jsoneditor{
+        border: none !important;
+    }
+
+    table.jsoneditor-tree > tbody > tr.jsoneditor-expandable:first-child {
+      display: none ;
+    }
+
+
+
+
+
+
+
+    input[type=submit],button{
+            font-family: inherit;
+        font-size: 100%;
+        /* padding: .5em 1em; */
+        color: #444;
+        color: rgba(0,0,0,.8);
+        border: 1px solid #999;
+        /* border: none transparent; */
+        background-color: #f9f9f9;
+        text-decoration: none;
+        border-radius: 1px;
+        display: inline-block;
+        zoom: 1;
+        line-height: normal;
+        white-space: nowrap;
+        vertical-align: middle;
+        text-align: center;
+        cursor: pointer;
+    }
+
+
+
+
+
+    input[type=submit]:hover,
+    input[type=submit]:active,
+    input[type=submit]:focus,
+    button:hover,
+    select:hover,
+    select:focus,
+    button:focus {
+        background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(40%, rgba(0,0,0, 0.05)), to(rgba(0,0,0, 0.10)));
+        background-image: -webkit-linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
+        background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
+        outline: none;
+    }
+
+
+    </style>
+</head>
+<body>
+
+    <div class='topbar'>
+        <button class = 'nav navfocus' id='plot' onclick="setPlotJSON(0)">
+            Plots
+        </button><button class = 'nav' id='lay' onclick="setLayoutJSON()">
+            Layout
+        </button>
+    </div>
+    <div class="bottombar">
+        <button class = 'endbtn' title="Apply changes to the plots" onclick="sendBack()">Apply</button>
+        <button class = "endbtn" title="Close the window" onclick="closePage()">Cancel</button>
+    </div>
+    <div id='main'>
+    <div class="container" id='plotcon'>
+        <select id='plotselect' onchange="editorPlot.update(plots[this.selectedIndex])"></select>
+        <div id="jsoneditorplot"></div>
+    </div>
+    <div class="container" id='laycon'>
+        <div id="jsoneditorlayout"></div>
+    </div>
+    </div>
+
+
+    <script src="../lib/jsoneditor/jsoneditor.min.js"></script>
+    <script>
+        const { remote, ipcRenderer } = require('electron');
+
+        const clone = (x) => JSON.parse(JSON.stringify(x))
+        const typeList = ["Arial", "Balto", "Courier New", "Droid Sans","Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
+        const symList =["circle","circle-open","circle-dot","circle-open-dot","square","square-open","square-dot","square-open-dot","diamond","diamond-open","diamond-dot","diamond-open-dot","cross","cross-open","cross-dot","cross-open-dot","x","x-open","x-dot","x-open-dot","triangle-up","triangle-up-open","triangle-up-dot","triangle-up-open-dot","triangle-down","triangle-down-open","triangle-down-dot","triangle-down-open-dot","triangle-left","triangle-left-open","triangle-left-dot","triangle-left-open-dot","triangle-right","triangle-right-open","triangle-right-dot","triangle-right-open-dot","triangle-ne","triangle-ne-open","triangle-ne-dot","triangle-ne-open-dot","triangle-se","triangle-se-open","triangle-se-dot","triangle-se-open-dot","triangle-sw","triangle-sw-open","triangle-sw-dot","triangle-sw-open-dot","triangle-nw","triangle-nw-open","triangle-nw-dot","triangle-nw-open-dot","pentagon","pentagon-open","pentagon-dot","pentagon-open-dot","hexagon","hexagon-open","hexagon-dot","hexagon-open-dot","hexagon2","hexagon2-open","hexagon2-dot","hexagon2-open-dot","octagon","octagon-open","octagon-dot","octagon-open-dot","star","star-open","star-dot","star-open-dot","hexagram","hexagram-open","hexagram-dot","hexagram-open-dot","star-triangle-up","star-triangle-up-open","star-triangle-up-dot","star-triangle-up-open-dot","star-triangle-down","star-triangle-down-open","star-triangle-down-dot","star-triangle-down-open-dot","star-square","star-square-open","star-square-dot","star-square-open-dot","star-diamond","star-diamond-open","star-diamond-dot","star-diamond-open-dot","diamond-tall","diamond-tall-open","diamond-tall-dot","diamond-tall-open-dot","diamond-wide","diamond-wide-open","diamond-wide-dot","diamond-wide-open-dot","hourglass","hourglass-open","bowtie","bowtie-open","circle-cross","circle-cross-open","circle-x","circle-x-open","square-cross","square-cross-open","square-x","square-x-open","diamond-cross","diamond-cross-open","diamond-x","diamond-x-open","cross-thin","cross-thin-open","x-thin","x-thin-open","asterisk","asterisk-open","hash","hash-open","hash-dot","hash-open-dot","y-up","y-up-open","y-down","y-down-open","y-left","y-left-open","y-right","y-right-open","line-ew","line-ew-open","line-ns","line-ns-open","line-ne","line-ne-open","line-nw","line-nw-open"]
+        const schemaLayout = {
+            'type': 'object',
+            'title': 'Schema for Layout',
+            "properties":{
+                "selectdirection":{
+                    "enum":["v","h", "any"]
+                },
+                "dragmode":{
+                    "enum":["select", "zoom"]
+                },
+                "hovermode":{
+                    "enum":[ "false","x","y", "closest"]
+                },
+                "title":{
+                    "properties":{
+                        "font":{
+                            "properties":{
+                                "family":{
+                                    "enum":typeList
+                                },
+                                "size":{
+                                    "type":"number"
+                                }
+                            }
+                        }
+                    }
+                },
+                "xaxis":{
+                        "properties":{
+                            "type":{
+                                "enum":['linear','log','date', 'category']
+                            },
+                            "title":{
+                                "properties":{
+                                    "font":{
+                                        "properties":{
+                                            "family":{
+                                                "enum":typeList
+                                            },
+                                            "size":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": ["type"]
+                },
+                "yaxis":{
+                    "properties":{
+                        "type":{
+                            "enum":['linear','log','date', 'category']
+                        },
+                        "title":{
+                            "properties":{
+                                "font":{
+                                    "properties":{
+                                        "family":{
+                                            "enum":typeList
+                                        },
+                                        "size":{
+                                            "type":"number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": ["type"]
+                }
+            }
+        }
+        const schemaPlot = {
+            type: 'object',
+            title: 'Schema for plot',
+            "properties":{
+                "Title":{
+                    "type":["string", "number"]
+                },
+                "Style":{
+                    "enum":['markers+lines', "lines", "markers"]
+                },
+                "Marker":{
+                    "properties":{
+                        "symbol": {
+                            "enum": symList
+                        },
+                        "size": {
+                            "type": "number"
+                        },
+                        "opacity": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "Line":{
+                    "properties": {
+                        "width": {
+                            "type": 'integer'
+                        },
+                        "dash": {
+                            "type": 'integer'
+                        },
+                        "shape": {
+                            "enum": ['linear', 'spline']
+                        }
+                    }
+                }
+            }
+        }
+
+        const optionsLayout = {
+            onChangeJSON: (json)=>{layout=json},
+            onColorPicker: function (parent, color, onChange) {
+                new JSONEditor.VanillaPicker({
+                    parent: parent,
+                    color: color,
+                    popup: 'bottom',
+                    onChange: function (color) {
+                        var alpha = color.rgba[3]
+                        var hex = (alpha === 1) ? color.hex.substr(0, 7) :color.hex
+                        onChange(hex)
+                    },
+                }).show();
+            },
+            mode: 'form',
+            mainMenuBar:false,
+            navigationBar:false,
+            schema : schemaLayout
+        };
+
+        const optionsPlot = {
+            onChangeJSON: function(json){
+                ind = plotsel.selectedIndex
+                oldTitle = plots[ind].Title
+                plots[ind] = json
+                if(oldTitle != json.Title) updateSelect()
+                plotsel.selectedIndex = ind
+            },
+            onColorPicker: function (parent, color, onChange) {
+                new JSONEditor.VanillaPicker({
+                    parent: parent,
+                    color: color,
+                    popup: 'bottom',
+                    onChange: function (color) {
+                        var alpha = color.rgba[3]
+                        var hex = (alpha === 1) ? color.hex.substr(0, 7) :color.hex
+                        onChange(hex)
+                    },
+                }).show();
+            },
+            mode: 'form',
+            mainMenuBar:false,
+            navigationBar:false,
+            schema : schemaPlot
+        };
+
+        const plotdiv = document.getElementById('plot')
+        const laydiv = document.getElementById('lay')
+        const plotcon = document.getElementById('plotcon')
+        const laycon = document.getElementById('laycon')
+        const plotsel = document.getElementById('plotselect')
+        const main = document.getElementById('main')
+        var layout, plots
+
+        // updateSelect()
+        const editorPlot = new JSONEditor(document.getElementById('jsoneditorplot'),optionsPlot, plots);
+        const editorLayout = new JSONEditor(document.getElementById('jsoneditorlayout'),optionsLayout, layout);
+        document.querySelectorAll("select option[value='']").forEach(el => el.remove());
+
+        function updateSelect(){
+            var op = "";
+            for(let i=0;i<plots.length;i++){
+                op+= `<option>${i+1}. ${plots[i].Title}</option>`
+            }
+            document.getElementById('plotselect').innerHTML = op
+        }
+
+        function setPlotJSON(index){
+            // editorPlot.update(plots[index])
+            laycon.style.left = '100%'
+            plotcon.style.left = '5%'
+            plotdiv.classList.add('navfocus')
+            laydiv.classList.remove('navfocus')
+            setTimeout(function(){main.scrollTop = 0},500)
+        }
+
+        function setLayoutJSON(){
+            plotcon.style.left = '-100%'
+            laycon.style.left = '5%'
+            plotdiv.classList.remove('navfocus')
+            laydiv.classList.add('navfocus')
+        }
+
+
+        function getUpdate(event, data){
+            [layout, plots] = data
+            layout.plot_background = layout.plot_bgcolor
+            layout.paper_background = layout.paper_bgcolor
+
+            // delete and add them to make them at the end of the list
+            let showLegTmp = layout.showlegend
+            let hoverTmp = layout.hovermode
+
+            delete layout.plot_bgcolor
+            delete layout.paper_bgcolor
+            delete layout.autosize
+            delete layout.showlegend
+            delete layout.hovermode
+
+            layout.showlegend = showLegTmp 
+            layout.hovermode = hoverTmp
+
+            
+
+
+            updateSelect()
+            editorPlot.update(plots[0])
+            editorLayout.update(layout)
+        }
+
+
+        function sendBack(){
+            //convert layout
+            let layot = clone(layout)
+            layot.plot_bgcolor = layot.plot_background 
+            layot.paper_bgcolor = layot.paper_background 
+            delete layot.plot_background
+            delete layot.paper_background
+            layot.autosize = true
+
+            //convert plots
+            let name = [], mode = [], line=[], marker = []
+
+            for (let t of plots){
+                name.push(t.Title);
+                mode.push(t.Style)
+                line.push(t.Line)
+                marker.push(t.Marker)
+            }
+
+            ipcRenderer.send('plotsetting',[{
+                name, mode, line, marker
+            },layot])
+
+        }
+
+
+        function closePage(){
+            remote.getCurrentWindow().close()
+        }
+
+        ipcRenderer.on('plotsetting',getUpdate)
+
+    </script>
+</body>
+</html>

@@ -1,9 +1,8 @@
 const fs = require("fs");
 const path = require('path');
 const url = require('url');
-var undoStack = [],
-    redoStack = [],
-    editorWindow, viewer = [, , ],
+var undoStack = [],redoStack = [],
+    editorWindow,
     show = false,
     saved = true,
     compFName, firstSave = true,
@@ -12,52 +11,90 @@ var undoStack = [],
     fullDataCols = [],
     fileNames = [],
     saveNames = [],
-    legendNames = [], rangedSelector=0;
-
-function updateData() {
-    col.x = xCol.selectedIndex;
-    col.y = yCol.selectedIndex;
-    col.z = zCol.selectedIndex;
-    th_in = 0;
-    if (ddd) { //3D
-        $slider.slider({
-            max: data.length - 1,
-            value: 0
-        })
-        $ch.text(xName + '=' + data[0][col.x][0])
-        $("#drag").html((_, html) => html.replace("Y", "X"));
-    } else { //2D
-        col.z = col.y;
-        col.y = col.x;
-        col.x = 0
-        // col2dChanged()
-    };
-    fullDataCols[0] = JSON.parse(JSON.stringify(col));
+    legendNames = [],
+    rangedSelector=0,
+    xCol = document.getElementById("xCol"),
+    yCol = document.getElementById("yCol"),
+    zCol = document.getElementById("zCol"),
+    sCol = document.getElementById("sCol"),
+    // xVal = document.getElementById("x_val");
+    parentWindow = remote.getCurrentWindow(),
+    currentEditable = 0;
 
 
 
 
-    updatePlot();
-    // makeRows();
-    startDragBehavior();
-    updateOnServer();
-    if (!swapped) {
-        if (ddd) {
-            localStorage.setItem("cols3d", JSON.stringify(col));
-        } else {
-            var tmp = {
-                x: col.y,
-                y: col.z,
-                z: 0,
-                s: 0
-            }
-            localStorage.setItem("cols2d", JSON.stringify(tmp));
-        }
+function setUpFor2d(){
+    $('#xCol,#xLabel,.3D').hide()
+    $('#yLabel').html('X')
+    $('#zLabel').html('Y')
+    var fl = JSON.parse(localStorage.getItem("cols2d"));
+    if (fl !== null) col = fl
+    col.x=0
+    serve = 0;
+    var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit']
+    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
+    // for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
+    for (let i of ["pax", '3dview']) menu.getMenuItemById(i).enabled = false;
+}
+
+function setUpFor3d(){
+    $('#xCol,#xLabel,.3D').show()
+    $('#yLabel').html('Y')
+    $('#zLabel').html('Z')
+    $(".3D").show();
+    setUpSlider();
+    var fl = JSON.parse(localStorage.getItem("cols3d"));
+    if (fl !== null) col = fl
+    var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','pax', '3dview']
+    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
+    for (let i of ["rgft", 'lmfit']) menu.getMenuItemById(i).enabled = false;
+}
+
+function setUpColumns(){
+    //a precaution here for the
+    let tmpL = data[0].length
+    if(col.x>=tmpL) col.x = 0
+    if(col.y>=tmpL) col.y = 0
+    if(col.z>=tmpL) col.z = 0
+    if(col.s>=tmpL) col.s = 0
+
+    var op = "";
+    for (var i = 1; i <= data[0].length; i++) op += `<option>${i}</option>`
+    $("#xCol, #yCol, #zCol, #sCol").html(op)
+    xCol.selectedIndex = col.x;
+    yCol.selectedIndex = col.y;
+    zCol.selectedIndex = col.z;
+    sCol.selectedIndex = col.s;
+}
+
+function updateData(init=false,all=true) {
+    if(!init){
+        col.x = xCol.selectedIndex;
+        col.y = yCol.selectedIndex;
+        col.z = zCol.selectedIndex;
+        fullDataCols[0] = JSON.parse(JSON.stringify(col));
     }
+
+    th_in = 0;
+    if(ddd) setUpSlider()
+    // if (ddd) { //3D slider setup
+    //     $slider.slider({
+    //         max: data.length - 1,
+    //         value: 0
+    //     })
+    //     $ch.text(xName + '=' + data[0][col.x][0])
+    //     $("#drag").html((_, html) => html.replace("Y", "X"));
+    // }
+
+    updatePlot(all);
+    updateOnServer();
+    if (!swapped) localStorage.setItem( ddd? "cols3d" : "cols2d", JSON.stringify(col));
+    startDragBehavior();
 };
 
 
-
+transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
 
 function parseData(strDps) {
     var newdat = [],
@@ -81,7 +118,7 @@ function parseData(strDps) {
         }
     } catch(err){
         if(err='badData'){
-            alert("Bad data found !!!\nCheck the file before openning.")
+            alertElec("Bad data found !!!\nCheck the file before openning.")
         }
         return
     }
@@ -89,18 +126,7 @@ function parseData(strDps) {
 };
 
 
-
-
-function transpose(m) {
-    return m[0].map((_, i) => m.map(x => x[i]));
-};
-
-
-
-
-document.ondragover = document.ondrop = (ev) => {
-    ev.preventDefault()
-}
+document.ondragover = document.ondrop = (ev) => ev.preventDefault()
 
 document.body.ondrop = (ev) => {
     const fname = ev.dataTransfer.files[0].path;
@@ -110,7 +136,7 @@ document.body.ondrop = (ev) => {
 
 
 function fileLoader() {
-    const fname = dialog.showOpenDialogSync({
+    const fname = dialog.showOpenDialogSync(parentWindow,{
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -120,148 +146,83 @@ function fileLoader() {
 
 function fileReader(fname) {
     //check if other file is open
-    if (!saved) var res = dialog.showMessageBoxSync({
+    if (!saved) var res = dialog.showMessageBoxSync(parentWindow,{
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Do you want to open a new file without saving the changes?",
         buttons: ['Yes', "No"]
     });
     if (res) return;
+
     // parse the file and data
     data = parseData(fs.readFileSync(fname, "utf8"))
     if(data==undefined) return
-    var dirname = path.dirname(fname);
-    var filename = path.basename(fname, path.extname(fname))
-    var extn = path.extname(fname)
-    save_name = path.join(dirname, filename + "_new" + extn);
-    recentLocation = dirname;
-    localStorage.setItem("recent", JSON.stringify(recentLocation));
-
+    ddd = data.length != 1;
 
     //reset everything....
-    swapped = 0;
-    refdat = 0;
-    xName = "X";
-    issame = false;
-    firstSave = true;
-    swapper = false;
-    undoStack = [];
-    redoStack = [];
-    fullData = [];
-    fullDataCols = [];
-    fileNames = [];
-    saveNames = [];
-    legendNames = [];
-    swapperIsOn = false;
-    $("#sCol, #sColInp").hide();
-    $("#particle").remove();
-    if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
-    $("#full").show();
-    $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
-    if (figurecontainer.data.length > 1){
-        let tt = Plotly.d3.range(1,figurecontainer.data.length)
-        Plotly.deleteTraces(figurecontainer, tt);
+    swapped = 0; refdat = 0; xName = "X";saved=true;
+    issame = false; firstSave = true; swapper = false;
+    undoStack = []; redoStack = [];  swapperIsOn = false;
+
+    // $("#full").show();
+    // remove older, initialize a new plot
+    let ind = figurecontainer.data.length
+    if(ind>1) Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))  // delete extra traces
+    // if currentEditable is not the first trace then, we have to update the points and also have to change the plot style
+    if(currentEditable !=0){
+        currentEditable = 0
+        let line = clone(iniPointsD.line)
+        let marker = clone(iniPointsD.marker)
+        Plotly.restyle(figurecontainer,{line : [line], marker:[marker]},0)
+        $(`.scatterlayer .trace:first-of-type .points path`).css({'pointer-events':'all'})
+        points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
     }
-    if (figurecontainer.layout.selectdirection != 'any') {
-        Plotly.relayout(figurecontainer, { selectdirection:'any'});
-    }
-    xCol = document.getElementById("xCol");
-    yCol = document.getElementById("yCol");
+    if(index.length) Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 
     //reset menus
     menu.getMenuItemById("pax").visible = true;
     menu.getMenuItemById("pay").visible = false;
     menu.getMenuItemById("swapen").visible = true;
 
-
-    ddd = data.length != 1;
-    document.title = "Interactive Data Editor - " + replaceWithHome(fname);
-
-    //setup the column selector and menu.
-    var enableMenu = ['save', 'saveas', 'tfd', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf']
-    if (ddd) { //3
-        $(".3D").show()
-        var fl = JSON.parse(localStorage.getItem("cols3d"));
-        enableMenu.push('pax', 'wire', 'surf');
-    } else { //2d
-        serve = 0;
-        $(".3D").hide()
-        var fl = JSON.parse(localStorage.getItem("cols2d"));
-        enableMenu.push('rgft', 'lmfit')
-        for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
-
-    }
-    if (fl !== null) col = fl
-
-    //a precaution here for the 
-    let tmpL = data[0].length
-    if(col.x>tmpL) col.x = 0
-    if(col.y>tmpL) col.y = 0
-    if(col.z>tmpL) col.z = 0
-    if(col.s>tmpL) col.s = 0
-
-    var op = "";
-    for (var i = 1; i <= data[0].length; i++) {
-        op += '<option>' + i + '</option>';
-    };
-    for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
-    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-
-    xCol.selectedIndex = col.x;
-    yCol.selectedIndex = col.y;
-    zCol.selectedIndex = col.z;
-    sCol.selectedIndex = col.s;
-
-    fullDataCols.push(JSON.parse(JSON.stringify(col)));
-    fullData.push(data);
-    fileNames.push(fname);
-
-    var dirname = path.dirname(fname);
-    var filename = path.basename(fname, path.extname(fname));
-    var extn = path.extname(fname);
-    var save_name = path.join(dirname, filename + "_new" + extn);
-    saveNames.push(save_name);
-    legendNames.push(path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`)
-
-    // console.log(points)
-    // plot here
-    updateData();
-    // console.log(points)
-
-    recentFiles = recentFiles.filter(x => x != fname);
-    recentFiles.push(fname);
-    recentMenu();
-
+    let dirname = path.dirname(fname);
+    let filename = path.basename(fname, path.extname(fname));
+    let extn = path.extname(fname);
+    let save_name = path.join(dirname, filename + "_new" + extn);
+    recentLocation = dirname;
+    
+    ddd ? setUpFor3d() : setUpFor2d();
+    fullDataCols =[JSON.parse(JSON.stringify(col))]
+    fullData =[data]
+    fileNames =[fname]
+    saveNames =[save_name]
+    legendNames =[path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`]
     resizePlot();
+    setUpColumns();
+    updateData(true,false);
     showStatus('Data file loaded ...');
+
 
     // load all scripts here
     if(notLoaded){ // this seems pretty bad, replace with require in future
         $.getScript('../lib/delay.min.js')
         notLoaded = false
     }
+
+    // part of the reset that is performed later
+    document.title = "Interactive Data Editor - " + replaceWithHome(fname);
+    recentFiles = recentFiles.filter(x => x != fname);
+    recentFiles.push(fname);
+    recentMenu();
+    localStorage.setItem("recent", JSON.stringify(recentLocation));
+
+    $("#sCol, #sColInp").hide();
+    $("#particle").remove();
+    document.getElementById('branding').style.display = 'block'
+    if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
+    setTimeout(()=>{closeThis2d();closeThis();},111)
 }
 var notLoaded = true
 
-
-function selUpdate() {
-    var op = "";
-    for (var i = 1; i <= data[0].length; i++) {
-        op += '<option>' + i + '</option>';
-    };
-    for (let i of $("#xCol, #yCol, #zCol, #sCol")) i.innerHTML = op;
-    if(ddd){
-        xCol.selectedIndex = col.x;
-        yCol.selectedIndex = col.y;
-        zCol.selectedIndex = col.z;
-        sCol.selectedIndex = col.s;
-    }else{
-        xCol.selectedIndex = col.y;
-        yCol.selectedIndex = col.z;
-        sCol.selectedIndex = col.s;
-    }
-
-}
 
 
 function updatePlot(all = true) {
@@ -269,10 +230,7 @@ function updatePlot(all = true) {
     // leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    var xl = [dpsx],
-        yl = [dpsy],
-        name = [legendNames[0]];
-    //! put another for swapper
+    // put another for swapper
     if (swapperIsOn) {
         let lname = path.basename(fileNames[0])
         let name=[
@@ -285,12 +243,12 @@ function updatePlot(all = true) {
             name
         })
     } else if (all) {
-        for (let i = 1; i < fullData.length; i++) {
+        let xl = [], yl = [], name = [];
+        for (let i = 0; i < fullData.length; i++) {
             xl.push(fullData[i][th_in][fullDataCols[i].y]);
             yl.push(fullData[i][th_in][fullDataCols[i].z]);
             name.push(legendNames[i])
         };
-
         Plotly.restyle(figurecontainer, {
             'x': xl,
             'y': yl,
@@ -298,169 +256,98 @@ function updatePlot(all = true) {
         })
     } else {
         Plotly.restyle(figurecontainer, {
-            'x': xl,
-            'y': yl,
-            name
-        }, 0)
+            'x': [dpsx],
+            'y': [dpsy],
+            "name":[legendNames[currentEditable]]
+        }, currentEditable)
     }
-    for (var i = 0; i < dpsx.length; i++) {
-        points[i].handle = {
-            x: dpsx[i],
-            y: dpsy[i]
-        };
-    };
+    for (let i = 0; i < dpsx.length; i++) points[i].index = i
 }
 
 
-function sliderChanged() {
-    $("#custom-handle").blur()
-    $slider.slider("value", th_in)
-    $ch.text(xName + '=' + data[th_in][col.x][0])
-    updatePlot()
-    startDragBehavior();
-};
+// function sliderChanged() {
+//     $slider.slider("value", th_in)
+//     $ch.text(xName + '=' + data[th_in][col.x][0])
+//     updatePlot()
+//     startDragBehavior();
+// };
 
-
-
-
-function col2dChanged(){
-    $("select").blur();
-    legendNames[0] = path.basename(fileNames[0]) + ` ${col.y + 1}:${col.z + 1}`
-    updatePlot(all = false);
-    updateOnServer();
-    startDragBehavior();
-    makeRows()
+// 3 px is just a shift from sides
+function sliderChanged(){
+    let max = data.length-1;
+    let xPX = th_in * (document.body.clientWidth -6 - thumb.offsetWidth) / max+3;
+    // xPX = xPX*100/document.body.clientWidth
+    thumb.style.left = `${xPX}px`
+    thumb.innerText = `${xName}=${data[th_in][col.x][0]}`
+    updatePlot();
 }
+
+
+function setUpSlider(){
+    slider.max = data.length - 1
+    // reset slider
+    slider.value = 0;
+    thumb.innerText = `${xName}=${data[0][col.x][0]}`
+    thumb.style.left = `${3}px`
+    slider.oninput = function(){
+        th_in = parseInt(slider.value);
+        sliderChanged()
+    }
+}
+
+
+
 
 function colChanged(value) {
-    $("select").blur();
-    fullDataCols[0].z = col.z = value;
-    legendNames[0] = path.basename(fileNames[0]) + ` ${col.y + 1}:${col.z + 1}`
+    fullDataCols[currentEditable].z = col.z = value;
+    legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${col.y + 1}:${col.z + 1}`
     updatePlot(all = false);
     updateOnServer();
     startDragBehavior();
-    makeRows()
-    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
+    if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
 };
 
 
 
-function colsChanged(value) {
-    col.s = value;
-    updatePlot();
-    // let lname = path.basename(fileNames[0])
-    // Plotly.restyle(figurecontainer, {
-    //     name: [
-    //         lname + ` ${col.y+1}:${col.z+1}`,
-    //         lname + ` ${col.y+1}:${col.s+1}`
-    //     ]
-    // })
-    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
-    console.log('cos s chnaged called')
-};
 
 
-function sSwapper() {
-    $("#sColInp").blur();
-    [col.s, col.z] = [col.z, col.s]
-    sCol.selectedIndex = col.s;
-    if(ddd){
-        zCol.selectedIndex = col.z;
-    } else{
-        yCol.selectedIndex = col.z;
-    }
-    // updatePlot();
-    colsChanged(col.s);
-    updateOnServer();
-}
+clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper))
 
-
-
-function updateFigure() {
-    var y = [],
-        x = [];
-    if (lockXc) {
-        for (let i of points) {
-            y.push(i.handle.y);
-        };
-        Plotly.restyle(figurecontainer, {
-            "y": [y]
-        }, 0);
-        dpsy = data[th_in][col.z] = y;
-    } else {
-        for (let i of points) {
-            x.push(i.handle.x);
-            y.push(i.handle.y);
-        };
-        Plotly.restyle(figurecontainer, {
-            "x": [x],
-            "y": [y]
-        }, 0);
-        dpsy = data[th_in][col.z] = y;
-        dpsx = data[th_in][col.y] = x;
-    };
-};
-
-
-
-function clamp(x, lower, upper) {
-    return Math.max(lower, Math.min(x, upper));
-};
-
-
-var oldX, oldCord, indd;
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
+    var oldDatX, oldDatY, pIndex;
+
     drag.origin(function () {
         saveOldData();
-        var transform = d3.select(this).attr("transform");
-        var translate = transform.substring(10, transform.length - 1).split(/,| /);
-        if (index.length) {
-            oldX = dpsx;
-            oldCord = dpsy;
-            indd = oldX.indexOf(this.handle.x);
-        };
-        return {
-            x: translate[0],
-            y: translate[1]
-        };
-    });
+        let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
+        pIndex = this.index
+        if (index.length) {oldDatX = clone(dpsx); oldDatY = clone(dpsy);}
+        return {x,y}
+    })
+
     drag.on("drag", function () {
-        var xmouse = d3.event.x,
-            ymouse = d3.event.y;
-        d3.select(this).attr("transform", "translate(" + [xmouse, ymouse] + ")");
-        var handle = this.handle;
-        var yaxis = figurecontainer._fullLayout.yaxis;
-        handle.y = clamp(yaxis.p2l(ymouse), yaxis.range[0], yaxis.range[1]);
-        if (index.length) {
-            var moved = handle.y - oldCord[indd];
-            for (let ind of index) {
-                points[ind].handle.y = moved + oldCord[ind];
-            };
+        // axis is put here, as the axis changes when axis range is changed
+        let yaxis = figurecontainer._fullLayout.yaxis;
+        let xaxis = figurecontainer._fullLayout.xaxis;
+
+        let yVal = clamp(yaxis.p2l(d3.event.y), ...yaxis.range);
+        dpsy[pIndex] = yVal
+        for (let i of index) dpsy[i] = yVal - oldDatY[pIndex] + oldDatY[i]
+        if (lockXc) {
+            Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable)
+        } else {// move in x direction
+            let xVal = clamp(xaxis.p2l(d3.event.x), ...xaxis.range);
+            dpsx[pIndex] = xVal
+            for (let i of index) dpsx[i] = xVal - oldDatX[pIndex] + oldDatX[i]
+            Plotly.restyle(figurecontainer, {x: [dpsx], y: [dpsy]}, currentEditable)
         };
-        if (!lockXc) {
-            var xaxis = figurecontainer._fullLayout.xaxis;
-            handle.x = clamp(xaxis.p2l(xmouse), xaxis.range[0], xaxis.range[1]);
-            if (index.length) {
-                var moved = handle.x - oldX[indd];
-                for (let ind of index) {
-                    points[ind].handle.x = moved + oldX[ind];
-                };
-            };
-        };
-        updateFigure();
     });
-    drag.on("dragend", function () {
-        updateFigure();
-        fullData[0] = data;
-        updatePlot(all = false)
-        if(polyFitLive) polyfit($("#polyInp").val());
-        updateOnServer();
-        // d3.select(".scatterlayer .trace:first-of-type .points path:first-of-type").call(drag);
-    });
-    d3.selectAll(".scatterlayer .trace:first-of-type .points path").call(drag);
+    drag.on("dragend", updateOnServer)
+    d3.selectAll(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).call(drag);
 };
+
+
 
 
 
@@ -473,10 +360,8 @@ function keyBoardDrag(inp) {
     var yaxis = figurecontainer._fullLayout.yaxis;
     var add = yaxis.p2l(1) - yaxis.p2l(0);
     if (inp) add = -add;
-    for (let ind of index) {
-        points[ind].handle.y += add;
-    }
-    updateFigure();
+    for (let ind of index) dpsy[ind] +=add
+    Plotly.restyle(figurecontainer, {y: [dpsy]}, 0)
 }
 
 
@@ -528,25 +413,38 @@ function updateOnServer() {
             z_list = [];
 
         let [a,b,c] = swapped ? [col.y, col.x,col.z] :  [col.x, col.y,col.z]
-        
+
         for (let i of data) {
             x_list.push(i[a]);
             y_list.push(i[b]);
             z_list.push(i[c]);
         };
         var s_data = [x_list, y_list, z_list];
-        for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, Object.values(col)]);
+        viewerWindow.webContents.send("sdata", [s_data, Object.values(col)]);
         resolve();
     })
 };
 
 
 function resizePlot() {
-    setTimeout(function () {
-        var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
-        $("#figurecontainer").height(height - 2);
-        Plotly.relayout(figurecontainer, {
-            autosize: true
-        });
-    }, 330)
+    // this triggers the responsiveness on plotly
+    window.dispatchEvent(new Event('resize'));
+    // setTimeout(function () {
+    //     var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
+    //     $("#figurecontainer").height(height - 2);
+    //     Plotly.relayout(figurecontainer, {
+    //         autosize: true
+    //     });
+    // }, 330)
+}
+
+
+
+function alertElec(msg, type=1){
+    dialog.showMessageBox(parentWindow,{
+        type: type==1? "error": 'warning',
+        title: "Failed to execute.",
+        message: msg,
+        buttons: ['OK']
+    });
 }
