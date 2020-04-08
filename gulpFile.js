@@ -37,7 +37,6 @@ function compressCombineDelayJS() {
         './src/numeric.js',
         './src/delayedKey.js',
         './src/delayedFunc.js',
-        './src/nav2.js'
         ])
         .pipe(concat('delay.js'))
         .pipe(uglify())

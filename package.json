@@ -1,11 +1,11 @@
 {
   "name": "interactive_data_editor",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
   "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
   "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
-  "copyright": "Copyright © November,2019 Koushik Naskar",
+  "copyright": "Copyright © April,2020 Koushik Naskar",
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -73,10 +73,8 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
-    "@sweetalert2/theme-material-ui": "^3.1.4",
     "plotly.js-gl3d-dist": "^1.52.2",
     "request": "^2.88.2",
-    "sweetalert2": "^9.10.2",
     "v8-compile-cache": "^2.1.0"
   }
 }

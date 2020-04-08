@@ -1,21 +1,20 @@
-// Not mainteained project
+//NOTE: This part of the project is not maintained for a long time
 
-require('v8-compile-cache');
+
 var figurecontainer = document.getElementById("figurecontainer"),
     data = [],
     ranges = [],
     zCols = [],
-    fname, recentLocation='';
+    fname, recentLocation='',optionList='';
 const Plotly = require('plotly.js-gl3d-dist');
 const fs = require("fs");
 const {ipcRenderer, remote,shell ,Menu} = require('electron');
 const path = require('path');
 const { dialog } = remote;
-
+const xcol = document.getElementById('xcol');
+const ycol = document.getElementById('ycol');
+const zcol = document.getElementById('zcol');
 ipcRenderer.on('checkClose', function (e, d) { ipcRenderer.send('checkClose', 'closeIt')})
-
-//Problems:
-//1. openning the settinggs winsow is pushing the mode bar out
 
 
 
@@ -89,8 +88,6 @@ var trace={
 }
 
 var layout = {
-    height: window.innerHeight,
-    width: window.innerWidth ,
     margin: {
         t: 0,
         r: 0,
@@ -181,8 +178,6 @@ var layout = {
     },
 }
 
-
-
 function triggerDownload(){
     var div = document.createElement('div');
     div.id = 'download'
@@ -219,11 +214,10 @@ function triggerDownload(){
                     </div>`.trim()
     document.body.appendChild(div)
 }
-
-
 var mode={
     displaylogo:false,
     editable: true,
+    responsive: true,
     modeBarButtonsToRemove : ["toImage","sendDataToCloud"],
     modeBarButtonsToAdd    : [
         [
@@ -236,14 +230,8 @@ var mode={
     ]
 }
 
-
-
 //plotting a dummy surface plot and adding the updateJSON funtion to it
 Plotly.newPlot(figurecontainer, [trace], layout, mode);
-
-
-
-
 
 function fileLoader(){
     fname = dialog.showOpenDialogSync({ properties: ['openFile'], defaultPath: recentLocation });
@@ -251,28 +239,10 @@ function fileLoader(){
     fname = fname[0]
     recentLocation = path.dirname(fname)
     fileReader(fname);
-    
 
-    $("#trace")[0].innerHTML =  '<option>1</option>'
-    $("#trace")[0].selectedIndex = 0
     zCols.push(2);
-    updateThisPlot();
-    updateJSON();
-}
-
-function transpose(m) {
-    return m[0].map((_, i) => m.map(x => x[i]));
-};
-
-function removeExtraTraces(){
-    var ex = figurecontainer.data.length -1;
-    if(ex){
-        var tmp = []
-        for(let i =1; i<=ex;i++){ //keep the first and delete every thing
-            tmp.push(i)
-        }
-        Plotly.deleteTraces(figurecontainer, tmp);
-    }
+    ind=0
+    updatePlot();
 }
 
 // loads file from the dialog box
@@ -299,19 +269,193 @@ function fileReader(fname) {
     };
 
     //update the select boxes
-    var op = "";
-    for (var i = 1; i <= col; i++) {
-        op += '<option>' + i + '</option>';
-    };
-    var tmp = $("#colSel select");
-    for (var i = 0; i < tmp.length; i++) {
-        tmp[i].innerHTML = op;
-        tmp[i].selectedIndex = i;
-    };
+    for (var i = 1; i <= col; i++) optionList += '<option>' + i + '</option>';
 
-    $("#file_name1").html(path.basename(fname));
+    xcol.innerHTML = optionList 
+    ycol.innerHTML = optionList 
+    zcol.innerHTML = optionList 
+    xcol.selectedIndex = 0
+    ycol.selectedIndex = 1
+    zcol.selectedIndex = 2
 
 }
+
+function transpose(m) {
+    return m[0].map((_, i) => m.map(x => x[i]));
+};
+
+function updatePlot(){
+    a = zcol.selectedIndex;
+    b = ycol.selectedIndex;
+    c = xcol.selectedIndex;
+    zCols[ind] = a
+    Plotly.restyle(figurecontainer, { "x": [data[c]], "y": [data[b]], "z": [data[a]] },ind);
+}
+
+
+
+
+const popupbox = document.getElementById('popupbox')
+
+function buildDOM(){
+    var txt = `<label class='heading'>List of Plots</label>`
+    let xcl = xcol.selectedIndex
+    let ycl = zcol.selectedIndex
+
+    let fileName = fname
+    let shortName = path.basename(fileName)
+    fileName = replaceWithHome(fileName)
+
+
+    for(let i=0; i<zCols.length; i++){
+
+
+
+        let colLen=fullData[i][0].length
+        let colLabel = `<label>${ddd ? fullDataCols[i].x+1+':' : '' }${fullDataCols[i].y+1}:</label>`
+        colLabel += `<select onchange="updatePlotPop(${i},this.selectedIndex)" title='Change data column'>`
+        for(let j=0; j<colLen; j++){
+            let sell = fullDataCols[i].z==j ? 'selected' : ''
+            colLabel += `<option ${sell}>${j+1}</option>`
+        }
+        colLabel+='</select>'
+
+
+
+
+
+
+
+
+
+        txt += 
+        `<div class="row">
+            <label class="index">${i+1}.</label>
+            <label class="filename" title='${fileName}'>${shortName}</label>
+
+            <div class="tools">
+                <button class="copyBtn" onclick="tools(1,${i})" title='Add another plot'>
+                    <svg viewBox="0 0 1792 1792">
+                        <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
+                    </svg>
+                    </button>
+                <button class="clsBtn" onclick="tools(2,${i})" title='Remove this plot'>
+                    <svg viewBox="0 0 1792 1792">
+                        <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popSelector">
+                ${optionList}
+            </div>
+        </div><br>`
+    }
+    txt += `<button class='lButton' title='' onclick="closePopUp()">Close</button>`
+    popupbox.innerHTML = txt
+}
+
+
+function tools(option,index){
+    if(option==0){ //select editable
+        if(currentEditable!=index) changeEditable(index)
+    }else if (option==1) { // clone this
+        fullData.push(fullData[index]); //not cloning same file
+        fullDataCols.push(clone(fullDataCols[index]))
+        fileNames.push(fileNames[index])
+        saveNames.push(saveNames[index])
+        legendNames.push(clone(legendNames[index]))
+        addTrace()
+    }else if(option==2) { // close this
+        if(fileNames.length==1) return // nothing to delete here
+        // console.log(currentEditable, index )
+        if(index <=currentEditable) {
+            changeEditable(currentEditable-1, false) // currentEditable is changed within the function
+        }
+        Plotly.deleteTraces(figurecontainer,index)
+        fullData.splice(index,1)
+        fullDataCols.splice(index,1)
+        fileNames.splice(index,1)
+        saveNames.splice(index,1)
+        legendNames.splice(index,1)
+    }
+    buildDOM()
+}
+
+
+function updatePlotPop(index, cl){
+    fullDataCols[index].z = cl 
+    legendNames[index] =path.basename(fileNames[index]) + ` ${fullDataCols[index].y+1}:${fullDataCols[index].z+1}`
+    Plotly.restyle(figurecontainer, {
+        y:[fullData[index][fullDataCols[index].x][fullDataCols[index].z]],
+        name : [legendNames[index]]
+    }, index)
+
+    if(index==currentEditable){
+        col.z = cl 
+        dpsy = data[th_in][col.z];
+    }
+}
+
+
+
+function openPopUp(){
+    popupbox.style.opacity = '1'
+    popupbox.style.visibility = 'visible'
+}
+
+function closePopUp(){
+    popupbox.style.visibility = 'hidden'
+    popupbox.style.opacity = '0'
+}
+
+function plotListPop(){
+    buildDOM()
+    popupbox.style.width = '50%'
+    popupbox.style.textAlign = 'center'
+    openPopUp()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function removeExtraTraces(){
+    var ex = figurecontainer.data.length -1;
+    if(ex){
+        var tmp = []
+        for(let i =1; i<=ex;i++){ //keep the first and delete every thing
+            tmp.push(i)
+        }
+        Plotly.deleteTraces(figurecontainer, tmp);
+    }
+}
+
 
 
 //adds new plot with colz as new z column
@@ -324,20 +468,11 @@ function addNewPlot(){
     document.getElementById('trace').innerHTML = op
     document.getElementById('trace').selectedIndex = thisInd
     Plotly.addTraces(figurecontainer,trace)
-    updateThisPlot()
-    updateJSON()
+    updatePlot()
 }
 
 
 
-function updateThisPlot(){
-    var ind = $('#trace')[0].selectedIndex;
-    a = $("#zcol")[0].selectedIndex;
-    b = $("#ycol")[0].selectedIndex;
-    c = $("#xcol")[0].selectedIndex;
-    zCols[ind] = a
-    Plotly.restyle(figurecontainer, { "x": [data[c]], "y": [data[b]], "z": [data[a]] },ind);
-}
 
 
 function traceUpdate(){
@@ -356,6 +491,17 @@ function deleteTrace(){
     $('#trace')[0].selectedIndex = 0
     $("#zcol")[0].selectedIndex = zCols[0]
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -391,7 +537,6 @@ function setXRange(lim) {
 
 
 function setYRange(lim) {
-
     var yInd = $('#xcol')[0].selectedIndex+1
     var range = ranges[yInd]
     var [lim, [t1,t2]] = getRange(lim, range);
@@ -411,13 +556,7 @@ function setZRange(lim) {
     }
     var range = [ Math.min(...tmpMin), Math.max(...tmpMax) ]
     var [lim, [cmin, cmax]] = getRange(lim,range)
-    // Plotly.relayout(figurecontainer, {
-    //     'scene.zaxis.range': lim,
-    // })
-    // Plotly.restyle(figurecontainer, {
-    //     "cmin": cmin,
-    //     "cmax": cmax
-    // })
+
     Plotly.update(figurecontainer, {
         "cmin": cmin,"cmax": cmax
     },{
@@ -427,81 +566,151 @@ function setZRange(lim) {
 };
 
 
+ipcRenderer.on("menuTrigger", function (e, d) {
+    if(d=="topbar"){
+        $(".floatdiv").toggle();
+    }else if(d=="open"){
+        fileLoader()
+    }else if(d=='lcon'){
+        loadConfig()
+    }else if(d=="scon"){
+        saveConfig()
+    }else if(d=='trigdown'){
+        triggerDownload();
+    }
+})
 
-var minWidth = window.innerWidth / 2.5
-$('#split-bar').mousedown(function (e) {
-    e.preventDefault();
-    $(document).mousemove(function (e) {
-        e.preventDefault();
-        var x = e.pageX - $('#sidebar').offset().left;
-        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
-            $('#sidebar').css("width", x - 2);
-            $('#full').css("margin-left", x);
-            minWidth = x;
-            // resizePlot()
+
+function saveConfig(){
+    var tmp_name = dialog.showSaveDialogSync({
+        title: "Save Configuration",
+        filters: [{
+            name: 'JSON',
+            extensions: ['json']
+        }],
+        defaultPath :recentLocation
+    });
+    if (tmp_name === undefined) return
+    recentLocation = path.dirname(tmp_name)
+
+
+    var Layout = {
+        "aspectratio" :figurecontainer.layout.scene.aspectratio,
+        "Xaxis" :figurecontainer.layout.scene.xaxis,
+        "Yaxis" :figurecontainer.layout.scene.yaxis,
+        "Zaxis" :figurecontainer.layout.scene.zaxis,
+        "View" : figurecontainer.layout.scene.camera
+    }
+    try {
+        Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
+        Layout.Xaxis.tickvals = figurecontainer.layout.scene.xaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Yaxis.ticktext = figurecontainer.layout.scene.yaxis.ticktext.join(',')
+        Layout.Yaxis.tickvals = figurecontainer.layout.scene.yaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
+        Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
+    } catch (err) { }
+
+
+    var surfaces = {
+        hoverinfo: [],
+        colorscale: [],
+        autocolorscale:[],
+        opacity: [],
+        name : [],
+        hoverlabel:[],
+        showscale: [],
+        cmin: [],
+        cmax: [],
+        cauto:[],
+        colorbar:[],
+        contours:[],
+        hidesurface:[]
+
+    }
+    for (let trace of figurecontainer.data) {
+            for (let key of Object.keys(surfaces)){
+                surfaces[key].push(trace[key])
         }
-    })
-});
+    }
+    var x = $("#xcol")[0].selectedIndex;
+    var y = $("#ycol")[0].selectedIndex;
+    var z = zCols;
+    var file = fname
+
+    fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,Layout}, null, '\t'), 'utf8');
+}
+
+function loadConfig(){
+    removeExtraTraces()
+    const tfname = dialog.showOpenDialogSync({
+        properties: ['openFile'],
+        filters: [{
+            name: 'JSON',
+             extensions: ['json']
+        }],
+        defaultPath : recentLocation
+    });
+    if (tfname === undefined) return 
+    var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
+    fname = out.file
+    recentLocation = path.dirname(tfname[0])
+    fileReader(out.file)    // data loaded
+    zCols = out.z          
+    //set up trace index selector
+    var op = "";
+    for(let i=1;i<=zCols.length;i++){
+        op += '<option>' + i + '</option>';
+    }
+    $('#trace')[0].innerHTML = op
+    $('#trace')[0].selectedIndex = 0
+    $("#zcol")[0].selectedIndex=zCols[0];
+    $("#ycol")[0].selectedIndex=out.y;
+    $("#xcol")[0].selectedIndex=out.x;
 
 
-$('#split-bar2').mousedown(function (e) {
-    e.preventDefault();
-    $(document).mousemove(function (e) {
-        e.preventDefault();
-        var x = e.pageX - $('#sidebar2').offset().left;
-        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
-            $('#sidebar2').css("width", x - 2);
-            $('#full').css("margin-left", x);
-            $('#jsoneditor').css("width", x - 7);
-            minWidth = x;
-            // resizePlot()
+    var tmp=[];
+    if(zCols.length>1){
+        for(let i=1; i<zCols.length ;i++){
+            tmp.push(trace)
         }
-    })
-});
+        Plotly.addTraces(figurecontainer,tmp)
+    }
 
 
-var minWidth = window.innerWidth / 4
-function openNav() {
-    $('#split-bar2').css("width", 5);
-    $('#sidebar2').css("width", minWidth);
-    $('#jsoneditor').css("width", minWidth - 5);
-    $('.floatdiv').css("margin-left", minWidth + 15);
-    $('#figurecontainer').css("margin-left", minWidth + 15);
-    $('.basediv').css("margin-left", minWidth + 6);
-// resizePlot()
+    out.surfaces.x = [data[out.x]]
+    out.surfaces.y = [data[out.y]]
+    out.surfaces.z = []
+    for(let i of zCols){
+        out.surfaces.z.push(data[i])
+    }
+    var layout = figurecontainer.layout;
+    layout.scene.aspectmode = "manual"
+    layout.scene.aspectratio = out.Layout.aspectratio
+    layout.scene.xaxis = out.Layout.Xaxis
+    layout.scene.yaxis = out.Layout.Yaxis
+    layout.scene.zaxis = out.Layout.Zaxis
+    layout.scene.camera = out.Layout.View
+    layout.scene.zaxis.tickvals = out.Layout.Zaxis.tickvals.split(",")
+    layout.scene.zaxis.ticktext = out.Layout.Zaxis.ticktext.split(",")
+    layout.scene.xaxis.tickvals = out.Layout.Xaxis.tickvals.split(",")
+    layout.scene.xaxis.ticktext = out.Layout.Xaxis.ticktext.split(",")
+    layout.scene.yaxis.tickvals = out.Layout.Yaxis.tickvals.split(",")
+    layout.scene.yaxis.ticktext = out.Layout.Yaxis.ticktext.split(",")
+    Plotly.update(figurecontainer, out.surfaces, layout)
+    updateJSON();
 }
 
 
-function closeNav() {
-    $('#split-bar2').css("width", 0);
-    $('#sidebar2').css("width", 0);
-    $('.floatdiv').css("margin-left", 10);
-    $('.basediv').css("margin-left", 0);
-    $('#jsoneditor').css("width", 195);
-    $('.ham').toggle()
-// resizePlot()
-}
 
 
 
-$('#split-bar2').mousedown(function (e) {
-    e.preventDefault();
-    $(document).mousemove(function (e) {
-        e.preventDefault();
-        var x = e.pageX - $('#sidebar2').offset().left;
-        if (x > minWidth / 5.0 && x < window.innerWidth / 2.5) {
-            $('#sidebar2').css("width", x - 2);
-            // $('#full').css("margin-left", x);
-            $('.floatdiv').css("margin-left", x+10);
-            $('.basediv').css("margin-left", x);
-            $('#jsoneditor').css("width", x - 7);
-            minWidth = x;
-            // resizePlot()
-        }
-    })
-});
 
-$(document).mouseup(function (e) {$(document).unbind('mousemove')});
+
+
 
 
 
@@ -705,148 +914,3 @@ function updateJSON() {
     })
 }
 
-
-ipcRenderer.on("menuTrigger", function (e, d) {
-    if(d=="topbar"){
-        $(".floatdiv").toggle();
-    }else if(d=="open"){
-        fileLoader()
-    }else if(d=='lcon'){
-        loadConfig()
-    }else if(d=="scon"){
-        saveConfig()
-    } else if (d == "side") {
-        if ($('#sidebar2').width()) {
-            closeNav();
-        } else {
-            openNav();
-        }
-    }else if(d=='trigdown'){
-        triggerDownload();
-    }
-})
-
-
-
-function saveConfig(){
-    var tmp_name = dialog.showSaveDialogSync({
-        title: "Save Configuration",
-        filters: [{
-            name: 'JSON',
-            extensions: ['json']
-        }],
-        defaultPath :recentLocation
-    });
-    if (tmp_name === undefined) return
-    recentLocation = path.dirname(tmp_name)
-
-
-    var Layout = {
-        "aspectratio" :figurecontainer.layout.scene.aspectratio,
-        "Xaxis" :figurecontainer.layout.scene.xaxis,
-        "Yaxis" :figurecontainer.layout.scene.yaxis,
-        "Zaxis" :figurecontainer.layout.scene.zaxis,
-        "View" : figurecontainer.layout.scene.camera
-    }
-    try {
-        Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
-        Layout.Xaxis.tickvals = figurecontainer.layout.scene.xaxis.tickvals.join(',')
-    } catch (err) {};
-    try {
-        Layout.Yaxis.ticktext = figurecontainer.layout.scene.yaxis.ticktext.join(',')
-        Layout.Yaxis.tickvals = figurecontainer.layout.scene.yaxis.tickvals.join(',')
-    } catch (err) {};
-    try {
-        Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
-        Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
-    } catch (err) { }
-
-
-    var surfaces = {
-        hoverinfo: [],
-        colorscale: [],
-        autocolorscale:[],
-        opacity: [],
-        name : [],
-        hoverlabel:[],
-        showscale: [],
-        cmin: [],
-        cmax: [],
-        cauto:[],
-        colorbar:[],
-        contours:[],
-        hidesurface:[]
-
-    }
-    for (let trace of figurecontainer.data) {
-            for (let key of Object.keys(surfaces)){
-                surfaces[key].push(trace[key])
-        }
-    }
-    var x = $("#xcol")[0].selectedIndex;
-    var y = $("#ycol")[0].selectedIndex;
-    var z = zCols;
-    var file = fname
-
-    fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,Layout}, null, '\t'), 'utf8');
-}
-
-function loadConfig(){
-    removeExtraTraces()
-    const tfname = dialog.showOpenDialogSync({
-        properties: ['openFile'],
-        filters: [{
-            name: 'JSON',
-             extensions: ['json']
-        }],
-        defaultPath : recentLocation
-    });
-    if (tfname === undefined) return 
-    var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
-    fname = out.file
-    recentLocation = path.dirname(tfname[0])
-    fileReader(out.file)    // data loaded
-    zCols = out.z          
-    //set up trace index selector
-    var op = "";
-    for(let i=1;i<=zCols.length;i++){
-        op += '<option>' + i + '</option>';
-    }
-    $('#trace')[0].innerHTML = op
-    $('#trace')[0].selectedIndex = 0
-    $("#zcol")[0].selectedIndex=zCols[0];
-    $("#ycol")[0].selectedIndex=out.y;
-    $("#xcol")[0].selectedIndex=out.x;
-
-
-    var tmp=[];
-    if(zCols.length>1){
-        for(let i=1; i<zCols.length ;i++){
-            tmp.push(trace)
-        }
-        Plotly.addTraces(figurecontainer,tmp)
-    }
-
-
-    out.surfaces.x = [data[out.x]]
-    out.surfaces.y = [data[out.y]]
-    out.surfaces.z = []
-    for(let i of zCols){
-        out.surfaces.z.push(data[i])
-    }
-    var layout = figurecontainer.layout;
-    layout.scene.aspectmode = "manual"
-    layout.scene.aspectratio = out.Layout.aspectratio
-    layout.scene.xaxis = out.Layout.Xaxis
-    layout.scene.yaxis = out.Layout.Yaxis
-    layout.scene.zaxis = out.Layout.Zaxis
-    layout.scene.camera = out.Layout.View
-    layout.scene.zaxis.tickvals = out.Layout.Zaxis.tickvals.split(",")
-    layout.scene.zaxis.ticktext = out.Layout.Zaxis.ticktext.split(",")
-    layout.scene.xaxis.tickvals = out.Layout.Xaxis.tickvals.split(",")
-    layout.scene.xaxis.ticktext = out.Layout.Xaxis.ticktext.split(",")
-    layout.scene.yaxis.tickvals = out.Layout.Yaxis.tickvals.split(",")
-    layout.scene.yaxis.ticktext = out.Layout.Yaxis.ticktext.split(",")
-    Plotly.update(figurecontainer, out.surfaces, layout)
-    updateJSON();
-}

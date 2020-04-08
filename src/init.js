@@ -113,17 +113,15 @@ function getFile(params) {
 //         };
 //     } else {
         require('../lib/particles.min.js');
-        let tmp = document.getElementsByClassName('basediv')[0]
-        tmp.style.opacity=1
-    // }
+        document.getElementById('particle').style.opacity = 1
+//     }
 // } else {
 //     document.getElementById("branding").remove()
 //     document.getElementById('particle').remove();
-//     document.getElementById('full').style.display = 'block';
 //     if (remote.process.argv.length > 2) {
 //         window.onload = function () {
 //             getFile(remote.process.argv[2])
 //         };
 //     };
-    // setTimeout(function(){fileReader("C:\\Users\\Koushik Naskar\\Desktop\\Interactive_Data_Editor\\Data\\Merged.dat")},1000)
+//     // setTimeout(function(){fileReader("C:\\Users\\Koushik Naskar\\Desktop\\Interactive_Data_Editor\\Data\\Merged.dat")},1000)
 // }

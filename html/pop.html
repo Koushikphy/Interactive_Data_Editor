@@ -87,10 +87,10 @@
         position: absolute;
         width: 100%;
         margin-top: 9px;
-        transition:  all .5s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+        transition:  all .4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
     }
 
-    .main{
+    #main{
         display: block;
         margin: 13px 10% 0 10%;
         overflow-y: auto;
@@ -184,9 +184,9 @@
         <button class = 'endbtn' title="Apply changes to the plots" onclick="sendBack()">Apply</button>
         <button class = "endbtn" title="Close the window" onclick="closePage()">Cancel</button>
     </div>
-    <div class='main'>
+    <div id='main'>
     <div class="container" id='plotcon'>
-        <select id='plotselect' onchange="setPlotJSON(this.selectedIndex)"></select>
+        <select id='plotselect' onchange="editorPlot.update(plots[this.selectedIndex])"></select>
         <div id="jsoneditorplot"></div>
     </div>
     <div class="container" id='laycon'>
@@ -198,139 +198,6 @@
     <script src="../lib/jsoneditor/jsoneditor.min.js"></script>
     <script>
         const { remote, ipcRenderer } = require('electron');
-
-        // var lay = {
-        //     "autosize": true,
-        //     "plot_bgcolor": "#fafafa",
-        //     "paper_bgcolor": "#fff",
-        //     "showlegend": true,
-        //     "hovermode": "closest",
-        //     "title": {
-        //         "text": "",
-        //         "font": {
-        //             "family": "Droid Sans",
-        //             "size": 20,
-        //             "color": "#000000"
-        //         }
-        //     },
-        //     "margin": {
-        //         "t": 25,
-        //         "r": 0,
-        //         "b": 19,
-        //         "l": 10,
-        //         "pad": 0
-        //     },
-        //     "xaxis": {
-        //         "title": {
-        //             "text": "",
-        //             "font": {
-        //                 "family": "Droid Sans",
-        //                 "size": 20,
-        //                 "color": "#000000"
-        //             }
-        //         },
-        //         "zeroline": false,
-        //         "showline": true,
-        //         "showgrid": true,
-        //         "automargin": true,
-        //         "dtick": "",
-        //         "range": [
-        //             -3.025705105319529,
-        //             53.02570510531953
-        //         ],
-        //         "autorange": true,
-        //         "type": "linear"
-        //     },
-        //     "yaxis": {
-        //         "title": {
-        //             "text": "",
-        //             "font": {
-        //                 "family": "Droid Sans",
-        //                 "size": 20,
-        //                 "color": "#000000"
-        //             }
-        //         },
-        //         "automargin": true,
-        //         "zeroline": false,
-        //         "showline": true,
-        //         "tickformat": " ,.5g",
-        //         "dtick": "",
-        //         "hoverformat": " ,.6g",
-        //         "showgrid": true,
-        //         "range": [
-        //             -0.0953904359632669,
-        //             1.597603245963267
-        //         ],
-        //         "autorange": true,
-        //         "type": "linear"
-        //     },
-        //     "font": {
-        //         "size": 14
-        //     },
-        //     "legend": {
-        //         "x": 0,
-        //         "y": 1
-        //     }
-        // }
-
-        // var plos = [
-        //     {
-        //         "type": "scatter",
-        //         "opacity": 1,
-        //         "mode": "markers+lines",
-        //         "marker": {
-        //             "symbol": "circle-dot",
-        //             "color": "#b00",
-        //             "size": 6,
-        //             "opacity": 1
-        //         },
-        //         "line": {
-        //             "width": 2,
-        //             "color": "#1e77b4",
-        //             "dash": 0,
-        //             "shape": "linear"
-        //         },
-        //         "hoverinfo": "x+y",
-        //         "name": "Morse.dat 1:2"
-        //     },
-        //     {
-        //         "type": "scatter",
-        //         "opacity": 1,
-        //         "mode": "markers+lines",
-        //         "marker": {
-        //             "symbol": "circle-dot",
-        //             "color": "#ff7f0e",
-        //             "size": 6,
-        //             "opacity": 1
-        //         },
-        //         "line": {
-        //             "width": 2,
-        //             "color": "#ff7f0e",
-        //             "dash": 0,
-        //             "shape": "linear"
-        //         },
-        //         "hoverinfo": "x+y",
-        //         "name": "GaussianLine.dat 1:2"
-        //     }
-        // ]
-
-        // // convert layout and plots as soon as they come to the format used here
-        // // goes inside the ipcmessage box incoming
-        // var layout = lay
-        // layout.plot_background = layout.plot_bgcolor
-        // layout.paper_background = layout.paper_bgcolor
-        // delete layout.plot_bgcolor
-        // delete layout.paper_bgcolor
-
-        // var plots = []
-        // for (let pl of plos){
-        //     plots.push({
-        //         Title : pl.name,
-        //         Style : pl.mode,
-        //         Marker: pl.marker,
-        //         Line : pl.line
-        //     })
-        // }
 
         const clone = (x) => JSON.parse(JSON.stringify(x))
         const typeList = ["Arial", "Balto", "Courier New", "Droid Sans","Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
@@ -498,6 +365,7 @@
         const plotcon = document.getElementById('plotcon')
         const laycon = document.getElementById('laycon')
         const plotsel = document.getElementById('plotselect')
+        const main = document.getElementById('main')
         var layout, plots
 
         // updateSelect()
@@ -514,15 +382,15 @@
         }
 
         function setPlotJSON(index){
-            editorPlot.update(plots[index])
+            // editorPlot.update(plots[index])
             laycon.style.left = '100%'
             plotcon.style.left = '5%'
             plotdiv.classList.add('navfocus')
             laydiv.classList.remove('navfocus')
+            setTimeout(function(){main.scrollTop = 0},500)
         }
 
         function setLayoutJSON(){
-            editorLayout.update(layout)
             plotcon.style.left = '-100%'
             laycon.style.left = '5%'
             plotdiv.classList.remove('navfocus')
@@ -534,8 +402,21 @@
             [layout, plots] = data
             layout.plot_background = layout.plot_bgcolor
             layout.paper_background = layout.paper_bgcolor
+
+            // delete and add them to make them at the end of the list
+            let showLegTmp = layout.showlegend
+            let hoverTmp = layout.hovermode
+
             delete layout.plot_bgcolor
             delete layout.paper_bgcolor
+            delete layout.autosize
+            delete layout.showlegend
+            delete layout.hovermode
+
+            layout.showlegend = showLegTmp 
+            layout.hovermode = hoverTmp
+
+            
 
 
             updateSelect()
@@ -551,6 +432,7 @@
             layot.paper_bgcolor = layot.paper_background 
             delete layot.plot_background
             delete layot.paper_background
+            layot.autosize = true
 
             //convert plots
             let name = [], mode = [], line=[], marker = []
@@ -572,7 +454,6 @@
         function closePage(){
             remote.getCurrentWindow().close()
         }
-
 
         ipcRenderer.on('plotsetting',getUpdate)
 

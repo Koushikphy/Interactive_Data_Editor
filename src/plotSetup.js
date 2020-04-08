@@ -22,12 +22,13 @@ var data = [],
         s: 0
     },
     xName = "X",
-    $slider = $("#slider"),
-    figurecontainer = document.getElementById("figurecontainer"),
-    $ch = $("#custom-handle")
+    // $slider = $("#slider"),
+    figurecontainer = document.getElementById("figurecontainer");
+    // $ch = $("#custom-handle")
     const Plotly = require('plotly.js-gl3d-dist');
     // const Plotly = require('plotly.js-basic-dist');
-
+    const slider = document.getElementById('range');
+    const thumb = document.getElementById('thumb');
 
 
 
@@ -173,23 +174,22 @@ var mode={
         ]
     ]
 }
-console.log($('#figurecontainer').height(),$('#figurecontainer').width())
+// console.log($('#figurecontainer').height(),$('#figurecontainer').width())
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], layout, mode);
 points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
-// pointscontainer = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points");
-// points = figurecontainer.getElementsByClassName('points')[0].getElementsByTagName('path')
 
 
 
-$slider.slider({
-    min: 0,
-    max: 0,
-    step: 1,
-    slide: function (event, ui) {
-        th_in = ui.value;
-        sliderChanged();
-    }
-});
+
+// $slider.slider({
+//     min: 0,
+//     max: 0,
+//     step: 1,
+//     slide: function (event, ui) {
+//         th_in = ui.value;
+//         sliderChanged();
+//     }
+// });
 
 
 
@@ -211,15 +211,10 @@ ipcRenderer.on("menuTrigger", (e, d) =>{
     if(d=="open") fileLoader()
 });
 
+window.addEventListener("resize", function(){
+    $('#filler').width($('#container').parent().width())
+    if(fullData.length && ddd) sliderChanged()
+}) //needed to position the thumb div
 
-// function firstWidth(){
-//     let elem = $('#container')
-//     let per = elem.width()*100/elem.parent().width()
-//     // $('#filler').css({'width': per+'%'});
-//     $('#filler').css({'width': $('#container').width()});
-//     // $('#extendutils').css({'width': per+'%'});
-// }
-
-resizePlot();
+// resizePlot();
 $('#filler').width($('#container').parent().width())
-window.addEventListener('resize', () => $('#filler').width($('#container').parent().width()));

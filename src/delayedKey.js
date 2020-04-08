@@ -72,13 +72,13 @@ function closeThis(){
 function extendUtilities2d(name){
     closeThis()
     document.getElementById('extendUtils2d').innerHTML = extendUtils[name]
-    $("#extendUtils2d").slideDown();
-    resizePlot()
+    $("#extendUtils2d").slideDown(300, resizePlot);
+    // resizePlot()
 }
 
 function closeThis2d(){
-    $("#extendUtils2d").slideUp();
-    resizePlot()
+    $("#extendUtils2d").slideUp(300, resizePlot);
+    // resizePlot()
 }
 
 
@@ -208,12 +208,15 @@ function ipcTrigger(e,d){
         case "saveas":
             saveAs();
             break;
-        case "wire":
-            openViewer(0);
+        case '3dview':
+            openViewer()
             break;
-        case "surface":
-            openViewer(1);
-            break;
+        // case "wire":
+        //     openViewer(0);
+        //     break;
+        // case "surface":
+        //     openViewer(1);
+        //     break;
         case "spread":
             spreadsheet();
             break;
@@ -305,6 +308,15 @@ const conMenu = Menu.buildFromTemplate([
     }
 ]
 )
+
+
+slider.onmousewheel= (ev)=>{
+    let change = ev.deltaY >0 ? 1 : -1
+    if((change==-1 && th_in==0) || (change==+1 && th_in==data.length-1)) return
+    th_in += change
+    sliderChanged()
+}
+
 
 window.onkeydown = hotKeys;
 window.onkeyup = hotDKeys;

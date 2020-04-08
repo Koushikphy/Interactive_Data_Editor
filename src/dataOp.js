@@ -2,6 +2,7 @@ var copyVar;
 function copyThis() {
     copyVar = JSON.stringify([dpsx, dpsy]);
 }
+
 function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
     // if (data[th_in][0].length != t1.length){
@@ -22,6 +23,7 @@ function colsChanged(value) {
     updatePlot();
     if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
 };
+
 
 function sSwapper() {
     [col.s, col.z] = [col.z, col.s]
@@ -72,6 +74,7 @@ function repeatMirror() {
 
     for (let i = 0; i < data.length; i++) {
         if (!(data[i][col.y].indexOf(last) + 1)) {
+            console.log(`${last} not found in ${i}`)
             alertElec("Endpoint must exist !!!");
             $("#extend").slideUp();
             return;

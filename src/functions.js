@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require('path');
 const url = require('url');
 var undoStack = [],redoStack = [],
-    editorWindow, viewer = [, , ],
+    editorWindow,
     show = false,
     saved = true,
     compFName, firstSave = true,
@@ -34,17 +34,19 @@ function setUpFor2d(){
     serve = 0;
     var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit']
     for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-    for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
+    // for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
+    for (let i of ["pax", '3dview']) menu.getMenuItemById(i).enabled = false;
 }
 
 function setUpFor3d(){
     $('#xCol,#xLabel,.3D').show()
     $('#yLabel').html('Y')
     $('#zLabel').html('Z')
-    $(".3D").show()
+    $(".3D").show();
+    setUpSlider();
     var fl = JSON.parse(localStorage.getItem("cols3d"));
     if (fl !== null) col = fl
-    var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','pax', 'wire', 'surf']
+    var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','pax', '3dview']
     for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
     for (let i of ["rgft", 'lmfit']) menu.getMenuItemById(i).enabled = false;
 }
@@ -75,14 +77,15 @@ function updateData(init=false,all=true) {
     }
 
     th_in = 0;
-    if (ddd) { //3D slider setup
-        $slider.slider({
-            max: data.length - 1,
-            value: 0
-        })
-        $ch.text(xName + '=' + data[0][col.x][0])
-        $("#drag").html((_, html) => html.replace("Y", "X"));
-    }
+    if(ddd) setUpSlider()
+    // if (ddd) { //3D slider setup
+    //     $slider.slider({
+    //         max: data.length - 1,
+    //         value: 0
+    //     })
+    //     $ch.text(xName + '=' + data[0][col.x][0])
+    //     $("#drag").html((_, html) => html.replace("Y", "X"));
+    // }
 
     updatePlot(all);
     updateOnServer();
@@ -157,11 +160,11 @@ function fileReader(fname) {
     ddd = data.length != 1;
 
     //reset everything....
-    swapped = 0; refdat = 0; xName = "X";
+    swapped = 0; refdat = 0; xName = "X";saved=true;
     issame = false; firstSave = true; swapper = false;
     undoStack = []; redoStack = [];  swapperIsOn = false;
 
-    $("#full").show();
+    // $("#full").show();
     // remove older, initialize a new plot
     let ind = figurecontainer.data.length
     if(ind>1) Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))  // delete extra traces
@@ -214,6 +217,7 @@ function fileReader(fname) {
 
     $("#sCol, #sColInp").hide();
     $("#particle").remove();
+    document.getElementById('branding').style.display = 'block'
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     setTimeout(()=>{closeThis2d();closeThis();},111)
 }
@@ -261,12 +265,37 @@ function updatePlot(all = true) {
 }
 
 
-function sliderChanged() {
-    $slider.slider("value", th_in)
-    $ch.text(xName + '=' + data[th_in][col.x][0])
-    updatePlot()
-    startDragBehavior();
-};
+// function sliderChanged() {
+//     $slider.slider("value", th_in)
+//     $ch.text(xName + '=' + data[th_in][col.x][0])
+//     updatePlot()
+//     startDragBehavior();
+// };
+
+// 3 px is just a shift from sides
+function sliderChanged(){
+    let max = data.length-1;
+    let xPX = th_in * (document.body.clientWidth -6 - thumb.offsetWidth) / max+3;
+    // xPX = xPX*100/document.body.clientWidth
+    thumb.style.left = `${xPX}px`
+    thumb.innerText = `${xName}=${data[th_in][col.x][0]}`
+    updatePlot();
+}
+
+
+function setUpSlider(){
+    slider.max = data.length - 1
+    // reset slider
+    slider.value = 0;
+    thumb.innerText = `${xName}=${data[0][col.x][0]}`
+    thumb.style.left = `${3}px`
+    slider.oninput = function(){
+        th_in = parseInt(slider.value);
+        sliderChanged()
+    }
+}
+
+
 
 
 function colChanged(value) {
@@ -287,19 +316,21 @@ clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper))
 function startDragBehavior() {
     var d3 = Plotly.d3;
     var drag = d3.behavior.drag();
-    var yaxis, xaxis, oldDatX, oldDatY, pIndex;
+    var oldDatX, oldDatY, pIndex;
 
     drag.origin(function () {
         saveOldData();
         let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
         pIndex = this.index
-        yaxis = figurecontainer._fullLayout.yaxis;
-        xaxis = figurecontainer._fullLayout.xaxis;
         if (index.length) {oldDatX = clone(dpsx); oldDatY = clone(dpsy);}
         return {x,y}
     })
 
     drag.on("drag", function () {
+        // axis is put here, as the axis changes when axis range is changed
+        let yaxis = figurecontainer._fullLayout.yaxis;
+        let xaxis = figurecontainer._fullLayout.xaxis;
+
         let yVal = clamp(yaxis.p2l(d3.event.y), ...yaxis.range);
         dpsy[pIndex] = yVal
         for (let i of index) dpsy[i] = yVal - oldDatY[pIndex] + oldDatY[i]
@@ -389,20 +420,22 @@ function updateOnServer() {
             z_list.push(i[c]);
         };
         var s_data = [x_list, y_list, z_list];
-        for (let w in viewer) viewer[w].webContents.send("sdata", [s_data, Object.values(col)]);
+        viewerWindow.webContents.send("sdata", [s_data, Object.values(col)]);
         resolve();
     })
 };
 
 
 function resizePlot() {
-    setTimeout(function () {
-        var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
-        $("#figurecontainer").height(height - 2);
-        Plotly.relayout(figurecontainer, {
-            autosize: true
-        });
-    }, 330)
+    // this triggers the responsiveness on plotly
+    window.dispatchEvent(new Event('resize'));
+    // setTimeout(function () {
+    //     var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
+    //     $("#figurecontainer").height(height - 2);
+    //     Plotly.relayout(figurecontainer, {
+    //         autosize: true
+    //     });
+    // }, 330)
 }
 
 

@@ -9,7 +9,6 @@ function downloadImage(){
         fileName+='.pdf'
         exportPDF({width: parseFloat(res[0]), height:parseFloat(res[1])}).then(pdfData=>{
 
-            // var tmp_name = dialog.showSaveDialog({
             var tmp_name = dialog.showSaveDialogSync({
                 title: "Save As:",
                 defaultPath: path.join(recentLocation, fileName),

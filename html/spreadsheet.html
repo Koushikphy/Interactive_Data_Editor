@@ -4,23 +4,29 @@
     <head>
         <title>Interactive Data Editor</title>
         <link rel="stylesheet" href='../lib/spreadsheet.min.css'>
-        <link rel="stylesheet" href="../lib/jquery-ui.min.css">
+        <!-- <link rel="stylesheet" href="../lib/jquery-ui.min.css"> -->
         <script>
             if (typeof module === 'object') { window.module = module; module = undefined; }
         </script>
-        <script src="../lib/jquery.min.js"></script>
-        <script src="../lib/jquery-ui.min.js"></script>
+        <!-- <script src="../lib/jquery.min.js"></script> -->
+        <!-- <script src="../lib/jquery-ui.min.js"></script> -->
         <script src="../lib/spreadsheet.min.js"></script>
     </head>
 
 <body>
 
     <div id="container">
-        <label id="fullS" style='margin-top: 10px;'>Spreadsheet is loading, please wait...</label>
+        <label id="fullS" style='margin: 10px 0 7px 0;'>Spreadsheet is loading, please wait...</label>
         <input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
-        <div id="slider" style="background: #eaeaea; display: none">
+        <!-- <div id="slider" style="background: #eaeaea; display: none">
             <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
+        </div> -->
+
+        <div id="range-div" style="display: none;">
+            <input type="range" name="" id="range" min=0 max=10000 step=1 value=0>
+            <span id="thumb"></span>
         </div>
+
     </div>
     <div id="table"></div>
     <script>
@@ -28,9 +34,8 @@
         const { remote, ipcRenderer } = require('electron');
         var full = document.getElementById("fullS");
         var xcol = [], data = [], hot, columns = [], xName, mytable;
-        // var btn = document.getElementById("btn");
-        // btn.style.visibility = "hidden";
-        var event, th_in = 0, $ch = $("#custom-handle"), $slider = $("#slider");
+        var event, th_in = 0
+        // , $ch = $("#custom-handle"), $slider = $("#slider");
 
         ipcRenderer.on("slider", function (e, d) {
             // e.sender.send("test", "2u3i")
@@ -40,15 +45,18 @@
             data = d[2].map(x => transpose(x));
             if (data.length != 1) { // if data is 3d show the slider
                 full.innerHTML = `Drag the slider to change "${xName}" value:`
-                $slider.show()
+                document.getElementById('range-div').style.display ='block'
+                document.getElementById('range-div').style.marginTop ='5px'
+                setUpSlider()
+                // $slider.show()
                 // $(function () {
-                    $slider.slider({
-                        min: 0, max: data.length - 1, step: 1,
-                        slide: function (event, ui) {
-                            th_in = ui.value;
-                            sliderChanged();
-                        }
-                    });
+                    // $slider.slider({
+                    //     min: 0, max: data.length - 1, step: 1,
+                    //     slide: function (event, ui) {
+                    //         th_in = ui.value;
+                    //         sliderChanged();
+                    //     }
+                    // });
                 // });
 
             } else {
@@ -58,7 +66,7 @@
                 document.getElementById("container").offsetTop - 2 -
                 document.getElementById("table").offsetTop;
 
-            $ch.text(xName + '=' + data[0][0][xcol]);
+            // $ch.text(xName + '=' + data[0][0][xcol]);
 
             var wit = (window.innerWidth-450)/data[0][0].length
             mytable = jexcel(document.getElementById('table'), {
@@ -74,7 +82,11 @@
                         tableWidth :window.innerWidth-100,
                         allowRenameColumn : false,
                         updateTable:function(_, cell, _, _, _, label, _) {cell.style.color = parseFloat(label)!=label ? 'red' : '#000000'},
-                        onload:_=>setTimeout(_=>{let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)},1), 
+                        onload:_=>setTimeout(_=>{
+                            let tt = document.getElementsByClassName('jexcel_content')[0]
+                            tt.style.height = `${window.innerHeight-tt.offsetTop-10}px`
+                            // let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)
+                        },1), 
                         // onchange:_=>btn.style.visibility = "visible",
                         // oninsertrow:_=>btn.style.visibility = "visible",
                         onsort:_=>{data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML))}//;btn.style.visibility = "visible"}
@@ -83,11 +95,33 @@
             })
 
 
-        function sliderChanged() {
-            $slider.slider("value", th_in)
-            $ch.text(xName + '=' + data[th_in][0][xcol]);
+        // function sliderChanged() {
+        //     $slider.slider("value", th_in)
+        //     $ch.text(xName + '=' + data[th_in][0][xcol]);
+        //     mytable.setData(data[th_in])
+        // };
+
+        const slider = document.getElementById('range');
+        const thumb = document.getElementById('thumb');
+        function sliderChanged(){
+            let max = data.length-1;
+            let xPX = th_in * (document.body.clientWidth - thumb.offsetWidth) / max;
+            thumb.style.left = `${xPX}px`
+            thumb.innerText = `${xName}=${data[th_in][0][xcol]}`
             mytable.setData(data[th_in])
-        };
+        }
+
+        function setUpSlider(){
+            slider.max = data.length - 1
+            // reset slider
+            slider.value = 0;
+            thumb.innerText = `${xName}=${data[0][0][xcol]}`
+            thumb.style.left = `${0}px`
+            slider.oninput = function(){
+                th_in = parseInt(slider.value);
+                sliderChanged()
+            }
+        }
 
         function transpose(m) {
             return m[0].map((_, i) => m.map(x => x[i]));
@@ -102,7 +136,7 @@
         }
 
 
-        function hotKeys(e) {
+        window.onkeydown = function hotKeys(e) {
             if (document.activeElement.type == "text") {
                 return;
             };
@@ -119,7 +153,7 @@
                     break;
             };
         };
-        $(window).keydown(hotKeys);
+
 
     </script>
 
