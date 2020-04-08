@@ -105,23 +105,22 @@ function getFile(params) {
 
 
 //in dev mode don't load animation directly go to plot
-// if (app.isPackaged) {
-//     setTimeout(versionCheck,5000)
-//     if (remote.process.argv.length > 1) {
-//         window.onload = function () {
-//             getFile(remote.process.argv[1])
-//         };
-//     } else {
+if (app.isPackaged) {
+    setTimeout(versionCheck,5000)
+    if (remote.process.argv.length > 1) {
+        window.onload = function () {
+            getFile(remote.process.argv[1])
+        };
+    } else {
         require('../lib/particles.min.js');
         document.getElementById('particle').style.opacity = 1
-//     }
-// } else {
-//     document.getElementById("branding").remove()
-//     document.getElementById('particle').remove();
-//     if (remote.process.argv.length > 2) {
-//         window.onload = function () {
-//             getFile(remote.process.argv[2])
-//         };
-//     };
-//     // setTimeout(function(){fileReader("C:\\Users\\Koushik Naskar\\Desktop\\Interactive_Data_Editor\\Data\\Merged.dat")},1000)
-// }
+    }
+} else {
+    // document.getElementById("branding").remove()
+    document.getElementById('particle').remove();
+    if (remote.process.argv.length > 2) {
+        window.onload = function () {
+            getFile(remote.process.argv[2])
+        };
+    };
+}

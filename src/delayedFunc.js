@@ -280,9 +280,10 @@ function openViewer() {
             slashes: true
         }));
     // }, 50)
-    // viewerWindow.on("closed", function () {
-    //     delete viewer[target]
-    // })
+    viewerWindow.on("closed", function () {
+        viewerWindow = null
+        serve=0
+    })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
     // viewer[target] = viewerWindow;

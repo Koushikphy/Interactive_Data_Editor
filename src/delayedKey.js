@@ -311,7 +311,7 @@ const conMenu = Menu.buildFromTemplate([
 
 
 slider.onmousewheel= (ev)=>{
-    let change = ev.deltaY >0 ? 1 : -1
+    let change = ev.deltaY <0 ? 1 : -1
     if((change==-1 && th_in==0) || (change==+1 && th_in==data.length-1)) return
     th_in += change
     sliderChanged()
