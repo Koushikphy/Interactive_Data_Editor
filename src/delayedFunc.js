@@ -215,8 +215,6 @@ function isswap() {
     col = fullDataCols[currentEditable]
     updateData();
     th_in = 0;
-    // $slider.slider("value", 0);
-    // $ch.text(xName + '=' + data[th_in][col.x][0]);
     setUpSlider();
     $("#drag").html((_, html) => html.replace(n1, n2));
 };
@@ -258,11 +256,9 @@ function spreadsheet() {
     })
 }
 
-var viewerWindow
+
+var viewerWindow;
 function openViewer() {
-    // var target = "3D_Viewer_Lines.html"
-    // if (x) target = "3D_Viewer_Surface.html"
-    // target = 
 
     viewerWindow = new BrowserWindow({
         show: false,
@@ -273,29 +269,21 @@ function openViewer() {
         }
     });
     viewerWindow.maximize();
-    // setTimeout(function () {
-        viewerWindow.loadURL(url.format({
-            pathname: path.join(__dirname, '3D_Viewer.html'),
-            protocol: 'file:',
-            slashes: true
-        }));
-    // }, 50)
+    viewerWindow.loadURL(url.format({
+        pathname: path.join(__dirname, '3D_Viewer.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
     viewerWindow.on("closed", function () {
         viewerWindow = null
         serve=0
     })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
-    // viewer[target] = viewerWindow;
     if (!app.isPackaged) viewerWindow.webContents.openDevTools();
-    viewerWindow.webContents.once("dom-ready", function () {
-        updateOnServer()
-    })
+    viewerWindow.webContents.once("dom-ready", updateOnServer)
     serve = 1;
-
 };
-
-
 
 
 
@@ -305,9 +293,6 @@ figurecontainer.on("plotly_legendclick", function(){
     for (let i of figurecontainer.data) tmpLeg.push(i.name)
     legendNames = tmpLeg;
 });
-
-
-
 
 
 
@@ -330,7 +315,6 @@ function buildDOM(){
 
         let checked = currentEditable==i? 'checked':''
 
-        
         // col label, x,y is uneditable for simplicity just now, maybe added later
         let colLen=fullData[i][0].length
         let colLabel = `<label>${ddd ? fullDataCols[i].x+1+':' : '' }${fullDataCols[i].y+1}:</label>`
@@ -397,7 +381,7 @@ function tools(option,index){
 
 
 function updatePlotPop(index, cl){
-    fullDataCols[index].z = cl 
+    fullDataCols[index].z = cl
     legendNames[index] =path.basename(fileNames[index]) + ` ${fullDataCols[index].y+1}:${fullDataCols[index].z+1}`
     Plotly.restyle(figurecontainer, {
         y:[fullData[index][fullDataCols[index].x][fullDataCols[index].z]],
@@ -405,7 +389,7 @@ function updatePlotPop(index, cl){
     }, index)
 
     if(index==currentEditable){
-        col.z = cl 
+        col.z = cl
         dpsy = data[th_in][col.z];
     }
 }
@@ -436,7 +420,6 @@ function settingWindow(){
         minHeight: 700,
         minWidth:600,
         title: "Interactive Data Editor - Plot Settings",
-        // show: false,
         webPreferences: {
             nodeIntegration: true
         }
@@ -448,7 +431,6 @@ function settingWindow(){
     }));
     settingEditWindow.setMenuBarVisibility(false);
 
-    // settingEditWindow.show();
     // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
     settingEditWindow.webContents.once("dom-ready", function () {
         let lay = figurecontainer.layout

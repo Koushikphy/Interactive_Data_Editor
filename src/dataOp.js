@@ -328,7 +328,6 @@ function deleteInterpolate() {
     saveOldData();
     for (let ind of index) data[th_in][col.z][ind] = spl.getVal(data[th_in][col.y][ind]);
     endJobs()
-
 };
 
 

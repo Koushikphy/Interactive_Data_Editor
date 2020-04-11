@@ -354,32 +354,13 @@ const homeMenuTemplate = [{
                     childWindow.show();
                 }
             }, {
-            //     label: "Keyboard Shortcuts",
-            //     click() {
-            //         var childWindow = new BrowserWindow({
-            //             show: false,
-            //             title: "Interactive Data Editor - Documentation",
-            //             icon: path.join(__dirname, 'figs/charts.png'),
-            //             webPreferences: {
-            //                 nodeIntegration: true
-            //             }
-            //         });
-            //         childWindow.loadURL(url.format({
-            //             pathname: path.join(__dirname, 'html/doc.html'),
-            //             protocol: 'file:',
-            //             slashes: true
-            //         }));
-            //         childWindow.maximize();
-            //         childWindow.setMenuBarVisibility(false);
-            //         childWindow.webContents.openDevTools()
-            //         childWindow.show();
-            //         childWindow.webContents.send('doc','3');
-            //     }
-            // },{
                 label: "Sample Data",
                 click() {
                     var childWindow = new BrowserWindow({
                         icon: path.join(__dirname, 'figs/charts.png'),
+                        resizable : false,
+                        maxWidth : 400,
+                        width:400,
                         title: "Interactive Data Editor - Sample Data",
                         webPreferences: {
                             nodeIntegration: true
@@ -406,7 +387,11 @@ const homeMenuTemplate = [{
                 click() {
                     var childWindow = new BrowserWindow({
                         icon: path.join(__dirname, 'figs/charts.png'),
-                        title: "Interactive Data Editor",
+                        // resizable : false,
+                        minWidth: 500,
+                        maxWidth : 700,
+                        width:600,
+                        title: "Interactive Data Editor - About",
                         webPreferences: {
                             nodeIntegration: true
                         },
@@ -418,8 +403,7 @@ const homeMenuTemplate = [{
                         slashes: true
                     }));
                     childWindow.setMenuBarVisibility(false);
-                    childWindow.webContents.openDevTools()
-
+                    // childWindow.webContents.openDevTools()
                 }
             },
         ]

@@ -1,11 +1,20 @@
-const fs = require("fs");
-const path = require('path');
-const url = require('url');
-var undoStack = [],redoStack = [],
+const fs     = require("fs"),
+      path   = require('path'),
+      url    = require('url'),
+      xCol   = document.getElementById("xCol"),
+      yCol   = document.getElementById("yCol"),
+      zCol   = document.getElementById("zCol"),
+      sCol   = document.getElementById("sCol"),
+      slider = document.getElementById('range'),
+      thumb  = document.getElementById('thumb'),
+      parentWindow = remote.getCurrentWindow();
+
+var undoStack = [],
+    redoStack = [],
     editorWindow,
     show = false,
     saved = true,
-    compFName, firstSave = true,
+    firstSave = true,
     issame = false,
     fullData = [],
     fullDataCols = [],
@@ -13,13 +22,9 @@ var undoStack = [],redoStack = [],
     saveNames = [],
     legendNames = [],
     rangedSelector=0,
-    xCol = document.getElementById("xCol"),
-    yCol = document.getElementById("yCol"),
-    zCol = document.getElementById("zCol"),
-    sCol = document.getElementById("sCol"),
-    // xVal = document.getElementById("x_val");
-    parentWindow = remote.getCurrentWindow(),
     currentEditable = 0;
+
+
 
 
 
@@ -78,14 +83,6 @@ function updateData(init=false,all=true) {
 
     th_in = 0;
     if(ddd) setUpSlider()
-    // if (ddd) { //3D slider setup
-    //     $slider.slider({
-    //         max: data.length - 1,
-    //         value: 0
-    //     })
-    //     $ch.text(xName + '=' + data[0][col.x][0])
-    //     $("#drag").html((_, html) => html.replace("Y", "X"));
-    // }
 
     updatePlot(all);
     updateOnServer();
@@ -165,7 +162,6 @@ function fileReader(fname) {
     undoStack = []; redoStack = [];  swapperIsOn = false;
 
     // $("#full").show();
-    // remove older, initialize a new plot
     let ind = figurecontainer.data.length
     if(ind>1) Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))  // delete extra traces
     // if currentEditable is not the first trace then, we have to update the points and also have to change the plot style
@@ -265,18 +261,10 @@ function updatePlot(all = true) {
 }
 
 
-// function sliderChanged() {
-//     $slider.slider("value", th_in)
-//     $ch.text(xName + '=' + data[th_in][col.x][0])
-//     updatePlot()
-//     startDragBehavior();
-// };
-
 // 3 px is just a shift from sides
 function sliderChanged(){
     let max = data.length-1;
     let xPX = th_in * (document.body.clientWidth -6 - thumb.offsetWidth) / max+3;
-    // xPX = xPX*100/document.body.clientWidth
     thumb.style.left = `${xPX}px`
     thumb.innerText = `${xName}=${data[th_in][col.x][0]}`
     updatePlot();
@@ -296,8 +284,6 @@ function setUpSlider(){
 }
 
 
-
-
 function colChanged(value) {
     fullDataCols[currentEditable].z = col.z = value;
     legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${col.y + 1}:${col.z + 1}`
@@ -309,9 +295,8 @@ function colChanged(value) {
 
 
 
-
-
 clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper))
+
 
 function startDragBehavior() {
     var d3 = Plotly.d3;
@@ -407,6 +392,7 @@ function doIt() {
 
 function updateOnServer() {
     if (!serve) return;
+    // may be removed
     return new Promise((resolve, reject)=>{
         let x_list = [],
             y_list = [],

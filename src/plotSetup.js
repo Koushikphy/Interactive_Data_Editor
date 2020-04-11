@@ -1,11 +1,8 @@
 var data = [],
-    compdata = [],
     olddata = "",
     dpsx = [],
     dpsy = [],
-    dpsy2 = [],
     index = [],
-    del_dat = [],
     th_in = 0,
     refdat = 1,
     ma = 1,
@@ -22,14 +19,8 @@ var data = [],
         s: 0
     },
     xName = "X",
-    // $slider = $("#slider"),
     figurecontainer = document.getElementById("figurecontainer");
-    // $ch = $("#custom-handle")
     const Plotly = require('plotly.js-gl3d-dist');
-    // const Plotly = require('plotly.js-basic-dist');
-    const slider = document.getElementById('range');
-    const thumb = document.getElementById('thumb');
-
 
 
 
@@ -174,22 +165,10 @@ var mode={
         ]
     ]
 }
-// console.log($('#figurecontainer').height(),$('#figurecontainer').width())
+
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], layout, mode);
 points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
-
-
-
-// $slider.slider({
-//     min: 0,
-//     max: 0,
-//     step: 1,
-//     slide: function (event, ui) {
-//         th_in = ui.value;
-//         sliderChanged();
-//     }
-// });
 
 
 
