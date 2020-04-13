@@ -195,5 +195,4 @@ window.addEventListener("resize", function(){
     if(fullData.length && ddd) sliderChanged()
 }) //needed to position the thumb div
 
-// resizePlot();
 $('#filler').width($('#container').parent().width())

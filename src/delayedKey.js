@@ -211,12 +211,6 @@ function ipcTrigger(e,d){
         case '3dview':
             openViewer()
             break;
-        // case "wire":
-        //     openViewer(0);
-        //     break;
-        // case "surface":
-        //     openViewer(1);
-        //     break;
         case "spread":
             spreadsheet();
             break;

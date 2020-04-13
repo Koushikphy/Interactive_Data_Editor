@@ -199,10 +199,10 @@ function fileReader(fname) {
 
 
     // load all scripts here
-    if(notLoaded){ // this seems pretty bad, replace with require in future
-        $.getScript('../lib/delay.min.js')
-        notLoaded = false
-    }
+    // if(notLoaded){ // this seems pretty bad, replace with require in future
+    //     $.getScript('../lib/delay.min.js')
+    //     notLoaded = false
+    // }
 
     // part of the reset that is performed later
     document.title = "Interactive Data Editor - " + replaceWithHome(fname);
@@ -217,7 +217,7 @@ function fileReader(fname) {
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     setTimeout(()=>{closeThis2d();closeThis();},111)
 }
-var notLoaded = true
+// var notLoaded = true
 
 
 
@@ -317,7 +317,7 @@ function startDragBehavior() {
         let xaxis = figurecontainer._fullLayout.xaxis;
 
         let yVal = clamp(yaxis.p2l(d3.event.y), ...yaxis.range);
-        dpsy[pIndex] = yVal
+        dpsy[pIndex] = yVal //dpsy is a reference to data, so this also modifies the data
         for (let i of index) dpsy[i] = yVal - oldDatY[pIndex] + oldDatY[i]
         if (lockXc) {
             Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable)
@@ -331,8 +331,6 @@ function startDragBehavior() {
     drag.on("dragend", updateOnServer)
     d3.selectAll(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).call(drag);
 };
-
-
 
 
 

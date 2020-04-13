@@ -35,7 +35,6 @@
         var full = document.getElementById("fullS");
         var xcol = [], data = [], hot, columns = [], xName, mytable;
         var event, th_in = 0
-        // , $ch = $("#custom-handle"), $slider = $("#slider");
 
         ipcRenderer.on("slider", function (e, d) {
             // e.sender.send("test", "2u3i")
@@ -48,16 +47,6 @@
                 document.getElementById('range-div').style.display ='block'
                 document.getElementById('range-div').style.marginTop ='5px'
                 setUpSlider()
-                // $slider.show()
-                // $(function () {
-                    // $slider.slider({
-                    //     min: 0, max: data.length - 1, step: 1,
-                    //     slide: function (event, ui) {
-                    //         th_in = ui.value;
-                    //         sliderChanged();
-                    //     }
-                    // });
-                // });
 
             } else {
                 full.style.display = "none";
@@ -85,21 +74,13 @@
                         onload:_=>setTimeout(_=>{
                             let tt = document.getElementsByClassName('jexcel_content')[0]
                             tt.style.height = `${window.innerHeight-tt.offsetTop-10}px`
-                            // let tt=$('.jexcel_content'); tt.height(window.innerHeight-tt.offset().top-10)
                         },1), 
-                        // onchange:_=>btn.style.visibility = "visible",
-                        // oninsertrow:_=>btn.style.visibility = "visible",
                         onsort:_=>{data[th_in] = mytable.records.map(x=>x.map(y=>y.innerHTML))}//;btn.style.visibility = "visible"}
                     })
                     mytable.setData(data[0])
             })
 
 
-        // function sliderChanged() {
-        //     $slider.slider("value", th_in)
-        //     $ch.text(xName + '=' + data[th_in][0][xcol]);
-        //     mytable.setData(data[th_in])
-        // };
 
         const slider = document.getElementById('range');
         const thumb = document.getElementById('thumb');

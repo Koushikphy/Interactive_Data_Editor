@@ -88,9 +88,8 @@ if (fl !== null) {
 }
 
 var fl = JSON.parse(localStorage.getItem("recent"));
-if (fl !== null) {
-    recentLocation = fl;
-}
+if (fl !== null) recentLocation = fl;
+
 
 function getFile(params) {
     console.log(params)
@@ -116,7 +115,6 @@ if (app.isPackaged) {
         document.getElementById('particle').style.opacity = 1
     }
 } else {
-    // document.getElementById("branding").remove()
     document.getElementById('particle').remove();
     if (remote.process.argv.length > 2) {
         window.onload = function () {
