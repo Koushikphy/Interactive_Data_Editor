@@ -1,5 +1,4 @@
 //downloads the image called from main and also from the plotter
-
 function downloadImage(){
     var fileName = $('#dfileName').val()
     var res = $('#imRes').val().split("x")
@@ -64,19 +63,6 @@ function exportPDF({ width=1920, height=1080}={}){
                 img.src = "${imgdata}"
                 setTimeout(() => reject(new Error('too long to load image')), ${3000})
             })`).then(()=>{
-                // win.webContents.printToPDF(printOpts, (err, pdfData) => { 
-                //         console.log(pdfData);
-                //         win.close();
-                //         if(err) {
-                //             reject(err)
-                //         }else{
-                //             console.log('here')
-                //             fs.writeFileSync('fefwe', pdfData)
-                //             // resolve(`PDF file ${fileName} export done`)
-                //             resolve(pdfData)
-                //         }
-                //     })
-                // changes for electron upgrade
                 win.webContents.printToPDF(printOpts).then(pdfData=>resolve(pdfData)).catch(err=>reject(err))
                 }).catch((err) => {
                     reject(err)

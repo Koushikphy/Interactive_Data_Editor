@@ -104,6 +104,7 @@ var TOAST={
 }
 
 TOAST.init();
+
 function showStatus(a){
     var t = TOAST.add(a,4321);
     setTimeout(function(){

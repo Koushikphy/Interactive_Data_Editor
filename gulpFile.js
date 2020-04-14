@@ -17,7 +17,14 @@ function compressCombineJS() {
     return src([
         './src/plotSetup.js',
         './src/functions.js',
-        './src/notify.js'
+        './src/notify.js',
+        './src/dataOp.js',
+        './src/download.js',
+        './src/numeric.js',
+        './src/extendUtils.js',
+        './src/popWindow.js',
+        './src/keyIpcTrigger.js',
+        './src/version.js'
         ])
         .pipe(concat('funcs.js'))
         .pipe(uglify())
@@ -26,25 +33,6 @@ function compressCombineJS() {
         }))
         .pipe(dest('./lib'))
 }
-
-
-
-function compressCombineDelayJS() {
-    return src([
-        './src/dataOp.js',
-        './src/download.js',
-        './src/numeric.js',
-        './src/delayedKey.js',
-        './src/delayedFunc.js',
-        ])
-        .pipe(concat('delay.js'))
-        .pipe(uglify())
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(dest('./lib'))
-}
-
 
 
 
@@ -60,7 +48,6 @@ function compressCombineJSp() {
 
 
 function compressJS() {
-    // return src(['./src/init.js', './src/plotter.js','./src/particles.js'])
     return src(['./src/init.js', './src/particles.js'])
         .pipe(uglify())
         .pipe(rename({
@@ -68,7 +55,6 @@ function compressJS() {
         }))
         .pipe(dest('./lib'))
 }
-
 
 
 function compressCSS() {
@@ -81,7 +67,7 @@ function compressCSS() {
 }
 
 function compressSpredSheetCSS() {
-    return src(['src/style.css','./src/jexcel.css','./src/jsuites.css'])
+    return src(['./src/jexcel.css','./src/jsuites.css'])
         .pipe(concat('spreadsheet.css'))
         .pipe(cleanCSS())
         .pipe(rename({
@@ -100,8 +86,10 @@ function compressCombineSheetJS() {
         .pipe(dest('./lib'))
 }
 
-exports.all     = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp, compressCombineDelayJS, compressSpredSheetCSS, compressCombineSheetJS);
-exports.default = parallel(compressCombineJS,compressCombineDelayJS );
+
+exports.default = parallel(compressJS, compressCSS, compressCombineJS);
+exports.all     = parallel(compressJS, compressCSS, compressCombineJS, compressCombineJSp);
+exports.jsuits  = parallel(compressCombineSheetJS, compressSpredSheetCSS)
 
 exports.watch = function () {
     watch('./src/*.*', parallel('all'));

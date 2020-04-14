@@ -1,26 +1,6 @@
-var data = [],
-    olddata = "",
-    dpsx = [],
-    dpsy = [],
-    index = [],
-    th_in = 0,
-    refdat = 1,
-    ma = 1,
-    file, points,
-    serve = 0,
-    lockXc = 1,
-    swapped = 0,
-    swapper = false,
-    ddd = false,
-    col = {
-        x: 0,
-        y: 0,
-        z: 0,
-        s: 0
-    },
-    xName = "X",
-    figurecontainer = document.getElementById("figurecontainer");
-    const Plotly = require('plotly.js-gl3d-dist');
+var points;
+const figurecontainer = document.getElementById("figurecontainer"),
+        Plotly = require('plotly.js-gl3d-dist');
 
 
 
@@ -108,7 +88,9 @@ var iniPointsD = {
 };
 
 
-const clone = (x) => JSON.parse(JSON.stringify(x))
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper));
+const transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
 
 
 
@@ -172,27 +154,27 @@ points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .poin
 
 
 
-ipcRenderer.on("rf",  (e, d)=> fileReader(d))
+// ipcRenderer.on("rf",  (e, d)=> fileReader(d))
 
-ipcRenderer.on('checkClose', function (e, d) {
-    if (!saved) var res = dialog.showMessageBoxSync({
-        type: "warning",
-        title: "Unsaved data found!!!",
-        message: "Do you want to quit without saving the changes ?",
-        buttons: ['Yes', "No"]
-    });
-    if (!res) ipcRenderer.send('checkClose', 'closeIt');
-})
+// ipcRenderer.on('checkClose', function (e, d) {
+//     if (!saved) var res = dialog.showMessageBoxSync({
+//         type: "warning",
+//         title: "Unsaved data found!!!",
+//         message: "Do you want to quit without saving the changes ?",
+//         buttons: ['Yes', "No"]
+//     });
+//     if (!res) ipcRenderer.send('checkClose', 'closeIt');
+// })
 
 
-ipcRenderer.on("menuTrigger", (e, d) =>{
-    if (show) console.log(e, d);
-    if(d=="open") fileLoader()
-});
+// // ipcRenderer.on("menuTrigger", (e, d) =>{
+// //     if (show) console.log(e, d);
+// //     if(d=="open") fileLoader()
+// // });
 
-window.addEventListener("resize", function(){
-    $('#filler').width($('#container').parent().width())
-    if(fullData.length && ddd) sliderChanged()
-}) //needed to position the thumb div
+// window.addEventListener("resize", function(){
+//     $('#filler').width($('#container').parent().width())
+//     if(fullData.length && ddd) sliderChanged()
+// }) //needed to position the thumb div
 
-$('#filler').width($('#container').parent().width())
+// $('#filler').width($('#container').parent().width())

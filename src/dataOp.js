@@ -1,3 +1,35 @@
+function parseData(strDps) {
+    var newdat = [],
+        blocks = [];
+    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
+    try{
+        for (let i of strDps) {
+            blocks = i.trim().split("\n");
+            for (var j = 0; j < blocks.length; j++) {
+                blocks[j] = blocks[j].trim().split(/[\s\t]+/);
+                blocks[j] = blocks[j].map(x => {
+                    y = parseFloat(x)
+                    if(isNaN(y)){
+                        throw "badData"
+                    } else{
+                        return y
+                    }
+                });
+            };
+            newdat.push(transpose(blocks));
+        }
+    } catch(err){
+        if(err='badData'){
+            alertElec("Bad data found !!!\nCheck the file before openning.")
+        }
+        return
+    }
+    return newdat;
+};
+
+
+
+
 var copyVar;
 function copyThis() {
     copyVar = JSON.stringify([dpsx, dpsy]);
@@ -18,13 +50,6 @@ function pasteThis() {
 
 
 
-function colsChanged(value) {
-    col.s = value;
-    updatePlot();
-    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
-};
-
-
 function sSwapper() {
     [col.s, col.z] = [col.z, col.s]
     sCol.selectedIndex = col.s;
@@ -36,12 +61,9 @@ function sSwapper() {
 
 
 function swapData() {
-    if (!index.length) return;
-    if(!swapperIsOn)  return;
+    if (!index.length || !swapperIsOn) return;
     saveOldData();
-    for (let ind of index) {
-        [data[th_in][col.z][ind], data[th_in][col.s][ind]] = [data[th_in][col.s][ind], data[th_in][col.z][ind]]
-    }
+    for (let ind of index) [data[th_in][col.z][ind], data[th_in][col.s][ind]] = [data[th_in][col.s][ind], data[th_in][col.z][ind]]
     endJobs()
 }
 
@@ -53,8 +75,7 @@ function moveReflect(key, mod){
     if(mod) tmp.reverse();
     tmp.shift();
     dpsy.splice(ind, tmp.length, ...tmp);
-    updatePlot();
-    updateOnServer();
+    endJobs()
 };
 
 
@@ -88,20 +109,14 @@ function repeatMirror() {
         tmp.splice(0, 1)
 
         for (let time = 0; time < times - 1; time++) {
-            for (let i = 0; i < tmp.length; i++) {
-                newy.push(tmp[i] + last * (1 + time));
-            }
+            for (let i = 0; i < tmp.length; i++) newy.push(tmp[i] + last * (1 + time));
         }
 
         for (let i of cols_wo_y) {
             var new_dat = dat[i].slice(0, ind)
             var tmp = new_dat.slice()
             for (let time = 0; time < times - 1; time++) {
-                if (mirror) {
-                    ptmp = tmp.reverse().slice()
-                } else {
-                    ptmp = tmp.slice()
-                }
+                ptmp = mirror ? tmp.reverse().slice() : tmp.slice()
                 ptmp.splice(0, 1)
                 new_dat.push(...ptmp)
             }
@@ -136,7 +151,6 @@ function dataFiller() {
 
     for(let dt of data[0][col.y]){
         if(dt[0]>=dt[1]){
-            // console.log(dt[0],dt[1])
             alertElec('Monotonically increasing values required for interpolation.\n NOTE: You can use the spreadsheet to sort the data')
             return
         }
