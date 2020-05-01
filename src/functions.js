@@ -43,7 +43,6 @@ function setUpFor3d(){
     $('#xCol,#xLabel,.3D').show()
     $('#yLabel').html('Y')
     $('#zLabel').html('Z')
-    $(".3D").show();
     setUpSlider();
     var fl = JSON.parse(localStorage.getItem("cols3d"));
     if (fl !== null) col = fl
@@ -454,7 +453,6 @@ function exitSwapper() {
 }
 
 
-
 function saveAs() {
     var tmp_name = dialog.showSaveDialogSync({
         title: "Save As:",
@@ -516,11 +514,6 @@ function isswap() {
     updateData();
     $("#drag").html((_, html) => html.replace(n1, n2));
 };
-
-
-
-
-
 
 
 

@@ -1,19 +1,20 @@
 //NOTE: This part of the project is not maintained for a long time
 
 
-var figurecontainer = document.getElementById("figurecontainer"),
-    data = [],
+var data = [],
     ranges = [],
     zCols = [],
     fname, recentLocation='',optionList='';
-const Plotly = require('plotly.js-gl3d-dist');
-const fs = require("fs");
-const {ipcRenderer, remote,shell ,Menu} = require('electron');
-const path = require('path');
-const { dialog } = remote;
-const xcol = document.getElementById('xcol');
-const ycol = document.getElementById('ycol');
-const zcol = document.getElementById('zcol');
+
+const Plotly                            = require('plotly.js-gl3d-dist');
+      fs                                = require("fs"),
+      {ipcRenderer, remote,shell ,Menu} = require('electron'),
+      path                              = require('path'),
+      { dialog }                        = remote,
+      xcol                              = document.getElementById('xcol'),
+      ycol                              = document.getElementById('ycol'),
+      zcol                              = document.getElementById('zcol'),
+figurecontainer = document.getElementById("figurecontainer"),
 ipcRenderer.on('checkClose', function (e, d) { ipcRenderer.send('checkClose', 'closeIt')})
 
 
@@ -230,7 +231,6 @@ var mode={
     ]
 }
 
-//plotting a dummy surface plot and adding the updateJSON funtion to it
 Plotly.newPlot(figurecontainer, [trace], layout, mode);
 
 function fileLoader(){
@@ -703,9 +703,6 @@ function loadConfig(){
     Plotly.update(figurecontainer, out.surfaces, layout)
     updateJSON();
 }
-
-
-
 
 
 

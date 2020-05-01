@@ -320,3 +320,11 @@ document.body.ondrop = (ev) => {
     if (fname !== undefined) fileReader(fname);
     ev.preventDefault()
 }
+
+function selectWheel(ev){
+    let add = ev.deltaY >0 ? 1 : -1
+    let cur = ev.toElement.selectedIndex
+    let max = ev.toElement.length-1
+    if((max==cur && add==1) || (cur==0 && add==-1) ) return
+    ev.toElement.selectedIndex = cur + add
+}
