@@ -1,7 +1,7 @@
 const popupbox = document.getElementById('popupbox')
 
 function buildDOM(){
-    var txt = `<label class='heading'>List of Plots</label>`
+    var txt =''// `<label class='heading'>List of Plots</label>`
     for(let i=0; i<fileNames.length; i++){
         let fileName = fileNames[i]
         let shortName = path.basename(fileName)
@@ -48,8 +48,11 @@ function buildDOM(){
             </div>
         </div><br>`
     }
-    txt += `<button class='lButton' title='' onclick="closePopUp()">Close</button>`
-    popupbox.innerHTML = txt
+    txt+='<br>'
+    // txt += `<button class='lButton' title='' onclick="closePopUp()">Close</button>`
+    // popupbox.innerHTML = txt
+    // openPop('List of plots', txt,'50%')
+    popMain.innerHTML = txt 
 }
 
 
@@ -92,25 +95,33 @@ function updatePlotPop(index, cl){
         col.z = cl
         dpsy = data[th_in][col.z];
     }
+    zCol.selectedIndex = col.z 
 }
 
 
 
-function openPopUp(){
-    popupbox.style.opacity = '1'
-    popupbox.style.visibility = 'visible'
-}
+// function openPopUp(){
+//     popupbox.style.opacity = '1'
+//     popupbox.style.visibility = 'visible'
+// }
 
-function closePopUp(){
-    popupbox.style.visibility = 'hidden'
-    popupbox.style.opacity = '0'
-}
+// function closePopUp(){
+//     popupbox.style.visibility = 'hidden'
+//     popupbox.style.opacity = '0'
+// }
+
+
 
 function plotListPop(){
+    // buildDOM()
+    // popupbox.style.width = '50%'
+    // popupbox.style.textAlign = 'center'
+    // openPopUp()
     buildDOM()
-    popupbox.style.width = '50%'
-    popupbox.style.textAlign = 'center'
-    openPopUp()
+    titletxt.innerHTML = 'List of Plots'
+    pop.style.width = '50%'
+    popMain.style.textAlign = 'center'
+    openPop()
 }
 
 
@@ -180,7 +191,6 @@ function spreadsheet() {
 
 var viewerWindow;
 function openViewer() {
-
     viewerWindow = new BrowserWindow({
         show: false,
         title: "Interactive Data Editor",
@@ -215,4 +225,40 @@ function alertElec(msg, type=1, title="Failed to execute."){
         message: msg,
         buttons: ['OK']
     });
+}
+
+
+
+
+
+
+const pop = document.getElementById('popup')
+const popMain = document.getElementById('popmain')
+const titletxt = document.getElementById('titletxt')
+
+function closePop(){
+    pop.style.opacity = 0
+    setTimeout(()=>{pop.style.visibility='hidden'},250)
+}
+
+function openPop(){
+    pop.style.visibility='visible'
+    pop.style.opacity = 1
+}
+
+// openPop('Hello', 'Hi there')
+
+document.getElementById('title').onmousedown = (e)=>{
+    x = e.clientX;
+    y = e.clientY;
+    document.onmouseup = (e)=>{
+        document.onmouseup = null;
+        document.onmousemove = null;
+    };
+    document.onmousemove = (e)=>{
+        pop.style.top = `${pop.offsetTop - y + e.clientY}px`
+        pop.style.left = `${pop.offsetLeft - x + e.clientX}px`
+        x = e.clientX;
+        y = e.clientY;
+    };
 }

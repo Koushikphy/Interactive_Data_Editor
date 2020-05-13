@@ -95,9 +95,8 @@ const transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
 
 
 function triggerDownload() {
-    popupbox.innerHTML = `<label class='heading'>Save the Image</label>
-            &ensp; File Name:<input type="text" id= "dfileName"><br>
-            &ensp; File Type:<select id="fileFormat">
+    popMain.innerHTML = `&ensp; File Name:<input type="text" id= "dfileName"><br>
+            &ensp; File Type: <select id="fileFormat">
             <option>PDF</option>
             <option>JPEG</option>
                     <option>PNG</option>
@@ -122,14 +121,13 @@ function triggerDownload() {
                 <option value="3840×2160">
             </datalist>
             <br>
-            <div style='text-align:center;margin:7px;margin-top:1pc'>
-                <input type="submit" value="OK" onclick="downloadImage();closePopUp();">
-                <input type="submit" value="Cancel" onclick="closePopUp();">
+            <div style='text-align:center;margin-top:10px'>
+                <input type="submit" value="OK" onclick="downloadImage();closePop();">
             </div>`
-    popupbox.style.width = 'fit-content'
-    popupbox.style.textAlign = 'left'
-    openPopUp()
-    console.log('hello there')
+        pop.style.width = 'fit-content'
+        titletxt.innerHTML = 'Save Image'
+        popMain.style.textAlign = 'left'
+        openPop()
 }
 
 var mode={

@@ -360,6 +360,8 @@ function changeEditable(index, colorReset=true){
     for (let i = 0; i < dpsx.length; i++) points[i].index = i
     startDragBehavior();
     firstSave = true; undoStack = []; redoStack = []
+    zCol.selectedIndex = col.z 
+    updateOnServer()
 }
 
 

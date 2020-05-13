@@ -201,12 +201,13 @@ const conMenu = Menu.buildFromTemplate([
     {
         label: 'Change Value',
         click(){
-            popupbox.innerHTML = `&ensp;Set value: &nbsp;<input type="text" style="width:6pc" id='valinput' ><br><br>
-                    <input type="submit" value="OK" onclick="setValue(this);closePopUp();">
-                    <input type="submit" value="Cancel" onclick="closePopUp();">`
-            popupbox.style.width = 'fit-content'
-            popupbox.style.textAlign = 'center'
-            openPopUp()
+            popMain.innerHTML = `&ensp;Set value: &nbsp;<input type="text" style="width:6pc" id='valinput' onchange="setValue();closePop();"><br>
+                    <input type="submit" value="OK" onclick="setValue();closePop();" style="margin-top:10px">`
+            pop.style.width = 'fit-content'
+            popMain.style.textAlign = 'center'
+            titletxt.innerHTML = 'Change Value'
+
+            openPop()
         }
     },{
         label: 'Change Sign',
@@ -241,12 +242,7 @@ figurecontainer.oncontextmenu= ()=>{ if(index.length) conMenu.popup() }
 
 
 
-slider.onmousewheel= (ev)=>{
-    let change = ev.deltaY <0 ? 1 : -1
-    if((change==-1 && th_in==0) || (change==+1 && th_in==data.length-1)) return
-    th_in += change
-    sliderChanged()
-}
+
 
 
 figurecontainer.onclick= (e)=>{
@@ -328,3 +324,13 @@ function selectWheel(ev){
     if((max==cur && add==1) || (cur==0 && add==-1) ) return
     ev.toElement.selectedIndex = cur + add
 }
+
+function slideWheel(ev){
+    let change = ev.deltaY <0 ? 1 : -1
+    if((change==-1 && th_in==0) || (change==+1 && th_in==data.length-1)) return
+    th_in += change
+    sliderChanged()
+}
+
+slider.onmousewheel= slideWheel
+figurecontainer.onmousewheel= slideWheel

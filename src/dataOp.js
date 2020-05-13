@@ -374,7 +374,7 @@ function changeSign() {
 
 
 
-function setValue(dat){
+function setValue(){
     saveOldData();
     var value = parseFloat($("#valinput").val());
     if (isNaN(value) ){

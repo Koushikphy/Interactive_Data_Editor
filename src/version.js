@@ -26,7 +26,4 @@ function versionCheck() {
 };
 
 
-// setTimeout(function(){
-//     if (app.isPackaged)  versionCheck()
-//     new Element("script", {src: "../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG", type: "text/javascript"});
-// },5000)
+setTimeout(function(){ if (app.isPackaged) versionCheck() },5000)
