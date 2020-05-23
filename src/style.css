@@ -349,7 +349,7 @@ background-color: rgb(219, 55, 55);
     position: absolute;
     top: 200px;
     left: 200px;
-    border-radius: 8px 8px 0 0;
+    border-radius: 5px 5px 0 0;
     border: 1px solid black;
     box-shadow: 8px 8px 6px -6px black;
     transition: opacity 0.3s;
@@ -359,7 +359,7 @@ background-color: rgb(219, 55, 55);
 }
 #title{
     background-color: darkcyan;
-    border-radius: 8px 8px 0 0;
+    border-radius: 5px 5px 0 0;
     padding-left: 5px;
     font-size: 21px;
     border-bottom:  1px solid black;
