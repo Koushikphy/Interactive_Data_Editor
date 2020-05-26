@@ -138,10 +138,9 @@ const homeMenuTemplate = [{
             },
             {
                 label: "3D plotter",
-                // enabled: false,
                 click() {
                     mainWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/Plotter.html'),
+                        pathname: path.join(__dirname, './html/Plotter/Plotter.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
@@ -416,7 +415,8 @@ var homeMenu = Menu.buildFromTemplate(homeMenuTemplate);
 
 const plotMenuTemplate = [{
     label: 'File',
-    submenu: [{
+    submenu: [
+        {
             label: "Open file",
             accelerator: 'CmdOrCtrl+O',
             click() {
@@ -424,13 +424,21 @@ const plotMenuTemplate = [{
             }
         },
         {
+            label: "Add file",
+            click() {
+                mainWindow.webContents.send("menuTrigger", "add");
+            }
+        },
+        {
             label: "Load Configuration",
+            enabled: false,
             click() {
                 mainWindow.webContents.send("menuTrigger", "lcon");
             }
         },
         {
             label: "Save Configuration",
+            enabled: false,
             click() {
                 mainWindow.webContents.send("menuTrigger", "scon");
             }
@@ -443,10 +451,10 @@ const plotMenuTemplate = [{
             type: 'separator'
         },
         {
-            label : "Toggle Plot Settings",
+            label : "Open Plot Settings",
             accelerator: 'CmdOrCtrl+K',
             click(){
-                mainWindow.webContents.send("menuTrigger", 'side')
+                mainWindow.webContents.send("menuTrigger", 'plotsetting')
             }
         },
         {
@@ -499,74 +507,84 @@ const plotMenuTemplate = [{
     },
 
     {
-    label: "Help",
-    submenu: [{
-            label: "Documentation",
-            click() {
-                var childWindow = new BrowserWindow({
-                    show: false,
-                    minWidth: 1200,
-                    title: "Interactive Data Editor - Documentation",
-                    icon: path.join(__dirname, 'figs/charts.png'),
-                    webPreferences: {
-                        nodeIntegration: true
-                    }
-                });
-                childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'html/doc.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
-                childWindow.maximize();
-                childWindow.setMenuBarVisibility(false);
-                childWindow.show();
-            }
-        }, {
-            label: "Sample Data",
-            click() {
-                var childWindow = new BrowserWindow({
-                    icon: path.join(__dirname, 'figs/charts.png'),
-                    title: "Interactive Data Editor - Sample Data",
-                    webPreferences: {
-                        nodeIntegration: true
-                    }
-                });
-                childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'html/data.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
-                childWindow.setMenuBarVisibility(false);;
-            }
-        },
+        label: "Help",
+        submenu: [{
+                label: "Documentation",
+                click() {
+                    var childWindow = new BrowserWindow({
+                        show: false,
+                        minWidth: 1200,
+                        minHeight: 700,
+                        title: "Interactive Data Editor - Documentation",
+                        icon: path.join(__dirname, 'figs/charts.png'),
+                        webPreferences: {
+                            nodeIntegration: true
+                        }
+                    });
+                    childWindow.loadURL(url.format({
+                        pathname: path.join(__dirname, 'html/doc.html'),
+                        protocol: 'file:',
+                        slashes: true
+                    }));
+                    childWindow.maximize();
+                    childWindow.setMenuBarVisibility(false);
+                    childWindow.show();
+                }
+            }, {
+                label: "Sample Data",
+                click() {
+                    var childWindow = new BrowserWindow({
+                        icon: path.join(__dirname, 'figs/charts.png'),
+                        resizable : false,
+                        maxWidth : 400,
+                        width:400,
+                        title: "Interactive Data Editor - Sample Data",
+                        webPreferences: {
+                            nodeIntegration: true
+                        }
+                    });
+                    childWindow.loadURL(url.format({
+                        pathname: path.join(__dirname, 'html/data.html'),
+                        protocol: 'file:',
+                        slashes: true
+                    }));
+                    childWindow.setMenuBarVisibility(false);;
+                    // childWindow.webContents.openDevTools()
+                }
+            },
 
-        {
-            label: "Homepage",
-            click() {
-                shell.openExternal("https://koushikphy.github.io/ide/");
-            }
-        },
-        {
-            label: "About",
-            click() {
-                var childWindow = new BrowserWindow({
-                    icon: path.join(__dirname, 'figs/charts.png'),
-                    title: "Interactive Data Editor",
-                    webPreferences: {
-                        nodeIntegration: true
-                    }
-                });
-                childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'html/about.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
-                childWindow.setMenuBarVisibility(false);
-                // childWindow.webContents.openDevTools()
-            }
-        },
-    ]
-}
+            {
+                label: "Homepage",
+                click() {
+                    shell.openExternal("https://koushikphy.github.io/ide/");
+                }
+            },
+            {
+                label: "About",
+                click() {
+                    var childWindow = new BrowserWindow({
+                        icon: path.join(__dirname, 'figs/charts.png'),
+                        // resizable : false,
+                        minWidth: 500,
+                        maxWidth : 700,
+                        width:600,
+                        title: "Interactive Data Editor - About",
+                        webPreferences: {
+                            nodeIntegration: true
+                        },
+                        height:650
+                    });
+                    childWindow.loadURL(url.format({
+                        pathname: path.join(__dirname, 'html/about.html'),
+                        protocol: 'file:',
+                        slashes: true
+                    }));
+                    childWindow.setMenuBarVisibility(false);
+                    // childWindow.webContents.openDevTools()
+                }
+            },
+        ]
+    }
 ];
 
 

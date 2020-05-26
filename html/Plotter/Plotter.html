@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>3D Plotter</title>
+    <link href="./plotterstyle.css" rel="stylesheet" >
+    <style>
+        body{
+            display: flex;
+            flex-flow: column;
+        }
+        #toolbox{
+            position: absolute;
+            width: fit-content;
+            display: block;
+        }
+        #plotList{
+            width: 65%;
+            margin-left: 1pc;
+            margin-right: 1pc;
+        }
+    </style>
+    <script>
+        if (typeof module === 'object') { window.module = module; module = undefined; }
+    </script>
+
+    <script src="../../lib/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="basediv" id="figurecontainer"></div>
+
+    <div class="borders" id="toolbox">
+        <div style="padding-bottom: 5px;">
+            Plot Lists ⇒ <select id='plotList' onclick="currentIndex=this.selectedIndex"></select>
+            <button class="copyBtn" title='Use this file' onclick="addNewPlot()">
+                <svg viewBox="0 0 1792 1792">
+                    <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
+                </svg>
+                </button>
+            <button class="clsBtn" title='Remove this file' onclick="deleteThisPlot()">
+                <svg viewBox="0 0 1792 1792">
+                    <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
+                </svg>
+            </button>
+        </div>
+        <div style="padding-bottom: 5px;">
+            Data Column ⇒
+            X <select id="xcol" onchange="updatePlot()"></select>
+            Y <select id="ycol" onchange="updatePlot()"></select>
+            Z <select id="zcol" onchange="updatePlot()"></select>    
+        </div>
+
+        <div>
+            Axes Ranges ⇒ 
+            X <input onchange="setRange(this.value,0)" type="text" />
+            Y <input onchange="setRange(this.value,1)" type="text" />
+            Z <input onchange="setRange(this.value,2)" type="text" />
+        </div>
+    </div>
+
+    <div id="popup">
+        <div id="title">
+            <label id='titletxt'>Title</label>
+            <b id='closbtn' onclick="closePop()" title="Close">X</b>
+        </div>
+        <div id="popmain"></div>
+    </div>
+
+
+    <div id = "branding">
+         <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br>
+    </div>
+    <script src="./plotter.js"></script>
+</body>
+
+</html>
+

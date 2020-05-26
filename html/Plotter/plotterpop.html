@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../lib/jsoneditor/jsoneditor.min.css">
+    <link rel="stylesheet" href="../../lib/jsoneditor/jsoneditor.min.css">
     <style>
 
     .topbar{
@@ -191,7 +191,7 @@
     </div>
 
 
-    <script src="../lib/jsoneditor/jsoneditor.min.js"></script>
+    <script src="../../lib/jsoneditor/jsoneditor.min.js"></script>
     <script>
         const { remote, ipcRenderer } = require('electron');
 
@@ -452,6 +452,243 @@
         }
 
         ipcRenderer.on('plotsetting',getUpdate)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var typeList = ["Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
+var colorPallete = ['Greys','YlGnBu','Greens','YlOrRd','Bluered','RdBu','Reds','Blues','Picnic','Rainbow','Portland','Jet','Hot','Blackbody','Earth','Electric','Viridis','Cividis']
+
+
+
+var schema ={
+    "properties":{
+        "Surfaces":{
+            "properties":{
+                "colorscale":{
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": colorPallete
+                    }
+                }
+            }
+        },
+        "Layout":{
+            "properties":{
+                "Zaxis":{
+                    "properties":{
+                        "title":{
+                            "properties":{
+                                "font":{
+                                    "properties":{
+                                        "family":{
+                                            "enum": typeList
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "tickfont":{
+                            "properties":{
+                                "family":{
+                                    "enum": typeList
+                                }
+                            }
+                        },
+                        "tickmode": {
+                                "enum":["auto","linear", "array"]
+
+                        },
+                        "ticks":{
+                            "enum":["outside","inside", ""]
+                        }
+                    }
+                },
+                "Yaxis":{
+                    "properties":{
+                        "title":{
+                            "properties":{
+                                "font":{
+                                    "properties":{
+                                        "family":{
+                                            "enum": typeList
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "tickfont":{
+                            "properties":{
+                                "family":{
+                                    "enum": typeList
+                                }
+                            }
+                        },
+                        "tickmode": {
+                                "enum":["auto","linear", "array"]
+
+                        },
+                        "ticks":{
+                            "enum":["outside","inside", ""]
+                        }
+                    }
+                },
+                "Xaxis":{
+                    "properties":{
+                        "title":{
+                            "properties":{
+                                "font":{
+                                    "properties":{
+                                        "family":{
+                                            "enum": typeList
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "tickfont":{
+                            "properties":{
+                                "family":{
+                                    "enum": typeList
+                                }
+                            }
+                        },
+                        "tickmode": {
+                                "enum":["auto","linear", "array"]
+
+                        },
+                        "ticks":{
+                            "enum":["outside","inside", ""]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+var options = {
+    onChangeJSON: function (json) {
+        var layout = figurecontainer.layout;
+        layout.scene.aspectmode = "manual"
+        layout.scene.aspectratio = json.Layout.aspectratio
+        layout.scene.xaxis = json.Layout.Xaxis
+        layout.scene.yaxis = json.Layout.Yaxis
+        layout.scene.zaxis = json.Layout.Zaxis
+        layout.scene.zaxis.tickvals = json.Layout.Zaxis.tickvals.split(",")
+        layout.scene.zaxis.ticktext = json.Layout.Zaxis.ticktext.split(",")
+        layout.scene.xaxis.tickvals = json.Layout.Xaxis.tickvals.split(",")
+        layout.scene.xaxis.ticktext = json.Layout.Xaxis.ticktext.split(",")
+        layout.scene.yaxis.tickvals = json.Layout.Yaxis.tickvals.split(",")
+        layout.scene.yaxis.ticktext = json.Layout.Yaxis.ticktext.split(",")
+
+        Plotly.update(figurecontainer, json.Surfaces, layout);
+    },
+    onColorPicker: function (parent, color, onChange) {
+        new JSONEditor.VanillaPicker({
+            parent: parent,
+            color: color,
+            popup: 'bottom',
+            onChange: function (color) {
+                var alpha = color.rgba[3]
+                var hex = (alpha === 1) ?
+                    color.hex.substr(0, 7) :
+                    color.hex
+                onChange(hex)
+            },
+        }).show();
+    },
+    mode: 'form',
+    schema: schema
+};
+
+var jsoneditor = document.getElementById('jsoneditor')
+// var editor = new JSONEditor( jsoneditor, options, {"Surfaces": '', "Layout": '' });
+// $('#jsoneditor').height(window.innerHeight - jsoneditor.offsetTop)
+
+
+
+function updateJSON() {
+    var Surfaces = {
+        hoverinfo: [],
+        colorscale: [],
+        opacity: [],
+        name : [],
+        hoverlabel:[],
+        showscale: [],
+        cmin: [],
+        cmax: [],
+        cauto:[],
+        colorbar:[],
+        contours:[],
+        hidesurface:[]
+    }
+
+    for (let trace of figurecontainer.data) {
+            for (let key of Object.keys(Surfaces)){
+                Surfaces[key].push(trace[key])
+        }
+    }
+    let lay = JSON.parse(JSON.stringify(figurecontainer.layout.scene))
+    var Layout = {
+        "aspectratio" :lay.aspectratio,
+        "Xaxis" :lay.xaxis,
+        "Yaxis" :lay.yaxis,
+        "Zaxis" :lay.zaxis,
+    }
+    try {
+        Layout.Xaxis.ticktext = lay.xaxis.ticktext.join(',')
+        Layout.Xaxis.tickvals = lay.xaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Yaxis.ticktext = lay.yaxis.ticktext.join(',')
+        Layout.Yaxis.tickvals = lay.yaxis.tickvals.join(',')
+    } catch (err) {};
+    try {
+        Layout.Zaxis.ticktext = lay.zaxis.ticktext.join(',')
+        Layout.Zaxis.tickvals = lay.zaxis.tickvals.join(',')
+    } catch (err) {}
+    editor.update({
+        Surfaces,
+        Layout
+    })
+}
+
+
+
 
     </script>
 </body>
