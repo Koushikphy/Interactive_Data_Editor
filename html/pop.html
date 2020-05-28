@@ -101,7 +101,7 @@
         padding-top: 5px;
         position: absolute;
         width: 80%;
-        height: 75%;
+        height: 80%;
     }
 
     #laycon{
@@ -176,10 +176,10 @@
             Layout
         </button>
     </div>
-    <div class="bottombar">
+    <!-- <div class="bottombar">
         <button class = 'endbtn' title="Apply changes to the plots" onclick="sendBack()">Apply</button>
         <button class = "endbtn" title="Close the window" onclick="closePage()">Cancel</button>
-    </div>
+    </div> -->
     <div id='main'>
     <div class="container" id='plotcon'>
         <select id='plotselect' onchange="editorPlot.update(plots[this.selectedIndex])"></select>
@@ -311,7 +311,7 @@
         }
 
         const optionsLayout = {
-            onChangeJSON: (json)=>{layout=json},
+            onChangeJSON: (json)=>{layout=json; sendBack()},
             onColorPicker: function (parent, color, onChange) {
                 new JSONEditor.VanillaPicker({
                     parent: parent,
@@ -336,7 +336,8 @@
                 oldTitle = plots[ind].Title
                 plots[ind] = json
                 if(oldTitle != json.Title) updateSelect()
-                plotsel.selectedIndex = ind
+                plotsel.selectedIndex = ind;
+                sendBack()
             },
             onColorPicker: function (parent, color, onChange) {
                 new JSONEditor.VanillaPicker({

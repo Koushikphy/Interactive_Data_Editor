@@ -454,7 +454,7 @@ const plotMenuTemplate = [{
             label : "Open Plot Settings",
             accelerator: 'CmdOrCtrl+K',
             click(){
-                mainWindow.webContents.send("menuTrigger", 'plotsetting')
+                mainWindow.webContents.send("menuTrigger", 'pdash')
             }
         },
         {

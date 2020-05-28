@@ -448,9 +448,18 @@ function openPlotSetting(){
 
     let layout  = figurecontainer.layout
     let trace  = []
-    for(let t of figurecontainer.data){
+
+    for(let i=0; i<figurecontainer.data.length; i++){
+        t = figurecontainer.data[i]
+        let fname = path.basename(fileNames[i], path.extname(fileNames[i]));
+        let a = fullDataCols[i].x +1
+        let b = fullDataCols[i].y +1
+        let c = fullDataCols[i].z +1
+
+        // remove type `surface` from here, but will be added from the incomig
         trace.push({
-            type : t.type,
+            // type : t.type,
+            Title : `${i+1}. ${fname}    ${a}:${b}:${c}`,
             hoverinfo : t.hoverinfo,
             colorscale : t.colorscale,
             opacity : t.opacity,
@@ -468,8 +477,13 @@ function openPlotSetting(){
         if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
         settingEditWindow.webContents.send("plotsetting", [layout, trace]);
     })
+    fs.writeFileSync('tmp_name', JSON.stringify({layout, trace}, null, '\t'), 'utf8')
 }
 
+
+ipcRenderer.on("plotsetting", (_,d)=>{
+    Plotly.update(figurecontainer,...d)
+})
 
 
 
@@ -486,7 +500,7 @@ ipcRenderer.on("menuTrigger", function (e, d) {
         triggerDownload();
     }else if(d=='topbar'){
         showHideToolBox();
-    }else if(d=='plotsetting'){
+    }else if(d=='pdash'){
         openPlotSetting();
     }
 
