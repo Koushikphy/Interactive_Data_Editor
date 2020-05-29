@@ -1,6 +1,3 @@
-//NOTE: This part of the project is not maintained for a long time
-
-
 var data   = [],
     ranges = [],
     zCols  = [],
@@ -239,10 +236,14 @@ function resetEverything(){
     var tmp = Plotly.d3.range(1,figurecontainer.data.length)
     Plotly.deleteTraces(figurecontainer, tmp);
     currentIndex = 0
+    fullData=[]
+    fullDataCols=[]
+    fileNames = []
 }
 
 
 function fileLoader(){
+    resetEverything()
     fname = dialog.showOpenDialogSync({ properties: ['openFile'], defaultPath: recentLocation });
     if (fname === undefined) return
     fname = fname[0]
@@ -252,6 +253,7 @@ function fileLoader(){
     updatePlot();
     buildPlotList()
 }
+
 
 function addNewFile(){
     Plotly.addTraces(figurecontainer,trace)
@@ -270,6 +272,7 @@ function addNewPlot(){
 }
 
 function deleteThisPlot(){
+    if (currentIndex=figurecontainer.data.length-1) currentIndex-=1
     if(figurecontainer.data.length==1) return
     Plotly.deleteTraces(figurecontainer, currentIndex)
     fullData.splice(currentIndex,1)
@@ -283,10 +286,10 @@ function deleteThisPlot(){
 // include a column retainer
 // loads file from the dialog box
 function fileReader(fname) {
-    var strDps = fs.readFileSync(fname, "utf8");
+    let strDps = fs.readFileSync(fname, "utf8");
     strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
-    col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
-    data = [... Array(col)].map(_ => Array());
+    let col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
+    let data = [... Array(col)].map(_ => Array());
     for (var i = 0; i < strDps.length; i++) {
         blocks = strDps[i].trim().split("\n");
         for (var j = 0; j < blocks.length; j++) {
@@ -299,16 +302,12 @@ function fileReader(fname) {
     };
     fullData.push(data)
     fullDataCols.push({
-        x : 1,
-        y : 2,
-        z : 3
+        x : 0,
+        y : 1,
+        z : 2
     })
     fileNames.push(fname)
 
-    // for (var i = 0; i < col; ++i) {
-    //     let flat_dat = [].concat(...data[i]);
-    //     ranges.push([Math.min(...flat_dat), Math.max(...flat_dat)]);
-    // };
 }
 
 
@@ -360,64 +359,41 @@ function updatePlot(){
 
 
 
-function getRange(lim, range) {
-    var min, max;
+function getRange(lim,col) {
     lim = lim.split(",").map(x => parseFloat(x));
-    [min, max] = range;
-
-    if (isNaN(lim[0])) {
-        lim[0] = min;
-    };
-    if (isNaN(lim[1])) {
-        lim[1] = max;
-    };
+    let tmp = fullData[currentIndex][col].flat()
+    let [min, max] = [Math.min(...tmp),Math.max(...tmp)];
+    console.log(min, max)
+    if (isNaN(lim[0])) lim[0] = min
+    if (isNaN(lim[1])) lim[1] = max
     cmin = Math.max(lim[0], min);
     cmax = Math.min(lim[1], max);
     return [lim, [cmin, cmax]];
 };
 
 
-//assuming x and y column of all the traces will be the same
 function setXRange(lim) {
-    var xInd = $('#xcol')[0].selectedIndex+1
-    var range = ranges[xInd]
-    var [lim, [t1,t2]] = getRange(lim, range);
-    console.log(lim)
-    Plotly.relayout(figurecontainer, {
-        "scene.xaxis.range": lim
-    });
-    updateJSON()
+    var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].x);
+    Plotly.relayout(figurecontainer, {"scene.xaxis.range": lim});
 };
 
 
 function setYRange(lim) {
-    var yInd = $('#xcol')[0].selectedIndex+1
-    var range = ranges[yInd]
-    var [lim, [t1,t2]] = getRange(lim, range);
-    Plotly.relayout(figurecontainer, {
-        "scene.yaxis.range": lim
-    });
-    updateJSON()
+    var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].y);
+    Plotly.relayout(figurecontainer, {"scene.yaxis.range": lim});
 };
 
 // assuming zCols has  the list of all the current z axis cols
 function setZRange(lim) {
-
-    var tmpMin=[], tmpMax=[]
-    for(let cc of zCols){
-        tmpMin.push(ranges[cc][0])
-        tmpMax.push(ranges[cc][1])
-    }
-    var range = [ Math.min(...tmpMin), Math.max(...tmpMax) ]
-    var [lim, [cmin, cmax]] = getRange(lim,range)
+    var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].z);
 
     Plotly.update(figurecontainer, {
-        "cmin": cmin,"cmax": cmax
+        "cmin": t1,"cmax": t2
     },{
         'scene.zaxis.range': lim
     })
-    updateJSON()
 };
+
 
 
 function showHideToolBox(){

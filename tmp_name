@@ -1,0 +1,241 @@
+{
+	"layout": {
+		"margin": {
+			"t": 0,
+			"r": 0,
+			"b": 0,
+			"l": 0,
+			"pad": 0
+		},
+		"autorange": true,
+		"spikesides": false,
+		"showlegend": true,
+		"autosize": true,
+		"scene": {
+			"aspectmode": "manual",
+			"aspectratio": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"zaxis": {
+				"title": {
+					"text": "",
+					"font": {
+						"family": "Times New Roman",
+						"size": 10
+					}
+				},
+				"showticklabels": true,
+				"tickfont": {
+					"family": "Times New Roman",
+					"size": 15
+				},
+				"tickmode": "auto",
+				"dtick": 10,
+				"tickvals": "",
+				"ticktext": "",
+				"ticks": "outside",
+				"range": [
+					-0.051056,
+					0.2
+				],
+				"autorange": false,
+				"spikesides": false,
+				"showgrid": true,
+				"zeroline": false,
+				"showline": true
+			},
+			"yaxis": {
+				"title": {
+					"text": "",
+					"font": {
+						"family": "Times New Roman",
+						"size": 10
+					}
+				},
+				"showticklabels": true,
+				"tickfont": {
+					"family": "Times New Roman",
+					"size": 15
+				},
+				"tickmode": "auto",
+				"dtick": 10,
+				"tickvals": "",
+				"ticktext": "",
+				"ticks": "outside",
+				"range": [
+					"",
+					""
+				],
+				"autorange": true,
+				"spikesides": false,
+				"showgrid": true,
+				"zeroline": false,
+				"showline": true
+			},
+			"xaxis": {
+				"title": {
+					"text": "",
+					"font": {
+						"family": "Times New Roman",
+						"size": 10
+					}
+				},
+				"showticklabels": true,
+				"tickfont": {
+					"family": "Times New Roman",
+					"size": 15
+				},
+				"tickmode": "auto",
+				"dtick": 10,
+				"tickvals": "",
+				"ticktext": "",
+				"ticks": "outside",
+				"range": [
+					"",
+					""
+				],
+				"autorange": true,
+				"spikesides": false,
+				"showgrid": true,
+				"zeroline": false,
+				"showline": true
+			},
+			"camera": {
+				"up": {
+					"x": 0,
+					"y": 0,
+					"z": 1
+				},
+				"center": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"eye": {
+					"x": 1.256457087713041,
+					"y": 0.8584261161456147,
+					"z": 1.0888539412449751
+				},
+				"projection": {
+					"type": "perspective"
+				}
+			}
+		}
+	},
+	"trace": [
+		{
+			"Title": "1. surf_rho_7.50    2:3:4",
+			"hoverinfo": "x+y+z",
+			"colorscale": "Portland",
+			"opacity": 1,
+			"showscale": false,
+			"cmin": -0.051056,
+			"cmax": 0.2,
+			"cauto": false,
+			"colorbar": {
+				"thickness": 30,
+				"dtick": 1,
+				"len": 1,
+				"x": 1.02,
+				"xpad": 10,
+				"y": 0.5,
+				"ypad": 10,
+				"tickfont": {
+					"family": "Times New Roman",
+					"size": 20
+				}
+			},
+			"contours": {
+				"x": {
+					"show": false,
+					"highlight": true,
+					"start": 0,
+					"end": 0,
+					"size": 1,
+					"color": "#000",
+					"usecolormap": false,
+					"width": 1
+				},
+				"y": {
+					"show": false,
+					"highlight": true,
+					"start": 0,
+					"end": 0,
+					"size": 1,
+					"color": "#000",
+					"usecolormap": false,
+					"width": 1
+				},
+				"z": {
+					"show": false,
+					"highlight": true,
+					"start": 0,
+					"end": 0,
+					"size": 1,
+					"color": "#000",
+					"usecolormap": false,
+					"width": 1
+				}
+			},
+			"hidesurface": false
+		},
+		{
+			"Title": "2. surf_rho_7.50    2:3:5",
+			"hoverinfo": "x+y+z",
+			"colorscale": "Portland",
+			"opacity": 1,
+			"showscale": false,
+			"cmin": -0.051056,
+			"cmax": 0.2,
+			"cauto": false,
+			"colorbar": {
+				"thickness": 30,
+				"dtick": 1,
+				"len": 1,
+				"x": 1.02,
+				"xpad": 10,
+				"y": 0.5,
+				"ypad": 10,
+				"tickfont": {
+					"family": "Times New Roman",
+					"size": 20
+				}
+			},
+			"contours": {
+				"x": {
+					"show": false,
+					"highlight": true,
+					"start": 0,
+					"end": 0,
+					"size": 1,
+					"color": "#000",
+					"usecolormap": false,
+					"width": 1
+				},
+				"y": {
+					"show": false,
+					"highlight": true,
+					"start": 0,
+					"end": 0,
+					"size": 1,
+					"color": "#000",
+					"usecolormap": false,
+					"width": 1
+				},
+				"z": {
+					"show": false,
+					"highlight": true,
+					"start": 0,
+					"end": 0,
+					"size": 1,
+					"color": "#000",
+					"usecolormap": false,
+					"width": 1
+				}
+			},
+			"hidesurface": false
+		}
+	]
+}
