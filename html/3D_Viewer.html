@@ -139,8 +139,7 @@
         // Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
 
         ipcRenderer.on("sdata", function (e, d) {
-            [data, newCol] = d;
-
+            [data, newCol,swapped] = d;
             updatePlot();
             if (!curCol) curCol = newCol; // first time purpose
             if (newCol[0] !== curCol[0]) {
@@ -234,21 +233,7 @@
         };
 
 
-
-
-
-
-
-
         // functions for wieframe*****************************
-
-
-
-
-
-
-
-
 
 
         function updatePlotWire() {
@@ -290,24 +275,23 @@
                 tmpData1 = [].concat(...data[1]).filter(x => x !== undefined),
                 tmpData2 = [].concat(...data[2]).filter(x => x !== undefined);
 
-            var tmp = [...new Set(tmpData1)].sort((a, b) => a - b);
+            var tmpData = swapped ? tmpData0 : tmpData1
 
-            xxx = [], yyy = [], zzz = [];
-            for (let x of tmp) {
-                var tmp0 = [],
-                    tmp1 = [],
-                    tmp2 = [];
-                for (let i = 0; i < tmpData0.length; i++) {
-                    if (tmpData1[i] == x) {
-                        tmp0.push(tmpData0[i]);
-                        tmp1.push(tmpData1[i]);
-                        tmp2.push(tmpData2[i]);
+            var tmp = [...new Set(tmpData)].sort((a, b) => a - b);
+                xxx = [], yyy = [], zzz = [];
+                for (let x of tmp) {
+                    var tmp0 = [], tmp1 = [], tmp2 = [];
+                    for (let i = 0; i < tmpData0.length; i++) {
+                        if (tmpData[i] == x) {
+                            tmp0.push(tmpData0[i]);
+                            tmp1.push(tmpData1[i]);
+                            tmp2.push(tmpData2[i]);
+                        };
                     };
+                    xxx.push(tmp0);
+                    yyy.push(tmp1);
+                    zzz.push(tmp2);
                 };
-                xxx.push(tmp0);
-                yyy.push(tmp1);
-                zzz.push(tmp2);
-            };
         };
 
 

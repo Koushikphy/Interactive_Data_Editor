@@ -49,9 +49,6 @@ function buildDOM(){
         </div><br>`
     }
     txt+='<br>'
-    // txt += `<button class='lButton' title='' onclick="closePopUp()">Close</button>`
-    // popupbox.innerHTML = txt
-    // openPop('List of plots', txt,'50%')
     popMain.innerHTML = txt 
 }
 
@@ -87,7 +84,7 @@ function updatePlotPop(index, cl){
     fullDataCols[index].z = cl
     legendNames[index] =path.basename(fileNames[index]) + ` ${fullDataCols[index].y+1}:${fullDataCols[index].z+1}`
     Plotly.restyle(figurecontainer, {
-        y:[fullData[index][fullDataCols[index].x][fullDataCols[index].z]],
+        y:[fullData[index][th_in][fullDataCols[index].z]],
         name : [legendNames[index]]
     }, index)
 
@@ -100,24 +97,8 @@ function updatePlotPop(index, cl){
 
 
 
-// function openPopUp(){
-//     popupbox.style.opacity = '1'
-//     popupbox.style.visibility = 'visible'
-// }
-
-// function closePopUp(){
-//     popupbox.style.visibility = 'hidden'
-//     popupbox.style.opacity = '0'
-// }
-
-
-
 function plotListPop(){
-    // buildDOM()
-    // popupbox.style.width = '50%'
-    // popupbox.style.textAlign = 'center'
-    // openPopUp()
-    buildDOM()
+     buildDOM()
     titletxt.innerHTML = 'List of Plots'
     pop.style.width = '50%'
     popMain.style.textAlign = 'center'
@@ -226,10 +207,6 @@ function alertElec(msg, type=1, title="Failed to execute."){
         buttons: ['OK']
     });
 }
-
-
-
-
 
 
 const pop = document.getElementById('popup')

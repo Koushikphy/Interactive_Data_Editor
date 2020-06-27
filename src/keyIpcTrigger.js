@@ -265,7 +265,7 @@ ipcRenderer.on("menuTrigger", ipcTrigger)
 
 ipcRenderer.on("adrf", (_, d)=> addNewFile(d))
 
-ipcRenderer.on("rf",  (_, d)=> fileReader(d))
+ipcRenderer.on("rf", (_, d)=> fileReader(d))
 
 ipcRenderer.on('checkClose', function (_,_) {
     if (!saved) var res = dialog.showMessageBoxSync({

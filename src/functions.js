@@ -87,8 +87,8 @@ function updateData(init=false,all=true) {
     if(ddd) setUpSlider()
 
     updatePlot(all);
-    updateOnServer();
     startDragBehavior();
+    updateOnServer();
 };
 
 
@@ -214,12 +214,17 @@ function updatePlot(all = true) {
 
 
 // 3 px is just a shift from sides
+var oldDpsLen=0
 function sliderChanged(){
     let max = data.length-1;
     let xPX = th_in * (document.body.clientWidth -6 - thumb.offsetWidth) / max+3;
     thumb.style.left = `${xPX}px`
     thumb.innerText = `${xName}=${data[th_in][col.x][0]}`
     updatePlot();
+    if(oldDpsLen!=dpsx.length){
+        startDragBehavior()
+        oldDpsLen=dpsx.length
+    }
 }
 
 
@@ -240,7 +245,10 @@ function colChanged(value) {
     legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${col.y + 1}:${col.z + 1}`
     updatePlot(all = false);
     updateOnServer();
-    startDragBehavior();
+    if(oldDpsLen!=dpsx.length){
+        startDragBehavior()
+        oldDpsLen=dpsx.length
+    }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
 };
 
@@ -306,9 +314,7 @@ function updateOnServer() {
     if (!serve) return;
     // may be removed
     return new Promise((resolve, reject)=>{
-        let x_list = [],
-            y_list = [],
-            z_list = [];
+        let x_list = [],y_list = [],z_list = [];
 
         let [a,b,c] = swapped ? [col.y, col.x,col.z] : [col.x, col.y,col.z]
 
@@ -318,7 +324,7 @@ function updateOnServer() {
             z_list.push(i[c]);
         };
         var s_data = [x_list, y_list, z_list];
-        viewerWindow.webContents.send("sdata", [s_data, Object.values(col)]);
+        viewerWindow.webContents.send("sdata", [s_data, Object.values(col), swapped]);
         resolve();
     })
 };
@@ -326,7 +332,6 @@ function updateOnServer() {
 
 
 function changeEditable(index, colorReset=true){
-    // console.log(`current ${currentEditable}, index : ${index}`)
     if (swapperIsOn) return  // we can just swap s and z anyways
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
@@ -493,6 +498,9 @@ function saveData() {
 // plots along a different axis
 function isswap() {
     if (!data.length) return;
+
+    // ! TODO: dont not use double exprotate, decide beforehand if its required or not
+
     for (let i = 0; i < fullData.length; i++) {
         [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
         fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
@@ -516,8 +524,6 @@ function isswap() {
     updateData();
     $("#drag").html((_, html) => html.replace(n1, n2));
 };
-
-
 
 
 

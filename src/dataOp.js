@@ -180,7 +180,7 @@ function dataFiller() {
         var lInd = dat[col.y].length - 1;
         // check if regression is required by cheking the starting of the array
         let backRegRequired = false, frontRegRequired = false;
-        if(allowRegression){
+        if(allowRegression && xs.length>=3){ // dont try to extrapolate if datalength is less than 3
             frontRegRequired = fullArr[0]<xs[0]
             backRegRequired = fullArr[fullArr.length-1]>xs[xs.length-1]
         }

@@ -132,31 +132,3 @@ var mode={
 
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], layout, mode);
 points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
-
-
-
-
-// ipcRenderer.on("rf",  (e, d)=> fileReader(d))
-
-// ipcRenderer.on('checkClose', function (e, d) {
-//     if (!saved) var res = dialog.showMessageBoxSync({
-//         type: "warning",
-//         title: "Unsaved data found!!!",
-//         message: "Do you want to quit without saving the changes ?",
-//         buttons: ['Yes', "No"]
-//     });
-//     if (!res) ipcRenderer.send('checkClose', 'closeIt');
-// })
-
-
-// // ipcRenderer.on("menuTrigger", (e, d) =>{
-// //     if (show) console.log(e, d);
-// //     if(d=="open") fileLoader()
-// // });
-
-// window.addEventListener("resize", function(){
-//     $('#filler').width($('#container').parent().width())
-//     if(fullData.length && ddd) sliderChanged()
-// }) //needed to position the thumb div
-
-// $('#filler').width($('#container').parent().width())

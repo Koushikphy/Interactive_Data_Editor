@@ -25,5 +25,4 @@ function versionCheck() {
         })
 };
 
-
 setTimeout(function(){ if (app.isPackaged) versionCheck() },5000)
