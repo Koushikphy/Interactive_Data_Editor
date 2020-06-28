@@ -16,7 +16,7 @@ var undoStack = [], redoStack = [],
     fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     currentEditable = 0,
     data = [], dpsx = [], dpsy = [], index = [],
-    th_in = 0, refdat = 1, ma = 1, 
+    th_in = 0, ma = 1, 
     serve = 0, lockXc = 1, swapped = 0,
     swapper = false, ddd = false,
     col = {x: 0,y: 0,z: 0,s: 0},
@@ -117,7 +117,7 @@ function fileReader(fname) {
     ddd = data.length != 1;
 
     //reset everything....
-    swapped = 0; refdat = 0; xName = "X";saved=true;
+    swapped = 0; xName = "X";saved=true;
     issame = false; firstSave = true; swapper = false;
     undoStack = []; redoStack = [];  swapperIsOn = false;
 

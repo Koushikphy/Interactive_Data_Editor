@@ -206,7 +206,7 @@ function triggerDownload() {
             &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080">
             <br>
             <div style='text-align:center;margin-top:10px'>
-                <input type="submit" value="OK" onclick="downloadImage();closePop();">
+                <input type="submit" value="OK" onclick="downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val());closePop();">
             </div>`
         pop.style.width = 'fit-content'
         titletxt.innerHTML = 'Save Image'
@@ -412,7 +412,8 @@ function openPlotSetting(){
         minWidth:600,
         title: "Interactive Data Editor - Plot Settings",
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            enableRemoteModule: true
         }
     });
     settingEditWindow.loadURL(url.format({

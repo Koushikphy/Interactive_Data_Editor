@@ -73,11 +73,9 @@ var extendUtils = {
         closeThis()
         document.getElementById('extendUtils2d').innerHTML = extendUtils[name]
         $("#extendUtils2d").slideDown(300, resizePlot);
-        // resizePlot()
     }
     
     function closeThis2d(){
         $("#extendUtils2d").slideUp(300, resizePlot);
-        // resizePlot()
     }
     

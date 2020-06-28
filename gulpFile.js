@@ -37,7 +37,7 @@ function compressCombineJS() {
 
 
 // function compressCombineJSp() {
-//     return src(['./src/plotter.js','./src/download.js'])
+//     return src(['./html/Plotter/plotter.js','./src/download.js'])
 //         .pipe(concat('plot.js'))
 //         .pipe(uglify())
 //         .pipe(rename({

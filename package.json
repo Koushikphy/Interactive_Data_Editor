@@ -63,7 +63,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^8.2.1",
+    "electron": "^9.0.5",
     "electron-builder": "^22.4.1",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.3.0",
@@ -73,8 +73,8 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
-    "plotly.js-gl3d-dist": "^1.53.0",
+    "plotly.js-gl3d-dist": "^1.54.5",
     "request": "^2.88.2",
-    "v8-compile-cache": "^2.1.0"
+    "v8-compile-cache": "^2.1.1"
   }
 }

@@ -51,8 +51,9 @@ app.on('ready', function () {
         title: "Interactive Data Editor",
         icon: path.join(__dirname, "figs/charts.png"),
         webPreferences: {
-            nodeIntegration: true
-        }
+            nodeIntegration: true,
+            enableRemoteModule: true
+        },
     });
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
@@ -340,7 +341,8 @@ const homeMenuTemplate = [{
                         title: "Interactive Data Editor - Documentation",
                         icon: path.join(__dirname, 'figs/charts.png'),
                         webPreferences: {
-                            nodeIntegration: true
+                            nodeIntegration: true,
+                            enableRemoteModule: true
                         }
                     });
                     childWindow.loadURL(url.format({
@@ -362,7 +364,8 @@ const homeMenuTemplate = [{
                         width:400,
                         title: "Interactive Data Editor - Sample Data",
                         webPreferences: {
-                            nodeIntegration: true
+                            nodeIntegration: true,
+                            enableRemoteModule: true
                         }
                     });
                     childWindow.loadURL(url.format({
@@ -392,7 +395,8 @@ const homeMenuTemplate = [{
                         width:600,
                         title: "Interactive Data Editor - About",
                         webPreferences: {
-                            nodeIntegration: true
+                            nodeIntegration: true,
+                            enableRemoteModule: true
                         },
                         height:650
                     });
@@ -518,7 +522,8 @@ const plotMenuTemplate = [{
                         title: "Interactive Data Editor - Documentation",
                         icon: path.join(__dirname, 'figs/charts.png'),
                         webPreferences: {
-                            nodeIntegration: true
+                            nodeIntegration: true,
+                            enableRemoteModule: true
                         }
                     });
                     childWindow.loadURL(url.format({
@@ -540,7 +545,8 @@ const plotMenuTemplate = [{
                         width:400,
                         title: "Interactive Data Editor - Sample Data",
                         webPreferences: {
-                            nodeIntegration: true
+                            nodeIntegration: true,
+                            enableRemoteModule: true
                         }
                     });
                     childWindow.loadURL(url.format({
@@ -570,7 +576,8 @@ const plotMenuTemplate = [{
                         width:600,
                         title: "Interactive Data Editor - About",
                         webPreferences: {
-                            nodeIntegration: true
+                            nodeIntegration: true,
+                            enableRemoteModule: true
                         },
                         height:650
                     });
