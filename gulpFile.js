@@ -36,15 +36,15 @@ function compressCombineJS() {
 
 
 
-// function compressCombineJSp() {
-//     return src(['./html/Plotter/plotter.js','./src/download.js'])
-//         .pipe(concat('plot.js'))
-//         .pipe(uglify())
-//         .pipe(rename({
-//             suffix: '.min'
-//         }))
-//         .pipe(dest('./lib'))
-// }
+function compressCombineJSp() {
+    return src(['./html/Plotter/plotter.js','./src/download.js'])
+        .pipe(concat('plot.js'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(dest('./html/Plotter/'))
+}
 
 
 function compressJS() {
@@ -88,7 +88,7 @@ function compressCombineSheetJS() {
 
 
 exports.default = parallel(compressJS, compressCSS, compressCombineJS);
-exports.all     = parallel(compressJS, compressCSS, compressCombineJS);
+exports.all     = parallel(compressJS, compressCSS, compressCombineJS,compressCombineJSp);
 exports.jsuits  = parallel(compressCombineSheetJS, compressSpredSheetCSS)
 
 exports.watch = function () {
