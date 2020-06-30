@@ -83,7 +83,7 @@ if (app.isPackaged) {
             getFile(remote.process.argv[1])
         };
     } else {
-        require('../lib/particles.min.js');
+        require('../lib/particles.min');
         document.getElementById('particle').style.opacity = 1
     }
 } else {

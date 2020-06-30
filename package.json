@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "start": "gulp all && electron .",
+    "start": "electron .",
     "startwatch": "gulp && electron . | gulp watch",
     "dist": "gulp all && electron-builder",
     "watch": "gulp watch",

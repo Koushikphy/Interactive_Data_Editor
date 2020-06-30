@@ -1,4 +1,4 @@
-function versionCheck() {
+function _versionCheck() {
     let req = require("request");
     req({
             'url': "https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/releases/latest",
@@ -25,4 +25,7 @@ function versionCheck() {
         })
 };
 
-setTimeout(function(){ if (app.isPackaged) versionCheck() },5000)
+
+export const versionCheck = ()=> {
+    if(app.isPackaged) setTimeout(_versionCheck, 5000) 
+}

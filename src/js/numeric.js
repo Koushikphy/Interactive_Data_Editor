@@ -3,7 +3,7 @@
 //doesnot depend on the outside parameter, and solely depend on the given argument
 
 
-function expRotate(tmpData, i, j) {
+export function expRotate(tmpData, i, j) {
     //Bunch up on i-th column and sort along j-th column
     tmpData = tmpData.map(x => transpose(x));
     if (!issame) {
@@ -119,7 +119,7 @@ function solve(A,x){ // solves a system of linear equations using QR decompositi
   }
 
 
-class Regression{
+export class Regression{
     constructor(xs,ys,n){
         //fit x,y with a polynomial of order n 
         var x=xs.slice(0), y = ys.slice(0);
@@ -159,7 +159,7 @@ class Regression{
 
 
 
-class Spline{
+export class Spline{
     constructor(xs, ys){
         var n=xs.length
         var diff = new Array(n).fill(0) 

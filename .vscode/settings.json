@@ -7,18 +7,9 @@
         "charts.png": true,
         "Data": true,
         "dist": true,
-        "lib" : true,
         "figs": true,
         "node_modules": true,
         "package-lock.json": true,
-        "yarn.lock": true,
-        "src/particles.js": true,
-        "src/jexcel.css" : true,
-        "src/jexcel.js" : true,
-        "src/jsuites.js" : true,
-        "src/jsuites.css":true,
-        "src/notify.js":true,
-        "src/numeric.js":true,
-        "src/download.js":true
+        "yarn.lock": true
     }
 }

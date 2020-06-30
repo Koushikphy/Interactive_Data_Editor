@@ -57,7 +57,7 @@ app.on('ready', function () {
     });
     mainWindow.maximize();
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'html/index.html'),
+        pathname: path.join(__dirname, './src/html/index.html'),
         protocol: 'file:',
         slashes: true
     }));
@@ -141,7 +141,7 @@ const homeMenuTemplate = [{
                 label: "3D plotter",
                 click() {
                     mainWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, './html/Plotter/Plotter.html'),
+                        pathname: path.join(__dirname, './src/html/Plotter/Plotter.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
@@ -346,7 +346,7 @@ const homeMenuTemplate = [{
                         }
                     });
                     childWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/doc.html'),
+                        pathname: path.join(__dirname, './src/html/doc.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
@@ -401,7 +401,7 @@ const homeMenuTemplate = [{
                         height:650
                     });
                     childWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/about.html'),
+                        pathname: path.join(__dirname, './src/html/about.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
@@ -486,7 +486,7 @@ const plotMenuTemplate = [{
             label: "Home",
             click(){
                 mainWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'html/index.html'),
+                    pathname: path.join(__dirname, './src/html/index.html'),
                     protocol: 'file:',
                     slashes: true
                 }));
@@ -527,7 +527,7 @@ const plotMenuTemplate = [{
                         }
                     });
                     childWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/doc.html'),
+                        pathname: path.join(__dirname, './src/html/doc.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
@@ -550,7 +550,7 @@ const plotMenuTemplate = [{
                         }
                     });
                     childWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/data.html'),
+                        pathname: path.join(__dirname, './src/html/data.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
@@ -582,7 +582,7 @@ const plotMenuTemplate = [{
                         height:650
                     });
                     childWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'html/about.html'),
+                        pathname: path.join(__dirname, './src/html/about.html'),
                         protocol: 'file:',
                         slashes: true
                     }));

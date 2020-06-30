@@ -4,7 +4,7 @@
 <head>
     <title>Interactive Data Editor</title>
     <!-- <link href="../bulma.min.css" rel="stylesheet"> -->
-    <link href="../lib/style.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
     <script> 
         if (typeof module === 'object') { window.module = module; module = undefined;  }
     </script>
@@ -14,7 +14,7 @@
 <body>
     <div id="particle">
             <div class="container">
-                <img id='logo' src="../figs/charts.png" width="75" height="75">
+                <img id='logo' src="../../figs/charts.png" width="75" height="75">
                 <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
                 <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">
                     A Software to interactively edit data in a graphical manner
@@ -27,10 +27,10 @@
                     Copyright &copy; April, 2020 Koushik Naskar
                 </div>
 
-                <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io');"><img src="../figs/internet.png" width="30" height="30"></a>
-                <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../figs/facebook.png" width="30" height="30"></a>
-                <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../figs/github.png"            width="30" height="30"></a>
-                <a title="Reach me on Gamil" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../figs/gmail.png" width="30" height="30"></a>
+                <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io');"><img src="../../figs/internet.png" width="30" height="30"></a>
+                <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../../figs/facebook.png" width="30" height="30"></a>
+                <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"            width="30" height="30"></a>
+                <a title="Reach me on Gamil" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../../figs/gmail.png" width="30" height="30"></a>
 
             </div>
     </div> 
@@ -90,12 +90,20 @@
     </div>
 
     <script>
-        document.getElementById('versionname').innerHTML =`Version ${require('../package.json').version}` 
+        document.getElementById('versionname').innerHTML =`Version ${require('../../package.json').version}` 
     </script>
 
-    <script src='../lib/init.min.js'></script>
+    <script src='../js/init.js'></script>
     <script defer src="../lib/jquery.min.js"></script>
-    <script defer src="../lib/funcs.min.js"></script>
+
+
+
+    <!-- <script defer src="../lib/funcs.min.js"></script> -->
+    <script defer src="../js/plotSetup.js"></script>
+    
+    
+    
+    
     <script defer src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
 </body>
 
