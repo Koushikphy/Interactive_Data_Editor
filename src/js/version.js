@@ -26,6 +26,9 @@ function _versionCheck() {
 };
 
 
-export const versionCheck = ()=> {
+function versionCheck(){
     if(app.isPackaged) setTimeout(_versionCheck, 5000) 
+}
+module.exports = {
+    versionCheck
 }

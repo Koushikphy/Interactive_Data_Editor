@@ -1,26 +1,50 @@
-const fs     = require("fs"),
-      path   = require('path'),
-      url    = require('url'),
-      xCol   = document.getElementById("xCol"),
-      yCol   = document.getElementById("yCol"),
-      zCol   = document.getElementById("zCol"),
-      sCol   = document.getElementById("sCol"),
-      slider = document.getElementById('range'),
-      thumb  = document.getElementById('thumb'),
-      parentWindow = remote.getCurrentWindow();
+const Plotly = require('plotly.js-gl3d-dist');
+const fs     = require("fs");
+const path   = require('path')
+const url    = require('url')
+const {dialog,BrowserWindow} = remote;
+const xCol   = document.getElementById("xCol")
+const yCol   = document.getElementById("yCol")
+const zCol   = document.getElementById("zCol")
+const sCol   = document.getElementById("sCol")
+const slider = document.getElementById('range')
+const thumb  = document.getElementById('thumb')
+const parentWindow = remote.getCurrentWindow()
+const figurecontainer = document.getElementById("figurecontainer");
 
-var undoStack = [], redoStack = [],
-    show = false,
-    saved = true, firstSave = true,
-    issame = false,
-    fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
-    currentEditable = 0,
+const {showStatus} = require('../js/notify')
+const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
+const {layout, colorList, iniPointsD } = require('../js/plotUtils')
+const {downloadImage } = require('../js/download') // used directly in html
+
+
+var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [],
-    th_in = 0, ma = 1, 
-    serve = 0, lockXc = 1, swapped = 0,
-    swapper = false, ddd = false,
+    saved = true, firstSave = true,
     col = {x: 0,y: 0,z: 0,s: 0},
+    currentEditable = 0,
     xName = "X";
+    serve = 0, lockXc = 1, swapped = 0,
+    show = false,
+    issame = false,
+    swapper = false, ddd = false,
+    th_in = 0, ma = 1, 
+    undoStack = [], redoStack = [];
+
+
+Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
+    displaylogo:false,
+    editable: true,
+    responsive: true,
+    modeBarButtonsToRemove : ["toImage","sendDataToCloud"],
+    modeBarButtonsToAdd    : [[{
+        name: 'Save the image',
+        icon: Plotly.Icons.camera,
+        click(){ $('#popupEx').show() }
+    }]]
+});
+var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
+
 
 
 
@@ -38,6 +62,7 @@ function setUpFor2d(){
     // for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
     for (let i of ["pax", '3dview']) menu.getMenuItemById(i).enabled = false;
 }
+
 
 function setUpFor3d(){
     $('#xCol,#xLabel,.3D').show()
@@ -74,7 +99,6 @@ function updateData(init=false,all=true) {
         col.y = yCol.selectedIndex;
         col.z = zCol.selectedIndex;
     }
-
     th_in = 0;
 
     if (!swapped){
@@ -145,7 +169,7 @@ function fileReader(fname) {
     let extn = path.extname(fname);
     let save_name = path.join(dirname, filename + "_new" + extn);
     recentLocation = dirname;
-    
+
     ddd ? setUpFor3d() : setUpFor2d();
     fullDataCols =[JSON.parse(JSON.stringify(col))]
     fullData =[data]
@@ -167,7 +191,7 @@ function fileReader(fname) {
     $("#particle").remove();
     document.getElementById('branding').style.display = 'block'
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
-    setTimeout(()=>{closeThis2d();closeThis();},111)
+    // setTimeout(()=>{closeThis2d();closeThis();},111)   //TODO: fox this
 }
 // var notLoaded = true
 

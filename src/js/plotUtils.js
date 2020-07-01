@@ -80,3 +80,26 @@ module.exports.iniPointsD = {
     },
     hoverinfo: 'x+y',
 };
+
+
+module.exports.iniPointsF = {
+    x: [1],
+    y: [1],
+    type: 'scatter',
+    opacity: 1,
+    mode: 'lines',
+    name : 'Fitted line',
+    marker: {
+        symbol: "circle-dot",
+        color: '#b00',
+        size: 6,
+        opacity: 1
+    },
+    line: {
+        width: 2,
+        color: "#207104",
+        dash: 0,
+        shape: 'spline'
+    },
+    hoverinfo: 'x+y',
+};

@@ -1,20 +1,11 @@
 require('v8-compile-cache');
-const {
-    remote,
-    ipcRenderer,
-    shell
-} = require('electron');
-const {
-    dialog,
-    BrowserWindow,
-    Menu,
-    MenuItem,
-    app
-} = remote;
+const {remote,ipcRenderer,shell} = require('electron');
+const {Menu,MenuItem,app} = remote;
+
 var recentLocation, recentFiles = [];
 
 
-function replaceWithHome(name) {
+function replaceWithHome(name) { // replaces full path name with the short one
     var home = process.env.HOME || process.env.USERPROFILE;
     if (name.includes(home)) {
         return name.replace(home, "~")
@@ -24,7 +15,7 @@ function replaceWithHome(name) {
 };
 
 
-function recentMenu() {
+function recentMenu() {// builds the recent file submenu
     var rrf = menu.getMenuItemById("rf").submenu;
     var arf = menu.getMenuItemById("arf").submenu;
     if (recentFiles.length > 10) {
@@ -64,7 +55,7 @@ var fl = JSON.parse(localStorage.getItem("recent"));
 if (fl !== null) recentLocation = fl;
 
 
-function getFile(params) {
+function getFile(params) { // get the filename from the argument list
     console.log(params)
     try {
         if(params.starswith('-') || params.starswith('--')) return false
@@ -85,6 +76,7 @@ if (app.isPackaged) {
     } else {
         require('../lib/particles.min');
         document.getElementById('particle').style.opacity = 1
+        require('../js/version').versionCheck()
     }
 } else {
     document.getElementById('particle').remove();

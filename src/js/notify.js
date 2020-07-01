@@ -1,4 +1,4 @@
-var TOAST={
+const TOAST={
     toast:null,
     _id:0,
     time:null,
@@ -105,7 +105,7 @@ var TOAST={
 
 TOAST.init();
 
-function showStatus(a){
+module.exports.showStatus = (a)=>{
     var t = TOAST.add(a,4321);
     setTimeout(function(){
         t.classList.add("toastIn");

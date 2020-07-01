@@ -1,13 +1,5 @@
 function resizePlot() {
-    // this triggers the responsiveness on plotly
     window.dispatchEvent(new Event('resize'));
-    // setTimeout(function () {
-    //     var height = window.innerHeight - document.getElementById("figurecontainer").offsetTop;
-    //     $("#figurecontainer").height(height - 2);
-    //     Plotly.relayout(figurecontainer, {
-    //         autosize: true
-    //     });
-    // }, 330)
 }
 
 
@@ -106,12 +98,12 @@ window.onkeydown = function hotKeys(e) {
             if (e.ctrlKey) {
                 if(figurecontainer.data.length==1) return
                 let ind = currentEditable == figurecontainer.data.length-1 ? 0 : currentEditable+1
-                // console.log(currentEditable,ind)
                 changeEditable(ind)
             }
             break;
         case "ArrowLeft": case "ArrowRight":
             if (e.ctrlKey | e.shiftKey) moveReflect(e.keyCode-37, e.shiftKey)
+            break
         case 'k':
         case 'K':
             dataSupStart()
@@ -166,31 +158,30 @@ function ipcTrigger(e,d){
             }
             break;
         case "edat":
-            extendUtilities('extend')
-            document.getElementById('repSel').selectedIndex = mirror
+            openUtility('repeatMirror')
             break;
         case 'fill':
-            extendUtilities('filler')
+            openUtility('fillValues')
             break;
         case 'filter':
-            extendUtilities('filter')
+            openUtility('filterData')
             break;
         case 'rgft':
             if(initPolyfit()){
-                extendUtilities2d('rgfit')
-                polyfit(1)
+                openUtilityFit('rgFit')
             }
             break;
         case 'lmfit':
             if(initLMfit()) {
-                extendUtilities2d('lmfit')
+                // extendUtilities2d('lmfit')
+                openUtilityFit('lmFit')
             }
             break;
         case 'pdash':
             settingWindow()
             break;
         case 'trigdown':
-            triggerDownload();
+            $('#popupEx').show() 
             break
     }
 }
@@ -200,15 +191,7 @@ function ipcTrigger(e,d){
 const conMenu = Menu.buildFromTemplate([
     {
         label: 'Change Value',
-        click(){
-            popMain.innerHTML = `&ensp;Set value: &nbsp;<input type="text" style="width:6pc" id='valinput' onchange="setValue();closePop();"><br>
-                    <input type="submit" value="OK" onclick="setValue();closePop();" style="margin-top:10px">`
-            pop.style.width = 'fit-content'
-            popMain.style.textAlign = 'center'
-            titletxt.innerHTML = 'Change Value'
-
-            openPop()
-        }
+        click(){ $('#popupSetVal').show() }
     },{
         label: 'Change Sign',
         accelerator : 'C',
@@ -235,12 +218,29 @@ const conMenu = Menu.buildFromTemplate([
             },
         ]
     }
-]
-)
+])
 
-figurecontainer.oncontextmenu= ()=>{ if(index.length) conMenu.popup() }
+figurecontainer.oncontextmenu= ()=>{ if(index.length) conMenu.popup() }// trigge only when some values are selected
 
 
+
+// make all the popups draggable
+for(let elem of document.getElementsByClassName('title')){
+    elem.onmousedown = function(e){
+            x = e.clientX;
+            y = e.clientY;
+            document.onmouseup = (e)=>{
+                document.onmouseup = null;
+                document.onmousemove = null;
+            };
+            document.onmousemove = (e)=>{
+                this.parentElement.style.top = `${this.parentElement.offsetTop - y + e.clientY}px`
+                this.parentElement.style.left = `${this.parentElement.offsetLeft - x + e.clientX}px`
+                x = e.clientX;
+                y = e.clientY;
+            };
+        }
+}
 
 
 
@@ -297,26 +297,28 @@ figurecontainer.on("plotly_selected", (ev)=>{
 });
 
 
-figurecontainer.on("plotly_legendclick", function(){
+figurecontainer.on("plotly_legendclick", function(){ // to catch the name if changed from legend
     var tmpLeg=[]
     for (let i of figurecontainer.data) tmpLeg.push(i.name)
     legendNames = tmpLeg;
 });
 
 
-ipcRenderer.on("plotsetting", (_,d)=>{
+ipcRenderer.on("plotsetting", (_,d)=>{ // incoming info from the plotsetting window
     Plotly.update(figurecontainer,...d)
 })
 
 
+// load file if droped inside the window
 document.ondragover = document.ondrop = (ev) => ev.preventDefault()
-
 document.body.ondrop = (ev) => {
     const fname = ev.dataTransfer.files[0].path;
     if (fname !== undefined) fileReader(fname);
     ev.preventDefault()
 }
 
+
+// attach change with mouse scroll functionality with the column selector
 function selectWheel(ev){
     let add = ev.deltaY >0 ? 1 : -1
     let cur = ev.toElement.selectedIndex
@@ -325,6 +327,8 @@ function selectWheel(ev){
     ev.toElement.selectedIndex = cur + add
 }
 
+
+// attach change X/Y with mouse scroll functionality to the figurecontainer and slider
 function slideWheel(ev){
     let change = ev.deltaY <0 ? 1 : -1
     if((change==-1 && th_in==0) || (change==+1 && th_in==data.length-1)) return
@@ -334,3 +338,26 @@ function slideWheel(ev){
 
 slider.onmousewheel= slideWheel
 figurecontainer.onmousewheel= slideWheel
+
+
+
+function openUtility(name){ // name is passed as id name
+    $('#filler').show()
+    $('.extendUtils').slideUp()
+    $(`#${name}`).slideDown()
+}
+
+function closeUtility(e){
+    $(e.parentElement).slideUp(300, ()=>{ $('#filler').hide() })
+}
+
+
+function openUtilityFit(name){
+    $(`#${name}`).show()
+    $('#extendUtils2D').slideDown()
+}
+
+function closeUtilityFit(e){
+    $('#extendUtils2D').slideUp()
+    $(e.parentElement).hide()
+}

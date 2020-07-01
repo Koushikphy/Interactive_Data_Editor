@@ -1,0 +1,23 @@
+TO-DO's step by step:
+
+
+1. load file show status, save file              [x] done
+2. keyboard load and save                        [x] done
+3. make it editable                              [x] done
+4. apply interpolate extrapolate etc.            [x] done
+5. plot along a different axis                   [x] done
+6. fill values/repeat/mirror/filter              [x] done
+6. 2d and 3d                                     [x] done
+7. fitting                                       [x] done
+8. check if jquery can be required 
+9. plot settrings
+10. spreadsheet window
+
+
+
+11. move/reflect not working   
+
+
+
+
+remove this.blur with tabindex                  [x] doesn't work

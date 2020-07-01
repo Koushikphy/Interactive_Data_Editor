@@ -1,4 +1,4 @@
-const popupbox = document.getElementById('popupbox')
+// const popupbox = document.getElementById('popupbox')
 
 function buildDOM(){
     var txt =''// `<label class='heading'>List of Plots</label>`
@@ -49,7 +49,8 @@ function buildDOM(){
         </div><br>`
     }
     txt+='<br>'
-    popMain.innerHTML = txt 
+    document.querySelector('#popupPlotList>.popmain').innerHTML = txt  // use this
+    // popMain.innerHTML = txt 
 }
 
 
@@ -96,14 +97,10 @@ function updatePlotPop(index, cl){
 }
 
 
-
-function plotListPop(){
-     buildDOM()
-    titletxt.innerHTML = 'List of Plots'
-    pop.style.width = '50%'
-    popMain.style.textAlign = 'center'
-    openPop()
-}
+// function plotListPop(){
+//     buildDOM()
+//     $('#popupPlotList').show()
+// }
 
 
 
@@ -172,7 +169,7 @@ function spreadsheet() {
 }
 
 
-var viewerWindow;
+var viewerWindow; // thi variable is used inside the update on server function
 function openViewer() {
     viewerWindow = new BrowserWindow({
         show: false,
@@ -200,45 +197,3 @@ function openViewer() {
     serve = 1;
 };
 
-
-
-function alertElec(msg, type=1, title="Failed to execute."){
-    dialog.showMessageBox(parentWindow,{
-        type: type==1? "error": 'warning',
-        title: title,
-        message: msg,
-        buttons: ['OK']
-    });
-}
-
-
-const pop = document.getElementById('popup')
-const popMain = document.getElementById('popmain')
-const titletxt = document.getElementById('titletxt')
-
-function closePop(){
-    pop.style.opacity = 0
-    setTimeout(()=>{pop.style.visibility='hidden'},250)
-}
-
-function openPop(){
-    pop.style.visibility='visible'
-    pop.style.opacity = 1
-}
-
-// openPop('Hello', 'Hi there')
-
-document.getElementById('title').onmousedown = (e)=>{
-    x = e.clientX;
-    y = e.clientY;
-    document.onmouseup = (e)=>{
-        document.onmouseup = null;
-        document.onmousemove = null;
-    };
-    document.onmousemove = (e)=>{
-        pop.style.top = `${pop.offsetTop - y + e.clientY}px`
-        pop.style.left = `${pop.offsetLeft - x + e.clientX}px`
-        x = e.clientX;
-        y = e.clientY;
-    };
-}
