@@ -245,52 +245,63 @@ function applyCutOFF(data, colmn,condition, thrsh, fillVal){
 
 
 
-function useRegression(dpsx, dpsy, index, condition=1){
-    if (!index.length) return;
-    first  = index[0]
-    last = index[index.length - 1]
+function useRegression(xx, yy, index, condition=1){
+    // if (!index.length) return yy;
+    let xs = xx.slice(); //shallow copy
+    let ys = yy.slice();
+    let ind= index.slice()
+
+    first = ind[0]
+    last = ind[ind.length - 1]
 
     if(condition==1){ // normal regression
         // take 3 numbers from both sides
-        xs = dpsx.slice(Math.max(first-3,0),first).concat(dpsx.slice(last+1,last+4))
-        ys = dpsy.slice(Math.max(first-3,0),first).concat(dpsy.slice(last+1,last+4))
-        exterp = new Regression(xs,ys, 2)
-        for (let ind of index) dpsy[ind] = exterp.val(dpsx[ind]);
+        let xxs = xs.slice(Math.max(first-3,0),first).concat(xs.slice(last+1,last+4))
+        let yys = ys.slice(Math.max(first-3,0),first).concat(ys.slice(last+1,last+4))
+        if(xxs.length<3) return ys;
+        exterp = new Regression(xxs,yys, 2)
+        for (let i of ind) ys[i] = exterp.val(xs[i]);
 
     } else if(condition==2){ // data dataSupEnd
-        let xs= dpsx.slice(Math.max(first-3,0),first)
-        let ys= dpsy.slice(Math.max(first-3,0),first)
-        exterp = new Regression(xs,ys, 2)
-        saveOldData();
-        let tmpVal = exterp.val(dpsx[first]) - dpsy[first]
-        for (let ind of index) dpsy[ind] += tmpVal;
+        let xxs= xs.slice(Math.max(first-3,0),first)
+        let yys= ys.slice(Math.max(first-3,0),first)
+        if(xxs.length<3) return ys;
+        exterp = new Regression(xxs,yys, 2)
+        let tmpVal = exterp.val(xs[first]) - ys[first]
+        for (let i of ind) ys[i] += tmpVal;
+
     } else if(condition==3){// dataSup start
-        let xs= dpsx.slice(last+1,last+4)
-        let ys= dpsy.slice(last+1,last+4)
-        exterp = new Regression(xs,ys, 2)
-        saveOldData();
-        let tmpVal = exterp.val(dpsx[last]) - dpsy[last]
-        for (let ind of index) dpsy[ind] += tmpVal;
+        let xxs= xs.slice(last+1,last+4)
+        let yys= ys.slice(last+1,last+4)
+        if(xxs.length<3) return ys;
+        exterp = new Regression(xxs,yys, 2)
+        let tmpVal = exterp.val(xs[last]) - ys[last]
+        for (let i of ind) ys[i] += tmpVal;
     }
-    return dpsy
+    return ys
 }
 
 
 
-function useSpline(dpsx, dpsy, index){
-    if (!index.length) return;
-    var xs = dpsx.slice();
-    var ys = dpsy.slice();
+function useSpline(xx, yy, index){
+    // if (!index.length) return yy;
+    let xs = xx.slice();
+    let ys = yy.slice();
+    let ind= index.slice()
+    // console.log(xs,ys,ind)
     //check for endpoints
-    if (index[0] == 0) index.splice(0, 1)
-    if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)
-    for (var i = index.length - 1; i >= 0; i--) {
-        xs.splice(index[i], 1);
-        ys.splice(index[i], 1);
+    if (ind[0] == 0) ind.splice(0, 1)
+    if (ind[ind.length - 1] == xs.length - 1) ind.splice(-1, 1)
+    let xxs = xs.slice()
+    let yys = ys.slice()
+    for (let i = ind.length - 1; i >= 0; i--) {
+        xxs.splice(ind[i], 1);
+        yys.splice(ind[i], 1);
     }
-    spl = new Spline(xs,ys)
-    for (let ind of index) dpsy[ind] = spl.getVal(dpsx[ind]);
-    return dpsy
+    spl = new Spline(xxs,yys)
+    for (let i of ind) ys[i] = spl.getVal(xs[i]);
+    // console.log(ys)
+    return ys
 }
 
 function regressionFit(xx,yy,n){
@@ -298,7 +309,6 @@ function regressionFit(xx,yy,n){
     var poly = new Regression(xs,ys,n)
     for(let x of xs) fity.push(poly.val(x))
     return [fity, poly.cf]
-
 }
 
 

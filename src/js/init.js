@@ -66,7 +66,6 @@ function getFile(params) { // get the filename from the argument list
     }
 }
 
-
 //in dev mode don't load animation directly go to plot
 if (app.isPackaged) {
     if (remote.process.argv.length > 1) {

@@ -4,28 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <title>3D Plotter</title>
-    <link href="./plotterstyle.css" rel="stylesheet" >
-    <style>
-        body{
-            display: flex;
-            flex-flow: column;
-        }
-        #toolbox{
-            position: absolute;
-            width: fit-content;
-            display: block;
-        }
-        #plotList{
-            width: 65%;
-            margin-left: 1pc;
-            margin-right: 1pc;
-        }
-    </style>
+    <link href="../css/plotterstyle.css" rel="stylesheet" >
     <script>
         if (typeof module === 'object') { window.module = module; module = undefined; }
     </script>
-
-    <script src="../../lib/jquery.min.js"></script>
 </head>
 
 <body>
@@ -60,21 +42,32 @@
         </div>
     </div>
 
-    <div id="popup">
-        <div id="title">
-            <label id='titletxt'>Title</label>
-            <b id='closbtn' onclick="closePop()" title="Close">X</b>
+    <div id="popupEx" class="popup">
+        <div class="title">
+            <label class='titletxt'>Save Image</label>
+            <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
         </div>
-        <div id="popmain"></div>
+        <div class="popmain">
+            &ensp; File Name:<input type="text" id= "dfileName"><br>
+            &ensp; File Type: <select id="fileFormat">
+                <option>PDF</option>
+                <option>JPEG</option>
+                <option>PNG</option>
+                <option>SVG</option>
+                <option>WEBP</option>
+            </select><br>
+            &ensp; Resolution: <input type="text" id="imRes" value="1920x1080"><br>
+            <div style='text-align:center;margin-top:10px'>
+                <input type="submit" value="OK" onclick="downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val());$('.popup').hide()">
+            </div>
+        </div>
     </div>
 
 
     <div id = "branding">
          <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')"><i>Developed by</i> <b>Koushik Naskar</b>&ensp;</a><br>
     </div>
-    <!-- <script src="./plotter.js"></script> -->
-    <!-- <script src="../../src/download.js"></script> -->
-    <script src="plot.min.js"></script>
+    <script src="../js/plotter.js"></script>
 </body>
 
 </html>

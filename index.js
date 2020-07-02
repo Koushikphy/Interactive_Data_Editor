@@ -141,7 +141,7 @@ const homeMenuTemplate = [{
                 label: "3D plotter",
                 click() {
                     mainWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, './src/html/Plotter/Plotter.html'),
+                        pathname: path.join(__dirname, './src/html/Plotter.html'),
                         protocol: 'file:',
                         slashes: true
                     }));

@@ -51,7 +51,7 @@ module.exports.layout = {
     font: {
         size: 14
     },
-    showlegend: true,
+    showlegend: false,
     legend: {
         x: 0,
         y: 1

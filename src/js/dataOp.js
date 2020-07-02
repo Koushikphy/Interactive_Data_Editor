@@ -32,48 +32,42 @@ function sSwapper() {
 
 
 function swapData() {
-    if (!index.length || !swapperIsOn) return;
+    if (!swapperIsOn) return;
     saveOldData();
-    for (let ind of index) [data[th_in][col.z][ind], data[th_in][col.s][ind]] = [data[th_in][col.s][ind], data[th_in][col.z][ind]]
+    for (let i of index) [data[th_in][col.z][i], data[th_in][col.s][i]] = [data[th_in][col.s][i], data[th_in][col.z][i]]
     endJobs()
 }
 
 
-function moveReflect(key, mod){
+function moveReflect(right, mirror){
     saveOldData();
-    var ind = index[index.length-1]+1;
-    var tmp = clone(dpsy.slice(index[0], ind));
-    if(!key) ind=index[0]-index.length;
-    if(mod) tmp.reverse();
+    let ind = index[index.length-1]+1;
+    let tmp = clone(dpsy.slice(index[0], ind));
+    if(!right) ind=index[0]-index.length;
+    if(mirror) tmp.reverse();
     tmp.shift();
-
     dpsy.splice(ind, tmp.length, ...tmp);
     endJobs()
 };
 
 
 
-var mirror = 0;
+
 function repeatMirror() {
     last  = parseFloat($("#einp").val());
     times = parseFloat($("#etime").val());
     if(!last|!times) { showStatus('Invalid inputs.'); return}
     mirror = $("#repSel")[0].selectedIndex;
 
-
     for (let i = 0; i < data.length; i++) {
         if (data[i][col.y].indexOf(last)==-1) {
             alertElec("Endpoint must exist !!!");
-            // $("#extend").slideUp();
             return;
         }
     }
-
     data = repeatMirrorData(data, col.y, last, times)
-
-    endJobs({resize:true, startdrag:true})
-    var tmp = mirror ? 'mirrored' : 'repeated'
-    showStatus(`Data ${tmp} ${times} times...`)
+    endJobs({resize:false, startdrag:true})
+    showStatus(`Data ${mirror ? 'mirrored' : 'repeated'} ${times} times...`)
 }
 
 
@@ -84,7 +78,7 @@ function dataFiller() {
     stop = parseFloat($("#fend").val());
     step = parseFloat($("#fstep").val());
     if(isNaN(start)|isNaN(step)|!step) { showStatus('Invalid inputs.'); return}
-    var allowRegression = $("#expSel")[0].selectedIndex ? true : false;
+    let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
     
     for(let dt of data[0][col.y]){
         if(dt[0]>=dt[1]){
@@ -93,22 +87,21 @@ function dataFiller() {
         }
     }
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
-
-    endJobs({resize:true, startdrag:true})
+    endJobs({resize:false, startdrag:true})
     showStatus('Missing values are filled...');
 }
 
 
 
 function filterData() {
-    var condition = $("#flSel")[0].selectedIndex;
-    var thrsh = parseFloat($("#flc").val());
-    var fillVal = parseFloat($("#flf").val());
-    var colmn = $("#flcl").val().split(',').map(x => parseFloat(x) - 1);
+    let condition = $("#flSel")[0].selectedIndex;
+    let thrsh = parseFloat($("#flc").val());
+    let fillVal = parseFloat($("#flf").val());
+    let colmn = $("#flcl").val().split(',').map(x => parseFloat(x) - 1);
 
     data = applyCutOFF(data, colmn,condition, thrsh, fillVal)
 
-    endJobs({resize:true, startdrag:true})
+    endJobs({resize:false, startdrag:false})
     showStatus('Data filtered...');
 
 }
@@ -145,26 +138,18 @@ function deleteInterpolate() {
 
 
 function autoSmooth() {
-    if (ma) {
-        saveOldData();
-        ma = 0;
-    }
-    if (!index.length) return;
     if (index[0] == 0) index.splice(0, 1)
-    if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)
+    if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)   // removes data
     for (let i of index) {
         dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
     };
     data[th_in][col.z] = dpsy;
-    updatePlot();
-    // updateonserver will be done on keyup
-    saved = false;
+    endJobs()
 };
 
 
 
 function changeSign() {
-    if (!index.length) return;
     saveOldData();
     for (let ind of index) data[th_in][col.z][ind] = -data[th_in][col.z][ind];
     endJobs()
@@ -174,7 +159,7 @@ function changeSign() {
 
 function setValue(val){
     saveOldData();
-    var value = parseFloat(val);
+    let value = parseFloat(val);
     if (isNaN(value) ) return;
     for (let ind of index) data[th_in][col.z][ind] = value;
     endJobs({clearIndex:true})
@@ -182,9 +167,7 @@ function setValue(val){
 }
 
 
-
 function removeBadData(){
-    if (!index.length) return;
     saveOldData()
     for (let i = index.length - 1; i >= 0; i--) {
         for(let j=0; j<data[0].length; j++) data[th_in][j].splice(index[i], 1);
@@ -217,13 +200,13 @@ function clearPloyFit(){
 
 
 function polyfit(){
-    var n = parseInt($('#polyInp').val())
+    let n = parseInt($('#polyInp').val())
     if(n>=dpsx.length) {
         showStatus(`Fitting of order ${n} is not possible.`); return
     }
     let [fity, coeff] = regressionFit(dpsx, dpsy, n)
     Plotly.restyle(figurecontainer, {'x':[dpsx], 'y': [fity]}, 1)
-    var formulaStr = 'y = '+ coeff[0].toPrecision(5)
+    let formulaStr = 'y = '+ coeff[0].toPrecision(5)
     for(let i=1;i<=n;i++){
         let vv = coeff[i].toPrecision(5)
         formulaStr += ` ${vv>=0? '+' : '-'}${Math.abs(vv)}x<sup>${i>1? i : ''}</sup>`
@@ -249,7 +232,6 @@ function initLMfit(){
 
 
 function clearLMfit(){
-    // close the dialog box
     Plotly.deleteTraces(figurecontainer, 1)
     Plotly.relayout(figurecontainer, {annotations:[{text:'', showarrow:false}]})
     for (let i of ['edat','fill','filter','af','arf','rgft']) menu.getMenuItemById(i).enabled = true;
@@ -259,16 +241,16 @@ function clearLMfit(){
 
 function lmfit(){
     // use a form and parse multiple values
-    var funcStr      = $('#funcStr').val()
-    var paramList    = $('#paramList').val().split(',')
-    var maxIter      = parseInt($('#iterationVal').val())
-    var parameters   = $('#intVal').val().split(',').map(x=>parseFloat(x))
-    var maxVal       = $('#maxVal').val().split(',').map(x=>parseFloat(x))
-    var minVal       = $('#minVal').val().split(',').map(x=>parseFloat(x))
-    var dampVal      = parseFloat($('#dampVal').val())
-    var stepVal      = parseFloat($('#stepVal').val())
-    var etVal        = parseFloat($('#etVal').val())
-    var egVal        = parseFloat($('#egVal').val())
+    let funcStr      = $('#funcStr').val()
+    let paramList    = $('#paramList').val().split(',')
+    let maxIter      = parseInt($('#iterationVal').val())
+    let parameters   = $('#intVal').val().split(',').map(x=>parseFloat(x))
+    let maxVal       = $('#maxVal').val().split(',').map(x=>parseFloat(x))
+    let minVal       = $('#minVal').val().split(',').map(x=>parseFloat(x))
+    let dampVal      = parseFloat($('#dampVal').val())
+    let stepVal      = parseFloat($('#stepVal').val())
+    let etVal        = parseFloat($('#etVal').val())
+    let egVal        = parseFloat($('#egVal').val())
 
     let [fity, params, chiError] = levenMarFit(dpsx, dpsy, funcStr, paramList, maxIter, parameters, maxVal, minVal, dampVal,stepVal, etVal, egVal)
 
@@ -295,7 +277,7 @@ function lmfit(){
 
 function endJobs({resize=false, updateAll = false, startdrag=false, clearIndex=false}={}){
     // jobs to do after a function is called like update plot
-    return new Promise((resolve,reject)=>{
+    // return new Promise((resolve,reject)=>{
         updatePlot(updateAll);
         updateOnServer();
         saved = false;
@@ -303,6 +285,6 @@ function endJobs({resize=false, updateAll = false, startdrag=false, clearIndex=f
         if (clearIndex) index = [];
         if (startdrag) startDragBehavior()
         if (resize) resizePlot()
-        resolve()
-    })
+    //     resolve()
+    // })
 }

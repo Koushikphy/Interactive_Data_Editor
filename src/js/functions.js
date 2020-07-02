@@ -9,10 +9,10 @@ const zCol   = document.getElementById("zCol")
 const sCol   = document.getElementById("sCol")
 const slider = document.getElementById('range')
 const thumb  = document.getElementById('thumb')
-const parentWindow = remote.getCurrentWindow()
 const figurecontainer = document.getElementById("figurecontainer");
 
-const {showStatus} = require('../js/notify')
+
+const $ = require('../lib/jquery.min')
 const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
 const {layout, colorList, iniPointsD } = require('../js/plotUtils')
 const {downloadImage } = require('../js/download') // used directly in html
@@ -47,6 +47,18 @@ var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .
 
 
 
+function showStatus(msg){
+    let toast = document.createElement('div')
+    toast.className = 'toast'
+    toast.innerHTML = `<p style="margin: 0;">${msg}</p>
+    <div class="toastTail">
+        <div class="toastCross">X</div>
+    </div>`
+    document.getElementById('toastContainer').appendChild(toast)
+    setTimeout(function(){toast.classList.add('toastIn')},50 ) //slight flicker animation
+    setTimeout(function(){ toast.remove()}, 4321 )
+}
+
 
 
 function setUpFor2d(){
@@ -59,7 +71,6 @@ function setUpFor2d(){
     serve = 0;
     var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit']
     for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-    // for (let i of ["pax", 'wire', 'surf']) menu.getMenuItemById(i).enabled = false;
     for (let i of ["pax", '3dview']) menu.getMenuItemById(i).enabled = false;
 }
 
@@ -77,7 +88,6 @@ function setUpFor3d(){
 }
 
 function setUpColumns(){
-    //a precaution here for the
     let tmpL = data[0].length
     if(col.x>=tmpL) col.x = 0
     if(col.y>=tmpL) col.y = 0
@@ -117,7 +127,7 @@ function updateData(init=false,all=true) {
 
 
 function fileLoader() {
-    const fname = dialog.showOpenDialogSync(parentWindow,{
+    const fname = dialog.showOpenDialogSync(remote.getCurrentWindow(),{
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -127,7 +137,7 @@ function fileLoader() {
 
 function fileReader(fname) {
     //check if other file is open
-    if (!saved) var res = dialog.showMessageBoxSync(parentWindow,{
+    if (!saved) var res = dialog.showMessageBoxSync(remote.getCurrentWindow(),{
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Do you want to open a new file without saving the changes?",
@@ -141,7 +151,7 @@ function fileReader(fname) {
     ddd = data.length != 1;
 
     //reset everything....
-    swapped = 0; xName = "X";saved=true;
+    swapped = 0; xName = "X"; saved=true;
     issame = false; firstSave = true; swapper = false;
     undoStack = []; redoStack = [];  swapperIsOn = false;
 
@@ -187,22 +197,20 @@ function fileReader(fname) {
     recentMenu();
     localStorage.setItem("recent", JSON.stringify(recentLocation));
 
-    $("#sCol, #sColInp").hide();
     $("#particle").remove();
     document.getElementById('branding').style.display = 'block'
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
-    // setTimeout(()=>{closeThis2d();closeThis();},111)   //TODO: fox this
+    $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
 }
 // var notLoaded = true
 
 
 
 function updatePlot(all = true) {
-    //true means just update the current plot i.e. 0th
-    // leave others as it is.
+    //true means just update the current plot i.e. 0th, leave others as it is.
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    // put another for swapper
+
     if (swapperIsOn) {
         let lname = path.basename(fileNames[0])
         let name=[
@@ -237,9 +245,10 @@ function updatePlot(all = true) {
 }
 
 
-// 3 px is just a shift from sides
 var oldDpsLen=0
-function sliderChanged(){
+function sliderChanged(shift=0){
+    if((shift==-1 && th_in==0) || (shift==+1 && th_in==data.length-1)) return
+    th_in +=shift
     let max = data.length-1;
     let xPX = th_in * (document.body.clientWidth -6 - thumb.offsetWidth) / max+3;
     thumb.style.left = `${xPX}px`
@@ -254,7 +263,6 @@ function sliderChanged(){
 
 function setUpSlider(){
     slider.max = data.length - 1
-    // reset slider
     slider.value = 0;
     thumb.innerText = `${xName}=${data[0][col.x][0]}`
     thumb.style.left = `${3}px`
@@ -275,6 +283,7 @@ function colChanged(value) {
     }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
 };
+
 
 function colsChanged(value) {
     col.s = value;
@@ -297,7 +306,6 @@ function startDragBehavior() {
     })
 
     drag.on("drag", function () {
-        // axis is put here, as the axis changes when axis range is changed
         let yaxis = figurecontainer._fullLayout.yaxis;
         let xaxis = figurecontainer._fullLayout.xaxis;
 
@@ -319,44 +327,32 @@ function startDragBehavior() {
 
 
 function keyBoardDrag(inp) {
-    if (!index.length) return;
-    if (ma) {
-        saveOldData();
-        ma = 0;
-    }
     var yaxis = figurecontainer._fullLayout.yaxis;
     var add = yaxis.p2l(1) - yaxis.p2l(0);
     if (inp) add = -add;
-    for (let ind of index) dpsy[ind] +=add
+    for (let ind of index) dpsy[ind] += add
     Plotly.restyle(figurecontainer, {y: [dpsy]}, 0)
 }
 
 
-
-
 function updateOnServer() {
     if (!serve) return;
-    // may be removed
-    return new Promise((resolve, reject)=>{
-        let x_list = [],y_list = [],z_list = [];
+    let x_list = [],y_list = [],z_list = [];
+    let [a,b,c] = swapped ? [col.y, col.x,col.z] : [col.x, col.y,col.z]
 
-        let [a,b,c] = swapped ? [col.y, col.x,col.z] : [col.x, col.y,col.z]
-
-        for (let i of data) {
-            x_list.push(i[a]);
-            y_list.push(i[b]);
-            z_list.push(i[c]);
-        };
-        var s_data = [x_list, y_list, z_list];
-        viewerWindow.webContents.send("sdata", [s_data, Object.values(col), swapped]);
-        resolve();
-    })
+    for (let i of data) {
+        x_list.push(i[a]);
+        y_list.push(i[b]);
+        z_list.push(i[c]);
+    };
+    var s_data = [x_list, y_list, z_list];
+    viewerWindow.webContents.send("sdata", [s_data, Object.values(col), swapped]);
 };
 
 
 
 function changeEditable(index, colorReset=true){
-    if (swapperIsOn) return  // we can just swap s and z anyways
+    if (swapperIsOn) return  // we can just swap s and z anyways  //TODO : merge swapper into this
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
     if(colorReset){ // needed for deleting traces lower than the currenteditable
@@ -399,7 +395,7 @@ function addNewFileDialog() {
         alertElec("Plot along X before adding a new file.",0,"Can't add the file!!!")
         return
     }
-    var fname = dialog.showOpenDialogSync(parentWindow,{
+    var fname = dialog.showOpenDialogSync(remote.getCurrentWindow(),{
         defaultPath: recentLocation,
         properties: ['openFile']
     });
@@ -431,6 +427,7 @@ function addNewFile(fname) {
     recentFiles.push(fname);
     recentMenu();
 }
+
 
 function addTrace(){
     let ind = fullData.length-1
@@ -469,7 +466,6 @@ function openSwapper() {
 
     for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
     $('#plotlist').addClass('disabled')
-    // updateJSON();
 }
 
 
@@ -524,7 +520,6 @@ function isswap() {
     if (!data.length) return;
 
     // ! TODO: dont not use double exprotate, decide beforehand if its required or not
-
     for (let i = 0; i < fullData.length; i++) {
         [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
         fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
@@ -590,3 +585,194 @@ function doIt(olddata) {
     updateOnServer();
     saved = false;
 }
+
+
+
+
+function buildDOM(){
+    var txt =''
+    for(let i=0; i<fileNames.length; i++){
+        let fileName = fileNames[i]
+        let shortName = path.basename(fileName)
+        fileName = replaceWithHome(fileName)
+ 
+        //making custom button for the currently editable
+        // for simlicity lets just make the currenteditable trace undeletable
+        let buttomTxt = currentEditable != i ?
+            `<button class="clsBtn" onclick="tools(2,${i})" title='Remove this file'>`:
+            `<button class="clsBtnD" title='Can not remove currently editing plot' disabled>`
+
+        let checked = currentEditable==i? 'checked':''
+
+        // col label, x,y is uneditable for simplicity just now, maybe added later
+        let colLen=fullData[i][0].length
+        let colLabel = `<label>${ddd ? fullDataCols[i].x+1+':' : '' }${fullDataCols[i].y+1}:</label>`
+        colLabel += `<select onchange="updatePlotPop(${i},this.selectedIndex)" title='Change data column'>`
+        for(let j=0; j<colLen; j++){
+            let sell = fullDataCols[i].z==j ? 'selected' : ''
+            colLabel += `<option ${sell}>${j+1}</option>`
+        }
+        colLabel+='</select>'
+
+        txt += 
+        `<div class="row">
+            <label class="index">${i+1}.</label>
+            <label class="filename" title='${fileName}'>${shortName}</label>
+
+            <div class="tools">
+                <input  class='radio' type="radio" onclick="tools(0,${i})" title='Select this as editable' ${checked}>
+                <button class="copyBtn" onclick="tools(1,${i})" title='Use this file'>
+                    <svg viewBox="0 0 1792 1792">
+                        <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
+                    </svg>
+                    </button>
+                ${buttomTxt}
+                    <svg viewBox="0 0 1792 1792">
+                        <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popSelector">
+                ${colLabel}
+            </div>
+        </div><br>`
+    }
+    txt+='<br>'
+    document.querySelector('#popupPlotList>.popmain').innerHTML = txt  // use this
+}
+
+
+function tools(option,index){
+    if(option==0){ //select editable
+        if(currentEditable!=index) changeEditable(index)
+    }else if (option==1) { // clone this
+        fullData.push(fullData[index]); //not cloning same file
+        fullDataCols.push(clone(fullDataCols[index]))
+        fileNames.push(fileNames[index])
+        saveNames.push(saveNames[index])
+        legendNames.push(clone(legendNames[index]))
+        addTrace()
+    }else if(option==2) { // close this
+        if(fileNames.length==1) return // nothing to delete here
+        if(index <=currentEditable) {
+            changeEditable(currentEditable-1, false) // currentEditable is changed within the function
+        }
+        Plotly.deleteTraces(figurecontainer,index)
+        fullData.splice(index,1)
+        fullDataCols.splice(index,1)
+        fileNames.splice(index,1)
+        saveNames.splice(index,1)
+        legendNames.splice(index,1)
+    }
+    buildDOM()
+}
+
+
+function updatePlotPop(index, cl){
+    fullDataCols[index].z = cl
+    legendNames[index] =path.basename(fileNames[index]) + ` ${fullDataCols[index].y+1}:${fullDataCols[index].z+1}`
+    Plotly.restyle(figurecontainer, {
+        y:[fullData[index][th_in][fullDataCols[index].z]],
+        name : [legendNames[index]]
+    }, index)
+
+    if(index==currentEditable){
+        col.z = cl
+        dpsy = data[th_in][col.z];
+    }
+    zCol.selectedIndex = col.z 
+}
+
+
+function settingWindow(){
+    let settingEditWindow = new BrowserWindow({
+        minHeight: 700,
+        minWidth:600,
+        title: "Interactive Data Editor - Plot Settings",
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true
+        }
+    });
+    settingEditWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "pop.html"),
+        protocol: 'file:',
+        slashes: true
+    }));
+    settingEditWindow.setMenuBarVisibility(false);
+
+    // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
+    settingEditWindow.webContents.once("dom-ready", function () {
+        let lay = figurecontainer.layout
+        let plot = []
+        for(let i=0; i<figurecontainer.data.length; i++){
+            let dat = {}
+            dat.Title = figurecontainer.data[i].name
+            dat.Style = figurecontainer.data[i].mode
+            dat.Marker = figurecontainer.data[i].marker
+            dat.Line = figurecontainer.data[i].line
+            // color is removed as colorway is used for easy iteration, get it from full
+            dat.Line.color = figurecontainer._fullData[i].line.color
+            dat.Marker.color = figurecontainer._fullData[i].marker.color
+            plot.push(dat)
+        }
+        if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
+        settingEditWindow.webContents.send("plotsetting", [lay, plot]);
+    })
+}
+
+
+
+function spreadsheet() {
+    let editorWindow = new BrowserWindow({
+        minWidth: 1200,
+        title: "Interactive Data Editor",
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true
+        }
+    });
+    editorWindow.maximize();
+    editorWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "spreadsheet.html"),
+        protocol: 'file:',
+        slashes: true
+    }));
+    editorWindow.setMenuBarVisibility(false);
+
+    editorWindow.show();
+    if (!app.isPackaged) editorWindow.webContents.openDevTools();
+    editorWindow.webContents.once("dom-ready", function () {
+        editorWindow.webContents.send("slider", [xName, col.x, data]);
+    })
+}
+
+
+var viewerWindow; // this variable is used inside the update on server function
+function openViewer() {
+    viewerWindow = new BrowserWindow({
+        show: false,
+        title: "Interactive Data Editor",
+        minWidth: 1200,
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true
+        }
+    });
+    viewerWindow.maximize();
+    viewerWindow.loadURL(url.format({
+        pathname: path.join(__dirname, '3D_Viewer.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
+    viewerWindow.on("closed", function () {
+        viewerWindow = null
+        serve=0
+    })
+    viewerWindow.show();
+    viewerWindow.setMenuBarVisibility(false);
+    if (!app.isPackaged) viewerWindow.webContents.openDevTools();
+    viewerWindow.webContents.once("dom-ready", updateOnServer)
+    serve = 1;
+};

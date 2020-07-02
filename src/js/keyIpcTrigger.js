@@ -2,187 +2,166 @@ function resizePlot() {
     window.dispatchEvent(new Event('resize'));
 }
 
-
-
+var fired=false
+function keyDownfired(){
+    if(!fired){
+        fired = true
+        saveOldData()
+    }
+}
 
 window.onkeyup = function hotDKeys(e) {
-    if (document.activeElement.type == "text") return
-    switch (e.key) {
-        case 'm':
-        case 'ArrowDown':
-        case 'ArrowUp':
-            ma = 1;
-            fullData[0] = data;
-            updateOnServer();
+    if((document.activeElement.type != "text") || e.key == 'm' || 
+        e.key == 'M' || e.key == 'ArrowDown' || e.key == 'ArrowUp' ){
+        fired=false
+        fullData[0] = data;
+        updateOnServer()
     }
 }
 
 
 window.onkeydown = function hotKeys(e) {
     if (document.activeElement.type == "text") return
-    // console.log(e)
-    switch (e.key) {
-        case " ":
-            Plotly.relayout(figurecontainer, {
-                "xaxis.autorange": true,
-                "yaxis.autorange": true
-            });
-            break;
-        case ",":
-            if (th_in == 0) break;
-            th_in = th_in - 1
-            sliderChanged();
-            break;
-        case ".":
-            if (th_in == data.length - 1) break;
-            th_in = th_in + 1
-            sliderChanged();
-            break;
-        case "s":
-        case "S":
-            if (!e.ctrlKey) Plotly.relayout(figurecontainer, {dragmode: "select"});
-            break;
-        case "z":
-        case "Z":
-            if (e.ctrlKey & !e.shiftKey) {
-                unDo();
-            } else if (e.ctrlKey & e.shiftKey) {
-                reDo();
-            } else {
-                Plotly.relayout(figurecontainer, {dragmode: "zoom"});
-            };
-            break;
-        case "p":
-        case "P":
-            swapData();
-            break;
 
-        case "d":
-        case "D":
-            deleteInterpolate()
-            break;
-        case "e":
-        case "E":
-            deleteExtrapolate()
-            break;
-        case "m":
-        case "M":
-            autoSmooth();
-            break;
-        case "c":
-        case "C":
-            if (e.ctrlKey) {
-                copyThis();
-            } else {
-                changeSign();
-            }
-            break;
-        case 'v':
-        case "V":
-            if (e.ctrlKey)pasteThis();
-            break;
-        case 'ArrowDown':
-            keyBoardDrag(0);
-            break;
-        case 'ArrowUp':
-            keyBoardDrag(1);
-            break
-        case 'o':
-        case 'O':
-            if (!app.isPackaged && ddd) sSwapper();
-            break
-        case 'x':
-        case 'X':
-            removeBadData()
-        case 'Tab':
-            if (e.ctrlKey) {
-                if(figurecontainer.data.length==1) return
-                let ind = currentEditable == figurecontainer.data.length-1 ? 0 : currentEditable+1
-                changeEditable(ind)
-            }
-            break;
-        case "ArrowLeft": case "ArrowRight":
-            if (e.ctrlKey | e.shiftKey) moveReflect(e.keyCode-37, e.shiftKey)
-            break
-        case 'k':
-        case 'K':
-            dataSupStart()
-            break;
-        case 'l':
-        case 'L':
-            dataSupEnd();
-    };
+    if(e.key==' '){
+        Plotly.relayout(figurecontainer, {
+            "xaxis.autorange": true,
+            "yaxis.autorange": true
+        });
+
+    }else if(e.key==","){ 
+        sliderChanged(-1)
+
+    }else if(e.key==","){ 
+        sliderChanged(+1)
+
+    }else if((e.key=="s" || e.key=="S") && !e.ctrlKey ){
+        Plotly.relayout(figurecontainer, {dragmode: "select"})
+    
+    }else if((e.key=="z" || e.key=="Z") && e.ctrlKey && !e.shiftKey){
+        unDo()
+    
+    }else if((e.key=="z" || e.key=="Z") && e.ctrlKey && e.shiftKey){
+        reDo()
+    
+    }else if((e.key=="z" || e.key=="Z") && !e.ctrlKey && !e.shiftKey){
+        Plotly.relayout(figurecontainer, {dragmode: "zoom"})
+
+    }else if((e.key=="d" || e.key=="D") && index.length){
+        deleteInterpolate()
+
+    }else if((e.key=="e" || e.key=="E") && index.length){
+        deleteExtrapolate()
+
+    }else if((e.key=="k" || e.key=="K") && index.length){
+        dataSupStart()
+
+    }else if((e.key=="l" || e.key=="L") && index.length){
+        dataSupEnd()
+
+    }else if((e.key=="m" || e.key=="M") && index.length){
+        keyDownfired();autoSmooth()
+
+    }else if((e.key=="c" || e.key=="C") && e.ctrlKey){
+        copyThis()
+
+    }else if((e.key=="c" || e.key=="C") && index.length && !e.ctrlKey){
+        changeSign()
+
+    }else if((e.key=="p" || e.key=="P") && index.length){
+        swapData()
+
+    }else if((e.key=="v" || e.key=="V") && e.ctrlKey){
+        pasteThis()
+
+    }else if((e.key=="x" || e.key=="X") && index.length){
+        removeBadData()
+    
+    }else if(e.key=="ArrowDown" && index.length){
+        keyDownfired(); keyBoardDrag(0)
+
+    }else if(e.key=="ArrowUp" && index.length){
+        keyDownfired(); keyBoardDrag(1)
+
+    }else if(e.key=="Tab" && e.ctrlKey && figurecontainer.data.length==1){
+        let ind = currentEditable == figurecontainer.data.length-1 ? 0 : currentEditable+1
+        changeEditable(ind)
+
+    }else if(e.key=="ArrowLeft" && e.ctrlKey && !e.shiftKey){
+        moveReflect(false, false)
+
+    }else if(e.key=="ArrowRight" && e.ctrlKey && !e.shiftKey){
+        moveReflect(true, false)
+
+    }else if(e.key=="ArrowLeft" && !e.ctrlKey && e.shiftKey){
+        moveReflect(false, true)
+
+    }else if(e.key=="ArrowRight" && !e.ctrlKey && e.shiftKey){
+        moveReflect(true, true)
+
+    // }else{
+    //     console.log('No available trigger',e.key)
+    }
 };
 
 
-function ipcTrigger(e,d){
-    if (show) console.log(e, d);
-    switch (d) {
-        case "open":
-            fileLoader()
-            break;
-        case 'add':
-            addNewFileDialog();
-            break;
-        case "save":
-            if (firstSave) {
-                saveAs()
-            } else {
-                saveData()
-            }
-            break;
-        case "saveas":
-            saveAs();
-            break;
-        case '3dview':
-            openViewer()
-            break;
-        case "spread":
-            spreadsheet();
-            break;
-        case "pa":
-            if(ddd) isswap();
-            break;
-        case "pamh":
-            lockXc = menu.getMenuItemById("pamh").checked ? 0 : 1;
-            break;
+function ipcTrigger(_,d){
+    if(d=='open'){
+        fileLoader()
 
-        case "fullscreen":
-            resizePlot();
-            break;
-        case 'tswap':
-            if (!swapperIsOn) {
-                openSwapper()
-            } else {
-                exitSwapper()
-            }
-            break;
-        case "edat":
-            openUtility('repeatMirror')
-            break;
-        case 'fill':
-            openUtility('fillValues')
-            break;
-        case 'filter':
-            openUtility('filterData')
-            break;
-        case 'rgft':
-            if(initPolyfit()){
-                openUtilityFit('rgFit')
-            }
-            break;
-        case 'lmfit':
-            if(initLMfit()) {
-                // extendUtilities2d('lmfit')
-                openUtilityFit('lmFit')
-            }
-            break;
-        case 'pdash':
-            settingWindow()
-            break;
-        case 'trigdown':
-            $('#popupEx').show() 
-            break
+    }else if(d=='add'){
+        addNewFileDialog()
+
+    }else if((d=='save' && firstSave) || (d=='saveas')){
+        saveAs()
+
+    }else if(d=='save' && !firstSave){
+        saveData()
+
+    }else if(d=='3dview'){
+        openViewer()
+
+    }else if(d=='pa' && ddd){
+        isswap()
+
+    }else if(d=='spread'){
+        spreadsheet()
+
+    }else if(d=='pamh'){
+        lockXc = menu.getMenuItemById("pamh").checked ? 0 : 1
+
+    }else if(d=='fullscreen'){
+        resizePlot()
+
+    }else if(d=='tswap' && !swapperIsOn){
+        openSwapper()
+
+    }else if(d=='tswap' && swapperIsOn){
+        exitSwapper()
+
+    }else if(d=='edat'){
+        openUtility('repeatMirror')
+
+    }else if(d=='fill'){
+        openUtility('fillValues')
+
+    }else if(d=='filter'){
+        openUtility('filterData')
+
+    }else if(d=='rgft' && initPolyfit()){
+        openUtilityFit('rgFit')
+
+    }else if(d=='lmfit' && initLMfit()){
+        openUtilityFit('lmFit')
+
+    }else if(d=='pdash'){
+        settingWindow()
+
+    }else if(d=='trigdown'){
+        $('#popupEx').show()
+
+    // }else {
+    //     console.log('No trigger available for',d)
     }
 }
 
@@ -244,7 +223,6 @@ for(let elem of document.getElementsByClassName('title')){
 
 
 
-
 figurecontainer.onclick= (e)=>{
     if (e.target.tagName == "rect") {
             Plotly.restyle(figurecontainer, {selectedpoints: [null]});
@@ -268,7 +246,7 @@ ipcRenderer.on("adrf", (_, d)=> addNewFile(d))
 ipcRenderer.on("rf", (_, d)=> fileReader(d))
 
 ipcRenderer.on('checkClose', function (_,_) {
-    if (!saved) var res = dialog.showMessageBoxSync({
+    if (!saved) let res = dialog.showMessageBoxSync({
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Do you want to quit without saving the changes ?",
@@ -281,7 +259,7 @@ ipcRenderer.on('checkClose', function (_,_) {
 window.addEventListener("resize", function(){
     $('#filler').width($('#container').parent().width())
     if(fullData.length && ddd) sliderChanged()
-}) //needed to position the thumb div
+})
 
 $('#filler').width($('#container').parent().width())
 
@@ -298,7 +276,7 @@ figurecontainer.on("plotly_selected", (ev)=>{
 
 
 figurecontainer.on("plotly_legendclick", function(){ // to catch the name if changed from legend
-    var tmpLeg=[]
+    let tmpLeg=[]
     for (let i of figurecontainer.data) tmpLeg.push(i.name)
     legendNames = tmpLeg;
 });
@@ -329,16 +307,9 @@ function selectWheel(ev){
 
 
 // attach change X/Y with mouse scroll functionality to the figurecontainer and slider
-function slideWheel(ev){
-    let change = ev.deltaY <0 ? 1 : -1
-    if((change==-1 && th_in==0) || (change==+1 && th_in==data.length-1)) return
-    th_in += change
-    sliderChanged()
+figurecontainer.onmousewheel = slider.onmousewheel = function(ev){
+    ev.deltaY <0 ? sliderChanged(+1) : sliderChanged(-1)
 }
-
-slider.onmousewheel= slideWheel
-figurecontainer.onmousewheel= slideWheel
-
 
 
 function openUtility(name){ // name is passed as id name
