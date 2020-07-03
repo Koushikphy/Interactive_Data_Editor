@@ -103,55 +103,90 @@ function filterData() {
 
     endJobs({resize:false, startdrag:false})
     showStatus('Data filtered...');
-
 }
 
 
 function deleteExtrapolate(){
-    saveOldData()
-    data[th_in][col.z] = useRegression(dpsx, dpsy, index)  // also apply this to dpsy
-    endJobs()
+    try{
+        let ind = index.filter((i)=>i<dpsx.length)
+        if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
+        saveOldData()
+        data[th_in][col.z] = useRegression(dpsx, dpsy, ind) // also apply this to dpsy
+        endJobs()
+    }catch(e){
+        if(e.ty=='sS') showStatus(e.msg)
+        console.log(e)
+    }
 }
 
 
 function dataSupEnd(){
-    saveOldData()
-    data[th_in][col.z] = useRegression(dpsx, dpsy, index,2)
-    endJobs()
+    try{
+        let ind = index.filter((i)=>i<dpsx.length)
+        if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
+        saveOldData()
+        data[th_in][col.z] = useRegression(dpsx, dpsy, ind,2)
+        endJobs()
+    } catch(e){
+        if(e.ty=='sS') showStatus(e.msg)
+        console.log(e)
+    }
 }
 
 
 function dataSupStart(){
-    saveOldData()
-    data[th_in][col.z] = useRegression(dpsx, dpsy, index,3)
-    endJobs()
+    try{
+        let ind = index.filter((i)=>i<dpsx.length)
+        if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
+        saveOldData()
+        data[th_in][col.z] = useRegression(dpsx, dpsy, ind,3)
+        endJobs()
+    } catch(e){
+        if(e.ty=='sS') showStatus(e.msg)
+        console.log(e)
+    }
 }
 
 
 
 function deleteInterpolate() {
-    saveOldData()
-    data[th_in][col.z] = useSpline(dpsx, dpsy, index)
-    endJobs()
-};
+    try{
+        let ind = index.filter((i)=>i<dpsx.length)
+        if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
+        if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply spline at endpoints"}
+        saveOldData()
+        data[th_in][col.z] = useSpline(dpsx, dpsy, ind)
+        endJobs()
+    } catch(e){
+        if(e.ty=='sS') showStatus(e.msg)
+        console.log(e)
+    }
+}
 
 
 
 function autoSmooth() {
-    if (index[0] == 0) index.splice(0, 1)
-    if (index[index.length - 1] == dpsx.length - 1) index.splice(-1, 1)   // removes data
-    for (let i of index) {
-        dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
-    };
-    data[th_in][col.z] = dpsy;
-    endJobs()
-};
+    try{
+        let ind = index.filter((i)=>i<dpsx.length)
+        if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
+        if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply mooving average at endpoints"}
+        for (let i of ind) {
+            dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
+        };
+        data[th_in][col.z] = dpsy;
+        endJobs()
+    } catch(e){
+        if(e.ty=='sS') showStatus(e.msg)
+        console.log(e)
+    }
+}
 
 
 
 function changeSign() {
+    let ind = index.filter((i)=>i<dpsx.length)
     saveOldData();
-    for (let ind of index) data[th_in][col.z][ind] = -data[th_in][col.z][ind];
+    for (let i of ind) data[th_in][col.z][i] = -data[th_in][col.z][i];
     endJobs()
 };
 
@@ -274,6 +309,23 @@ function lmfit(){
 }
 
 
+
+// function checkForBadSelection(){
+//     let ind = index.filter((i)=>i<dpsx)
+//     if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
+//     return ind
+// }
+
+
+
+
+function badSelectedPoints(){// selected some points that doesn't exist
+    if(index[index.length-1]>dpsx.length -1){
+        showStatus("Select proper data points.")
+        return true
+    }
+    return false
+}
 
 function endJobs({resize=false, updateAll = false, startdrag=false, clearIndex=false}={}){
     // jobs to do after a function is called like update plot

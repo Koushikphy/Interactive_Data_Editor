@@ -2,34 +2,29 @@ const Plotly = require('plotly.js-gl3d-dist');
 const fs     = require("fs");
 const path   = require('path')
 const url    = require('url')
+const $      = require('../lib/jquery.min')
 const {dialog,BrowserWindow} = remote;
+const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
+const {layout, colorList, iniPointsD } = require('../js/plotUtils')
+const {downloadImage } = require('../js/download') // used directly in html
+
 const xCol   = document.getElementById("xCol")
 const yCol   = document.getElementById("yCol")
 const zCol   = document.getElementById("zCol")
 const sCol   = document.getElementById("sCol")
 const slider = document.getElementById('range')
 const thumb  = document.getElementById('thumb')
-const figurecontainer = document.getElementById("figurecontainer");
-
-
-const $ = require('../lib/jquery.min')
-const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
-const {layout, colorList, iniPointsD } = require('../js/plotUtils')
-const {downloadImage } = require('../js/download') // used directly in html
+const figurecontainer = document.getElementById("figurecontainer")
 
 
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [],
     saved = true, firstSave = true,
-    col = {x: 0,y: 0,z: 0,s: 0},
-    currentEditable = 0,
-    xName = "X";
+    col = {x: 0, y: 0, z: 0,s: 0},
+    currentEditable = 0, xName = "X";
     serve = 0, lockXc = 1, swapped = 0,
-    show = false,
-    issame = false,
-    swapper = false, ddd = false,
-    th_in = 0, ma = 1, 
-    undoStack = [], redoStack = [];
+    issame = false, swapper = false, ddd = false,
+    th_in = 0, undoStack = [], redoStack = [];
 
 
 Plotly.newPlot(figurecontainer, [iniPointsD], layout, {

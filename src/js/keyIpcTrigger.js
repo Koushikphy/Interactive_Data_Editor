@@ -246,7 +246,7 @@ ipcRenderer.on("adrf", (_, d)=> addNewFile(d))
 ipcRenderer.on("rf", (_, d)=> fileReader(d))
 
 ipcRenderer.on('checkClose', function (_,_) {
-    if (!saved) let res = dialog.showMessageBoxSync({
+    if (!saved) var res = dialog.showMessageBoxSync({
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Do you want to quit without saving the changes ?",
@@ -332,3 +332,6 @@ function closeUtilityFit(e){
     $('#extendUtils2D').slideUp()
     $(e.parentElement).hide()
 }
+
+
+document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`

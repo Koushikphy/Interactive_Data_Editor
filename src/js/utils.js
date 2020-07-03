@@ -1,12 +1,12 @@
 const {Regression, Spline, stepAhed} = require('../js/numeric')
- 
+// const {remote} = require('electron')
 const clone = (x) => JSON.parse(JSON.stringify(x));
 const clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper));
 const transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
 
 
 function alertElec(msg, type=1, title="Failed to execute."){
-    dialog.showMessageBox(parentWindow,{
+    dialog.showMessageBox(remote.getCurrentWindow(),{
         type: type==1? "error": 'warning',
         title: title,
         message: msg,
@@ -16,8 +16,7 @@ function alertElec(msg, type=1, title="Failed to execute."){
 
 
 function parseData(strDps) {
-    var newdat = [],
-        blocks = [];
+    var newdat = [],blocks = [];
     strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
     try{
         for (let i of strDps) {
@@ -46,9 +45,9 @@ function parseData(strDps) {
 
 
 
-function expRotate(tmpData, i, j) {
+function expRotate(inp, i, j) {
     //Bunch up on i-th column and sort along j-th column
-    tmpData = tmpData.map(x => transpose(x));
+    tmpData = inp.map(x => transpose(x));
     if (!issame) {
         issame = true;
         var b = tmpData[0].length;
@@ -246,7 +245,6 @@ function applyCutOFF(data, colmn,condition, thrsh, fillVal){
 
 
 function useRegression(xx, yy, index, condition=1){
-    // if (!index.length) return yy;
     let xs = xx.slice(); //shallow copy
     let ys = yy.slice();
     let ind= index.slice()
@@ -258,14 +256,14 @@ function useRegression(xx, yy, index, condition=1){
         // take 3 numbers from both sides
         let xxs = xs.slice(Math.max(first-3,0),first).concat(xs.slice(last+1,last+4))
         let yys = ys.slice(Math.max(first-3,0),first).concat(ys.slice(last+1,last+4))
-        if(xxs.length<3) return ys;
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points selected"};
         exterp = new Regression(xxs,yys, 2)
         for (let i of ind) ys[i] = exterp.val(xs[i]);
 
     } else if(condition==2){ // data dataSupEnd
         let xxs= xs.slice(Math.max(first-3,0),first)
         let yys= ys.slice(Math.max(first-3,0),first)
-        if(xxs.length<3) return ys;
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points selected"};
         exterp = new Regression(xxs,yys, 2)
         let tmpVal = exterp.val(xs[first]) - ys[first]
         for (let i of ind) ys[i] += tmpVal;
@@ -273,7 +271,7 @@ function useRegression(xx, yy, index, condition=1){
     } else if(condition==3){// dataSup start
         let xxs= xs.slice(last+1,last+4)
         let yys= ys.slice(last+1,last+4)
-        if(xxs.length<3) return ys;
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points selected"};
         exterp = new Regression(xxs,yys, 2)
         let tmpVal = exterp.val(xs[last]) - ys[last]
         for (let i of ind) ys[i] += tmpVal;
@@ -284,14 +282,9 @@ function useRegression(xx, yy, index, condition=1){
 
 
 function useSpline(xx, yy, index){
-    // if (!index.length) return yy;
     let xs = xx.slice();
     let ys = yy.slice();
     let ind= index.slice()
-    // console.log(xs,ys,ind)
-    //check for endpoints
-    if (ind[0] == 0) ind.splice(0, 1)
-    if (ind[ind.length - 1] == xs.length - 1) ind.splice(-1, 1)
     let xxs = xs.slice()
     let yys = ys.slice()
     for (let i = ind.length - 1; i >= 0; i--) {
@@ -300,7 +293,6 @@ function useSpline(xx, yy, index){
     }
     spl = new Spline(xxs,yys)
     for (let i of ind) ys[i] = spl.getVal(xs[i]);
-    // console.log(ys)
     return ys
 }
 
