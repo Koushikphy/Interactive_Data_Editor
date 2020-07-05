@@ -32,20 +32,20 @@ window.onkeydown = function hotKeys(e) {
     }else if(e.key==","){ 
         sliderChanged(-1)
 
-    }else if(e.key==","){ 
+    }else if(e.key=="."){ 
         sliderChanged(+1)
 
     }else if((e.key=="s" || e.key=="S") && !e.ctrlKey ){
         Plotly.relayout(figurecontainer, {dragmode: "select"})
+        
+    }else if((e.key=="z" || e.key=="Z") && !e.ctrlKey && !e.shiftKey){
+        Plotly.relayout(figurecontainer, {dragmode: "zoom"})
     
     }else if((e.key=="z" || e.key=="Z") && e.ctrlKey && !e.shiftKey){
         unDo()
     
     }else if((e.key=="z" || e.key=="Z") && e.ctrlKey && e.shiftKey){
         reDo()
-    
-    }else if((e.key=="z" || e.key=="Z") && !e.ctrlKey && !e.shiftKey){
-        Plotly.relayout(figurecontainer, {dragmode: "zoom"})
 
     }else if((e.key=="d" || e.key=="D") && index.length){
         deleteInterpolate()

@@ -10,7 +10,7 @@ function _versionCheck() {
             var new_ver = JSON.parse(body).name
             var body = JSON.parse(body).body
             console.log(body, new_ver)
-            if (new_ver != `v${require('../package.json').version}`) {
+            if (new_ver != `v${require('../../package.json').version}`) {
                 var txt = `A new version of the software ${new_ver} is available.\n Do you want to download it now?`
                 var res = dialog.showMessageBoxSync({
                     type: "question",

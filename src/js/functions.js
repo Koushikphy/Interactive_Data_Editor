@@ -18,12 +18,9 @@ const figurecontainer = document.getElementById("figurecontainer")
 
 
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
-    data = [], dpsx = [], dpsy = [], index = [],
-    saved = true, firstSave = true,
-    col = {x: 0, y: 0, z: 0,s: 0},
-    currentEditable = 0, xName = "X";
-    serve = 0, lockXc = 1, swapped = 0,
-    issame = false, swapper = false, ddd = false,
+    data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
+    col = {x: 0, y: 0, z: 0,s: 0}, currentEditable = 0, xName = "X";
+    lockXc = 1, swapped = 0, issame = false, swapper = false, ddd = false,
     th_in = 0, undoStack = [], redoStack = [];
 
 
@@ -63,7 +60,6 @@ function setUpFor2d(){
     var fl = JSON.parse(localStorage.getItem("cols2d"));
     if (fl !== null) col = fl
     col.x=0
-    serve = 0;
     var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit']
     for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
     for (let i of ["pax", '3dview']) menu.getMenuItemById(i).enabled = false;
@@ -82,6 +78,7 @@ function setUpFor3d(){
     for (let i of ["rgft", 'lmfit']) menu.getMenuItemById(i).enabled = false;
 }
 
+
 function setUpColumns(){
     let tmpL = data[0].length
     if(col.x>=tmpL) col.x = 0
@@ -97,6 +94,7 @@ function setUpColumns(){
     zCol.selectedIndex = col.z;
     sCol.selectedIndex = col.s;
 }
+
 
 function updateData(init=false,all=true) {
     if(!init){
@@ -131,7 +129,6 @@ function fileLoader() {
 
 
 function fileReader(fname) {
-    //check if other file is open
     if (!saved) var res = dialog.showMessageBoxSync(remote.getCurrentWindow(),{
         type: "warning",
         title: "Unsaved data found!!!",
@@ -150,7 +147,6 @@ function fileReader(fname) {
     issame = false; firstSave = true; swapper = false;
     undoStack = []; redoStack = [];  swapperIsOn = false;
 
-    // $("#full").show();
     let ind = figurecontainer.data.length
     if(ind>1) Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))  // delete extra traces
     // if currentEditable is not the first trace then, we have to update the points and also have to change the plot style
@@ -197,7 +193,6 @@ function fileReader(fname) {
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
 }
-// var notLoaded = true
 
 
 
@@ -325,13 +320,13 @@ function keyBoardDrag(inp) {
     var yaxis = figurecontainer._fullLayout.yaxis;
     var add = yaxis.p2l(1) - yaxis.p2l(0);
     if (inp) add = -add;
-    for (let ind of index) dpsy[ind] += add
+    for (let i of index) dpsy[i] += add
     Plotly.restyle(figurecontainer, {y: [dpsy]}, 0)
 }
 
 
 function updateOnServer() {
-    if (!serve) return;
+    if (!viewerWindow) return;
     let x_list = [],y_list = [],z_list = [];
     let [a,b,c] = swapped ? [col.y, col.x,col.z] : [col.x, col.y,col.z]
 
@@ -560,7 +555,6 @@ function reDo() {
 
 
 function unDo() {
-    if (!ma) ma = 1;
     if (!undoStack.length) return;
     let olddata = undoStack.pop()
     redoStack.push(JSON.stringify([th_in, col, swapped, data[th_in]]));
@@ -604,8 +598,7 @@ function buildDOM(){
         let colLabel = `<label>${ddd ? fullDataCols[i].x+1+':' : '' }${fullDataCols[i].y+1}:</label>`
         colLabel += `<select onchange="updatePlotPop(${i},this.selectedIndex)" title='Change data column'>`
         for(let j=0; j<colLen; j++){
-            let sell = fullDataCols[i].z==j ? 'selected' : ''
-            colLabel += `<option ${sell}>${j+1}</option>`
+            colLabel += `<option ${fullDataCols[i].z==j ? 'selected' : ''}>${j+1}</option>`
         }
         colLabel+='</select>'
 
@@ -744,7 +737,7 @@ function spreadsheet() {
 }
 
 
-var viewerWindow; // this variable is used inside the update on server function
+var viewerWindow=null; // this variable is used inside the update on server function
 function openViewer() {
     viewerWindow = new BrowserWindow({
         show: false,
@@ -761,13 +754,9 @@ function openViewer() {
         protocol: 'file:',
         slashes: true
     }));
-    viewerWindow.on("closed", function () {
-        viewerWindow = null
-        serve=0
-    })
+    viewerWindow.on("closed", function () { viewerWindow = null })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
     if (!app.isPackaged) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready", updateOnServer)
-    serve = 1;
 };

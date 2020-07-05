@@ -15,6 +15,7 @@
         "**/plotUtils.js": true,
         "node_modules": true,
         "package-lock.json": true,
-        "yarn.lock": true
+        "yarn.lock": true,
+        "**/lib*":true
     }
 }

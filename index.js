@@ -115,7 +115,7 @@ const helpMenu = {
                     }
                 });
                 childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'html/data.html'),
+                    pathname: path.join(__dirname, 'src/html/data.html'),
                     protocol: 'file:',
                     slashes: true
                 }));
@@ -245,7 +245,7 @@ const homeMenuTemplate = [
                 label: 'Reload',
                 accelerator: 'CmdOrCtrl+R',
                 click() {
-                    console.log('window')
+                    console.log('fegfuegu')
                     mainWindow.webContents.send('windowReload','closeExtra')
                     BrowserWindow.getAllWindows().forEach((window) => {
                         if(mainWindow!=window) window.close()

@@ -1,4 +1,4 @@
-const {repeatMirrorData,fillMissingGrid,useRegression,useSpline,levenMarFit,regressionFit} = require('../js/utils');
+const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
 const { PlotSchema } = require('plotly.js-gl3d-dist');
 const {iniPointsF} = require('../js/plotUtils')
 
@@ -42,7 +42,7 @@ function swapData() {
 function moveReflect(right, mirror){
     saveOldData();
     let ind = index[index.length-1]+1;
-    let tmp = clone(dpsy.slice(index[0], ind));
+    let tmp = dpsy.slice(index[0], ind)
     if(!right) ind=index[0]-index.length;
     if(mirror) tmp.reverse();
     tmp.shift();
@@ -66,7 +66,7 @@ function repeatMirror() {
         }
     }
     data = repeatMirrorData(data, col.y, last, times)
-    endJobs({resize:false, startdrag:true})
+    endJobs({startdrag:true})
     showStatus(`Data ${mirror ? 'mirrored' : 'repeated'} ${times} times...`)
 }
 
@@ -81,13 +81,13 @@ function dataFiller() {
     let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
     
     for(let dt of data[0][col.y]){
-        if(dt[0]>=dt[1]){
+        if(dt[0]>=dt[1]){ // just checking once
             alertElec('Monotonically increasing values required for interpolation.')
             return
         }
     }
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
-    endJobs({resize:false, startdrag:true})
+    endJobs({startdrag:true})
     showStatus('Missing values are filled...');
 }
 
@@ -101,7 +101,7 @@ function filterData() {
 
     data = applyCutOFF(data, colmn,condition, thrsh, fillVal)
 
-    endJobs({resize:false, startdrag:false})
+    endJobs()
     showStatus('Data filtered...');
 }
 
@@ -114,8 +114,7 @@ function deleteExtrapolate(){
         data[th_in][col.z] = useRegression(dpsx, dpsy, ind) // also apply this to dpsy
         endJobs()
     }catch(e){
-        if(e.ty=='sS') showStatus(e.msg)
-        console.log(e)
+        e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
 }
 
@@ -128,8 +127,7 @@ function dataSupEnd(){
         data[th_in][col.z] = useRegression(dpsx, dpsy, ind,2)
         endJobs()
     } catch(e){
-        if(e.ty=='sS') showStatus(e.msg)
-        console.log(e)
+        e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
 }
 
@@ -142,8 +140,7 @@ function dataSupStart(){
         data[th_in][col.z] = useRegression(dpsx, dpsy, ind,3)
         endJobs()
     } catch(e){
-        if(e.ty=='sS') showStatus(e.msg)
-        console.log(e)
+        e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
 }
 
@@ -158,8 +155,7 @@ function deleteInterpolate() {
         data[th_in][col.z] = useSpline(dpsx, dpsy, ind)
         endJobs()
     } catch(e){
-        if(e.ty=='sS') showStatus(e.msg)
-        console.log(e)
+        e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
 }
 
@@ -176,8 +172,7 @@ function autoSmooth() {
         data[th_in][col.z] = dpsy;
         endJobs()
     } catch(e){
-        if(e.ty=='sS') showStatus(e.msg)
-        console.log(e)
+        e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
 }
 
@@ -198,17 +193,16 @@ function setValue(val){
     if (isNaN(value) ) return;
     for (let ind of index) data[th_in][col.z][ind] = value;
     endJobs({clearIndex:true})
-    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 }
 
 
 function removeBadData(){
     saveOldData()
-    for (let i = index.length - 1; i >= 0; i--) {
+    let ind = index.filter((i)=>i<dpsx.length)
+    for (let i = ind.length - 1; i >= 0; i--) {
         for(let j=0; j<data[0].length; j++) data[th_in][j].splice(index[i], 1);
     }
     endJobs({clearIndex:true})
-    Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 }
 
 
@@ -290,7 +284,7 @@ function lmfit(){
     let [fity, params, chiError] = levenMarFit(dpsx, dpsy, funcStr, paramList, maxIter, parameters, maxVal, minVal, dampVal,stepVal, etVal, egVal)
 
     let anotX=0.5, anotY=1;
-    if(figurecontainer.layout.annotations!= undefined){  // persists annotation data if already used
+    if(figurecontainer.layout.annotations!= undefined){  // persists annotation if already used
         anotX = figurecontainer.layout.annotations[0].x
         anotY = figurecontainer.layout.annotations[0].y
     }
@@ -310,33 +304,16 @@ function lmfit(){
 
 
 
-// function checkForBadSelection(){
-//     let ind = index.filter((i)=>i<dpsx)
-//     if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
-//     return ind
-// }
-
-
-
-
-function badSelectedPoints(){// selected some points that doesn't exist
-    if(index[index.length-1]>dpsx.length -1){
-        showStatus("Select proper data points.")
-        return true
-    }
-    return false
-}
 
 function endJobs({resize=false, updateAll = false, startdrag=false, clearIndex=false}={}){
-    // jobs to do after a function is called like update plot
-    // return new Promise((resolve,reject)=>{
-        updatePlot(updateAll);
-        updateOnServer();
-        saved = false;
         fullData[0] = data;
-        if (clearIndex) index = [];
-        if (startdrag) startDragBehavior()
+        updatePlot(updateAll);
         if (resize) resizePlot()
-    //     resolve()
-    // })
+        updateOnServer();
+        if (startdrag) startDragBehavior()
+        if (clearIndex){
+            Plotly.restyle(figurecontainer, {selectedpoints: [null]})
+            index = []
+        }
+        saved = false;
 }

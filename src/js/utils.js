@@ -17,9 +17,9 @@ function alertElec(msg, type=1, title="Failed to execute."){
 
 function parseData(strDps) {
     var newdat = [],blocks = [];
-    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
+    var strps = strDps.trim().split(/\r?\n\s*\r?\n/);
     try{
-        for (let i of strDps) {
+        for (let i of strps) {
             blocks = i.trim().split("\n");
             for (var j = 0; j < blocks.length; j++) {
                 blocks[j] = blocks[j].trim().split(/[\s\t]+/);
@@ -35,9 +35,7 @@ function parseData(strDps) {
             newdat.push(transpose(blocks));
         }
     } catch(err){
-        if(err='badData'){
-            alertElec("Bad data found !!!\nCheck the file before openning.")
-        }
+        if(err='badData') alertElec("Bad data found !!!\nCheck the file before openning.")
         return
     }
     return newdat;
@@ -46,18 +44,21 @@ function parseData(strDps) {
 
 
 function expRotate(inp, i, j) {
+    // this function is not good
     //Bunch up on i-th column and sort along j-th column
     tmpData = inp.map(x => transpose(x));
-    if (!issame) {
-        issame = true;
-        var b = tmpData[0].length;
-        for (let a of tmpData) {
-            if (a.length != b) {
-                issame = false;
-                break;
-            };
-        };
-    }
+    if(!issame) issame = tmpdat.every(v=>v.length==tmpdat[0].length)
+    // if (!issame) {
+    //     issame = tmpdat.every(v=>v.length==tmpdat[0].length)
+    //     issame = true;
+    //     var b = tmpData[0].length;
+    //     for (let a of tmpData) {
+    //         if (a.length != b) {
+    //             issame = false;
+    //             break;
+    //         };
+    //     };
+    // }
     if (issame) {
         tmpData = transpose(tmpData);
         tmpData = tmpData.map(x => transpose(x));
@@ -67,17 +68,14 @@ function expRotate(inp, i, j) {
     tmpData = [].concat(...tmpData).filter(x => x !== undefined);
 
     var tmp = new Set();
-    for (let a of tmpData) {
-        tmp.add(a[i]);
-    };
+    for (let a of tmpData) tmp.add(a[i])
+
     tmp = [...tmp].sort((a, b) => a - b);
     var newdat = [];
     for (let x of tmp) {
         var tmpdat = [];
         for (let line of tmpData) {
-            if (x == line[i]) {
-                tmpdat.push(line)
-            };
+            if (x == line[i]) tmpdat.push(line)
         };
         tmpdat = tmpdat.sort((m, n) => m[j] - n[j]);
         newdat.push(transpose(tmpdat));
@@ -95,7 +93,7 @@ function repeatMirrorData(data, ycol, last, times){
         if (i != ycol) cols_wo_y.push(i)
     }
 
-    data = data.map(dat => {
+    res = data.map(dat => {
         var ind = dat[ycol].indexOf(last) + 1
         var newy = dat[ycol].slice(0, ind)
         var tmp = newy.slice()
@@ -118,7 +116,7 @@ function repeatMirrorData(data, ycol, last, times){
         dat[ycol] = newy;
         return dat
     })
-    return data
+    return res
 }
 
 
@@ -147,7 +145,7 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
     }
 
 
-    data = data.map(dat => {
+    res = data.map(dat => {
         if (fullArr.length == dat[0].length) return dat; // no interpolation required
         var xs = dat[col.y].slice()
         var lInd = dat[col.y].length - 1;
@@ -162,20 +160,14 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
             newArr = [];
             var ys = dat[tc].slice();
             spl = new Spline(xs, ys)
-            if(frontRegRequired){
-                frontReg = new Regression(xs.slice(0,3), ys.slice(0,3),2)
-            }
-            if(backRegRequired){
-                backReg = new Regression(
-                    xs.slice(Math.max(xs.length-3,1)),
-                    ys.slice(Math.max(ys.length-3,1)),
-                    2
-                )
-            }
+
+            if(frontRegRequired)frontReg = new Regression(xs.slice(0,3), ys.slice(0,3),2)
+
+            if(backRegRequired) backReg = new Regression( xs.slice(Math.max(xs.length-3,1)), ys.slice(Math.max(ys.length-3,1)),2)
+
 
             for (let val of fullArr) {
-                ind = dat[col.y].indexOf(val)
-                if (ind != -1) {  // value already available, no filling required
+                if (dat[col.y].includes(val)) {  // value already available, no filling required
                     newArr.push(dat[tc][ind])
                 } else {
                     if (val <= dat[col.y][0]) {  // front extrapolation
@@ -202,52 +194,28 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
         if(ddd) dat[col.x] = new Array(fullArr.length).fill(dat[col.x][0])
         return dat;
     })
-    return data
+    return res
 
 }
 
 
 function applyCutOFF(data, colmn,condition, thrsh, fillVal){
-    if (condition == 0) {
-        data = data.map(dat => {
-            for (let tc of colmn) {
-                dat[tc] = dat[tc].map(x => {
-                    if (x < thrsh) return fillVal;
-                    return x;
-                })
-            }
-            return dat;
-        })
-    } else if (condition == 1) {
-        data = data.map(dat => {
-            for (let tc of colmn) {
-                dat[tc] = dat[tc].map(x => {
-                    if (x > thrsh) return fillVal;
-                    return x;
-                })
-            }
-            return dat;
-        })
-    } else if (condition == 2) {
-        data = data.map(dat => {
-            for (let tc of colmn) {
-                dat[tc] = dat[tc].map(x => {
-                    if (x == thrsh) return fillVal;
-                    return x;
-                })
-            }
-            return dat;
-        })
-    }
-    return data
+    return data.map(dat => {
+        for (let tc of colmn) {
+            dat[tc] = dat[tc].map(x => {
+                if((condition==0 && x < thrsh) || (condition==1 && x > thrsh) || (condition==0 && x == thrsh) ) return fillVal
+                return x;
+            })
+        }
+        return dat;
+    })
 }
 
 
 
-function useRegression(xx, yy, index, condition=1){
+function useRegression(xx, yy, ind, condition=1){
     let xs = xx.slice(); //shallow copy
     let ys = yy.slice();
-    let ind= index.slice()
 
     first = ind[0]
     last = ind[ind.length - 1]
@@ -256,14 +224,14 @@ function useRegression(xx, yy, index, condition=1){
         // take 3 numbers from both sides
         let xxs = xs.slice(Math.max(first-3,0),first).concat(xs.slice(last+1,last+4))
         let yys = ys.slice(Math.max(first-3,0),first).concat(ys.slice(last+1,last+4))
-        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points selected"};
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points avialable"};
         exterp = new Regression(xxs,yys, 2)
         for (let i of ind) ys[i] = exterp.val(xs[i]);
 
     } else if(condition==2){ // data dataSupEnd
         let xxs= xs.slice(Math.max(first-3,0),first)
         let yys= ys.slice(Math.max(first-3,0),first)
-        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points selected"};
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points avialable"};
         exterp = new Regression(xxs,yys, 2)
         let tmpVal = exterp.val(xs[first]) - ys[first]
         for (let i of ind) ys[i] += tmpVal;
@@ -271,7 +239,7 @@ function useRegression(xx, yy, index, condition=1){
     } else if(condition==3){// dataSup start
         let xxs= xs.slice(last+1,last+4)
         let yys= ys.slice(last+1,last+4)
-        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points selected"};
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points avialable"};
         exterp = new Regression(xxs,yys, 2)
         let tmpVal = exterp.val(xs[last]) - ys[last]
         for (let i of ind) ys[i] += tmpVal;
@@ -281,25 +249,20 @@ function useRegression(xx, yy, index, condition=1){
 
 
 
-function useSpline(xx, yy, index){
-    let xs = xx.slice();
-    let ys = yy.slice();
-    let ind= index.slice()
-    let xxs = xs.slice()
-    let yys = ys.slice()
-    for (let i = ind.length - 1; i >= 0; i--) {
-        xxs.splice(ind[i], 1);
-        yys.splice(ind[i], 1);
-    }
+function useSpline(xx, yy, ind){
+    let xxs = xx.filter((_,i)=>!ind.includes(i))
+    let yys = yy.filter((_,i)=>!ind.includes(i))
+
     spl = new Spline(xxs,yys)
-    for (let i of ind) ys[i] = spl.getVal(xs[i]);
-    return ys
+    for (let i of ind) yy[i] = spl.getVal(xx[i]);
+    return yy
 }
 
 function regressionFit(xx,yy,n){
-    var xs = xx.slice(), ys = yy.slice(), fity=[];
+    var xs = xx.slice(), ys = yy.slice();
     var poly = new Regression(xs,ys,n)
-    for(let x of xs) fity.push(poly.val(x))
+    var fity = xs.map((i)=>poly.val(i))
+    // for(let x of xs) fity.push(poly.val(x))
     return [fity, poly.cf]
 }
 
@@ -393,6 +356,7 @@ module.exports = {
     parseData,
     repeatMirrorData,
     fillMissingGrid,
+    applyCutOFF,
     useRegression,
     useSpline,
     levenMarFit,

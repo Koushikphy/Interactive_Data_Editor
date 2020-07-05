@@ -15,23 +15,20 @@
 </head>
 <body>
 <div style="font-size: xx-large;font-weight: bold;margin: 13px"><u>Sample Data:</u> </div>
-&nbsp;1.<a href="javascript:void(0)" onclick="save('../Data/StraightLine.dat');">Straight Line</a><br>
-&nbsp;2.<a href="javascript:void(0)" onclick="save('../Data/GaussianLine.dat');">Gaussian Function</a><br>
-&nbsp;3.<a href="javascript:void(0)" onclick="save('../Data/Morse.dat');">Morse Function</a><br>
-&nbsp;4.<a href="javascript:void(0)" onclick="save('../Data/3D2.dat');">Sin(&radic;(x<sup>2</sup>+y<sup>2</sup>))/&radic;(x<sup>2</sup>+y<sup>2</sup>)</a><br>
-&nbsp;5.<a href="javascript:void(0)" onclick="save('../Data/3D2.dat');">Sin(x)*Cos(y)</a><br>
-&nbsp;6.<a href="javascript:void(0)" onclick="save('../Data/MultiColumn2D.dat');">2D Multi Column</a><br>
-&nbsp;7.<a href="javascript:void(0)" onclick="save('../Data/MultiColumn3D.dat');">3D Multi Column</a><br>
+&nbsp;1.<a href="javascript:void(0)" onclick="save('../../Data/StraightLine.dat');">Straight Line</a><br>
+&nbsp;2.<a href="javascript:void(0)" onclick="save('../../Data/GaussianLine.dat');">Gaussian Function</a><br>
+&nbsp;3.<a href="javascript:void(0)" onclick="save('../../Data/Morse.dat');">Morse Function</a><br>
+&nbsp;4.<a href="javascript:void(0)" onclick="save('../../Data/3D2.dat');">Sin(&radic;(x<sup>2</sup>+y<sup>2</sup>))/&radic;(x<sup>2</sup>+y<sup>2</sup>)</a><br>
+&nbsp;5.<a href="javascript:void(0)" onclick="save('../../Data/3D2.dat');">Sin(x)*Cos(y)</a><br>
+&nbsp;6.<a href="javascript:void(0)" onclick="save('../../Data/MultiColumn2D.dat');">2D Multi Column</a><br>
+&nbsp;7.<a href="javascript:void(0)" onclick="save('../../Data/MultiColumn3D.dat');">3D Multi Column</a><br>
 <script >
 	const fs = require("fs");        
-	const { remote } = require('electron');
-	const path = require('path');
-	const {dialog} = remote;
+	const {dialog} = require('electron').remote;
 
 
 	function save(tmp) {
-		var ttt = path.join(__dirname, tmp);
-		data = fs.readFileSync(ttt,"utf8");
+		data = fs.readFileSync( require('path').join(__dirname, tmp),"utf8");
 		var save_name = dialog.showSaveDialog({title:"Save File:",defaultPath:tmp});
 		fs.writeFileSync(save_name,data);
 	}
