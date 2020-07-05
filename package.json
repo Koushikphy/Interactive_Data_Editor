@@ -18,7 +18,8 @@
     "asar": true,
     "files": [
       "!gulpFile.js",
-      "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}"
+      "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}",
+      "!**/libscripts"
     ],
     "nsis": {
       "oneClick": false,

@@ -1,5 +1,4 @@
-const {Regression, Spline, stepAhed} = require('../js/numeric')
-// const {remote} = require('electron')
+const {Regression, Spline, stepAhed} = require('../js/numeric');
 const clone = (x) => JSON.parse(JSON.stringify(x));
 const clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper));
 const transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
@@ -43,59 +42,34 @@ function parseData(strDps) {
 
 
 
-function expRotate(inp, i, j) {
-    // this function is not good
+function expRotate(inp, i, j) { // this function is not good
     //Bunch up on i-th column and sort along j-th column
     tmpData = inp.map(x => transpose(x));
-    if(!issame) issame = tmpdat.every(v=>v.length==tmpdat[0].length)
-    // if (!issame) {
-    //     issame = tmpdat.every(v=>v.length==tmpdat[0].length)
-    //     issame = true;
-    //     var b = tmpData[0].length;
-    //     for (let a of tmpData) {
-    //         if (a.length != b) {
-    //             issame = false;
-    //             break;
-    //         };
-    //     };
-    // }
-    if (issame) {
-        tmpData = transpose(tmpData);
-        tmpData = tmpData.map(x => transpose(x));
-        return tmpData;
-    };
+    if(!issame) issame = tmpData.every(v=>v.length==tmpData[0].length)
+
+    if (issame) return transpose(tmpData).map(x => transpose(x))
 
     tmpData = [].concat(...tmpData).filter(x => x !== undefined);
 
-    var tmp = new Set();
-    for (let a of tmpData) tmp.add(a[i])
+    var tmp = [...new Set(tmpData.map(x=>x[i]))].sort((a, b) => a - b);
 
-    tmp = [...tmp].sort((a, b) => a - b);
-    var newdat = [];
-    for (let x of tmp) {
-        var tmpdat = [];
-        for (let line of tmpData) {
-            if (x == line[i]) tmpdat.push(line)
-        };
-        tmpdat = tmpdat.sort((m, n) => m[j] - n[j]);
-        newdat.push(transpose(tmpdat));
-    };
-    return newdat;
+    return tmp.map(x=>{
+        var tmpdat = tmpData.filter(l=>x==l[i])
+        tmpdat = tmpdat.sort((m, n) => m[j] - n[j])
+        return transpose(tmpdat)
+    });
+
 };
 
 
 
 function repeatMirrorData(data, ycol, last, times){
-    var cols_wo_y = []
-    var tmp = data[0].length
 
-    for (let i = 0; i < tmp; i++) {
-        if (i != ycol) cols_wo_y.push(i)
-    }
+    var cols_wo_y = [...Array(data[0].length).keys()].filter(i=>i!=ycol)
 
     res = data.map(dat => {
         var ind = dat[ycol].indexOf(last) + 1
-        var newy = dat[ycol].slice(0, ind)
+        var newy= dat[ycol].slice(0, ind)
         var tmp = newy.slice()
         tmp.splice(0, 1)
 
@@ -123,26 +97,17 @@ function repeatMirrorData(data, ycol, last, times){
 
 function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
 
-    var cols_wo_y = []   // on which columns to fill the data
-
     let noCol = ddd? [col.x,col.y] : [col.y]
 
-    for (let i = 0; i < data[0].length; i++){
-        if(!noCol.includes(i)) cols_wo_y.push(i)
-    }
+    var cols_wo_y = [...Array(data[0].length).keys()].filter(i=>!noCol.includes(i))
 
-    var fullArr = []
     var ttt = Plotly.d3.range(start, stop+step, step)
 
-    for (let xx of data[0][col.y]){ // array before the newgrid 
-        if(xx>=start) break
-        fullArr.push(xx)
-    }
+
+    var fullArr = data[0][col.y].filter(x=>x<start)
     fullArr = fullArr.concat(ttt)
-    for (let xx of data[0][col.y]){ // array after the new grid
-        if(xx<=stop) continue
-        fullArr.push(xx)
-    }
+    fullArr = fullArr.concat(data[0][col.y].filter(x=>x>stop))
+
 
 
     res = data.map(dat => {
@@ -165,9 +130,9 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
 
             if(backRegRequired) backReg = new Regression( xs.slice(Math.max(xs.length-3,1)), ys.slice(Math.max(ys.length-3,1)),2)
 
-
             for (let val of fullArr) {
-                if (dat[col.y].includes(val)) {  // value already available, no filling required
+                ind = dat[col.y].indexOf(val)
+                if (ind != -1) {  // value already available, no filling required
                     newArr.push(dat[tc][ind])
                 } else {
                     if (val <= dat[col.y][0]) {  // front extrapolation

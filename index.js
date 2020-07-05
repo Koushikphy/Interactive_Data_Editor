@@ -245,7 +245,6 @@ const homeMenuTemplate = [
                 label: 'Reload',
                 accelerator: 'CmdOrCtrl+R',
                 click() {
-                    console.log('fegfuegu')
                     mainWindow.webContents.send('windowReload','closeExtra')
                     BrowserWindow.getAllWindows().forEach((window) => {
                         if(mainWindow!=window) window.close()

@@ -1,5 +1,4 @@
 const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
-const { PlotSchema } = require('plotly.js-gl3d-dist');
 const {iniPointsF} = require('../js/plotUtils')
 
 
