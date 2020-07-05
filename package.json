@@ -9,20 +9,17 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "start": "gulp all && electron .",
-    "startwatch": "gulp && electron . | gulp watch",
-    "dist": "gulp all && electron-builder",
-    "watch": "gulp watch",
-    "uplib": "gulp default"
+    "start": "electron .",
+    "dist": "electron-builder"
   },
   "build": {
     "appId": "com.ide.app",
     "productName": "Interactive Data Editor",
     "asar": true,
     "files": [
-      "!src",
       "!gulpFile.js",
-      "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}"
+      "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}",
+      "!**/libscripts"
     ],
     "nsis": {
       "oneClick": false,

@@ -3,169 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../lib/jsoneditor/jsoneditor.min.css">
-    <style>
-
-    .topbar{
-        margin-top: 1.5pc;
-        text-align: center;
-        border-bottom-style: double;
-        padding-bottom: 13px;
-    }
-
-    body{
-        overflow-x: hidden;
-    }
-
-    .bottombar{
-        text-align: center;
-        /* margin-top: 1pc; */
-        position: absolute;
-        bottom: 0;
-        display: block;
-        width: 100%;
-        margin-bottom: 13px;
-    }
-    .endbtn{
-        font-size: larger;
-        cursor: pointer;
-        font-size: larger;
-        padding: 3px;
-        width: 4pc;
-    }
-
-    .nav{
-        height: 2.3pc;
-        width: 10pc;
-        font-size: x-large;
-        display: inline-block;
-        padding: 5px;
-        cursor: pointer;
-        border: 1px solid #DCDFE6;
-        background: none;
-        transition: all .3s cubic-bezier(0.46, 0.03, 0.52, 0.96);
-        
-    }
-
-    .nav:focus{
-        outline: none;
-    }
-
-
-    .navfocus{
-        color: white;
-        background-color: #409EFF;
-    }
-
-    #plotselect{
-        font-size: larger;
-        width:70%;
-        border-radius: 4px;
-        margin-bottom: 1pc;
-        padding: 3px;
-    }
-    #plotselect:focus{
-        outline: none;
-    }
-    #pslabel{
-        font-size: x-large;
-        margin-right: 1pc;
-        margin-left:3.5%;
-    }
-
-    #plot{
-        border-radius: 7px 0 0 7px;
-        border-right: 0px !important;
-    }
-
-    #lay{
-        border-radius: 0px 7px 7px 0px;
-    }
-
-    .container{
-        display: block;
-        position: absolute;
-        width: 100%;
-        margin-top: 9px;
-        transition:  all .4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
-    }
-
-    #main{
-        display: block;
-        margin: 13px 10% 0 10%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        position: absolute;
-        border-style: double;
-        border-width: 1.5px;
-        padding-top: 5px;
-        position: absolute;
-        width: 80%;
-        height: 80%;
-    }
-
-    #laycon{
-        left: 100%;
-    }
-    #plotcon{
-        left:5%
-    }
-
-
-    .jsoneditor-field, .jsoneditor-value, .jsoneditor-tree select {
-        font-size: 1.1pc !important;
-        font-family:inherit !important;
-    }
-
-    .jsoneditor{
-        border: none !important;
-    }
-
-    table.jsoneditor-tree > tbody > tr.jsoneditor-expandable:first-child {
-      display: none ;
-    }
-
-
-
-    input[type=submit],button{
-            font-family: inherit;
-        font-size: 100%;
-        /* padding: .5em 1em; */
-        color: #444;
-        color: rgba(0,0,0,.8);
-        border: 1px solid #999;
-        /* border: none transparent; */
-        background-color: #f9f9f9;
-        text-decoration: none;
-        border-radius: 1px;
-        display: inline-block;
-        zoom: 1;
-        line-height: normal;
-        white-space: nowrap;
-        vertical-align: middle;
-        text-align: center;
-        cursor: pointer;
-    }
-
-
-
-
-
-    input[type=submit]:hover,
-    input[type=submit]:active,
-    input[type=submit]:focus,
-    button:hover,
-    select:hover,
-    select:focus,
-    button:focus {
-        background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(40%, rgba(0,0,0, 0.05)), to(rgba(0,0,0, 0.10)));
-        background-image: -webkit-linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
-        background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
-        outline: none;
-    }
-
-
-    </style>
+    <link rel="stylesheet" href="../lib/jsoneditor/jsoneditor.min.css">
+    <link rel="stylesheet" href="../css/pop.css">
 </head>
 <body>
 
@@ -176,10 +15,6 @@
             Layout
         </button>
     </div>
-    <!-- <div class="bottombar">
-        <button class = 'endbtn' title="Apply changes to the plots" onclick="sendBack()">Apply</button>
-        <button class = "endbtn" title="Close the window" onclick="closePage()">Cancel</button>
-    </div> -->
     <div id='main'>
     <div class="container" id='plotcon'>
         <select id='plotselect' onchange="editorPlot.update(plots[this.selectedIndex])"></select>
@@ -191,7 +26,7 @@
     </div>
 
 
-    <script src="../../lib/jsoneditor/jsoneditor.min.js"></script>
+    <script src="../lib/jsoneditor/jsoneditor.min.js"></script>
     <script>
         const { remote, ipcRenderer } = require('electron');
 

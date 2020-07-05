@@ -3,46 +3,6 @@
 //doesnot depend on the outside parameter, and solely depend on the given argument
 
 
-function expRotate(tmpData, i, j) {
-    //Bunch up on i-th column and sort along j-th column
-    tmpData = tmpData.map(x => transpose(x));
-    if (!issame) {
-        issame = true;
-        var b = tmpData[0].length;
-        for (let a of tmpData) {
-            if (a.length != b) {
-                issame = false;
-                break;
-            };
-        };
-    }
-    if (issame) {
-        tmpData = transpose(tmpData);
-        tmpData = tmpData.map(x => transpose(x));
-        return tmpData;
-    };
-
-    tmpData = [].concat(...tmpData).filter(x => x !== undefined);
-
-    var tmp = new Set();
-    for (let a of tmpData) {
-        tmp.add(a[i]);
-    };
-    tmp = [...tmp].sort((a, b) => a - b);
-    var newdat = [];
-    for (let x of tmp) {
-        var tmpdat = [];
-        for (let line of tmpData) {
-            if (x == line[i]) {
-                tmpdat.push(line)
-            };
-        };
-        tmpdat = tmpdat.sort((m, n) => m[j] - n[j]);
-        newdat.push(transpose(tmpdat));
-    };
-    return newdat;
-};
-
 
 
 
@@ -349,4 +309,13 @@ function stepAhed( xs, ys, parameters, damping, gradDiff, myfunc ) {
         parms2[i] = parameters[i]-minp[i]
     }
     return parms2
+}
+
+
+
+
+module.exports ={
+    Regression,
+    Spline,
+    stepAhed
 }

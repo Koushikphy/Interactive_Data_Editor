@@ -1,4 +1,4 @@
-function versionCheck() {
+function _versionCheck() {
     let req = require("request");
     req({
             'url': "https://api.github.com/repos/Koushikphy/Interactive-Data-Editor/releases/latest",
@@ -10,7 +10,7 @@ function versionCheck() {
             var new_ver = JSON.parse(body).name
             var body = JSON.parse(body).body
             console.log(body, new_ver)
-            if (new_ver != `v${require('../package.json').version}`) {
+            if (new_ver != `v${require('../../package.json').version}`) {
                 var txt = `A new version of the software ${new_ver} is available.\n Do you want to download it now?`
                 var res = dialog.showMessageBoxSync({
                     type: "question",
@@ -25,4 +25,10 @@ function versionCheck() {
         })
 };
 
-setTimeout(function(){ if (app.isPackaged) versionCheck() },5000)
+
+function versionCheck(){
+    if(app.isPackaged) setTimeout(_versionCheck, 5000) 
+}
+module.exports = {
+    versionCheck
+}

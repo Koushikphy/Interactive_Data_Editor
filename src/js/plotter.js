@@ -1,17 +1,19 @@
-var data   = [],
-    ranges = [],
-    zCols  = [],
-    fname, recentLocation='',optionList='';
+const Plotly= require('plotly.js-gl3d-dist')
+const fs = require("fs")
+const {ipcRenderer, remote} = require('electron')
+const path= require('path')
+const { dialog, BrowserWindow, app } = remote
+const url = require('url')
+const xcol = document.getElementById('xcol')
+const ycol = document.getElementById('ycol')
+const zcol = document.getElementById('zcol')
+const {downloadImage } = require('../js/download')
+const {transpose}= require('../js/utils')
+const $ = require('../lib/jquery.min')
 
-const Plotly                            = require('plotly.js-gl3d-dist');
-      fs                                = require("fs"),
-      {ipcRenderer, remote} = require('electron'),
-      path                              = require('path'),
-      { dialog, BrowserWindow, app }                        = remote,
-      url    = require('url'),
-      xcol                              = document.getElementById('xcol'),
-      ycol                              = document.getElementById('ycol'),
-      zcol                              = document.getElementById('zcol');
+
+var data   = [],ranges = [],zCols  = [],fname, recentLocation='',optionList='';
+
 
 
 figurecontainer = document.getElementById("figurecontainer"),
@@ -180,41 +182,7 @@ var layout = {
     },
 }
 
-const pop = document.getElementById('popup')
-const popMain = document.getElementById('popmain')
-const titletxt = document.getElementById('titletxt')
-// remove the poopup box as it is only one
-function closePop(){
-    pop.style.opacity = 0
-    setTimeout(()=>{pop.style.visibility='hidden'},250)
-}
-
-function openPop(){
-    pop.style.visibility='visible'
-    pop.style.opacity = 1
-}
-
-function triggerDownload() {
-    popMain.innerHTML = `&ensp; File Name:<input type="text" id= "dfileName"><br>
-            &ensp; File Type: <select id="fileFormat">
-            <option>PDF</option>
-            <option>JPEG</option>
-                    <option>PNG</option>
-                    <option>SVG</option>
-                    <option>WEBP</option>
-                </select><br>
-            &ensp; Image Resolution: <input type="text" id="imRes" value="1920x1080">
-            <br>
-            <div style='text-align:center;margin-top:10px'>
-                <input type="submit" value="OK" onclick="downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val());closePop();">
-            </div>`
-        pop.style.width = 'fit-content'
-        titletxt.innerHTML = 'Save Image'
-        popMain.style.textAlign = 'left'
-        openPop()
-}
-
-var mode={
+Plotly.newPlot(figurecontainer, [trace], layout, {
     displaylogo:false,
     editable: true,
     responsive: true,
@@ -224,13 +192,12 @@ var mode={
             {
                 name: 'Save the image',
                 icon: Plotly.Icons.camera,
-                click: triggerDownload
+                click(){ $('#popupEx').show() }
             }
         ]
     ]
-}
+});
 
-Plotly.newPlot(figurecontainer, [trace], layout, mode);
 
 function resetEverything(){
     var tmp = Plotly.d3.range(1,figurecontainer.data.length)
@@ -283,8 +250,7 @@ function deleteThisPlot(){
 
 
 
-// include a column retainer
-// loads file from the dialog box
+
 function fileReader(fname) {
     let strDps = fs.readFileSync(fname, "utf8");
     strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
@@ -324,6 +290,7 @@ function selUpdate(){
 }
 
 
+
 function buildPlotList(){
     var opTxt = ''
 
@@ -340,18 +307,11 @@ function buildPlotList(){
 
 
 
-function transpose(m) {
-    return m[0].map((_, i) => m.map(x => x[i]));
-};
-
-
 function updatePlot(){
     a = xcol.selectedIndex;
     b = ycol.selectedIndex;
     c = zcol.selectedIndex;
-    fullDataCols[currentIndex] = {
-        x : a, y : b, z:c
-    }
+    fullDataCols[currentIndex] = {x : a, y : b, z:c}
     Plotly.restyle(figurecontainer, { 
         "x": [fullData[currentIndex][a]], "y": [fullData[currentIndex][b]], "z": [fullData[currentIndex][c]] 
     }, currentIndex);
@@ -482,132 +442,3 @@ ipcRenderer.on("menuTrigger", function (e, d) {
     }
 
 })
-
-
-
-
-
-
-
-// function saveConfig(){
-//     var tmp_name = dialog.showSaveDialogSync({
-//         title: "Save Configuration",
-//         filters: [{
-//             name: 'JSON',
-//             extensions: ['json']
-//         }],
-//         defaultPath :recentLocation
-//     });
-//     if (tmp_name === undefined) return
-//     recentLocation = path.dirname(tmp_name)
-
-
-//     var Layout = {
-//         "aspectratio" :figurecontainer.layout.scene.aspectratio,
-//         "Xaxis" :figurecontainer.layout.scene.xaxis,
-//         "Yaxis" :figurecontainer.layout.scene.yaxis,
-//         "Zaxis" :figurecontainer.layout.scene.zaxis,
-//         "View" : figurecontainer.layout.scene.camera
-//     }
-//     try {
-//         Layout.Xaxis.ticktext = figurecontainer.layout.scene.xaxis.ticktext.join(',')
-//         Layout.Xaxis.tickvals = figurecontainer.layout.scene.xaxis.tickvals.join(',')
-//     } catch (err) {};
-//     try {
-//         Layout.Yaxis.ticktext = figurecontainer.layout.scene.yaxis.ticktext.join(',')
-//         Layout.Yaxis.tickvals = figurecontainer.layout.scene.yaxis.tickvals.join(',')
-//     } catch (err) {};
-//     try {
-//         Layout.Zaxis.ticktext = figurecontainer.layout.scene.zaxis.ticktext.join(',')
-//         Layout.Zaxis.tickvals = figurecontainer.layout.scene.zaxis.tickvals.join(',')
-//     } catch (err) { }
-
-
-//     var surfaces = {
-//         hoverinfo: [],
-//         colorscale: [],
-//         autocolorscale:[],
-//         opacity: [],
-//         name : [],
-//         hoverlabel:[],
-//         showscale: [],
-//         cmin: [],
-//         cmax: [],
-//         cauto:[],
-//         colorbar:[],
-//         contours:[],
-//         hidesurface:[]
-
-//     }
-//     for (let trace of figurecontainer.data) {
-//             for (let key of Object.keys(surfaces)){
-//                 surfaces[key].push(trace[key])
-//         }
-//     }
-//     var x = $("#xcol")[0].selectedIndex;
-//     var y = $("#ycol")[0].selectedIndex;
-//     var z = zCols;
-//     var file = fname
-
-//     fs.writeFileSync(tmp_name, JSON.stringify({file, x,y,z,surfaces,Layout}, null, '\t'), 'utf8');
-// }
-
-// function loadConfig(){
-//     removeExtraTraces()
-//     const tfname = dialog.showOpenDialogSync({
-//         properties: ['openFile'],
-//         filters: [{
-//             name: 'JSON',
-//              extensions: ['json']
-//         }],
-//         defaultPath : recentLocation
-//     });
-//     if (tfname === undefined) return 
-//     var out = JSON.parse(fs.readFileSync(tfname[0], "utf8"))
-//     fname = out.file
-//     recentLocation = path.dirname(tfname[0])
-//     fileReader(out.file)    // data loaded
-//     zCols = out.z          
-//     //set up trace index selector
-//     var op = "";
-//     for(let i=1;i<=zCols.length;i++){
-//         op += '<option>' + i + '</option>';
-//     }
-//     $('#trace')[0].innerHTML = op
-//     $('#trace')[0].selectedIndex = 0
-//     $("#zcol")[0].selectedIndex=zCols[0];
-//     $("#ycol")[0].selectedIndex=out.y;
-//     $("#xcol")[0].selectedIndex=out.x;
-
-
-//     var tmp=[];
-//     if(zCols.length>1){
-//         for(let i=1; i<zCols.length ;i++){
-//             tmp.push(trace)
-//         }
-//         Plotly.addTraces(figurecontainer,tmp)
-//     }
-
-
-//     out.surfaces.x = [data[out.x]]
-//     out.surfaces.y = [data[out.y]]
-//     out.surfaces.z = []
-//     for(let i of zCols){
-//         out.surfaces.z.push(data[i])
-//     }
-//     var layout = figurecontainer.layout;
-//     layout.scene.aspectmode = "manual"
-//     layout.scene.aspectratio = out.Layout.aspectratio
-//     layout.scene.xaxis = out.Layout.Xaxis
-//     layout.scene.yaxis = out.Layout.Yaxis
-//     layout.scene.zaxis = out.Layout.Zaxis
-//     layout.scene.camera = out.Layout.View
-//     layout.scene.zaxis.tickvals = out.Layout.Zaxis.tickvals.split(",")
-//     layout.scene.zaxis.ticktext = out.Layout.Zaxis.ticktext.split(",")
-//     layout.scene.xaxis.tickvals = out.Layout.Xaxis.tickvals.split(",")
-//     layout.scene.xaxis.ticktext = out.Layout.Xaxis.ticktext.split(",")
-//     layout.scene.yaxis.tickvals = out.Layout.Yaxis.tickvals.split(",")
-//     layout.scene.yaxis.ticktext = out.Layout.Yaxis.ticktext.split(",")
-//     Plotly.update(figurecontainer, out.surfaces, layout)
-//     updateJSON();
-// }

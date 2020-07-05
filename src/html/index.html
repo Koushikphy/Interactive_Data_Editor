@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Interactive Data Editor</title>
+    <link href="../css/style.css" rel="stylesheet">
+    <script> 
+        if (typeof module === 'object') { window.module = module; module = undefined;}
+    </script>
+</head>
+
+
+<body>
+    <div id="particle">
+        <div class="container">
+            <img id='logo' src="../../figs/charts.png" width="75" height="75">
+            <div style="font-weight: bold;font-size: xx-large;">Interactive Data Editor</div>
+            <div style="font-size: large;font-style: italic;margin-top: 3px; font-weight:500">
+                A Software to interactively edit data in a graphical manner
+            </div>
+            <div id='versionname' style="font-size: large;margin-top: 7px">Version 2.8.0 </div>
+            <div style="font-size: larger;margin-top: 5px;font-style: italic;margin-bottom: 9px; font-weight:600">
+                Developed by Koushik Naskar
+            </div>
+            <div style="font-size: larger;margin-top: 50px;font-style: italic;margin-bottom: 9px;font-weight:530">
+                Copyright &copy; April, 2020 Koushik Naskar
+            </div>
+
+            <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io');"><img src="../../figs/internet.png" width="30" height="30"></a>
+            <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../../figs/facebook.png" width="30" height="30"></a>
+            <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"            width="30" height="30"></a>
+            <a title="Reach me on Gamil" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../../figs/gmail.png" width="30" height="30"></a>
+        </div>
+    </div>
+
+    <div id='toastContainer'></div>  <!-- notification -->
+
+    <div id="full" >
+        <div class="borders column" id="container">
+            &nbsp;Data Column: &ensp;
+            <span id='xLabel'>X</span> <select id="xCol" onchange="updateData();this.blur()" onmousewheel=selectWheel(event);updateData()></select>&ensp;
+            <span id='yLabel'>Y</span> <select id="yCol" onchange="updateData();this.blur()" onmousewheel=selectWheel(event);updateData()></select>&ensp;
+            <span id='zLabel'>Z</span> <select id="zCol" onchange="colChanged(this.selectedIndex);this.blur()" onmousewheel=selectWheel(event);colChanged(this.selectedIndex);></select>&ensp;
+            <button id='sColInp' onclick='sSwapper();'>
+                <svg viewBox="0 0 512 512">
+                    <path d="M0 168v-16c0-13.255 10.745-24 24-24h360V80c0-21.367 25.899-32.042 40.971-16.971l80 80c9.372 9.373 9.372 24.569 0 33.941l-80 80C409.956 271.982 384 261.456 384 240v-48H24c-13.255 0-24-10.745-24-24zm488 152H128v-48c0-21.314-25.862-32.08-40.971-16.971l-80 80c-9.372 9.373-9.372 24.569 0 33.941l80 80C102.057 463.997 128 453.437 128 432v-48h360c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24z"/>
+                </svg>
+            </button>
+            <select id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
+            <button id="plotlist" title="Open List of plots" onclick="buildDOM();$('#popupPlotList').show()">
+                <svg viewBox="0 0 512 512">
+                    <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
+                </svg>
+            </button>
+            <div id="drag" class='3D'>&nbsp;Drag the slider to change 'X' value:</div>
+
+            <div id="range-div" class='3D' >  <!-- slider for the 3d x change -->
+                <input type="range" name="" id="range" min=0 max=10000 step=1 value=0 onclick="this.blur()" onresize='console.log(this)'>
+                <span id="thumb"></span>
+            </div>
+        </div>
+
+        <div id="workarea">
+            <div id="extendUtils2D" class="borders">
+
+                <div id="rgFit">
+                    <span style="display: inline-block; margin-bottom: .4pc"> Order of polynomial: </span> 
+                    <input style="height: 1.5pc" id="polyInp" type="number" value="1" min="1">
+                    <input type="submit" value="Solve" onclick="polyfit()" style="width: 5pc;height: 1.5pc">
+                    <input type="submit" value="Close" onclick="closeUtilityFit(this);clearPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
+                    Fitted Equation: <span id='formulaStr'></span>
+                </div>
+
+                <div id="lmFit">
+                    <span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a+b*x"></span>
+                    <span style="margin-left: 7px;"> Parameters List: <input style=" height: 1.5pc; width: 7.7pc;" id='paramList'type="text" value="a,b"></span>
+                    <button style=" height: 1.7pc; float: right;margin-right: 2.1%;"onclick="closeUtilityFit(this);clearLMfit()" >Close</button>
+                    <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
+                    <div class="grid-container" style="margin-top: 7px;">
+                        Max Iterations: <input id='iterationVal' type="text" value='1000'>
+                        Initial Values: <input id='intVal' type="text">
+                        Max Values: <input id='maxVal' type="text">
+                        Min Values: <input id='minVal' type="text">
+                        Damping factor: <input id='dampVal' type="text" value="1.5">
+                        Step Size: <input id='stepVal' type="text" value='1e-2'>
+                        Error Tolerance: <input id='etVal' type="text" value='1e-5'>
+                        Error gradient: <input id='egVal' type="text" value='1e-8'>  
+                    </div>
+                </div>
+            </div>
+
+            <div id="figurecontainer"></div>
+
+            <div id="filler">
+                <div class="borders">
+                    <div id='fillValues' class="extendUtils">
+                        Start : <input type="text" id="fstart">
+                        Extrapolate <select id="expSel">
+                            <option>Closest</option>
+                            <option>Regression</option>
+                        </select> <br>
+                        End : <input type="text" id="fend">
+                        <input type="submit" value="OK" onclick="dataFiller();closeUtility(this)" style="width: 5.15pc;height: 1.7pc;margin: 2px">
+                        <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5.15pc;height: 1.7pc">
+                         &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
+                        Step : <input type="text" id="fstep">
+                        <!-- <input id='setAsGrid' type="checkbox"> Set as grid -->
+                    </div>
+
+                    <div id="repeatMirror"  class="extendUtils">
+                        Extend from : 0 to <input type="text" id="einp"> <br>
+                        Extend times: <input type="text" id="etime">
+                        <input type="submit" value="OK" onclick="repeatMirror();closeUtility(this)" style="width: 5pc;height: 1.9pc">
+                        <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc"> <br>
+                        Extend by: <select id="repSel" >
+                            <option>Repeat</option>
+                            <option>Mirror</option>
+                        </select><br>
+                    </div>
+
+                    <div id="filterData"  class="extendUtils">
+                        Condition:<select id="flSel">
+                            <option>&lt;</option>
+                            <option>></option>
+                            <option>=</option>
+                        </select>
+                        <input type="text" id="flc"> <br>
+                        Fill with: <input type="text" id="flf">
+                        <input type="submit" value="OK" onclick="filterData();closeUtility(this)" style="width: 5pc;height: 1.9pc">
+                        <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc">
+                        &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
+                        Columns : <input type="text" id="flcl">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- POP UPs -->
+
+        <!-- export image popup -->
+        <div id="popupEx" class="popup">
+            <div class="title">
+                <label class='titletxt'>Save Image</label>
+                <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
+            </div>
+            <div class="popmain">
+                &ensp; File Name:<input type="text" id= "dfileName"><br>
+                &ensp; File Type: <select id="fileFormat">
+                    <option>PDF</option>
+                    <option>JPEG</option>
+                    <option>PNG</option>
+                    <option>SVG</option>
+                    <option>WEBP</option>
+                </select><br>
+                &ensp; Resolution: <input type="text" id="imRes" value="1920x1080"><br>
+                <div style='text-align:center;margin-top:10px'>
+                    <input type="submit" value="OK" onclick="downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val());$('.popup').hide()">
+                </div>
+            </div>
+        </div>
+
+        <!-- set value popup -->
+        <div id="popupSetVal" class="popup">
+            <div class="title">
+                <label class='titletxt'>Change Value</label>
+                <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
+            </div>
+            <div class="popmain">
+                &ensp;Set value: &nbsp;<input type="text" style="width:6pc" id='valinput' onchange="setValue($('#valinput').val());$('.popup').hide()"><br>
+                <input type="submit" value="OK" onclick="setValue($('#valinput').val());$('.popup').hide()" style="margin-top:10px">
+            </div>
+        </div>
+
+        <div id="popupPlotList" class="popup">
+            <div class="title">
+                <label class='titletxt'>List of Plots</label>
+                <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
+            </div>
+            <div class="popmain"></div>
+        </div>
+
+        <div id = "branding">
+            <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')">
+                <i>Developed by </i> <b>Koushik Naskar</b>&ensp;
+            </a><br>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('versionname').innerHTML =`Version ${require('../../package.json').version}` 
+    </script>
+
+    <script src='../js/init.js'></script>
+
+    <script defer src="../js/functions.js"></script>
+    <script defer src="../js/dataOp.js"></script>
+    <script defer src="../js/keyIpcTrigger.js"></script>
+
+    <script defer src="../lib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+</body>
+
+</html>

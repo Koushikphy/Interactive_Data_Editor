@@ -3,25 +3,18 @@
 
     <head>
         <title>Interactive Data Editor</title>
-        <link rel="stylesheet" href='../lib/spreadsheet.min.css'>
-        <link rel="stylesheet" href='../lib/style.min.css'>
-        <!-- <link rel="stylesheet" href="../lib/jquery-ui.min.css"> -->
+        <link rel="stylesheet" href='../css/spreadsheet.min.css'>
+        <link rel="stylesheet" href='../css/style.css'>
         <script>
             if (typeof module === 'object') { window.module = module; module = undefined; }
         </script>
-        <!-- <script src="../lib/jquery.min.js"></script> -->
-        <!-- <script src="../lib/jquery-ui.min.js"></script> -->
         <script src="../lib/spreadsheet.min.js"></script>
     </head>
 
 <body>
-
     <div id="container">
         <label id="fullS" style='margin: 10px 0 7px 0;'>Spreadsheet is loading, please wait...</label>
         <input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
-        <!-- <div id="slider" style="background: #eaeaea; display: none">
-            <div id="custom-handle" class="ui-slider-handle" style="background: #4CAF50; color:#ffffff"></div>
-        </div> -->
 
         <div id="range-div" style="display: none;">
             <input type="range" name="" id="range" min=0 max=10000 step=1 value=0>
@@ -31,7 +24,6 @@
     </div>
     <div id="table"></div>
     <script>
-        require('v8-compile-cache');
         const { remote, ipcRenderer } = require('electron');
         var full = document.getElementById("fullS");
         var xcol = [], data = [], hot, columns = [], xName, mytable;
@@ -56,7 +48,6 @@
                 document.getElementById("container").offsetTop - 2 -
                 document.getElementById("table").offsetTop;
 
-            // $ch.text(xName + '=' + data[0][0][xcol]);
 
             var wit = (window.innerWidth-450)/data[0][0].length
             mytable = jexcel(document.getElementById('table'), {
@@ -80,7 +71,6 @@
                     })
                     mytable.setData(data[0])
             })
-
 
 
         const slider = document.getElementById('range');
@@ -110,7 +100,6 @@
         };
 
         function updateData() { //parse the formulas during the return 
-            // btn.style.visibility = "hidden";
             var dat = data.map(blocks=> blocks.map(line=>line.map(elem=>{
                 if (('' + elem).substr(0,1) == '=')  return mytable.executeFormula(elem); return elem
             })))
@@ -135,11 +124,6 @@
                     break;
             };
         };
-
-
     </script>
-
-
 </body>
-
 </html>

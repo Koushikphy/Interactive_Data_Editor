@@ -1,12 +1,14 @@
-//downloads the image called from main and also from the plotter
-function downloadImage(fileName, res, type){
+const path   = require('path')
+const fs  = require("fs")
+
+module.exports.downloadImage = (fileName, res, type) => {
+// function downloadImage(fileName, res, type){
     res = res.split("x")
     type = type.toLocaleLowerCase()
     if(!fileName) fileName = 'plot'
     if (type =='pdf'){
         fileName+='.pdf'
         exportPDF({width: parseFloat(res[0]), height:parseFloat(res[1])}).then(pdfData=>{
-
             var tmp_name = dialog.showSaveDialogSync({
                 title: "Save As:",
                 defaultPath: path.join(recentLocation, fileName),
@@ -15,7 +17,6 @@ function downloadImage(fileName, res, type){
                     extensions: ['pdf']
                   }]
             });
-            // console.log(tmp_name)
             if (tmp_name === undefined) return
             fs.writeFileSync(tmp_name, pdfData)
         })
@@ -23,7 +24,6 @@ function downloadImage(fileName, res, type){
         Plotly.downloadImage(figurecontainer, {filename: fileName, format: type, width: res[0], height: res[1]});
     }
 }
-
 
 
 function exportPDF({ width=1920, height=1080}={}){
@@ -72,3 +72,8 @@ function exportPDF({ width=1920, height=1080}={}){
         })
     })
 }
+
+
+// module.exports = {
+//     downloadImage : downloadImage
+// }
