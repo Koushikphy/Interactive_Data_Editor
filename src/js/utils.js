@@ -42,7 +42,7 @@ function parseData(strDps) {
 
 
 
-function expRotate(inp, i, j) { // this function is not good
+function expRotate(inp, i, j) {
     //Bunch up on i-th column and sort along j-th column
     tmpData = inp.map(x => transpose(x));
     if(!issame) issame = tmpData.every(v=>v.length==tmpData[0].length)
@@ -65,65 +65,53 @@ function expRotate(inp, i, j) { // this function is not good
 
 function repeatMirrorData(data, ycol, last, times){
 
-    var cols_wo_y = [...Array(data[0].length).keys()].filter(i=>i!=ycol)
 
-    res = data.map(dat => {
+    return data.map(dat => {
         var ind = dat[ycol].indexOf(last) + 1
         var newy= dat[ycol].slice(0, ind)
-        var tmp = newy.slice()
-        tmp.splice(0, 1)
+        var tmp = newy.slice(1)
 
         for (let time = 0; time < times - 1; time++) {
             for (let i = 0; i < tmp.length; i++) newy.push(tmp[i] + last * (1 + time));
         }
 
-        for (let i of cols_wo_y) {
-            var new_dat = dat[i].slice(0, ind)
+        return dat.map((i,j)=>{
+            if(j==ycol) return newy
+            var new_dat = i.slice(0, ind)
             var tmp = new_dat.slice()
             for (let time = 0; time < times - 1; time++) {
                 ptmp = mirror ? tmp.reverse().slice() : tmp.slice()
                 ptmp.splice(0, 1)
                 new_dat.push(...ptmp)
             }
-            dat[i] = new_dat;
-        }
-        dat[ycol] = newy;
-        return dat
+            return new_dat
+        })
     })
-    return res
 }
 
 
 
 function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
 
-    let noCol = ddd? [col.x,col.y] : [col.y]
-
-    var cols_wo_y = [...Array(data[0].length).keys()].filter(i=>!noCol.includes(i))
-
-    var ttt = Plotly.d3.range(start, stop+step, step)
-
-
     var fullArr = data[0][col.y].filter(x=>x<start)
-    fullArr = fullArr.concat(ttt)
+    fullArr = fullArr.concat(Plotly.d3.range(start, stop+step, step))
     fullArr = fullArr.concat(data[0][col.y].filter(x=>x>stop))
 
-
-
-    res = data.map(dat => {
+    return data.map(dat => {
         if (fullArr.length == dat[0].length) return dat; // no interpolation required
         var xs = dat[col.y].slice()
         var lInd = dat[col.y].length - 1;
         // check if regression is required by cheking the starting of the array
-        let backRegRequired = false, frontRegRequired = false;
+        var backRegRequired = false, frontRegRequired = false;
         if(allowRegression && xs.length>=3){ // dont try to extrapolate if datalength is less than 3
             frontRegRequired = fullArr[0]<xs[0]
             backRegRequired = fullArr[fullArr.length-1]>xs[xs.length-1]
         }
 
-        for (let tc of cols_wo_y) {
-            newArr = [];
-            var ys = dat[tc].slice();
+        return dat.map((ys,j)=>{
+            if(j==col.y) return fullArr;
+            if(ddd && j==col.x) return new Array(fullArr.length).fill(dat[col.x][0])
+            var newArr = [];
             spl = new Spline(xs, ys)
 
             if(frontRegRequired)frontReg = new Regression(xs.slice(0,3), ys.slice(0,3),2)
@@ -133,34 +121,28 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
             for (let val of fullArr) {
                 ind = dat[col.y].indexOf(val)
                 if (ind != -1) {  // value already available, no filling required
-                    newArr.push(dat[tc][ind])
+                    newArr.push(ys[ind])
                 } else {
                     if (val <= dat[col.y][0]) {  // front extrapolation
                         if (frontRegRequired){
                             newArr.push(frontReg.val(val))
                         }else{  // else just use the 1st value
-                            newArr.push(dat[tc][0])
+                            newArr.push(ys[0])
                         }
                     } else if (val >= dat[col.y][lInd]) { //back extrapolation
                         if (backRegRequired){
                             newArr.push(backReg.val(val))
                         }else{
-                            newArr.push(dat[tc][lInd])
+                            newArr.push(ys[lInd])
                         }
                     } else {                            //spline interpolation
                         newArr.push(spl.getVal(val))
                     }
                 }
             }
-            dat[tc] = newArr;
-        }
-
-        dat[col.y] = fullArr;
-        if(ddd) dat[col.x] = new Array(fullArr.length).fill(dat[col.x][0])
-        return dat;
+            return newArr;
+        })
     })
-    return res
-
 }
 
 

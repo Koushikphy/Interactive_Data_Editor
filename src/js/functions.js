@@ -341,25 +341,25 @@ function updateOnServer() {
 
 
 
-function changeEditable(index, colorReset=true){
+function changeEditable(index){
     if (swapperIsOn) return  // we can just swap s and z anyways  //TODO : merge swapper into this
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
-    if(colorReset){ // needed for deleting traces lower than the currenteditable
-        let line1 = figurecontainer._fullData[currentEditable].line
-        let marker1 = figurecontainer._fullData[currentEditable].marker
+    
+    let line1 = figurecontainer._fullData[currentEditable].line
+    let marker1 = figurecontainer._fullData[currentEditable].marker
 
-        let line2 = figurecontainer._fullData[index].line
-        let marker2 = figurecontainer._fullData[index].marker
+    let line2 = figurecontainer._fullData[index].line
+    let marker2 = figurecontainer._fullData[index].marker
 
-        line1.dash = Number(line1.dash) // weird but _fullData store dash as string
-        line2.dash = Number(line2.dash)
+    line1.dash = Number(line1.dash) // weird but _fullData store dash as string
+    line2.dash = Number(line2.dash)
 
-        Plotly.restyle(figurecontainer, {
-            line : [line2, line1],
-            marker: [marker2, marker1]
-        }, [currentEditable, index])
-    }
+    Plotly.restyle(figurecontainer, {
+        line : [line2, line1],
+        marker: [marker2, marker1]
+    }, [currentEditable, index])
+
     if (fullData[currentEditable][0].length != fullData[index][0].length) setUpColumns()
 
     currentEditable = index
@@ -378,6 +378,21 @@ function changeEditable(index, colorReset=true){
     zCol.selectedIndex = col.z 
     updateOnServer()
 }
+
+
+function changeEditable2(ind){ // used for deleting trace below the currenteditable
+    if (swapperIsOn) return
+    $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
+    $(`.scatterlayer .trace:nth-of-type(${ind+1}) .points path`).css({'pointer-events':'all'})
+
+    currentEditable = ind
+
+    points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points`)
+            .getElementsByTagName("path");
+    for (let i = 0; i < dpsx.length; i++) points[i].index = i
+
+}
+
 
 
 function addNewFileDialog() {
@@ -642,9 +657,8 @@ function tools(option,index){
         addTrace()
     }else if(option==2) { // close this
         if(fileNames.length==1) return // nothing to delete here
-        if(index <=currentEditable) {
-            changeEditable(currentEditable-1, false) // currentEditable is changed within the function
-        }
+        if(index <=currentEditable) changeEditable2(currentEditable-1) // currentEditable is changed within the function
+
         Plotly.deleteTraces(figurecontainer,index)
         fullData.splice(index,1)
         fullDataCols.splice(index,1)
@@ -689,7 +703,6 @@ function settingWindow(){
     }));
     settingEditWindow.setMenuBarVisibility(false);
 
-    // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
     settingEditWindow.webContents.once("dom-ready", function () {
         let lay = figurecontainer.layout
         let plot = []

@@ -64,27 +64,27 @@
             <div id="extendUtils2D" class="borders">
 
                 <div id="rgFit">
-                    <span style="display: inline-block; margin-bottom: .4pc"> Order of polynomial: </span> 
+                    <span style="display: inline-block; margin-bottom: .4pc"> Order of polynomial </span> 
                     <input style="height: 1.5pc" id="polyInp" type="number" value="1" min="1">
                     <input type="submit" value="Solve" onclick="polyfit()" style="width: 5pc;height: 1.5pc">
                     <input type="submit" value="Close" onclick="closeUtilityFit(this);clearPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
-                    Fitted Equation: <span id='formulaStr'></span>
+                    Fitted Equation <span id='formulaStr'></span>
                 </div>
 
                 <div id="lmFit">
-                    <span> Function: <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a+b*x"></span>
-                    <span style="margin-left: 7px;"> Parameters List: <input style=" height: 1.5pc; width: 7.7pc;" id='paramList'type="text" value="a,b"></span>
+                    <span> Function <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a+b*x"></span>
+                    <span style="margin-left: 7px;"> Parameters List <input style=" height: 1.5pc; width: 7.7pc;" id='paramList'type="text" value="a,b"></span>
                     <button style=" height: 1.7pc; float: right;margin-right: 2.1%;"onclick="closeUtilityFit(this);clearLMfit()" >Close</button>
                     <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
                     <div class="grid-container" style="margin-top: 7px;">
-                        Max Iterations: <input id='iterationVal' type="text" value='1000'>
-                        Initial Values: <input id='intVal' type="text">
-                        Max Values: <input id='maxVal' type="text">
-                        Min Values: <input id='minVal' type="text">
-                        Damping factor: <input id='dampVal' type="text" value="1.5">
-                        Step Size: <input id='stepVal' type="text" value='1e-2'>
-                        Error Tolerance: <input id='etVal' type="text" value='1e-5'>
-                        Error gradient: <input id='egVal' type="text" value='1e-8'>  
+                        Max Iterations <input id='iterationVal' type="text" value='1000'>
+                        Initial Values <input id='intVal' type="text">
+                        Max Values <input id='maxVal' type="text">
+                        Min Values <input id='minVal' type="text">
+                        Damping factor <input id='dampVal' type="text" value="1.5">
+                        Step Size <input id='stepVal' type="text" value='1e-2'>
+                        Error Tolerance <input id='etVal' type="text" value='1e-5'>
+                        Error gradient <input id='egVal' type="text" value='1e-8'>  
                     </div>
                 </div>
             </div>
@@ -94,42 +94,42 @@
             <div id="filler">
                 <div class="borders">
                     <div id='fillValues' class="extendUtils">
-                        Start : <input type="text" id="fstart">
+                        Start  <input type="text" id="fstart">
                         Extrapolate <select id="expSel">
                             <option>Closest</option>
                             <option>Regression</option>
                         </select> <br>
-                        End : <input type="text" id="fend">
+                        End  <input type="text" id="fend">
                         <input type="submit" value="OK" onclick="dataFiller();closeUtility(this)" style="width: 5.15pc;height: 1.7pc;margin: 2px">
                         <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5.15pc;height: 1.7pc">
                          &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
-                        Step : <input type="text" id="fstep">
+                        Step  <input type="text" id="fstep">
                         <!-- <input id='setAsGrid' type="checkbox"> Set as grid -->
                     </div>
 
                     <div id="repeatMirror"  class="extendUtils">
-                        Extend from : 0 to <input type="text" id="einp"> <br>
-                        Extend times: <input type="text" id="etime">
+                        Extend from  0 to <input type="text" id="einp"> <br>
+                        Extend times <input type="text" id="etime">
                         <input type="submit" value="OK" onclick="repeatMirror();closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc"> <br>
-                        Extend by: <select id="repSel" >
+                        Extend by <select id="repSel" >
                             <option>Repeat</option>
                             <option>Mirror</option>
                         </select><br>
                     </div>
 
                     <div id="filterData"  class="extendUtils">
-                        Condition:<select id="flSel">
+                        Condition<select id="flSel">
                             <option>&lt;</option>
                             <option>></option>
                             <option>=</option>
                         </select>
                         <input type="text" id="flc"> <br>
-                        Fill with: <input type="text" id="flf">
+                        Fill with <input type="text" id="flf">
                         <input type="submit" value="OK" onclick="filterData();closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
-                        Columns : <input type="text" id="flcl">
+                        Columns <input type="text" id="flcl">
                     </div>
                 </div>
 
@@ -183,7 +183,7 @@
 
         <div id = "branding">
             <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')">
-                <i>Developed by </i> <b>Koushik Naskar</b>&ensp;
+                <i>Developed by </i> <b> Koushik Naskar</b>&ensp;
             </a><br>
         </div>
     </div>

@@ -11,8 +11,7 @@ function keyDownfired(){
 }
 
 window.onkeyup = function hotDKeys(e) {
-    if((document.activeElement.type != "text") || e.key == 'm' || 
-        e.key == 'M' || e.key == 'ArrowDown' || e.key == 'ArrowUp' ){
+    if((document.activeElement.type != "text") && (e.key == 'm' || e.key == 'M' || e.key == 'ArrowDown' || e.key == 'ArrowUp') ){
         fired=false
         fullData[0] = data;
         updateOnServer()

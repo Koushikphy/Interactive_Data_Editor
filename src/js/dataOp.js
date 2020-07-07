@@ -161,6 +161,7 @@ function deleteInterpolate() {
 
 
 function autoSmooth() {
+    console.log('here')
     try{
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
