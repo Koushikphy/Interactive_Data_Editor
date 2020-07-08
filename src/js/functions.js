@@ -177,7 +177,6 @@ function fileReader(fname) {
     fileNames =[fname]
     saveNames =[save_name]
     legendNames =[path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`]
-    resizePlot();
     setUpColumns();
     updateData(true,false);
     showStatus('Data file loaded ...');
@@ -187,6 +186,7 @@ function fileReader(fname) {
     recentFiles.push(fname);
     recentMenu();
     localStorage.setItem("recent", JSON.stringify(recentLocation));
+    resizePlot();
 
     $("#particle").remove();
     document.getElementById('branding').style.display = 'block'
