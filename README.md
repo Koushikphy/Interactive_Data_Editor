@@ -37,7 +37,7 @@ The software is available as pre-built binaries for different platforms. Install
 Check out the software in action in this [gallery](https://koushikphy.github.io/posts/gallery.html)
 
 ## To-Do:
-The software in implemented in Vanilla JS and uses a lot of codes to keep the data and UI in sync. This makes the project sometimes complicated and confusing. This process can be streamlined by using a frontend JS framework. (preferably Vue or React). But this requires to rewrite most of the protion of this project and that's why I'm not currently working on that. But wish to implement that in future. Any PR is welcome.
+The software is implemented in Vanilla JS and uses a lot of codes to keep the data and UI in sync. This makes the codebase complicated. This process can be streamlined by using a frontend JS framework (preferably Vue or React). But this requires to rewrite most of the protion of this project and that's why I'm not currently working on that. But wish to implement that in future. Any PR is welcome.
 
 ## Copyright and license
 Copyright © July 2020, Koushik Naskar. All rights reserved.
