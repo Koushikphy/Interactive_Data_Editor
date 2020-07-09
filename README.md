@@ -3,7 +3,7 @@
 
 
 [![Version](https://img.shields.io/badge/Version-2.8.0-brightgreen.svg)]() 
-[![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Koushikphy/Interactive-Data-Editor/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Koushikphy/Interactive_Data_Editor/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/163010471.svg)](https://zenodo.org/badge/latestdoi/163010471)
 [![Version](https://img.shields.io/badge/Web-https://koushikphy.github.io/ide/-success.svg)](https://koushikphy.github.io/ide/)  
 
@@ -30,7 +30,7 @@ We have all worked with data at some point of time. Now, depending on the source
 
 
 ## Download and installation
-The software is available as pre-built binaries for different platforms. Install the appropriate installer for your system available in [releases section](https://github.com/Koushikphy/Interactive-Data-Editor/releases) of this repo.  
+The software is available as pre-built binaries for different platforms. Install the appropriate installer for your system available in [releases section](https://github.com/Koushikphy/Interactive_Data_Editor/releases) of this repo.  
 
 
 ## Gallery
