@@ -143,7 +143,7 @@ function fileReader(fname) {
     ddd = data.length != 1;
 
     //reset everything....
-    swapped = 0; xName = "X"; saved=true;
+    swapped = 0; xName = "X"; saved=true, index=[];
     issame = false; firstSave = true; swapper = false;
     undoStack = []; redoStack = [];  swapperIsOn = false;
 

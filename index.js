@@ -12,7 +12,6 @@ const {
     Menu,
     ipcMain,
     shell,
-    screen
 } = electron;
 
 
@@ -35,7 +34,6 @@ ipcMain.on("adrf", function (e, d) {
 })
 
 
-
 ipcMain.on('checkClose', function (eg, d) {
     mainWindow.destroy();
     app.quit();
@@ -45,8 +43,6 @@ ipcMain.on('checkClose', function (eg, d) {
 app.on('ready', function () {
     mainWindow = new BrowserWindow({
         show: false,
-        // width: screen.getPrimaryDisplay().workAreaSize.width,
-        // height: screen.getPrimaryDisplay().workAreaSize.height,
         minWidth: 1200,
         title: "Interactive Data Editor",
         icon: path.join(__dirname, "figs/charts.png"),
@@ -250,7 +246,7 @@ const homeMenuTemplate = [
                         if(mainWindow!=window) window.close()
                       })
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfs', '3dview', "spr", 'af', 'arf',  'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
+                    for (let i of ['save', 'saveas', 'tfs', '3dview', "spr", 'af', 'arf', 'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     men.getMenuItemById("pax").visible = true;

@@ -82,7 +82,7 @@ window.onkeydown = function hotKeys(e) {
     }else if(e.key=="ArrowUp" && index.length){
         keyDownfired(); keyBoardDrag(1)
 
-    }else if(e.key=="Tab" && e.ctrlKey && figurecontainer.data.length==1){
+    }else if(e.key=="Tab" && e.ctrlKey && figurecontainer.data.length!=1){
         let ind = currentEditable == figurecontainer.data.length-1 ? 0 : currentEditable+1
         changeEditable(ind)
 

@@ -622,7 +622,8 @@ a:focus{
     height: 10px;
     outline: none;
     margin-top: 7px;
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    cursor: pointer;
 }
 
 #range:active::-webkit-slider-thumb {

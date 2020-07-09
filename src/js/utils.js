@@ -65,7 +65,6 @@ function expRotate(inp, i, j) {
 
 function repeatMirrorData(data, ycol, last, times){
 
-
     return data.map(dat => {
         var ind = dat[ycol].indexOf(last) + 1
         var newy= dat[ycol].slice(0, ind)
