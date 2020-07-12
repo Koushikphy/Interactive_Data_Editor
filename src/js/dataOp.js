@@ -159,6 +159,18 @@ function deleteInterpolate() {
 }
 
 
+function autoSm(len=data.length){
+    for(let j=0;j<len;j++){
+        dps = data[j][col.z]
+        for (let i of index) {
+            dps[i] = (dps[i - 1] + dps[i] + dps[i + 1]) / 3.0
+        };
+        data[j][col.z] = dps;
+    }
+    updatePlot()
+    updateOnServer()
+}
+
 
 function autoSmooth() {
     try{

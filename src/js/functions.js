@@ -345,7 +345,6 @@ function changeEditable(index){
     if (swapperIsOn) return  // we can just swap s and z anyways  //TODO : merge swapper into this
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
-    
     let line1 = figurecontainer._fullData[currentEditable].line
     let marker1 = figurecontainer._fullData[currentEditable].marker
 
@@ -584,6 +583,7 @@ function doIt(olddata) {
     zCol.selectedIndex = col.z;
     sCol.selectedIndex = col.s;
     data[th_in] = arr;
+    sliderChanged()
     updatePlot(all = false);
     startDragBehavior();
     updateOnServer();
