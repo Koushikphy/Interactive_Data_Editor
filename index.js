@@ -19,8 +19,14 @@ ipcMain.on("back", function (e, d) {
     mainWindow.webContents.send("back", d);
 })
 
+
 ipcMain.on("plotsetting", function (e, d) {
     mainWindow.webContents.send("plotsetting", d);
+})
+
+
+ipcMain.on("colchanged", function (e, d) {
+    mainWindow.webContents.send("colchanged", d);
 })
 
 

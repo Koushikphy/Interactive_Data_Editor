@@ -286,6 +286,12 @@ ipcRenderer.on("plotsetting", (_,d)=>{ // incoming info from the plotsetting win
 })
 
 
+ipcRenderer.on("colchanged", (_,d)=>{ // incoming info from the plotsetting window
+    zCol.selectedIndex = d
+    colChanged(d)
+})
+
+
 // load file if droped inside the window
 document.ondragover = document.ondrop = (ev) => ev.preventDefault()
 document.body.ondrop = (ev) => {

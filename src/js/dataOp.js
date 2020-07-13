@@ -161,11 +161,15 @@ function deleteInterpolate() {
 
 function autoSm(len=data.length){
     for(let j=0;j<len;j++){
-        dps = data[j][col.z]
-        for (let i of index) {
-            dps[i] = (dps[i - 1] + dps[i] + dps[i + 1]) / 3.0
-        };
-        data[j][col.z] = dps;
+        dpsYY = data[j][col.z]
+        dpsXX = data[j][col.y]
+        // for (let i of index) {
+        //     dps[i] = (dps[i - 1] + dps[i] + dps[i + 1]) / 3.0
+        // };
+        // data[j][col.z] = dps;
+
+
+        data[j][col.z] = useRegression(dpsXX, dpsYY, index) 
     }
     updatePlot()
     updateOnServer()

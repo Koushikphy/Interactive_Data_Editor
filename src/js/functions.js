@@ -196,6 +196,15 @@ function fileReader(fname) {
 
 
 
+var sRange=false, sMin, sMax;
+function setRange(a,b){
+    sMin = parseFloat(a)
+    sMax = parseFloat(b)
+    sRange = true
+}
+
+
+
 function updatePlot(all = true) {
     //true means just update the current plot i.e. 0th, leave others as it is.
     dpsy = data[th_in][col.z];
@@ -232,7 +241,19 @@ function updatePlot(all = true) {
         }, currentEditable)
     }
     for (let i = 0; i < dpsx.length; i++) points[i].index = i
+
+    if(sRange){
+        var lay = figurecontainer.layout.yaxis, a=Math.min(...dpsy), b=Math.max(...dpsy);
+        lay.autorange = false
+        a = isNaN(sMin)? a: Math.max(sMin,a)
+        b = isNaN(sMax)? b: Math.min(sMax,b)
+        ab = (b-a)*.03 // gives a slight padding in range
+        tmp = [isNaN(sMin)? a: Math.max(sMin,a), isNaN(sMax)? b: Math.min(sMax,b)]
+        lay.range = [a - ab, b + ab ]
+        Plotly.relayout(figurecontainer, {"yaxis":lay})
+    }
 }
+
 
 
 var oldDpsLen=0
@@ -291,7 +312,7 @@ function startDragBehavior() {
         saveOldData();
         let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
         pIndex = this.index
-        if (index.length) {oldDatX = clone(dpsx); oldDatY = clone(dpsy);}
+        if (index.length) {oldDatX = clone(dpsx); oldDatY = clone(dpsy)}
         return {x,y}
     })
 
@@ -328,21 +349,21 @@ function keyBoardDrag(inp) {
 function updateOnServer() {
     if (!viewerWindow) return;
     let x_list = [],y_list = [],z_list = [];
-    let [a,b,c] = swapped ? [col.y, col.x,col.z] : [col.x, col.y,col.z]
+    let [a,b] = swapped ? [col.y, col.x] : [col.x, col.y]
 
     for (let i of data) {
         x_list.push(i[a]);
         y_list.push(i[b]);
-        z_list.push(i[c]);
+        z_list.push(i[col.z]);
     };
     var s_data = [x_list, y_list, z_list];
-    viewerWindow.webContents.send("sdata", [s_data, Object.values(col), swapped]);
-};
+    viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length-1]);
+}
 
 
 
 function changeEditable(index){
-    if (swapperIsOn) return  // we can just swap s and z anyways  //TODO : merge swapper into this
+    if (swapperIsOn) return // we can just swap s and z anyways  //TODO : merge swapper into this
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
     let line1 = figurecontainer._fullData[currentEditable].line

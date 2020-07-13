@@ -1,6 +1,7 @@
 require('v8-compile-cache');
 const {remote,ipcRenderer,shell} = require('electron');
 const {Menu,MenuItem,app} = remote;
+const menu = Menu.getApplicationMenu();
 
 var recentLocation, recentFiles = [];
 
@@ -14,36 +15,28 @@ function replaceWithHome(name) { // replaces full path name with the short one
     }
 };
 
-
 function recentMenu() {// builds the recent file submenu
     var rrf = menu.getMenuItemById("rf").submenu;
     var arf = menu.getMenuItemById("arf").submenu;
-    if (recentFiles.length > 10) {
-        recentFiles.splice(0, 1);
-    }
-    rrf.clear();
-    arf.clear();
-    for (let i = recentFiles.length - 1; i >= 0; i--) {
-        var fln = replaceWithHome(recentFiles[i].slice())
-        var item = {
+    if (recentFiles.length > 10) recentFiles.splice(0, 1);
+    rrf.clear(); arf.clear();
+
+    for(let rc of recentFiles){
+        let fln = replaceWithHome(rc)
+        rrf.insert(0,new MenuItem({
             label: fln,
             click() {
-                ipcRenderer.send("rf", recentFiles[i]);
-            }
-        };
-        var item2 = {
+                ipcRenderer.send("rf", rc)
+        }}));
+        arf.insert(0,new MenuItem({
             label: fln,
             click() {
-                ipcRenderer.send("adrf", recentFiles[i]);
-            }
-        };
-        rrf.append(new MenuItem(item));
-        arf.append(new MenuItem(item2));
+                ipcRenderer.send("adrf", rc)
+        }}))
     }
     localStorage.setItem("files", JSON.stringify(recentFiles));
 };
 
-var menu = Menu.getApplicationMenu();
 
 var fl = JSON.parse(localStorage.getItem("files"));
 if (fl !== null) {
@@ -56,7 +49,6 @@ if (fl !== null) recentLocation = fl;
 
 
 function getFile(params) { // get the filename from the argument list
-    console.log(params)
     try {
         if(params.starswith('-') || params.starswith('--')) return false
         let file =  path.resolve(process.cwd(),params)
@@ -66,7 +58,6 @@ function getFile(params) { // get the filename from the argument list
     }
 }
 
-//in dev mode don't load animation directly go to plot
 if (app.isPackaged) {
     if (remote.process.argv.length > 1) {
         window.onload = function () {
@@ -75,8 +66,8 @@ if (app.isPackaged) {
     } else {
         require('../lib/particles.min');
         document.getElementById('particle').style.opacity = 1
-        require('../js/version').versionCheck()
     }
+    require('../js/version').versionCheck()
 } else {
     document.getElementById('particle').remove();
     if (remote.process.argv.length > 2) {

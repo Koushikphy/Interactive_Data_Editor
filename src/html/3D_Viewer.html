@@ -90,6 +90,11 @@
         #marker{
             display: inline-block;
         }
+        #colSel{
+            min-width: 2.7pc;
+            margin-left: 3px;
+            margin-right: 10px;
+        }
 
     </style>
     <script>
@@ -103,6 +108,8 @@
     <div id="status" style="margin-bottom: 5px;">
         <i><b>Requesting data. Please wait...</b></i>
     </div>
+    <span>Z: </span>
+    <select id="colSel" onchange="ipcRenderer.send('colchanged', this.value-1)"></select>
 
     <span>Plot Type: </span>
     <select name="" id="typeSel" onchange="changePlotType(this)">
@@ -111,47 +118,100 @@
     </select>
     <div id="marker">
         <input onclick="mark_clicked(this)" type="checkbox" >
-        <span>Markers</span> 
+        <span>Markers</span>
     </div>
     <div class="borders">
         Axes Ranges ⇒
-        X : <input onchange="setRange(this.value,0)" type="text" id='xInp' >
-        Y : <input onchange="setRange(this.value,1)" type="text" id='yInp' >
-        Z : <input onchange="setRange(this.value,2)" type="text" id='zInp' >
+        X : <input onchange="setRange()" type="text" id='xInp' >
+        Y : <input onchange="setRange()" type="text" id='yInp' >
+        Z : <input onchange="setRange()" type="text" id='zInp' >
     </div>
     </div>
     <script>
-        var xxx = [], yyy = [], zzz = [], check = true;
-        var figurecontainer = document.getElementById("figurecontainer"),
-            data = [],
-            swapped = false,
-            newCol = [0, 0, 0],
-            first = true,
-            curCol = false;
+        var xxx = [], yyy = [], zzz = [], data = [],
+        swapped = false, first = true,currentType = 0, colLen=0;
+
+        const figurecontainer = document.getElementById("figurecontainer")
         const {ipcRenderer} = require('electron');
         const Plotly = require('plotly.js-gl3d-dist');
         const stat = document.getElementById('status');
-        var updatePlot=updatePlotWire,  // changable function
-        currentType = 0 // 0 means wireframe
+        var updatePlot = updatePlotWire  // changable function
 
 
+        document.getElementById("colSel").onwheel = (ev)=> {
+            let add = ev.deltaY >0 ? 1 : -1
+            let cur = ev.toElement.selectedIndex
+            if((cur==colLen && add==1) || (cur==0 && add==-1)) return
+            ev.toElement.selectedIndex = cur + add
+            ipcRenderer.send('colchanged', cur + add)
+        }
 
-        // Plotly.newPlot(figurecontainer, initData(1), layout, { displaylogo: false });
 
-        ipcRenderer.on("sdata", function (e, d) {
-            [data, newCol,swapped] = d;
-            updatePlot();
-            if (!curCol) curCol = newCol; // first time purpose
-            if (newCol[0] !== curCol[0]) {
-                setRange(document.getElementById("xInp").value,0);
-            } else if (newCol[1] !== curCol[1]) {
-                setRange(document.getElementById("yInp").value,1);
-            } else if (newCol[2] !== curCol[2]) {
-                setRange(document.getElementById("zInp").value,2);
+        ipcRenderer.on("sdata", (e, d)=> {
+            [data, swapped, zVal, tmpCL] = d;
+            if(tmpCL !=colLen){
+                colLen = tmpCL
+                txt = ''
+                for(let i=0; i<=colLen; i++) txt += `<option value="${i+1}">${i+1}</option>` 
+                document.getElementById("colSel").innerHTML = txt
             }
-            curCol = newCol
+            document.getElementById("colSel").selectedIndex = zVal
+            updatePlot();
         })
 
+
+        function makeLayOutRanges(){
+            layoutRange = {}
+            cRange = {}
+
+            ll = document.getElementById("xInp").value
+            if(ll==""){
+                layoutRange["scene.xaxis.autorange"] = true
+            } else{
+                ll = ll.split(",").map(x => parseFloat(x))
+                if (isNaN(ll[0])) ll[0] = getMin(data[0])
+                if (isNaN(ll[1])) ll[1] = getMax(data[0])
+                layoutRange["scene.xaxis.range"] = ll
+            }
+
+            ll = document.getElementById("yInp").value
+            if(ll==""){
+                layoutRange["scene.yaxis.autorange"] = true
+            } else{
+                ll = ll.split(",").map(x => parseFloat(x))
+                if (isNaN(ll[0])) ll[0] = getMin(data[1])
+                if (isNaN(ll[1])) ll[1] = getMax(data[1])
+                layoutRange["scene.yaxis.range"] = ll
+            }
+
+            ll = document.getElementById("zInp").value
+            if(ll==""){
+                layoutRange["scene.zaxis.autorange"] = true
+                cRange["cauto"] = true
+            } else{
+                ll = ll.split(",").map(x => parseFloat(x))
+
+                if(currentType==1){ //surface type
+                    var rr = [getMin(data[2]), getMax(data[2])]
+                    if (isNaN(ll[0])) ll[0] = rr[0]
+                    if (isNaN(ll[1])) ll[1] = rr[1]
+                    
+                    cmin = Math.max(ll[0], rr[0]);
+                    cmax = Math.min(ll[1], rr[1]);
+
+                    cRange = {
+                        "cauto" : false,
+                        "cmin" : cmin,
+                        "cmax" : cmax
+                    }
+                } else{
+                    if (isNaN(ll[0])) ll[0] = getMin(data[2])
+                    if (isNaN(ll[1])) ll[1] = getMax(data[2])
+                }
+                layoutRange["scene.zaxis.range"] = ll
+            }
+            return currentType==1? [cRange, layoutRange] : layoutRange
+        }
 
 
         //common functions******************************
@@ -177,63 +237,15 @@
 
 
         function setRange(lim, axis){
-            var tmp = "scene." + ["xaxis.", "yaxis.", "zaxis."][axis]
-
-            if (lim == "") {
-                Plotly.relayout(figurecontainer, { [tmp+"autorange"]: true})
-            }else {
-                if(currentType==1 && axis==2){ // surface type z axis has a color, handle it slightly differently
-                    setZrangeSurf(lim)
-                    return
-                }
-
-                lim = lim.split(",").map(x => parseFloat(x))
-                if(isNaN(lim[0]) || isNaN(lim[1])){
-                    var flat_dat = data[axis].flat();
-                    if (isNaN(lim[0])) {
-                        lim[0] = Math.min(...flat_dat);
-                    }
-                    if (isNaN(lim[1])) {
-                        lim[1] = Math.max(...flat_dat);
-                    }
-                }
-                Plotly.relayout(figurecontainer, {[tmp+'range'] : lim})
+            if(currentType==1){
+                Plotly.update(figurecontainer, ...makeLayOutRanges())
+            } else {
+                Plotly.relayout(figurecontainer, makeLayOutRanges())
             }
         }
 
 
-
-        var layout = {
-            margin: {
-                t: 0,
-                r: 0,
-                b: 0,
-                l: 0,
-                pad: 0
-            },
-            showlegend: false,
-            scene: {
-                aspectmode: "cube",
-                zaxis: {
-                    autorange: true,
-                    spikesides: false,
-                },
-                yaxis: {
-                    spikesides: false,
-                },
-                xaxis: {
-                    spikesides: false,
-                }
-            },
-        };
-
-        function transpose(m) {
-            return m[0].map((_, i) => m.map(x => x[i]));
-        };
-
-
         // functions for wieframe*****************************
-
 
         function updatePlotWire() {
             makeRotation();
@@ -244,7 +256,8 @@
                 Plotly.newPlot(figurecontainer, initData(xxx.length), layout, { displaylogo: false ,responsive: true});
                 first = false
             };
-            let tt = Plotly.restyle(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz }).then(
+            let layR = makeLayOutRanges()
+            Plotly.update(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz }, layR).then(
                 function(){
                     stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
                 }
@@ -339,34 +352,14 @@
                 first = false
             }
 
-            Plotly.restyle(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[2]] }).then(
+            var [cR, lR] = makeLayOutRanges()
+            Plotly.update(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[2]], ...cR }, lR).then(
                 function(){
                     stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
                 }
             );
         };
 
-
-        function setZrangeSurf(lim){
-            var min, max;
-
-            lim = lim.split(",").map(x => parseFloat(x));
-
-            var flat_dat = data[2].flat();
-            max = Math.max(...flat_dat);
-            min = Math.min(...flat_dat);
-
-            if (isNaN(lim[0])) {
-                lim[0] = min;
-            };
-            if (isNaN(lim[1])) {
-                lim[1] = max;
-            };
-            cmin = Math.max(lim[0], min);
-            cmax = Math.min(lim[1], max);
-            Plotly.update(figurecontainer, {"cmin": cmin, "cmax": cmax},{'scene.zaxis.range': lim} )
-
-        }
 
 
         var sIniData = [{
@@ -389,6 +382,54 @@
         }];
 
 
+
+        function getMin(dat){
+            var m = Infinity
+            for(let i of dat){
+                for(let j of i) m = m<=j? m: j
+            }
+            return m
+        }
+
+
+        function getMax(dat){
+            var n =-Infinity
+            for(let i of dat){
+                for(let j of i) n = n>=j? n: j
+            }
+            return n
+        }
+
+
+        function transpose(m) {
+            return m[0].map((_, i) => m.map(x => x[i]));
+        };
+
+
+        
+        var layout = {
+            margin: {
+                t: 0,
+                r: 0,
+                b: 0,
+                l: 0,
+                pad: 0
+            },
+            showlegend: false,
+            scene: {
+                aspectmode: "cube",
+                zaxis: {
+                    autorange: true,
+                    spikesides: false,
+                },
+                yaxis: {
+                    spikesides: false,
+                },
+                xaxis: {
+                    spikesides: false,
+                }
+            },
+        }
 
     </script>
 </body>
