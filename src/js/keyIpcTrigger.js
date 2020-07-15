@@ -279,6 +279,7 @@ figurecontainer.on("plotly_legendclick", function(){ // to catch the name if cha
     for (let i of figurecontainer.data) tmpLeg.push(i.name)
     legendNames = tmpLeg;
 });
+// figurecontainer.on("plotly_relayout", console.log);
 
 
 ipcRenderer.on("plotsetting", (_,d)=>{ // incoming info from the plotsetting window

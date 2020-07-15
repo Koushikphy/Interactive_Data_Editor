@@ -278,7 +278,8 @@ button:active {
     background: none;
     border: none;
     padding: 0;
-    display: none
+    display: none;
+    margin: 0 5px 0 5px;
 }
 #sColInp:focus,#sColInp:active{
     outline: none;
@@ -560,9 +561,9 @@ a:focus{
 }
 
 
-#rgFit{
+/* #rgFit{
     padding:3px
-}
+} */
 
 
 #workarea {
@@ -605,7 +606,8 @@ a:focus{
 
 #range-div {
     position: relative;
-    /* margin-top: 3pc; */
+    margin-top: 3px;
+
 }
 
 #range {
@@ -654,16 +656,52 @@ a:focus{
     text-align: center;
     color: #fff;
     line-height: 25px;
-    font-size: 1pc;
+    font-size: 1.035pc;
     pointer-events: none;
     background: #1299E6;
     width: fit-content;
     padding: 0 4px 0 4px;
-    border-radius: 5px;
+    border-radius: 4px;
     min-width: 4pc;
     cursor: grab;
 }
 
 #thumb:active{
     cursor: grabbing;
+}
+.mySelect{
+    background-color: rgb(255, 255, 255);
+    display: inline-flex;
+    font-size: 1.05pc;
+    border: 1px solid black;
+    border-radius: 2.3px;
+    margin: 0px 5px 0 3px;
+}
+
+.mySelect select{
+    border: none;
+    border-radius: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 2pc !important;
+    padding-left: 3px;
+    font-size: 1.05pc !important;
+    border-left: 1px solid black;
+    background-color: rgb(255, 255, 255);
+    text-align-last: center;
+}
+
+.mySelect span{
+    min-width: 2.5pc;
+    padding: 0 3px 0 3px;
+    text-align: center;
+}
+
+.mySelect select:focus{
+    /* border: none; */
+    outline: none;
+}
+
+.rightBorder{
+    border-right: 1px solid black !important;
 }

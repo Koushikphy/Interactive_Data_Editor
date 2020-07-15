@@ -36,25 +36,38 @@
     <div id='toastContainer'></div>  <!-- notification -->
 
     <div id="full" >
-        <div class="borders column" id="container">
-            &nbsp;Data Column: &ensp;
-            <span id='xLabel'>X</span> <select id="xCol" onchange="updateData();this.blur()" onmousewheel=selectWheel(event);updateData()></select>&ensp;
-            <span id='yLabel'>Y</span> <select id="yCol" onchange="updateData();this.blur()" onmousewheel=selectWheel(event);updateData()></select>&ensp;
-            <span id='zLabel'>Z</span> <select id="zCol" onchange="colChanged(this.selectedIndex);this.blur()" onmousewheel=selectWheel(event);colChanged(this.selectedIndex);></select>&ensp;
-            <button id='sColInp' onclick='sSwapper();'>
-                <svg viewBox="0 0 512 512">
-                    <path d="M0 168v-16c0-13.255 10.745-24 24-24h360V80c0-21.367 25.899-32.042 40.971-16.971l80 80c9.372 9.373 9.372 24.569 0 33.941l-80 80C409.956 271.982 384 261.456 384 240v-48H24c-13.255 0-24-10.745-24-24zm488 152H128v-48c0-21.314-25.862-32.08-40.971-16.971l-80 80c-9.372 9.373-9.372 24.569 0 33.941l80 80C102.057 463.997 128 453.437 128 432v-48h360c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24z"/>
-                </svg>
-            </button>
-            <select id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
+        <div class="borders column" id="container" style="padding-top: 4px;">
+
+            <div class="mySelect 3D" >
+                <span id='xLabel'>X</span>
+                <select class="testSelect" id="xCol" onchange="updateData();this.blur()" onmousewheel=selectWheel(event);updateData()>
+            </select></div>
+
+            <div class="mySelect">
+                <span id='yLabel'>Y</span>
+                <select class="testSelect" id="yCol" onchange="updateData();this.blur()" onmousewheel=selectWheel(event);updateData()>
+            </select></div>
+
+            <div class="mySelect">
+                <span id='zLabel'>Z</span>
+                <select class="testSelect" id="zCol" onchange="colChanged(this.selectedIndex);this.blur()" onmousewheel=selectWheel(event);colChanged(this.selectedIndex);>
+                </select>
+                <button id='sColInp' onclick='sSwapper();'>
+                    <svg viewBox="0 0 512 512">
+                        <path d="M0 168v-16c0-13.255 10.745-24 24-24h360V80c0-21.367 25.899-32.042 40.971-16.971l80 80c9.372 9.373 9.372 24.569 0 33.941l-80 80C409.956 271.982 384 261.456 384 240v-48H24c-13.255 0-24-10.745-24-24zm488 152H128v-48c0-21.314-25.862-32.08-40.971-16.971l-80 80c-9.372 9.373-9.372 24.569 0 33.941l80 80C102.057 463.997 128 453.437 128 432v-48h360c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24z"/>
+                    </svg>
+                </button>
+                <select id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
+            </div>
+
+
             <button id="plotlist" title="Open List of plots" onclick="buildDOM();$('#popupPlotList').show()">
                 <svg viewBox="0 0 512 512">
                     <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
                 </svg>
             </button>
-            <div id="drag" class='3D'>&nbsp;Drag the slider to change 'X' value:</div>
 
-            <div id="range-div" class='3D' >  <!-- slider for the 3d x change -->
+            <div id="range-div" class='3D' > 
                 <input type="range" name="" id="range" min=0 max=10000 step=1 value=0 onclick="this.blur()" onresize='console.log(this)'>
                 <span id="thumb"></span>
             </div>
@@ -63,7 +76,7 @@
         <div id="workarea">
             <div id="extendUtils2D" class="borders">
 
-                <div id="rgFit">
+                <div id="rgFit" style="padding:3px">
                     <span style="display: inline-block; margin-bottom: .4pc"> Order of polynomial </span> 
                     <input style="height: 1.5pc" id="polyInp" type="number" value="1" min="1">
                     <input type="submit" value="Solve" onclick="polyfit()" style="width: 5pc;height: 1.5pc">
@@ -129,7 +142,7 @@
                         <input type="submit" value="OK" onclick="filterData();closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
-                        Columns <input type="text" id="flcl">
+                        Columns &nbsp; <input type="text" id="flcl">
                     </div>
                 </div>
 
@@ -145,16 +158,16 @@
                 <label class='titletxt'>Save Image</label>
                 <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
             </div>
-            <div class="popmain">
-                &ensp; File Name:<input type="text" id= "dfileName"><br>
-                &ensp; File Type: <select id="fileFormat">
+            <div class="popmain" style="text-align: left;">
+                &ensp; File Name <input type="text" id= "dfileName"><br>
+                &ensp; File Type <select id="fileFormat">
                     <option>PDF</option>
                     <option>JPEG</option>
                     <option>PNG</option>
                     <option>SVG</option>
                     <option>WEBP</option>
                 </select><br>
-                &ensp; Resolution: <input type="text" id="imRes" value="1920x1080"><br>
+                &ensp; Resolution<input type="text" id="imRes" value="1920x1080"><br>
                 <div style='text-align:center;margin-top:10px'>
                     <input type="submit" value="OK" onclick="downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val());$('.popup').hide()">
                 </div>

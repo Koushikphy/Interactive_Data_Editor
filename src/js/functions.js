@@ -54,7 +54,7 @@ function showStatus(msg){
 
 
 function setUpFor2d(){
-    $('#xCol,#xLabel,.3D').hide()
+    $('.3D').hide()
     $('#yLabel').html('X')
     $('#zLabel').html('Y')
     var fl = JSON.parse(localStorage.getItem("cols2d"));
@@ -67,7 +67,7 @@ function setUpFor2d(){
 
 
 function setUpFor3d(){
-    $('#xCol,#xLabel,.3D').show()
+    $('.3D').show()
     $('#yLabel').html('Y')
     $('#zLabel').html('Z')
     setUpSlider();
@@ -80,12 +80,12 @@ function setUpFor3d(){
 
 
 function setUpColumns(){
-    let tmpL = data[0].length
-    if(col.x>=tmpL) col.x = 0
-    if(col.y>=tmpL) col.y = 0
-    if(col.z>=tmpL) col.z = 0
-    if(col.s>=tmpL) col.s = 0
-
+    // let tmpL = data[0].length
+    // if(col.x>=tmpL) col.x = 0
+    // if(col.y>=tmpL) col.y = 0
+    // if(col.z>=tmpL) col.z = 0
+    // if(col.s>=tmpL) col.s = 0
+    for(let i in col) col[i] = col[i] < data[0].length ? col[i] : 0
     var op = "";
     for (var i = 1; i <= data[0].length; i++) op += `<option>${i}</option>`
     $("#xCol, #yCol, #zCol, #sCol").html(op)
@@ -196,6 +196,7 @@ function fileReader(fname) {
 
 
 
+// this feature is hidden
 var sRange=false, sMin, sMax;
 function setRange(a,b){
     sMin = parseFloat(a)
@@ -471,6 +472,7 @@ var swapperIsOn = false
 function openSwapper() {
     swapperIsOn = true;
     $("#sCol, #sColInp").show();
+    $("#zCol").addClass("rightBorder")
     let len = figurecontainer.data.length
     if (len > 2) { // we just need two traces
         Plotly.deleteTraces(figurecontainer,Plotly.d3.range(2,len))
@@ -500,6 +502,7 @@ function exitSwapper() {
     Plotly.relayout(figurecontainer, {selectdirection: 'any'});
     data = fullData[0]
     $("#sCol, #sColInp").hide();
+    $("#zCol").removeClass("rightBorder")
     for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
     $('#plotlist').removeClass('disabled')
 }
@@ -566,7 +569,7 @@ function isswap() {
     col = fullDataCols[currentEditable]
     xName = n2; 
     updateData();
-    $("#drag").html((_, html) => html.replace(n1, n2));
+    // $("#drag").html((_, html) => html.replace(n1, n2));
 };
 
 
