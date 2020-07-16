@@ -24,7 +24,7 @@ var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendName
     th_in = 0, undoStack = [], redoStack = [];
 
 
-Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
+    Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
     displaylogo:false,
     editable: true,
     responsive: true,

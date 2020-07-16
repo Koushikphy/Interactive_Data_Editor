@@ -79,19 +79,17 @@ function dataFiller() {
     let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
     
 
-    if(!data[0][col.y].every((i,j,k)=> i==0 ? true:i>k[j-1])){
+    if(!data[0][col.y].every((i,j,k)=> j==0 ? true:i>k[j-1])){
         alertElec('Monotonically increasing values required for interpolation.')
         return
     }
-    // for(let dt of data[0][col.y]){
-        // if(dt[0]>=dt[1]){
-        // }
-    // }
+
 
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
     endJobs({startdrag:true})
     showStatus('Missing values are filled...');
 }
+
 
 
 

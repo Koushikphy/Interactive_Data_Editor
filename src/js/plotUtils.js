@@ -2,7 +2,6 @@ module.exports.layout = {
     autosize: true,
     plot_bgcolor: "#fafafa",
     paper_bgcolor: '#fff',
-    showlegend: false,
     hovermode: "closest",
     title: '',
     titlefont:{
@@ -51,7 +50,7 @@ module.exports.layout = {
     font: {
         size: 14
     },
-    showlegend: false,
+    showlegend: true,
     legend: {
         x: 0,
         y: 1
