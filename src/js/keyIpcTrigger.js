@@ -26,7 +26,9 @@ window.onkeydown = function hotKeys(e) {
         Plotly.relayout(figurecontainer, {
             "xaxis.autorange": true,
             "yaxis.autorange": true
-        });
+        })
+
+
 
     }else if(e.key==","){ 
         sliderChanged(-1)
@@ -279,7 +281,6 @@ figurecontainer.on("plotly_legendclick", function(){ // to catch the name if cha
     for (let i of figurecontainer.data) tmpLeg.push(i.name)
     legendNames = tmpLeg;
 });
-// figurecontainer.on("plotly_relayout", console.log);
 
 
 ipcRenderer.on("plotsetting", (_,d)=>{ // incoming info from the plotsetting window

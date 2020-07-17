@@ -4,7 +4,7 @@
 
 [![Version](https://img.shields.io/badge/Version-2.8.0-brightgreen.svg)]() 
 [![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Koushikphy/Interactive_Data_Editor/blob/master/LICENSE)
-[![DOI](https://zenodo.org/badge/163010471.svg)](https://zenodo.org/badge/latestdoi/163010471)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3947508.svg)](https://doi.org/10.5281/zenodo.3947508)
 [![Version](https://img.shields.io/badge/Web-https://koushikphy.github.io/ide/-success.svg)](https://koushikphy.github.io/ide/)  
 
 ![alt text](figs/screenshot.png "Screen shot")
@@ -45,5 +45,5 @@ Licensed under the MIT License.
 
 
 ## Citaion
-If this software was helpful in your work, please cite this project as http://doi.org/10.5281/zenodo.3745858 .
+If this software was helpful in your work, please cite this project as https://doi.org/10.5281/zenodo.3947508.
 

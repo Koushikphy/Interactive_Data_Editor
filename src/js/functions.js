@@ -196,14 +196,6 @@ function fileReader(fname) {
 
 
 
-// this feature is hidden
-var sRange=false, sMin, sMax;
-function setRange(a,b){
-    sMin = parseFloat(a)
-    sMax = parseFloat(b)
-    sRange = true
-}
-
 
 
 function updatePlot(all = true) {
@@ -242,17 +234,6 @@ function updatePlot(all = true) {
         }, currentEditable)
     }
     for (let i = 0; i < dpsx.length; i++) points[i].index = i
-
-    if(sRange){
-        var lay = figurecontainer.layout.yaxis, a=Math.min(...dpsy), b=Math.max(...dpsy);
-        lay.autorange = false
-        a = isNaN(sMin)? a: Math.max(sMin,a)
-        b = isNaN(sMax)? b: Math.min(sMax,b)
-        ab = (b-a)*.03 // gives a slight padding in range
-        tmp = [isNaN(sMin)? a: Math.max(sMin,a), isNaN(sMax)? b: Math.min(sMax,b)]
-        lay.range = [a - ab, b + ab ]
-        Plotly.relayout(figurecontainer, {"yaxis":lay})
-    }
 }
 
 

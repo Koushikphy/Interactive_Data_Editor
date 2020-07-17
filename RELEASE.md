@@ -3,10 +3,13 @@
 2. doc style changes
 3. Plot setting window
 4. Plot list utility
-4. Mouse Scroll support for slider and column selector
-5. Improved performance
-6. Minor bug fixes
-7. Improved 3D plotter  
+5. Mouse Scroll support for slider and column selector
+6. Coulumn selector from 3D Viewer window
+7. Improved performance
+8. Minor bug fixes
+9. Improved 3D plotter  
+10. Axes range bug in 3D plotter
+
 
 ## 2.7.0
 #### NEW:

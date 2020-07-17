@@ -680,7 +680,7 @@ a:focus{
 
 .mySelect select{
     border: none;
-    border-radius: 0;
+    /* border-radius: 0; */
     padding: 0 !important;
     margin: 0 !important;
     min-width: 2pc !important;
