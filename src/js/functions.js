@@ -197,6 +197,22 @@ function fileReader(fname) {
 
 
 
+var cRange=false,cRangeY=[NaN, NaN];
+function setCutRange(){
+    if(!cRange) return
+    let a=Math.min(...dpsy), b=Math.max(...dpsy);
+    let [aY,bY] = cRangeY;
+    a = isNaN(aY)? a: Math.max(aY,a)
+    b = isNaN(bY)? b: Math.min(bY,b)
+
+    // upper cutoff is lower than the min value or lower cutoff is bigger than max value
+    if(a>b) a=b-1 // improve this
+
+    ab = (b-a)*.03 // gives a slight padding in range
+    range = [a-ab, b+ab ]
+    Plotly.relayout(figurecontainer, {"yaxis.autorange":false,"yaxis.range":[a-ab, b+ab ], "xaxis.autorange":true})
+}
+
 
 function updatePlot(all = true) {
     //true means just update the current plot i.e. 0th, leave others as it is.
@@ -234,6 +250,8 @@ function updatePlot(all = true) {
         }, currentEditable)
     }
     for (let i = 0; i < dpsx.length; i++) points[i].index = i
+
+    setCutRange()
 }
 
 

@@ -23,12 +23,15 @@ window.onkeydown = function hotKeys(e) {
     if (document.activeElement.type == "text") return
 
     if(e.key==' '){
-        Plotly.relayout(figurecontainer, {
-            "xaxis.autorange": true,
-            "yaxis.autorange": true
-        })
-
-
+        if(cRangeY.every(i=>isNaN(i))){
+            Plotly.relayout(figurecontainer, {
+                "xaxis.autorange": true,
+                "yaxis.autorange": true
+            })
+        }else{
+            cRange = true
+            setCutRange()
+        }
 
     }else if(e.key==","){ 
         sliderChanged(-1)
@@ -280,6 +283,28 @@ figurecontainer.on("plotly_legendclick", function(){ // to catch the name if cha
     let tmpLeg=[]
     for (let i of figurecontainer.data) tmpLeg.push(i.name)
     legendNames = tmpLeg;
+});
+
+
+figurecontainer.on("plotly_relayout", (lay)=>{
+    let keys = Object.keys(lay)
+    // console.log(keys)
+
+    if( keys.length==2 && keys.includes("xaxis.autorange") && keys.includes("yaxis.autorange")){
+        cRange = false
+        cRangeY = [NaN, NaN]
+    }else if( ( keys.includes("yaxis.range[0]") && keys.includes("yaxis.range[1]") ) || // zoomed view
+     ( keys.includes("xaxis.range[0]") && keys.includes("xaxis.range[1]")  )  ){
+        cRange = false
+    }else if( keys.length==1 && keys.includes("yaxis.range[0]")){
+        cRange = true;
+        cRangeY[0] = lay["yaxis.range[0]"]
+        setCutRange()
+    }else if( keys.length==1 && keys.includes("yaxis.range[1]") ){
+        cRange = true;
+        cRangeY[1] = lay["yaxis.range[1]"]
+        setCutRange()
+    }
 });
 
 
