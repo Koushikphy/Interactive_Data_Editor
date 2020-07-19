@@ -101,6 +101,7 @@ function updateData(init=false,all=true) {
         col.x = xCol.selectedIndex;
         col.y = yCol.selectedIndex;
         col.z = zCol.selectedIndex;
+        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${col.y + 1}:${col.z + 1}`
     }
     th_in = 0;
 
@@ -139,7 +140,6 @@ function fileReader(fname) {
 
     // parse the file and data
     data = parseData(fs.readFileSync(fname, "utf8"))
-    if(data==undefined) return
     ddd = data.length != 1;
 
     //reset everything....
@@ -396,6 +396,7 @@ function changeEditable(index){
     startDragBehavior();
     firstSave = true; undoStack = []; redoStack = []
     zCol.selectedIndex = col.z 
+    document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[currentEditable])
     updateOnServer()
 }
 

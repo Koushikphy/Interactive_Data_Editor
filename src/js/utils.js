@@ -15,29 +15,18 @@ function alertElec(msg, type=1, title="Failed to execute."){
 
 
 function parseData(strDps) {
-    var newdat = [],blocks = [];
-    var strps = strDps.trim().split(/\r?\n\s*\r?\n/);
-    try{
-        for (let i of strps) {
-            blocks = i.trim().split("\n");
-            for (var j = 0; j < blocks.length; j++) {
-                blocks[j] = blocks[j].trim().split(/[\s\t]+/);
-                blocks[j] = blocks[j].map(x => {
-                    y = parseFloat(x)
-                    if(isNaN(y)){
-                        throw "badData"
-                    } else{
-                        return y
-                    }
-                });
-            };
-            newdat.push(transpose(blocks));
-        }
-    } catch(err){
-        if(err='badData') alertElec("Bad data found !!!\nCheck the file before openning.")
-        return
-    }
-    return newdat;
+    return strDps.trim().split(/\r?\n\s*\r?\n/).map(dat =>{
+        return transpose(dat.trim().split("\n").map(line=>{
+            return line.trim().split(/[\s\t]+/).map(val =>{
+                y = parseFloat(val)
+                if(isNaN(y)){
+                    alertElec("Bad data found !!!\nCheck the file before openning.")
+                    throw "badData"
+                }
+                return y
+            })
+        }))
+    })
 };
 
 
@@ -50,7 +39,6 @@ function expRotate(inp, i, j) {
     if (issame) return transpose(tmpData).map(x => transpose(x))
 
     tmpData = [].concat(...tmpData).filter(x => x !== undefined);
-
     var tmp = [...new Set(tmpData.map(x=>x[i]))].sort((a, b) => a - b);
 
     return tmp.map(x=>{
@@ -208,7 +196,6 @@ function regressionFit(xx,yy,n){
     var xs = xx.slice(), ys = yy.slice();
     var poly = new Regression(xs,ys,n)
     var fity = xs.map((i)=>poly.val(i))
-    // for(let x of xs) fity.push(poly.val(x))
     return [fity, poly.cf]
 }
 
@@ -254,9 +241,7 @@ function levenMarFit(dpsx, dpsy, funcStr, paramList, maxIter, parameters, maxVal
         throw "Can't parse the formula."
     }
 
-
     let xs = dpsx.slice(); ys = dpsy.slice()
-
 
     try {
         func(parameters)(xs[0])  // check if the function is usable

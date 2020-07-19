@@ -143,8 +143,6 @@
     </select></div>
 
 
-    <!-- <span>Z: </span>
-    <select id="colSel" onchange="ipcRenderer.send('colchanged', this.value-1)"></select> -->
 
     <div class="mySelect">
         <span>Plot Type</span>
@@ -154,27 +152,13 @@
     </select></div>
 
 
-    <!-- <span>Plot Type: </span>
-    <select name="" id="typeSel" onchange="changePlotType(this)">
-        <option value="wire">Wire Frame</option>
-        <option value="surf">Surface</option>
-    </select> -->
-
-
     <div class="mySelect"  id="marker">
         <input onclick="mark_clicked(this)" type="checkbox">
         <span>Markers</span>
-        <!-- <select id="typeSel" onchange="changePlotType(this)">
-            <option value="wire">Wire Frame</option>
-            <option value="surf">Surface</option>
-        </select> -->
+
     </div>
 
 
-    <!-- <div id="marker">
-        <input onclick="mark_clicked(this)" type="checkbox" >
-        <span>Markers</span>
-    </div> -->
     <div class="borders">
         Axes Ranges ⇒
         X <input onchange="setRange()" type="text" id='xInp' >
@@ -193,11 +177,13 @@
         var updatePlot = updatePlotWire  // changable function
 
 
-        document.getElementById("colSel").onwheel = (ev)=> {
-            let add = ev.deltaY >0 ? 1 : -1
-            let cur = ev.toElement.selectedIndex
-            if((cur==colLen && add==1) || (cur==0 && add==-1)) return
-            ev.toElement.selectedIndex = cur + add
+
+        document.getElementById("colSel").onwheel = function(e){
+            let cur = this.selectedIndex
+            let add = e.deltaY >0 ? 1 : -1
+            if((colLen==cur && add==1) || (cur==0 && add==-1) ) return
+            this.selectedIndex = cur + add
+            // this.dispatchEvent(new Event('change'))
             ipcRenderer.send('colchanged', cur + add)
         }
 

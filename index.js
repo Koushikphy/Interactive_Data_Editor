@@ -30,16 +30,6 @@ ipcMain.on("colchanged", function (e, d) {
 })
 
 
-ipcMain.on("rf", function (e, d) {
-    mainWindow.webContents.send("rf", d);
-})
-
-
-ipcMain.on("adrf", function (e, d) {
-    mainWindow.webContents.send("adrf", d);
-})
-
-
 ipcMain.on('checkClose', function (eg, d) {
     mainWindow.destroy();
     app.quit();

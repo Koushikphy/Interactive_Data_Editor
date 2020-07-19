@@ -25,14 +25,12 @@ function recentMenu() {// builds the recent file submenu
         let fln = replaceWithHome(rc)
         rrf.insert(0,new MenuItem({
             label: fln,
-            click() {
-                ipcRenderer.send("rf", rc)
-        }}));
+            click() {fileReader(rc)}
+        }));
         arf.insert(0,new MenuItem({
             label: fln,
-            click() {
-                ipcRenderer.send("adrf", rc)
-        }}))
+            click() {addNewFile(rc)}
+        }))
     }
     localStorage.setItem("files", JSON.stringify(recentFiles));
 };

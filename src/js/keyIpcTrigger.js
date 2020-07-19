@@ -245,10 +245,6 @@ ipcRenderer.on("back", (_, d) =>{
 
 ipcRenderer.on("menuTrigger", ipcTrigger)
 
-ipcRenderer.on("adrf", (_, d)=> addNewFile(d))
-
-ipcRenderer.on("rf", (_, d)=> fileReader(d))
-
 ipcRenderer.on('checkClose', function (_,_) {
     if (!saved) var res = dialog.showMessageBoxSync({
         type: "warning",
@@ -294,7 +290,7 @@ figurecontainer.on("plotly_relayout", (lay)=>{
         cRange = false
         cRangeY = [NaN, NaN]
     }else if( ( keys.includes("yaxis.range[0]") && keys.includes("yaxis.range[1]") ) || // zoomed view
-     ( keys.includes("xaxis.range[0]") && keys.includes("xaxis.range[1]")  )  ){
+     ( keys.includes("xaxis.range[0]") && keys.includes("xaxis.range[1]"))){
         cRange = false
     }else if( keys.length==1 && keys.includes("yaxis.range[0]")){
         cRange = true;
@@ -313,7 +309,7 @@ ipcRenderer.on("plotsetting", (_,d)=>{ // incoming info from the plotsetting win
 })
 
 
-ipcRenderer.on("colchanged", (_,d)=>{ // incoming info from the plotsetting window
+ipcRenderer.on("colchanged", (_,d)=>{ // incoming info from the viewer window
     zCol.selectedIndex = d
     colChanged(d)
 })
@@ -327,16 +323,17 @@ document.body.ondrop = (ev) => {
     ev.preventDefault()
 }
 
-
-// attach change with mouse scroll functionality with the column selector
-function selectWheel(ev){
-    let add = ev.deltaY >0 ? 1 : -1
-    let cur = ev.toElement.selectedIndex
-    let max = ev.toElement.length-1
-    if((max==cur && add==1) || (cur==0 && add==-1) ) return
-    ev.toElement.selectedIndex = cur + add
+// attach change with mouse scroll functionality to selectors
+for(let elem of document.getElementsByClassName('sWheel')){
+    elem.onwheel = function(e){
+        let cur = this.selectedIndex
+        let max = this.length-1
+        let add = e.deltaY >0 ? 1 : -1
+        if((max==cur && add==1) || (cur==0 && add==-1) ) return
+        this.selectedIndex = cur + add
+        this.dispatchEvent(new Event('change'))
+    }
 }
-
 
 // attach change X/Y with mouse scroll functionality to the figurecontainer and slider
 figurecontainer.onmousewheel = slider.onmousewheel = function(ev){
