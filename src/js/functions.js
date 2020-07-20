@@ -43,7 +43,7 @@ function showStatus(msg){
     let toast = document.createElement('div')
     toast.className = 'toast'
     toast.innerHTML = `<p style="margin: 0;">${msg}</p>
-    <div class="toastTail">
+    <div class="toastTail" onclick=this.parentElement.remove()>
         <div class="toastCross">X</div>
     </div>`
     document.getElementById('toastContainer').appendChild(toast)

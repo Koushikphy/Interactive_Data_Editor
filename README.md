@@ -7,7 +7,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3947508.svg)](https://doi.org/10.5281/zenodo.3947508)
 [![Version](https://img.shields.io/badge/Web-https://koushikphy.github.io/ide/-success.svg)](https://koushikphy.github.io/ide/)  
 
-![alt text](figs/screenshot.png "Screen shot")
+![alt text](figs/screenshot.gif "Screen shot")
 We have all worked with data at some point of time. Now, depending on the source, sometimes the data may not be regular, smooth and uniform and requires refinement before applying for any practical use. This software lets you do that very easily and efficiently in a graphical way including many others useful data operation.
 
 ## Features
