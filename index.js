@@ -53,7 +53,7 @@ app.on('ready', function () {
         protocol: 'file:',
         slashes: true
     }));
-    if (!app.isPackaged) mainWindow.webContents.openDevTools();
+    // if (!app.isPackaged) mainWindow.webContents.openDevTools();
     // mainWindow.webContents.openDevTools();
     // mainWindow.on('closed', function(){
     // app.quit();

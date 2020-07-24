@@ -21,13 +21,13 @@ function pasteThis() {
 }
 
 
-function sSwapper() {
-    [col.s, col.z] = [col.z, col.s]
-    sCol.selectedIndex = col.s;
-    zCol.selectedIndex = col.z;
-    colsChanged(col.s);
-    updateOnServer();
-}
+// function sSwapper() {
+//     [col.s, col.z] = [col.z, col.s]
+//     sCol.selectedIndex = col.s;
+//     zCol.selectedIndex = col.z;
+//     colsChanged(col.s);
+//     updateOnServer();
+// }
 
 
 function swapData() {
@@ -65,7 +65,7 @@ function repeatMirror() {
         }
     }
     data = repeatMirrorData(data, col.y, last, times)
-    endJobs({startdrag:true})
+    endJobs({startdrag:true,minimal:false})
     showStatus(`Data ${mirror ? 'mirrored' : 'repeated'} ${times} times...`)
 }
 
@@ -86,7 +86,7 @@ function dataFiller() {
 
 
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
-    endJobs({startdrag:true})
+    endJobs({startdrag:true,minimal:false})
     showStatus('Missing values are filled...');
 }
 
@@ -101,7 +101,7 @@ function filterData() {
 
     data = applyCutOFF(data, colmn,condition, thrsh, fillVal)
 
-    endJobs()
+    endJobs({minimal:false})
     showStatus('Data filtered...');
 }
 
@@ -182,11 +182,9 @@ function autoSmooth() {
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply mooving average at endpoints"}
-        for (let i of ind) {
-            dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
-        };
+        for (let i of ind) dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
         data[th_in][col.z] = dpsy;
-        endJobs()
+        endJobs({serVerUpdate:false})
     } catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
@@ -208,17 +206,28 @@ function setValue(val){
     let value = parseFloat(val);
     if (isNaN(value) ) return;
     for (let ind of index) data[th_in][col.z][ind] = value;
-    endJobs({clearIndex:true})
+    endJobs()
 }
 
 
 function removeBadData(){
     saveOldData()
-    let ind = index.filter((i)=>i<dpsx.length)
-    for (let i = ind.length - 1; i >= 0; i--) {
-        for(let j=0; j<data[0].length; j++) data[th_in][j].splice(index[i], 1);
+    data[th_in] = data[th_in].map(x=>x.filter((_,i)=>!index.includes(i)))
+    endJobs({clearIndex:true,minimal:false,startdrag:true})
+}
+
+
+function endJobs({resize=false,startdrag=false,clearIndex=false,serVerUpdate=true,minimal=true}={}){
+    fullData[0] = data;
+    minimal? Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable) : updatePlot(false);
+    if (resize) resizePlot()
+    if (serVerUpdate) updateOnServer();
+    if (startdrag) startDragBehavior()
+    if (clearIndex){
+        Plotly.restyle(figurecontainer, {selectedpoints: [null]})
+        index = []
     }
-    endJobs({clearIndex:true})
+    saved = false;
 }
 
 
@@ -321,15 +330,3 @@ function lmfit(){
 
 
 
-function endJobs({resize=false, updateAll = false, startdrag=false, clearIndex=false}={}){
-        fullData[0] = data;
-        updatePlot(updateAll);
-        if (resize) resizePlot()
-        updateOnServer();
-        if (startdrag) startDragBehavior()
-        if (clearIndex){
-            Plotly.restyle(figurecontainer, {selectedpoints: [null]})
-            index = []
-        }
-        saved = false;
-}

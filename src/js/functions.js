@@ -342,7 +342,7 @@ function keyBoardDrag(inp) {
     var add = yaxis.p2l(1) - yaxis.p2l(0);
     if (inp) add = -add;
     for (let i of index) dpsy[i] += add
-    Plotly.restyle(figurecontainer, {y: [dpsy]}, 0)
+    Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable)
 }
 
 
@@ -362,8 +362,15 @@ function updateOnServer() {
 
 
 
-function changeEditable(index){
-    if (swapperIsOn) return // we can just swap s and z anyways  //TODO : merge swapper into this
+function changeEditable(index){ // we can just swap s and z anyways  //TODO : merge swapper into this
+    if (swapperIsOn) {
+        [col.s, col.z] = [col.z, col.s]
+        sCol.selectedIndex = col.s;
+        zCol.selectedIndex = col.z;
+        colsChanged(col.s);
+        updateOnServer();
+        return
+    } 
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
     let line1 = figurecontainer._fullData[currentEditable].line
@@ -523,15 +530,8 @@ function saveAs() {
 function saveData() {
     tmpData = data
     if (swapped) tmpData = expRotate(tmpData, col.y, col.x)
-    var tmpData = tmpData.map(x => transpose(x));
-    var txt = "";
     try {
-        for (let i of tmpData) {
-            for (let j of i) {
-                if (j !== undefined) txt += j.map(n => parseFloat(n).toFixed(8)).join("\t") + "\n";
-            };
-            txt += "\n";
-        };
+        var txt = tmpData.map(x => transpose(x).map( y=>y.map( i=>i.toFixed(8) ).join('\t')).join('\n')).join('\n\n')
         fs.writeFileSync(saveNames[currentEditable], txt);
         showStatus("Data Saved in file " + replaceWithHome(saveNames[currentEditable]));
         saved = true;
@@ -569,7 +569,6 @@ function isswap() {
     col = fullDataCols[currentEditable]
     xName = n2; 
     updateData();
-    // $("#drag").html((_, html) => html.replace(n1, n2));
 };
 
 
@@ -741,7 +740,7 @@ function settingWindow(){
             dat.Marker.color = figurecontainer._fullData[i].marker.color
             plot.push(dat)
         }
-        if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
+        // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
         settingEditWindow.webContents.send("plotsetting", [lay, plot]);
     })
 }
@@ -767,7 +766,7 @@ function spreadsheet() {
     editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
-    if (!app.isPackaged) editorWindow.webContents.openDevTools();
+    // if (!app.isPackaged) editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready", function () {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
     })
@@ -794,6 +793,6 @@ function openViewer() {
     viewerWindow.on("closed", function () { viewerWindow = null })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
-    if (!app.isPackaged) viewerWindow.webContents.openDevTools();
+    // if (!app.isPackaged) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready", updateOnServer)
 };

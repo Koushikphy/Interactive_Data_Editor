@@ -269,7 +269,8 @@ button:active {
 }
 
 #sCol{
-    display: none
+    display: none;
+    margin-left: 3px !important;
 }
 
 #sColInp{
