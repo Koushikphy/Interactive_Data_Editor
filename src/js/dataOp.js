@@ -21,15 +21,6 @@ function pasteThis() {
 }
 
 
-// function sSwapper() {
-//     [col.s, col.z] = [col.z, col.s]
-//     sCol.selectedIndex = col.s;
-//     zCol.selectedIndex = col.z;
-//     colsChanged(col.s);
-//     updateOnServer();
-// }
-
-
 function swapData() {
     if (!swapperIsOn) return;
     saveOldData();
@@ -78,18 +69,15 @@ function dataFiller() {
     if(isNaN(start)|isNaN(step)|!step) { showStatus('Invalid inputs.'); return}
     let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
     
-
     if(!data[0][col.y].every((i,j,k)=> j==0 ? true:i>k[j-1])){
         alertElec('Monotonically increasing values required for interpolation.')
         return
     }
 
-
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
     endJobs({startdrag:true,minimal:false})
     showStatus('Missing values are filled...');
 }
-
 
 
 

@@ -312,7 +312,10 @@ function startDragBehavior() {
         saveOldData();
         let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
         pIndex = this.index
-        if (index.length) {oldDatX = clone(dpsx); oldDatY = clone(dpsy)}
+        if (index.length) {
+            oldDatY = dpsy.slice(0)// clone(dpsy)
+            if (!lockXc) oldDatX = dpsx.slice(0)// clone(dpsx);
+        }
         return {x,y}
     })
 
@@ -348,15 +351,12 @@ function keyBoardDrag(inp) {
 
 function updateOnServer() {
     if (!viewerWindow) return;
-    let x_list = [],y_list = [],z_list = [];
-    let [a,b] = swapped ? [col.y, col.x] : [col.x, col.y]
 
-    for (let i of data) {
-        x_list.push(i[a]);
-        y_list.push(i[b]);
-        z_list.push(i[col.z]);
-    };
-    var s_data = [x_list, y_list, z_list];
+    var s_data=[
+        data.map(el=>el[swapped? col.y: col.x]),
+        data.map(el=>el[swapped? col.x: col.y]),
+        data.map(el=>el[col.z])
+    ]
     viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length-1]);
 }
 
@@ -484,18 +484,18 @@ function openSwapper() {
     if (len > 2) { // we just need two traces
         Plotly.deleteTraces(figurecontainer,Plotly.d3.range(2,len))
     } else if (len == 1) {
-        let thisTrace = JSON.parse(JSON.stringify(iniPointsD))
+        let thisTrace = clone(iniPointsD)
         thisTrace.line.color = thisTrace.marker.color = colorList[1]
         Plotly.addTraces(figurecontainer, thisTrace)
     }
     let lname = path.basename(fileNames[0])
     Plotly.update(figurecontainer, {
-            x: [data[th_in][col.y], data[th_in][col.y]],
-            y: [data[th_in][col.z], data[th_in][col.s]],
-            name: [
-                lname + ` ${col.y +1 }:${col.z +1}`,
-                lname + ` ${col.y +1}:${col.s +1}`
-            ]
+        x: [data[th_in][col.y], data[th_in][col.y]],
+        y: [data[th_in][col.z], data[th_in][col.s]],
+        name: [
+            lname + ` ${col.y +1 }:${col.z +1}`,
+            lname + ` ${col.y +1}:${col.s +1}`
+        ]
     },{selectdirection: 'h'})
 
     for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
@@ -553,9 +553,7 @@ function isswap() {
         fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
     }
 
-    const allEqual = fullData.every(v => v.length === fullData[0].length)
-
-    if (!allEqual) {
+    if (fullData.length>1 && !fullData.every(v => v.length == fullData[0].length)) {
         for (let i = 0; i < fullData.length; i++) {
             [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
             fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
@@ -728,18 +726,19 @@ function settingWindow(){
 
     settingEditWindow.webContents.once("dom-ready", function () {
         let lay = figurecontainer.layout
-        let plot = []
-        for(let i=0; i<figurecontainer.data.length; i++){
-            let dat = {}
-            dat.Title = figurecontainer.data[i].name
-            dat.Style = figurecontainer.data[i].mode
-            dat.Marker = figurecontainer.data[i].marker
-            dat.Line = figurecontainer.data[i].line
-            // color is removed as colorway is used for easy iteration, get it from full
-            dat.Line.color = figurecontainer._fullData[i].line.color
-            dat.Marker.color = figurecontainer._fullData[i].marker.color
-            plot.push(dat)
-        }
+        let plot = figurecontainer.data.map((el,i)=>({
+            "Title" : el.name,
+            "Style" : el.mode,
+            "Marker" : {
+                ...el.marker, // color is removed as colorway is used for easy iteration, get it from full
+                "color":figurecontainer._fullData[i].marker.color
+            },
+            "Line" : {
+                ...el.line,
+                "color":figurecontainer._fullData[i].line.color
+            }
+        }))
+
         // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
         settingEditWindow.webContents.send("plotsetting", [lay, plot]);
     })

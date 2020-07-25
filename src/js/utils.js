@@ -15,9 +15,9 @@ function alertElec(msg, type=1, title="Failed to execute."){
 
 
 function parseData(strDps) {
-    return strDps.trim().split(/\r?\n\s*\r?\n/).map(dat =>{
-        return transpose(dat.trim().split("\n").map(line=>{
-            return line.trim().split(/[\s\t]+/).map(val =>{
+    return strDps.trim().split(/\r?\n\s*\r?\n/).map(dat =>
+         transpose(dat.trim().split("\n").map(line=>
+            line.trim().split(/[\s\t]+/).map(val =>{
                 y = parseFloat(val)
                 if(isNaN(y)){
                     alertElec("Bad data found !!!\nCheck the file before openning.")
@@ -25,30 +25,29 @@ function parseData(strDps) {
                 }
                 return y
             })
-        }))
-    })
+        ))
+    )
 };
 
 
-
-function expRotate(inp, i, j) {
-    //Bunch up on i-th column and sort along j-th column
-    tmpData = inp.map(x => transpose(x));
+function expRotate(inp, i, j) { //Bunch up on i-th column and sort along j-th column
+    var tmpData = inp.map(transpose);
     if(!issame) issame = tmpData.every(v=>v.length==tmpData[0].length)
 
-    if (issame) return transpose(tmpData).map(x => transpose(x))
+    if (issame) return transpose(tmpData).map(transpose)
 
-    tmpData = [].concat(...tmpData).filter(x => x !== undefined);
+    tmpData = [].concat(...tmpData)//.filter(x => x !== undefined) // or - tmpData.flat()  // flat is slow
     var tmp = [...new Set(tmpData.map(x=>x[i]))].sort((a, b) => a - b);
 
-    return tmp.map(x=>{
-        var tmpdat = tmpData.filter(l=>x==l[i])
-        tmpdat = tmpdat.sort((m, n) => m[j] - n[j])
-        return transpose(tmpdat)
-    });
+    var res = new Array(tmp.length).fill(0).map(_=> new Array())
 
+    tmpData.forEach(el=>{
+        let ind = tmp.indexOf(el[i])
+        res[ind].push(el)
+    })
+    // res = res.map(x=>x.sort((m, n) => m[j] - n[j])) // ignoring secondary sort
+    return res.map(transpose)
 };
-
 
 
 function repeatMirrorData(data, ycol, last, times){
@@ -58,16 +57,16 @@ function repeatMirrorData(data, ycol, last, times){
         var newy= dat[ycol].slice(0, ind)
         var tmp = newy.slice(1)
 
-        for (let time = 0; time < times - 1; time++) {
-            for (let i = 0; i < tmp.length; i++) newy.push(tmp[i] + last * (1 + time));
+        for (let time = 1; time < times; time++) {
+            for (let el of tmp) newy.push(el + last*time)
         }
 
         return dat.map((i,j)=>{
             if(j==ycol) return newy
             var new_dat = i.slice(0, ind)
-            var tmp = new_dat.slice()
-            for (let time = 0; time < times - 1; time++) {
-                ptmp = mirror ? tmp.reverse().slice() : tmp.slice()
+            var tmp = new_dat.slice(0)
+            for (let time=1; time<times; time++) {
+                ptmp = mirror ? tmp.reverse().slice(0) : tmp.slice(0)
                 ptmp.splice(0, 1)
                 new_dat.push(...ptmp)
             }
@@ -80,13 +79,16 @@ function repeatMirrorData(data, ycol, last, times){
 
 function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
 
-    var fullArr = data[0][col.y].filter(x=>x<start)
-    fullArr = fullArr.concat(Plotly.d3.range(start, stop+step, step))
-    fullArr = fullArr.concat(data[0][col.y].filter(x=>x>stop))
+    var fullArr = [].concat(
+        data[0][col.y].filter(x=>x<start),
+        Plotly.d3.range(start,stop+step,step),
+        data[0][col.y].filter(x=>x>stop)
+    )
+
 
     return data.map(dat => {
         if (fullArr.length == dat[0].length) return dat; // no interpolation required
-        var xs = dat[col.y].slice()
+        var xs = dat[col.y].slice(0)
         var lInd = dat[col.y].length - 1;
         // check if regression is required by cheking the starting of the array
         var backRegRequired = false, frontRegRequired = false;
@@ -148,8 +150,8 @@ function applyCutOFF(data, colmn,condition, thrsh, fillVal){
 
 
 function useRegression(xx, yy, ind, condition=1){
-    let xs = xx.slice(); //shallow copy
-    let ys = yy.slice();
+    let xs = xx.slice(0); //shallow copy
+    let ys = yy.slice(0);
 
     first = ind[0]
     last = ind[ind.length - 1]
@@ -193,7 +195,7 @@ function useSpline(xx, yy, ind){
 }
 
 function regressionFit(xx,yy,n){
-    var xs = xx.slice(), ys = yy.slice();
+    var xs = xx.slice(0), ys = yy.slice(0);
     var poly = new Regression(xs,ys,n)
     var fity = xs.map((i)=>poly.val(i))
     return [fity, poly.cf]
@@ -241,7 +243,7 @@ function levenMarFit(dpsx, dpsy, funcStr, paramList, maxIter, parameters, maxVal
         throw "Can't parse the formula."
     }
 
-    let xs = dpsx.slice(); ys = dpsy.slice()
+    let xs = dpsx.slice(0); ys = dpsy.slice(0)
 
     try {
         func(parameters)(xs[0])  // check if the function is usable

@@ -167,8 +167,8 @@
     </div>
     </div>
     <script>
-        var xxx = [], yyy = [], zzz = [], data = [],
-        swapped = false, first = true,currentType = 0, colLen=0;
+        // var xxx = [], yyy = [], zzz = [], data = [],
+        var data = [], swapped = false, first = true, currentType = 0, colLen=0, ii=1;
 
         const figurecontainer = document.getElementById("figurecontainer")
         const {ipcRenderer} = require('electron');
@@ -190,6 +190,7 @@
 
         ipcRenderer.on("sdata", (e, d)=> {
             [data, swapped, zVal, tmpCL] = d;
+            ii = swapped ? 0: 1
             if(tmpCL !=colLen){
                 colLen = tmpCL
                 txt = ''
@@ -289,62 +290,33 @@
         // functions for wieframe*****************************
 
         function updatePlotWire() {
-            makeRotation();
-            xxx = data[0].concat(xxx),
-            yyy = data[1].concat(yyy),
-            zzz = data[2].concat(zzz);
-            if ( first || figurecontainer.data.length != xxx.length) {
-                Plotly.newPlot(figurecontainer, initData(xxx.length), layout, { displaylogo: false ,responsive: true});
+            var res = makeRotation();
+            var dat = data.map((el,i)=>el.concat(res[i]))
+
+            if ( first || figurecontainer.data.length != dat[0].length) {
+                Plotly.newPlot(figurecontainer, initData(dat[0].length), layout, { displaylogo: false ,responsive: true});
                 first = false
             };
             let layR = makeLayOutRanges()
-            Plotly.update(figurecontainer, { 'x': xxx, 'y': yyy, 'z': zzz }, layR).then(
-                function(){
-                    stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
-                }
-            );
+            Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, layR).then(_=>{
+                stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
+            });
         };
 
 
         function makeRotation() {
-            var issame = true, b = data[0][0].length;
-            for (let a of data[0]) {
-                if (a.length != b) {
-                    issame = false;
-                    break;
-                };
-            };
-
-            if (issame) {
-                xxx = transpose(data[0]);
-                yyy = transpose(data[1]);
-                zzz = transpose(data[2]);
-                return;
-            };
-
-            var tmpData0 = [].concat(...data[0]).filter(x => x !== undefined),
-                tmpData1 = [].concat(...data[1]).filter(x => x !== undefined),
-                tmpData2 = [].concat(...data[2]).filter(x => x !== undefined);
-
-            var tmpData = swapped ? tmpData0 : tmpData1
-
-            var tmp = [...new Set(tmpData)].sort((a, b) => a - b);
-                xxx = [], yyy = [], zzz = [];
-                for (let x of tmp) {
-                    var tmp0 = [], tmp1 = [], tmp2 = [];
-                    for (let i = 0; i < tmpData0.length; i++) {
-                        if (tmpData[i] == x) {
-                            tmp0.push(tmpData0[i]);
-                            tmp1.push(tmpData1[i]);
-                            tmp2.push(tmpData2[i]);
-                        };
-                    };
-                    xxx.push(tmp0);
-                    yyy.push(tmp1);
-                    zzz.push(tmp2);
-                };
+            if(data[0].every(v=>v.length==data[0][0].length)) return data.map(transpose)
+            var tmpDa = data.map(el=>[].concat(...el))//.filter(x => x !== undefined))
+            var unq = [...new Set(tmpDa[ii])].sort((a, b) => a - b);
+            var res = [0,0,0].map(_=>new Array(unq.length).fill(0).map(_=> new Array()))
+            tmpDa[ii].forEach((el,i)=>{
+                var ind = unq.indexOf(el)
+                res[0][ind].push(tmpDa[0][i])
+                res[1][ind].push(tmpDa[1][i])
+                res[2][ind].push(tmpDa[2][i])
+            })
+            return res
         };
-
 
 
         function mark_clicked(mark) {
@@ -394,11 +366,9 @@
             }
 
             var [cR, lR] = makeLayOutRanges()
-            Plotly.update(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[2]], ...cR }, lR).then(
-                function(){
-                    stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
-                }
-            );
+            Plotly.update(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[2]], ...cR }, lR).then(_=>{
+                stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
+            });
         };
 
 

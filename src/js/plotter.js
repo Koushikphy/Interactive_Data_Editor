@@ -10,7 +10,7 @@ const zcol = document.getElementById('zcol')
 const {downloadImage } = require('../js/download')
 const {transpose}= require('../js/utils')
 const $ = require('../lib/jquery.min')
-
+const {alertElec}= require('../js/utils')
 
 var data   = [],ranges = [],zCols  = [],fname, recentLocation='',optionList='';
 
@@ -250,22 +250,24 @@ function deleteThisPlot(){
 
 
 
-
 function fileReader(fname) {
-    let strDps = fs.readFileSync(fname, "utf8");
-    strDps = strDps.trim().split(/\r?\n\s*\r?\n/);
-    let col = strDps[0].trim().split("\n")[0].trim().split(/[\s\t]+/).length;
-    let data = [... Array(col)].map(_ => Array());
-    for (var i = 0; i < strDps.length; i++) {
-        blocks = strDps[i].trim().split("\n");
-        for (var j = 0; j < blocks.length; j++) {
-            blocks[j] = blocks[j].trim().split(/[\s\t]+/);
-        };
-        blocks = transpose(blocks);
-        for (var k = 0; k < col; k++) {
-            data[k].push(blocks[k]);
-        };
-    };
+    var tmpDat = fs.readFileSync(fname, "utf8").trim().split(/\r?\n\s*\r?\n/).map(dat=>{
+        let res = dat.trim().split("\n").map( block=>block.trim().split(/[\s\t]+/).map(x=>{
+            y = parseFloat(x)
+            if(isNaN(y)){
+                alertElec("Bad data found !!!\nCheck the file before openning.")
+                throw "badData"
+            }
+            return y
+        }))
+        return transpose(res)
+    })
+    data = new Array(tmpDat[0].length).fill(0).map(_=> new Array())
+    tmpDat.forEach(dat=>{
+        dat.forEach((el,i)=>{
+            data[i].push(el)
+        })
+    })
     fullData.push(data)
     fullDataCols.push({
         x : 0,
@@ -273,7 +275,6 @@ function fileReader(fname) {
         z : 2
     })
     fileNames.push(fname)
-
 }
 
 
@@ -294,7 +295,7 @@ function selUpdate(){
 function buildPlotList(){
     var opTxt = ''
 
-    for(let i=0; i<=fileNames.length-1; i++){
+    for(let i=0; i<fileNames.length; i++){
         let fname = path.basename(fileNames[i], path.extname(fileNames[i]));
         let a = fullDataCols[i].x +1
         let b = fullDataCols[i].y +1
@@ -308,22 +309,31 @@ function buildPlotList(){
 
 
 function updatePlot(){
-    a = xcol.selectedIndex;
-    b = ycol.selectedIndex;
-    c = zcol.selectedIndex;
-    fullDataCols[currentIndex] = {x : a, y : b, z:c}
+    let a = xcol.selectedIndex;
+    let b = ycol.selectedIndex;
+    let c = zcol.selectedIndex;
+    fullDataCols[currentIndex] = {x:a, y:b, z:c}
     Plotly.restyle(figurecontainer, { 
         "x": [fullData[currentIndex][a]], "y": [fullData[currentIndex][b]], "z": [fullData[currentIndex][c]] 
     }, currentIndex);
 }
 
 
+function getMinMax(col){
+    var [min, max] = [Infinity, -Infinity]
+    fullData[currentIndex][col].forEach(el=>{
+        el.forEach(x=>{
+            min = x<min ? x:min
+            max = x>max ? x:max
+        })
+    })
+    return [min,max]
+}
+
 
 function getRange(lim,col) {
     lim = lim.split(",").map(x => parseFloat(x));
-    let tmp = fullData[currentIndex][col].flat()
-    let [min, max] = [Math.min(...tmp),Math.max(...tmp)];
-    console.log(min, max)
+    let [min, max] = getMinMax(col)
     if (isNaN(lim[0])) lim[0] = min
     if (isNaN(lim[1])) lim[1] = max
     cmin = Math.max(lim[0], min);
@@ -333,20 +343,18 @@ function getRange(lim,col) {
 
 
 function setXRange(lim) {
-    var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].x);
+    var [lim, _] = getRange(lim, fullDataCols[currentIndex].x);
     Plotly.relayout(figurecontainer, {"scene.xaxis.range": lim});
 };
 
 
 function setYRange(lim) {
-    var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].y);
+    var [lim, _] = getRange(lim, fullDataCols[currentIndex].y);
     Plotly.relayout(figurecontainer, {"scene.yaxis.range": lim});
 };
 
-// assuming zCols has  the list of all the current z axis cols
 function setZRange(lim) {
     var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].z);
-
     Plotly.update(figurecontainer, {
         "cmin": t1,"cmax": t2
     },{
@@ -357,7 +365,6 @@ function setZRange(lim) {
 
 
 function showHideToolBox(){
-    console.log('here')
     let tl = document.getElementById('toolbox')
     let ds = tl.style.display
     if(ds=='' || ds=='block') tl.style.display = 'none'
@@ -384,37 +391,32 @@ function openPlotSetting(){
     settingEditWindow.setMenuBarVisibility(false);
 
     let layout  = figurecontainer.layout
-    let trace  = []
-
-    for(let i=0; i<figurecontainer.data.length; i++){
-        t = figurecontainer.data[i]
+    let trace = figurecontainer.data.map((el,i)=>{
         let fname = path.basename(fileNames[i], path.extname(fileNames[i]));
         let a = fullDataCols[i].x +1
         let b = fullDataCols[i].y +1
         let c = fullDataCols[i].z +1
-
-        // remove type `surface` from here, but will be added from the incomig
-        trace.push({
-            // type : t.type,
+        return {
             Title : `${i+1}. ${fname}    ${a}:${b}:${c}`,
-            hoverinfo : t.hoverinfo,
-            colorscale : t.colorscale,
-            opacity : t.opacity,
-            showscale : t.showscale,
-            cmin : t.cmin,
-            cmax : t.cmax,
-            cauto : t.cauto,
-            colorbar : t.colorbar,
-            contours : t.contours,
-            hidesurface : t.hidesurface,
-        })
-    }
+            hoverinfo : el.hoverinfo,
+            colorscale : el.colorscale,
+            opacity : el.opacity,
+            showscale : el.showscale,
+            cmin : el.cmin,
+            cmax : el.cmax,
+            cauto : el.cauto,
+            colorbar : el.colorbar,
+            contours : el.contours,
+            hidesurface : el.hidesurface,
+        }
+    })
 
-    settingEditWindow.webContents.once("dom-ready", function () {
-        if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
+
+    settingEditWindow.webContents.once("dom-ready", () => {
+        // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
         settingEditWindow.webContents.send("plotsetting", [layout, trace]);
     })
-    fs.writeFileSync('tmp_name', JSON.stringify({layout, trace}, null, '\t'), 'utf8')
+    // fs.writeFileSync('tmp_name', JSON.stringify({layout, trace}, null, '\t'), 'utf8')
 }
 
 

@@ -39,7 +39,6 @@
                 document.getElementById('range-div').style.display ='block'
                 document.getElementById('range-div').style.marginTop ='5px'
                 setUpSlider()
-
             } else {
                 full.style.display = "none";
             }
@@ -47,10 +46,8 @@
                 document.getElementById("container").offsetTop - 2 -
                 document.getElementById("table").offsetTop;
 
-
             var wit = (window.innerWidth-450)/data[0][0].length
             mytable = jexcel(document.getElementById('table'), {
-                        // copyCompatibility:true,
                         data:data[0],
                         tableOverflow:true,
                         defaultColWidth: wit>120?120:wit,
@@ -99,29 +96,22 @@
         };
 
         function updateData() { //parse the formulas during the return 
-            var dat = data.map(blocks=> blocks.map(line=>line.map(elem=>{
-                if (('' + elem).substr(0,1) == '=')  return mytable.executeFormula(elem); return elem
-            })))
-            ipcRenderer.send("back", dat); 
+            var dat = data.map(blocks=> blocks.map(line=>line.map(
+                elem=>(''+elem).substr(0,1)=='=' ? mytable.executeFormula(elem) : elem
+            )))
+            ipcRenderer.send("back", dat)
         }
 
 
         window.onkeydown = function hotKeys(e) {
-            if (document.activeElement.type == "text") {
-                return;
-            };
-            switch (e.key) {
-                case ",":
-                    if (th_in == 0) break;
-                    th_in = th_in - 1
-                    sliderChanged();
-                    break;
-                case ".":
-                    if (th_in == data.length - 1) break;
-                    th_in = th_in + 1
-                    sliderChanged();
-                    break;
-            };
+            if (document.activeElement.type == "text") return
+            if(e.key=="," && th_in!=0){
+                th_in-=1
+                sliderChanged()
+            } else if(e.key=="." && th_in!=data.length-1){
+                th_in+=1
+                sliderChanged()
+            }
         };
     </script>
 </body>
