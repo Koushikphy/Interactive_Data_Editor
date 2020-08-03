@@ -97,7 +97,7 @@
 
         function updateData() { //parse the formulas during the return 
             var dat = data.map(blocks=> blocks.map(line=>line.map(
-                elem=>(''+elem).substr(0,1)=='=' ? mytable.executeFormula(elem) : elem
+                elem=>(''+elem).substr(0,1)=='=' ? mytable.executeFormula(elem) :parseFloat(elem)
             )))
             ipcRenderer.send("back", dat)
         }

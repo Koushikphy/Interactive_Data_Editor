@@ -151,7 +151,7 @@ input[type=submit],button{
     font-size: 100%;
     color: #444;
     border: 1px solid #d5d5d5;
-    background-color: #f9f9f9;
+    background-color: #f3f3f3;
     text-decoration: none;
     border-radius: 2px;
     display: inline-block;
@@ -401,29 +401,42 @@ a:focus{
 }
 
 #polyInp{
-    width: 3pc;
+    margin-left: 5px;
+    width: 3.3pc;
     text-align: center;
+    height: 1.5pc;
 }
 #formulaStr{
     margin-left: 2pc
 }
 
+.rgfit-buttons{
+    margin-left: 3px;
+    width: 5pc;
+    height: 1.5pc
+}
 
 .grid-container {
+    margin-right: 5px;
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(8,auto);
     grid-gap: 5px;
 }
   
 .grid-container input{
-    width: 85%;
-    margin-right: 15%;
-}
-.grid-container span{
-    margin-left: .5pc;
+    width: 100%;
+    margin-right: 5px;
 }
 
-
+.grid-buttons{
+    grid-column: 7/9;
+    display: grid;
+    grid-template-columns: repeat(2,auto);
+    grid-gap: 3px;
+}
+#funcStr{
+    grid-column: 2/5;
+}
 
 .row{
     border-style: groove;
@@ -514,7 +527,7 @@ a:focus{
     padding:inherit;
     border: none;
     -webkit-appearance: none;
-    /* width: 1pc; */
+    min-width: 1em;
     width: fit-content;
     padding-bottom: 1px;
 }

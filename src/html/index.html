@@ -77,19 +77,24 @@
             <div id="extendUtils2D" class="borders">
 
                 <div id="rgFit" style="padding:3px">
-                    <span style="display: inline-block; margin-bottom: .4pc"> Order of polynomial </span> 
-                    <input style="height: 1.5pc" id="polyInp" type="number" value="1" min="1">
-                    <input type="submit" value="Solve" onclick="polyfit()" style="width: 5pc;height: 1.5pc">
-                    <input type="submit" value="Close" onclick="closeUtilityFit(this);clearPloyFit()" style="width: 5pc;height: 1.5pc"> <br>
+                    <span > Order of polynomial </span> 
+                    <input id="polyInp" type="number" value="1" min="1">
+                    <input type="submit" value="Solve" onclick="polyfit()" class="rgfit-buttons">
+                    <!-- <input type="submit" value="Save" onclick="savepolyfit()" class="rgfit-buttons"> -->
+                    <input type="submit" value="Close" onclick="closeUtilityFit(document.getElementById('rgFit'));clearFit()" class="rgfit-buttons"> <br>
                     Fitted Equation <span id='formulaStr'></span>
                 </div>
 
                 <div id="lmFit">
-                    <span> Function <input id='funcStr' style=" margin-left:1.7%;width: 40.3%; height: 1.5pc;" type="text" value="a+b*x"></span>
-                    <span style="margin-left: 7px;"> Parameters List <input style=" height: 1.5pc; width: 7.7pc;" id='paramList'type="text" value="a,b"></span>
-                    <button style=" height: 1.7pc; float: right;margin-right: 2.1%;"onclick="closeUtilityFit(this);clearLMfit()" >Close</button>
-                    <button style=" height: 1.7pc;margin-right: 3pc; width: 10%;border: 2px solid #000000; float: right;" onclick="lmfit()">Solve</button>
-                    <div class="grid-container" style="margin-top: 7px;">
+                    <div class="grid-container">
+                        Function <input id='funcStr' type="text" value="a+b*x" >
+                        Parameters List <input id='paramList'type="text" value="a,b">
+                        <div class="grid-buttons">
+                            <button onclick="lmfit()">Solve</button>
+                            <!-- <button onclick="savelmfit()">Save</button> -->
+                            <button onclick="closeUtilityFit(document.getElementById('lmFit'));clearFit(true)" >Close</button>
+                        </div>
+
                         Max Iterations <input id='iterationVal' type="text" value='1000'>
                         Initial Values <input id='intVal' type="text">
                         Max Values <input id='maxVal' type="text">
@@ -142,7 +147,7 @@
                         <input type="submit" value="OK" onclick="filterData();closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc">
                         &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
-                        Columns &nbsp; <input type="text" id="flcl">
+                        Columns&nbsp; <input type="text" id="flcl">
                     </div>
                 </div>
 

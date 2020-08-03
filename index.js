@@ -230,7 +230,7 @@ const homeMenuTemplate = [
                         slashes: true
                     }));
                     Menu.setApplicationMenu(plotMenu);
-                    if (!app.isPackaged) mainWindow.webContents.openDevTools();
+                    // if (!app.isPackaged) mainWindow.webContents.openDevTools();
                 }
             },
             {

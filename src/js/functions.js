@@ -24,7 +24,7 @@ var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendName
     th_in = 0, undoStack = [], redoStack = [];
 
 
-    Plotly.newPlot(figurecontainer, [iniPointsD], layout, {
+Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
     displaylogo:false,
     editable: true,
     responsive: true,
@@ -38,6 +38,12 @@ var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendName
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
 
+enableMenu  = (list)=> { for(let i of list) menu.getMenuItemById(i).enabled = true}
+disableMenu = (list)=> { for(let i of list) menu.getMenuItemById(i).enabled = false}
+hideMenu    = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = true}
+visibleMenu = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = false}
+
+
 
 function showStatus(msg){
     let toast = document.createElement('div')
@@ -48,9 +54,8 @@ function showStatus(msg){
     </div>`
     document.getElementById('toastContainer').appendChild(toast)
     setTimeout(function(){toast.classList.add('toastIn')},50 ) //slight flicker animation
-    setTimeout(function(){ toast.remove()}, 4321 )
+    setTimeout(function(){ toast.remove()}, 4321 ) // 4321 miliseconds to fade
 }
-
 
 
 function setUpFor2d(){
@@ -60,9 +65,8 @@ function setUpFor2d(){
     var fl = JSON.parse(localStorage.getItem("cols2d"));
     if (fl !== null) col = fl
     col.x=0
-    var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit']
-    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-    for (let i of ["pax", '3dview']) menu.getMenuItemById(i).enabled = false;
+    enableMenu(['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit'])
+    disableMenu(["pax", '3dview'])
 }
 
 
@@ -73,18 +77,12 @@ function setUpFor3d(){
     setUpSlider();
     var fl = JSON.parse(localStorage.getItem("cols3d"));
     if (fl !== null) col = fl
-    var enableMenu = ['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','pax', '3dview']
-    for (let i of enableMenu) menu.getMenuItemById(i).enabled = true;
-    for (let i of ["rgft", 'lmfit']) menu.getMenuItemById(i).enabled = false;
+    enableMenu(['save', 'saveas', 'tfs', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','pax', '3dview'])
+    disableMenu(["rgft", 'lmfit'])
 }
 
 
 function setUpColumns(){
-    // let tmpL = data[0].length
-    // if(col.x>=tmpL) col.x = 0
-    // if(col.y>=tmpL) col.y = 0
-    // if(col.z>=tmpL) col.z = 0
-    // if(col.s>=tmpL) col.s = 0
     for(let i in col) col[i] = col[i] < data[0].length ? col[i] : 0
     var op = "";
     for (var i = 1; i <= data[0].length; i++) op += `<option>${i}</option>`
@@ -110,7 +108,7 @@ function updateData(init=false,all=true) {
     } else{
         [col.x, col.y] = [col.y, col.x]
     }
-    fullDataCols[0] = JSON.parse(JSON.stringify(col));
+    fullDataCols[currentEditable] = JSON.parse(JSON.stringify(col));
 
     if(ddd) setUpSlider()
 
@@ -139,31 +137,39 @@ function fileReader(fname) {
     if (res) return;
 
     // parse the file and data
-    data = parseData(fs.readFileSync(fname, "utf8"))
+    try{
+        data = parseData(fs.readFileSync(fname, "utf8"))
+    } catch(err) {
+        if (err.code === 'ENOENT') {
+            showStatus("File doesn't exist.")
+            recentFiles = recentFiles.filter(x => x != fname);
+            recentMenu();
+            return;
+        }
+    }
     ddd = data.length != 1;
 
-    //reset everything....
+    //clear everything....
     swapped = 0; xName = "X"; saved=true, index=[];
     issame = false; firstSave = true; swapper = false;
-    undoStack = []; redoStack = [];  swapperIsOn = false;
+    undoStack = []; redoStack = []; swapperIsOn = false;
 
     let ind = figurecontainer.data.length
-    if(ind>1) Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))  // delete extra traces
-    // if currentEditable is not the first trace then, we have to update the points and also have to change the plot style
-    if(currentEditable !=0){
-        currentEditable = 0
-        let line = clone(iniPointsD.line)
-        let marker = clone(iniPointsD.marker)
-        Plotly.restyle(figurecontainer,{line : [line], marker:[marker]},0)
-        $(`.scatterlayer .trace:first-of-type .points path`).css({'pointer-events':'all'})
-        points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
+    if(ind>1) { // delete extra traces
+        if(currentEditable!=0){
+            Plotly.update(figurecontainer,clone(iniPointsD),clone(layout))
+            $(`.scatterlayer .trace:first-of-type .points path`).css({'pointer-events':'all'})
+            points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
+            currentEditable = 0
+        }
+        Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))
     }
-    if(index.length) Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 
-    //reset menus
-    menu.getMenuItemById("pax").visible = true;
-    menu.getMenuItemById("pay").visible = false;
-    menu.getMenuItemById("swapen").visible = true;
+    // if(index.length) Plotly.restyle(figurecontainer, {selectedpoints: [null]});
+
+    //reset menus, other menues are treated inside respective setup functions
+    visibleMenu(['pax','swapen'])
+    hideMenu(['swapen'])
 
     let dirname = path.dirname(fname);
     let filename = path.basename(fname, path.extname(fname));
@@ -172,11 +178,11 @@ function fileReader(fname) {
     recentLocation = dirname;
 
     ddd ? setUpFor3d() : setUpFor2d();
-    fullDataCols =[JSON.parse(JSON.stringify(col))]
+    fullDataCols =[clone(col)]
     fullData =[data]
     fileNames =[fname]
     saveNames =[save_name]
-    legendNames =[path.basename(fileNames[0]) + ` ${col.y+1}:${col.z+1}`]
+    legendNames =[path.basename(fname) + ` ${col.y+1}:${col.z+1}`]
     setUpColumns();
     updateData(true,false);
     showStatus('Data file loaded ...');
@@ -192,12 +198,14 @@ function fileReader(fname) {
     document.getElementById('branding').style.display = 'block'
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
+    $("#zCol").removeClass("rightBorder")
+    $('#plotlist').removeClass('disabled')
 }
 
 
 
 
-var cRange=false,cRangeY=[NaN, NaN];
+var cRange=false,cRangeY=[NaN, NaN]; //hidden feature
 function setCutRange(){
     if(!cRange) return
     let a=Math.min(...dpsy), b=Math.max(...dpsy);
@@ -216,41 +224,30 @@ function setCutRange(){
 
 function updatePlot(all = true) {
     //true means just update the current plot i.e. 0th, leave others as it is.
-    dpsy = data[th_in][col.z];
-    dpsx = data[th_in][col.y];
-
     if (swapperIsOn) {
-        let lname = path.basename(fileNames[0])
-        let name=[
-            lname + ` ${col.y+1}:${col.z+1}`,
-            lname + ` ${col.y+1}:${col.s+1}`
-        ]
         Plotly.restyle(figurecontainer, {
-            x: [data[th_in][col.y], data[th_in][col.y]],
-            y: [data[th_in][col.z], data[th_in][col.s]],
-            name
+            'x': [data[th_in][col.y], data[th_in][col.y]],
+            'y': [data[th_in][col.z], data[th_in][col.s]],
+            'name': [col.z,col.s].map(e=> path.basename(fileNames[0]) + ` ${col.y+1}:${e+1}`)
         })
     } else if (all) {
-        let xl = [], yl = [], name = [];
-        for (let i = 0; i < fullData.length; i++) {
-            xl.push(fullData[i][th_in][fullDataCols[i].y]);
-            yl.push(fullData[i][th_in][fullDataCols[i].z]);
-            name.push(legendNames[i])
-        };
         Plotly.restyle(figurecontainer, {
-            'x': xl,
-            'y': yl,
-            name
+            'x': fullData.map((el,i)=>el[th_in][fullDataCols[i].y]),
+            'y': fullData.map((el,i)=>el[th_in][fullDataCols[i].z]),
+            'name' : legendNames
         })
     } else {
         Plotly.restyle(figurecontainer, {
-            'x': [dpsx],
-            'y': [dpsy],
+            'x': [data[th_in][col.y]],
+            'y': [data[th_in][col.z]],
             "name":[legendNames[currentEditable]]
         }, currentEditable)
     }
-    for (let i = 0; i < dpsx.length; i++) points[i].index = i
 
+
+    dpsy = data[th_in][col.z]
+    dpsx = data[th_in][col.y]
+    dpsx.forEach((_,i)=> points[i].index = i)
     setCutRange()
 }
 
@@ -313,22 +310,21 @@ function startDragBehavior() {
         let [x,y] = this.getAttribute('transform').slice(10,-1).split(/,| /);
         pIndex = this.index
         if (index.length) {
-            oldDatY = dpsy.slice(0)// clone(dpsy)
-            if (!lockXc) oldDatX = dpsx.slice(0)// clone(dpsx);
+            oldDatY = dpsy.slice(0)
+            if (!lockXc) oldDatX = dpsx.slice(0)
         }
         return {x,y}
     })
 
     drag.on("drag", function () {
         let yaxis = figurecontainer._fullLayout.yaxis;
-        let xaxis = figurecontainer._fullLayout.xaxis;
-
         let yVal = clamp(yaxis.p2l(d3.event.y), ...yaxis.range);
         dpsy[pIndex] = yVal //dpsy is a reference to data, so this also modifies the data
         for (let i of index) dpsy[i] = yVal - oldDatY[pIndex] + oldDatY[i]
         if (lockXc) {
             Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable)
         } else {// move in x direction
+            let xaxis = figurecontainer._fullLayout.xaxis;
             let xVal = clamp(xaxis.p2l(d3.event.x), ...xaxis.range);
             dpsx[pIndex] = xVal
             for (let i of index) dpsx[i] = xVal - oldDatX[pIndex] + oldDatX[i]
@@ -340,10 +336,10 @@ function startDragBehavior() {
 };
 
 
-function keyBoardDrag(inp) {
+function keyBoardDrag(moveDown) {
     var yaxis = figurecontainer._fullLayout.yaxis;
     var add = yaxis.p2l(1) - yaxis.p2l(0);
-    if (inp) add = -add;
+    if (moveDown) add = -add;
     for (let i of index) dpsy[i] += add
     Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable)
 }
@@ -362,7 +358,7 @@ function updateOnServer() {
 
 
 
-function changeEditable(index){ // we can just swap s and z anyways  //TODO : merge swapper into this
+function changeEditable(index,reset=false){ // we can just swap s and z anyways  //TODO : merge swapper into this
     if (swapperIsOn) {
         [col.s, col.z] = [col.z, col.s]
         sCol.selectedIndex = col.s;
@@ -388,12 +384,13 @@ function changeEditable(index){ // we can just swap s and z anyways  //TODO : me
     }, [currentEditable, index])
 
     if (fullData[currentEditable][0].length != fullData[index][0].length) setUpColumns()
-
     currentEditable = index
 
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'all'})
     points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points`)
             .getElementsByTagName("path");
+
+    if(reset) return // used for reset
 
     data = fullData[currentEditable]
     col = fullDataCols[currentEditable]
@@ -412,13 +409,10 @@ function changeEditable2(ind){ // used for deleting trace below the currentedita
     if (swapperIsOn) return
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
     $(`.scatterlayer .trace:nth-of-type(${ind+1}) .points path`).css({'pointer-events':'all'})
-
     currentEditable = ind
-
     points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points`)
             .getElementsByTagName("path");
     for (let i = 0; i < dpsx.length; i++) points[i].index = i
-
 }
 
 
@@ -432,8 +426,7 @@ function addNewFileDialog() {
         defaultPath: recentLocation,
         properties: ['openFile']
     });
-    if (fname === undefined) return
-    addNewFile(fname[0]);
+    if (fname !== undefined) addNewFile(fname[0]);
 }
 
 
@@ -497,8 +490,7 @@ function openSwapper() {
             lname + ` ${col.y +1}:${col.s +1}`
         ]
     },{selectdirection: 'h'})
-
-    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = false;
+    disableMenu(['edat','fill','filter','af','arf'])
     $('#plotlist').addClass('disabled')
 }
 
@@ -510,8 +502,8 @@ function exitSwapper() {
     data = fullData[0]
     $("#sCol, #sColInp").hide();
     $("#zCol").removeClass("rightBorder")
-    for (let i of ['edat','fill','filter','af','arf']) menu.getMenuItemById(i).enabled = true;
     $('#plotlist').removeClass('disabled')
+    enableMenu(['edat','fill','filter','af','arf'])
 }
 
 

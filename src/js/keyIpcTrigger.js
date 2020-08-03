@@ -1,3 +1,5 @@
+const {iniPointsF} = require('../js/plotUtils')
+
 function resizePlot() {
     window.dispatchEvent(new Event('resize'));
 }
@@ -13,7 +15,7 @@ function keyDownfired(){
 window.onkeyup = function hotDKeys(e) {
     if((document.activeElement.type != "text") && (e.key == 'm' || e.key == 'M' || e.key == 'ArrowDown' || e.key == 'ArrowUp') ){
         fired=false
-        fullData[0] = data;
+        fullData[currentEditable] = data;
         updateOnServer()
     }
 }
@@ -152,11 +154,14 @@ function ipcTrigger(_,d){
     }else if(d=='filter'){
         openUtility('filterData')
 
-    }else if(d=='rgft' && initPolyfit()){
-        openUtilityFit('rgFit')
 
-    }else if(d=='lmfit' && initLMfit()){
-        openUtilityFit('lmFit')
+    }else if(d=='rgft' || d=='lmfit'){
+        if(figurecontainer.data.length>1) {alertElec('Supported only for one plot at a time.'); return}
+        Plotly.addTraces(figurecontainer, {...iniPointsF, x: [dpsx[0]], y:[dpsy[0]]});
+        setTimeout(resizePlot, 300)
+        disableMenu(['edat','fill','filter','af','arf',d=='rgft' ? 'lmfit':'rgft'])
+        $(`#${d=='rgft' ? 'rgFit' : 'lmFit' }`).show()
+        $('#extendUtils2D').slideDown()
 
     }else if(d=='pdash'){
         settingWindow()
@@ -164,8 +169,6 @@ function ipcTrigger(_,d){
     }else if(d=='trigdown'){
         $('#popupEx').show()
 
-    // }else {
-    //     console.log('No trigger available for',d)
     }
 }
 
@@ -236,7 +239,8 @@ figurecontainer.onclick= (e)=>{
 
 ipcRenderer.on("back", (_, d) =>{
     data = d.map(x => transpose(x))
-    updatePlot(1);
+    fullData[currentEditable] = data
+    updatePlot();
     setUpColumns()
     startDragBehavior();
     updateOnServer();
@@ -345,10 +349,12 @@ function openUtility(name){ // name is passed as id name
     $('#filler').show()
     $('.extendUtils').slideUp()
     $(`#${name}`).slideDown()
+    if(!ddd) disableMenu(['lmfit','rgft'])
 }
 
 function closeUtility(e){
     $(e.parentElement).slideUp(300, ()=>{ $('#filler').hide() })
+    if(!ddd) enableMenu(['lmfit','rgft'])
 }
 
 
@@ -359,7 +365,7 @@ function openUtilityFit(name){
 
 function closeUtilityFit(e){
     $('#extendUtils2D').slideUp()
-    $(e.parentElement).hide()
+    $(e).hide()
 }
 
 

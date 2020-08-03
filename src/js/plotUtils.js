@@ -50,6 +50,7 @@ module.exports.layout = {
     font: {
         size: 14
     },
+    selectdirection: "any",
     showlegend: true,
     legend: {
         x: 0,

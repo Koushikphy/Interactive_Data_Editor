@@ -33,8 +33,8 @@ We have all worked with data at some point of time. Now, depending on the source
 The software is available as pre-built binaries for different platforms. Install the appropriate installer for your system available in [releases section](https://github.com/Koushikphy/Interactive_Data_Editor/releases) of this repo.  
 
 
-## Gallery
-Check out the software in action in this [gallery](https://koushikphy.github.io/posts/gallery.html)
+## Quick Reference
+For a quick reference, documentation and FAQs [check this](https://koushikphy.github.io/posts/ide_quick_ref.html)
 
 ## To-Do:
 The software is implemented in Vanilla JS and uses a lot of codes to keep the data and UI in sync. This makes the codebase complicated. This process can be streamlined by using a frontend JS framework (preferably Vue or React). But this requires to rewrite most of the protion of this project and that's why I'm not currently working on that. But wish to implement that in future. Any PR is welcome.

@@ -1,5 +1,5 @@
 const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
-const {iniPointsF} = require('../js/plotUtils')
+// const {iniPointsF} = require('../js/plotUtils')
 
 
 // copy paste values between different x/y
@@ -49,12 +49,13 @@ function repeatMirror() {
     if(!last|!times) { showStatus('Invalid inputs.'); return}
     mirror = $("#repSel")[0].selectedIndex;
 
-    for (let i = 0; i < data.length; i++) {
-        if (data[i][col.y].indexOf(last)==-1) {
-            alertElec("Endpoint must exist !!!");
-            return;
-        }
-    }
+    if(! data.every(e=>e[col.y].includes(last))){ alertElec("Endpoint must exist !!!"); return}
+    // for (let i = 0; i < data.length; i++) {
+        // if (data[i][col.y].indexOf(last)==-1) {
+            // alertElec("Endpoint must exist !!!");
+            // return;
+        // }
+    // }
     data = repeatMirrorData(data, col.y, last, times)
     endJobs({startdrag:true,minimal:false})
     showStatus(`Data ${mirror ? 'mirrored' : 'repeated'} ${times} times...`)
@@ -99,7 +100,7 @@ function deleteExtrapolate(){
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         saveOldData()
-        data[th_in][col.z] = useRegression(dpsx, dpsy, ind) // also apply this to dpsy
+        dpsy = data[th_in][col.z] = useRegression(dpsx, dpsy, ind) // also apply this to dpsy
         endJobs()
     }catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
@@ -112,7 +113,7 @@ function dataSupEnd(){
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         saveOldData()
-        data[th_in][col.z] = useRegression(dpsx, dpsy, ind,2)
+        dpsy = data[th_in][col.z] = useRegression(dpsx, dpsy, ind,2)
         endJobs()
     } catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
@@ -125,7 +126,7 @@ function dataSupStart(){
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         saveOldData()
-        data[th_in][col.z] = useRegression(dpsx, dpsy, ind,3)
+        dpsy = data[th_in][col.z] = useRegression(dpsx, dpsy, ind,3)
         endJobs()
     } catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
@@ -140,7 +141,7 @@ function deleteInterpolate() {
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply spline at endpoints"}
         saveOldData()
-        data[th_in][col.z] = useSpline(dpsx, dpsy, ind)
+        dpsy = data[th_in][col.z] = useSpline(dpsx, dpsy, ind)
         endJobs()
     } catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
@@ -201,12 +202,12 @@ function setValue(val){
 function removeBadData(){
     saveOldData()
     data[th_in] = data[th_in].map(x=>x.filter((_,i)=>!index.includes(i)))
-    endJobs({clearIndex:true,minimal:false,startdrag:true})
+    endJobs({clearIndex:true,startdrag:true})
 }
 
 
 function endJobs({resize=false,startdrag=false,clearIndex=false,serVerUpdate=true,minimal=true}={}){
-    fullData[0] = data;
+    fullData[currentEditable] = data;
     minimal? Plotly.restyle(figurecontainer, {y: [dpsy]}, currentEditable) : updatePlot(false);
     if (resize) resizePlot()
     if (serVerUpdate) updateOnServer();
@@ -220,23 +221,11 @@ function endJobs({resize=false,startdrag=false,clearIndex=false,serVerUpdate=tru
 
 
 //########################### regression fit ########################
-
-function initPolyfit(){
-    if(figurecontainer.data.length>1){ alertElec('Supported only for one plot at time.'); return}
-    let thisTrace = iniPointsF
-    thisTrace.x = [dpsx[0]]
-    thisTrace.y = [dpsy[0]]
-    Plotly.addTraces(figurecontainer, thisTrace)
-
-    for (let i of ['edat','fill','filter','af','arf','lmfit']) menu.getMenuItemById(i).enabled = false;
-    setTimeout(resizePlot, 300)
-    return true
-}
-
-
-function clearPloyFit(){
+function clearFit(lm=false){
     Plotly.deleteTraces(figurecontainer, 1);
-    for (let i of ['edat','fill','filter','af','arf','lmfit']) menu.getMenuItemById(i).enabled = true;
+    enableMenu(['edat','fill','filter','af','arf',lm? 'rgft':'lmfit'])
+    lm ? Plotly.relayout(figurecontainer, {annotations:[{text:'', showarrow:false}]}) : 
+        document.getElementById('formulaStr').innerHTML = ' '
     setTimeout(resizePlot, 300)
 }
 
@@ -248,38 +237,16 @@ function polyfit(){
     }
     let [fity, coeff] = regressionFit(dpsx, dpsy, n)
     Plotly.restyle(figurecontainer, {'x':[dpsx], 'y': [fity]}, 1)
-    let formulaStr = 'y = '+ coeff[0].toPrecision(5)
-    for(let i=1;i<=n;i++){
-        let vv = coeff[i].toPrecision(5)
-        formulaStr += ` ${vv>=0? '+' : '-'}${Math.abs(vv)}x<sup>${i>1? i : ''}</sup>`
-    }
-    document.getElementById('formulaStr').innerHTML = formulaStr;
-    return true // to be parsed by the menutrigger
+
+    document.getElementById('formulaStr').innerHTML = coeff.map((el,i)=>{
+        if(i==0) return el.toPrecision(5)
+        return `${el>0?'+':''}${el.toPrecision(5)}${i>1? `x<sup>${i}</sup>` : 'x'}`
+    }).join(' ')
 }
 
 
 
 //########################### LM FIT ##############################
-function initLMfit(){
-    if(figurecontainer.data.length>1) {alertElec('Supported only for one plot at a time.'); return}
-
-    let thisTrace = iniPointsF
-    thisTrace.x = [dpsx[0]]
-    thisTrace.y = [dpsy[0]]
-    Plotly.addTraces(figurecontainer, thisTrace);
-    for (let i of ['edat','fill','filter','af','arf','rgft']) menu.getMenuItemById(i).enabled = false;
-    setTimeout(resizePlot, 300)
-    return true
-}
-
-
-function clearLMfit(){
-    Plotly.deleteTraces(figurecontainer, 1)
-    Plotly.relayout(figurecontainer, {annotations:[{text:'', showarrow:false}]})
-    for (let i of ['edat','fill','filter','af','arf','rgft']) menu.getMenuItemById(i).enabled = true;
-    setTimeout(resizePlot, 300)
-}
-
 
 function lmfit(){
     // use a form and parse multiple values
