@@ -12,7 +12,7 @@ const {transpose}= require('../js/utils')
 const $ = require('../lib/jquery.min')
 const {alertElec}= require('../js/utils')
 
-var data   = [],ranges = [],zCols  = [],fname, recentLocation='',optionList='';
+var data = [],ranges = [],zCols  = [],fname, recentLocation='',optionList='';
 
 
 

@@ -6,7 +6,6 @@ const $      = require('../lib/jquery.min')
 const {dialog,BrowserWindow} = remote;
 const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
 const {layout, colorList, iniPointsD } = require('../js/plotUtils')
-const {downloadImage } = require('../js/download') // used directly in html
 
 const xCol   = document.getElementById("xCol")
 const yCol   = document.getElementById("yCol")
@@ -167,7 +166,6 @@ function fileReader(fname) {
 
     // if(index.length) Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 
-    //reset menus, other menues are treated inside respective setup functions
     visibleMenu(['pax','swapen'])
     hideMenu(['swapen'])
 
@@ -557,7 +555,7 @@ function isswap() {
     let [n1,n2] = swapped ? ["X", "Y"] : ["Y", "X"];
     data = fullData[currentEditable]
     col = fullDataCols[currentEditable]
-    xName = n2; 
+    xName = n2;
     updateData();
 };
 

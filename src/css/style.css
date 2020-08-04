@@ -719,3 +719,8 @@ a:focus{
 .rightBorder{
     border-right: 1px solid black !important;
 }
+
+.utilBtn{
+    width: 5pc;
+    height: 1.7pc
+}

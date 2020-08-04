@@ -1,4 +1,6 @@
 const {iniPointsF} = require('../js/plotUtils')
+const {downloadImage } = require('../js/download') 
+
 
 function resizePlot() {
     window.dispatchEvent(new Event('resize'));
@@ -145,15 +147,11 @@ function ipcTrigger(_,d){
     }else if(d=='tswap' && swapperIsOn){
         exitSwapper()
 
-    }else if(d=='edat'){
-        openUtility('repeatMirror')
-
-    }else if(d=='fill'){
-        openUtility('fillValues')
-
-    }else if(d=='filter'){
-        openUtility('filterData')
-
+    }else if(d=='edat' || d=='fill' || d=='filter'){
+        $('#filler').show()
+        $('.extendUtils').slideUp()
+        $(`#${d}`).slideDown()
+        if(!ddd) disableMenu(['lmfit','rgft'])
 
     }else if(d=='rgft' || d=='lmfit'){
         if(figurecontainer.data.length>1) {alertElec('Supported only for one plot at a time.'); return}
@@ -280,9 +278,7 @@ figurecontainer.on("plotly_selected", (ev)=>{
 
 
 figurecontainer.on("plotly_legendclick", function(){ // to catch the name if changed from legend
-    let tmpLeg=[]
-    for (let i of figurecontainer.data) tmpLeg.push(i.name)
-    legendNames = tmpLeg;
+    legendNames = figurecontainer.data.map(e=>e.name) 
 });
 
 
@@ -345,28 +341,27 @@ figurecontainer.onmousewheel = slider.onmousewheel = function(ev){
 }
 
 
-function openUtility(name){ // name is passed as id name
-    $('#filler').show()
-    $('.extendUtils').slideUp()
-    $(`#${name}`).slideDown()
-    if(!ddd) disableMenu(['lmfit','rgft'])
-}
-
-function closeUtility(e){
-    $(e.parentElement).slideUp(300, ()=>{ $('#filler').hide() })
-    if(!ddd) enableMenu(['lmfit','rgft'])
-}
-
-
-function openUtilityFit(name){
-    $(`#${name}`).show()
-    $('#extendUtils2D').slideDown()
-}
-
-function closeUtilityFit(e){
+function closeFit(e){
     $('#extendUtils2D').slideUp()
     $(e).hide()
 }
 
 
 document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`
+
+for(let el of document.getElementsByClassName('closbtn')) el.onclick = ()=>{$('.popup').hide()}
+
+for(let el of document.getElementsByClassName('utilBtn')) el.addEventListener("click",function(){
+    $(this.parentElement).slideUp(300, ()=>{ $('#filler').hide() })
+    if(!ddd) enableMenu(['lmfit','rgft'])
+})
+
+document.getElementById("dwBtn").onclick=()=>{
+    downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val())
+    $('.popup').hide()
+}
+
+document.getElementById("valinput").onchange = document.getElementById('valBtn').onclick = ()=>{
+    setValue($('#valinput').val())
+    $('.popup').hide()
+}

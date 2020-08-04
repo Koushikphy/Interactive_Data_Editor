@@ -1,5 +1,4 @@
 const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
-// const {iniPointsF} = require('../js/plotUtils')
 
 
 // copy paste values between different x/y
@@ -25,7 +24,7 @@ function swapData() {
     if (!swapperIsOn) return;
     saveOldData();
     for (let i of index) [data[th_in][col.z][i], data[th_in][col.s][i]] = [data[th_in][col.s][i], data[th_in][col.z][i]]
-    endJobs()
+    endJobs({minimal:false})
 }
 
 
@@ -41,8 +40,6 @@ function moveReflect(right, mirror){
 };
 
 
-
-
 function repeatMirror() {
     last  = parseFloat($("#einp").val());
     times = parseFloat($("#etime").val());
@@ -50,13 +47,8 @@ function repeatMirror() {
     mirror = $("#repSel")[0].selectedIndex;
 
     if(! data.every(e=>e[col.y].includes(last))){ alertElec("Endpoint must exist !!!"); return}
-    // for (let i = 0; i < data.length; i++) {
-        // if (data[i][col.y].indexOf(last)==-1) {
-            // alertElec("Endpoint must exist !!!");
-            // return;
-        // }
-    // }
-    data = repeatMirrorData(data, col.y, last, times)
+
+    data = repeatMirrorData(data, col.y, last, times, mirror)
     endJobs({startdrag:true,minimal:false})
     showStatus(`Data ${mirror ? 'mirrored' : 'repeated'} ${times} times...`)
 }
@@ -88,7 +80,7 @@ function filterData() {
     let fillVal = parseFloat($("#flf").val());
     let colmn = $("#flcl").val().split(',').map(x => parseFloat(x) - 1);
 
-    data = applyCutOFF(data, colmn,condition, thrsh, fillVal)
+    data = applyCutOFF(data, colmn, condition, thrsh, fillVal)
 
     endJobs({minimal:false})
     showStatus('Data filtered...');
@@ -245,9 +237,7 @@ function polyfit(){
 }
 
 
-
 //########################### LM FIT ##############################
-
 function lmfit(){
     // use a form and parse multiple values
     let funcStr      = $('#funcStr').val()
@@ -281,7 +271,3 @@ function lmfit(){
         }]},
     1)
 }
-
-
-
-

@@ -52,11 +52,6 @@
                 <span id='zLabel'>Z</span>
                 <select class="testSelect sWheel" id="zCol" onchange="colChanged(this.selectedIndex);this.blur()">
                 </select>
-                <!-- <button id='sColInp' onclick='sSwapper();'>
-                    <svg viewBox="0 0 512 512">
-                        <path d="M0 168v-16c0-13.255 10.745-24 24-24h360V80c0-21.367 25.899-32.042 40.971-16.971l80 80c9.372 9.373 9.372 24.569 0 33.941l-80 80C409.956 271.982 384 261.456 384 240v-48H24c-13.255 0-24-10.745-24-24zm488 152H128v-48c0-21.314-25.862-32.08-40.971-16.971l-80 80c-9.372 9.373-9.372 24.569 0 33.941l80 80C102.057 463.997 128 453.437 128 432v-48h360c13.255 0 24-10.745 24-24v-16c0-13.255-10.745-24-24-24z"/>
-                    </svg>
-                </button> -->
                 <select class="sWheel" id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
             </div>
 
@@ -81,7 +76,7 @@
                     <input id="polyInp" type="number" value="1" min="1">
                     <input type="submit" value="Solve" onclick="polyfit()" class="rgfit-buttons">
                     <!-- <input type="submit" value="Save" onclick="savepolyfit()" class="rgfit-buttons"> -->
-                    <input type="submit" value="Close" onclick="closeUtilityFit(document.getElementById('rgFit'));clearFit()" class="rgfit-buttons"> <br>
+                    <input type="submit" value="Close" onclick="closeFit($('#rgFit'));clearFit()" class="rgfit-buttons"> <br>
                     Fitted Equation <span id='formulaStr'></span>
                 </div>
 
@@ -92,7 +87,7 @@
                         <div class="grid-buttons">
                             <button onclick="lmfit()">Solve</button>
                             <!-- <button onclick="savelmfit()">Save</button> -->
-                            <button onclick="closeUtilityFit(document.getElementById('lmFit'));clearFit(true)" >Close</button>
+                            <button onclick="closeFit($('#lmFit'));clearFit(true)" >Close</button>
                         </div>
 
                         Max Iterations <input id='iterationVal' type="text" value='1000'>
@@ -111,32 +106,32 @@
 
             <div id="filler">
                 <div class="borders">
-                    <div id='fillValues' class="extendUtils">
-                        Start  <input type="text" id="fstart">
-                        Extrapolate <select id="expSel">
+                    <div id='fill' class="extendUtils">
+                        Start  <input type="text" id="fstart" tabindex="1">
+                        Extrapolate <select id="expSel" tabindex="4">
                             <option>Closest</option>
                             <option>Regression</option>
                         </select> <br>
-                        End  <input type="text" id="fend">
-                        <input type="submit" value="OK" onclick="dataFiller();closeUtility(this)" style="width: 5.15pc;height: 1.7pc;margin: 2px">
-                        <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5.15pc;height: 1.7pc">
+                        End  <input type="text" id="fend" tabindex="2">
+                        <input type="submit" value="OK" onclick="dataFiller()" class="utilBtn" tabindex="4">
+                        <input type="submit" value="Cancel" class="utilBtn">
                          &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span><br>
-                        Step  <input type="text" id="fstep">
+                        Step  <input type="text" id="fstep" tabindex="3">
                         <!-- <input id='setAsGrid' type="checkbox"> Set as grid -->
                     </div>
 
-                    <div id="repeatMirror"  class="extendUtils">
-                        Extend from  0 to <input type="text" id="einp"> <br>
-                        Extend times <input type="text" id="etime">
-                        <input type="submit" value="OK" onclick="repeatMirror();closeUtility(this)" style="width: 5pc;height: 1.9pc">
-                        <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc"> <br>
-                        Extend by <select id="repSel" >
+                    <div id="edat" class="extendUtils">
+                        Extend from  0 to <input type="text" id="einp" tabindex="1"> <br>
+                        Extend times <input type="text" id="etime" tabindex="2">
+                        <input type="submit" value="OK" onclick="repeatMirror()" class="utilBtn" tabindex="4">
+                        <input type="submit" value="Cancel" class="utilBtn" > <br>
+                        Extend by <select id="repSel" tabindex="3">
                             <option>Repeat</option>
                             <option>Mirror</option>
                         </select><br>
                     </div>
 
-                    <div id="filterData"  class="extendUtils">
+                    <div id="filter"  class="extendUtils">
                         Condition<select id="flSel">
                             <option>&lt;</option>
                             <option>></option>
@@ -144,8 +139,8 @@
                         </select>
                         <input type="text" id="flc"> <br>
                         Fill with <input type="text" id="flf">
-                        <input type="submit" value="OK" onclick="filterData();closeUtility(this)" style="width: 5pc;height: 1.9pc">
-                        <input type="submit" value="Cancel" onclick="closeUtility(this)" style="width: 5pc;height: 1.9pc">
+                        <input type="submit" value="OK" onclick="filterData()" class="utilBtn">
+                        <input type="submit" value="Cancel" class="utilBtn" >
                         &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
                         Columns&nbsp; <input type="text" id="flcl">
                     </div>
@@ -161,7 +156,7 @@
         <div id="popupEx" class="popup">
             <div class="title">
                 <label class='titletxt'>Save Image</label>
-                <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
+                <b class='closbtn' title="Close">X</b>
             </div>
             <div class="popmain" style="text-align: left;">
                 &ensp; File Name <input type="text" id= "dfileName"><br>
@@ -174,7 +169,7 @@
                 </select><br>
                 &ensp; Resolution<input type="text" id="imRes" value="1920x1080"><br>
                 <div style='text-align:center;margin-top:10px'>
-                    <input type="submit" value="OK" onclick="downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val());$('.popup').hide()">
+                    <input type="submit" value="OK" id='dwBtn'>
                 </div>
             </div>
         </div>
@@ -183,18 +178,19 @@
         <div id="popupSetVal" class="popup">
             <div class="title">
                 <label class='titletxt'>Change Value</label>
-                <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
+                <b class='closbtn' title="Close">X</b>
             </div>
             <div class="popmain">
-                &ensp;Set value: &nbsp;<input type="text" style="width:6pc" id='valinput' onchange="setValue($('#valinput').val());$('.popup').hide()"><br>
-                <input type="submit" value="OK" onclick="setValue($('#valinput').val());$('.popup').hide()" style="margin-top:10px">
+                &ensp;Set value: &nbsp;
+                <input type="text" style="width:6pc" id='valinput'><br>
+                <input type="submit" id="valBtn" value="OK" style="margin-top:10px">
             </div>
         </div>
 
         <div id="popupPlotList" class="popup">
             <div class="title">
                 <label class='titletxt'>List of Plots</label>
-                <b class='closbtn' onclick="$('.popup').hide()" title="Close">X</b>
+                <b class='closbtn' title="Close">X</b>
             </div>
             <div class="popmain"></div>
         </div>

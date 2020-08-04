@@ -37,7 +37,8 @@ The software is available as pre-built binaries for different platforms. Install
 For a quick reference, documentation and FAQs [check this](https://koushikphy.github.io/posts/ide_quick_ref.html)
 
 ## To-Do:
-The software is implemented in Vanilla JS and uses a lot of codes to keep the data and UI in sync. This makes the codebase complicated. This process can be streamlined by using a frontend JS framework (preferably Vue or React). But this requires to rewrite most of the protion of this project and that's why I'm not currently working on that. But wish to implement that in future. Any PR is welcome.
+- [ ] Moving average for unequally spaced grid
+
 
 ## Copyright and license
 Copyright © July 2020, Koushik Naskar. All rights reserved.

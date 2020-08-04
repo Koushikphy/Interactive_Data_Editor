@@ -50,7 +50,7 @@ function expRotate(inp, i, j) { //Bunch up on i-th column and sort along j-th co
 };
 
 
-function repeatMirrorData(data, ycol, last, times){
+function repeatMirrorData(data, ycol, last, times, mirror){
 
     return data.map(dat => {
         var ind = dat[ycol].indexOf(last) + 1
