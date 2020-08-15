@@ -271,3 +271,49 @@ function lmfit(){
         }]},
     1)
 }
+
+
+
+
+function diff12(){
+    data = data.map(el=>[...el, el[4].map((i,j)=>i-el[3][j])])
+    fullData[currentEditable] = data
+    col.z = 6
+    updatePlot(false)
+    setUpColumns()
+}
+
+
+function merge12(){
+    data = data.map(el=>{
+        el[4] = el[3].map((i,j)=> i+el[6][j]  )
+        el.splice(6)
+        return el
+    })
+    col.z = 4
+    updatePlot(false)
+    fullData[currentEditable] = data
+    setUpColumns()
+}
+
+
+function diff23(){
+    data = data.map(el=>[...el, el[5].map((i,j)=>i-el[4][j])])
+    fullData[currentEditable] = data
+    col.z = 6
+    updatePlot(false)
+    setUpColumns()
+}
+
+
+function merge23(){
+    data = data.map(el=>{
+        el[5] = el[4].map((i,j)=> i+el[6][j]  )
+        el.splice(6)
+        return el
+    })
+    fullData[currentEditable] = data
+    col.z = 5
+    updatePlot(false)
+    setUpColumns()
+}
