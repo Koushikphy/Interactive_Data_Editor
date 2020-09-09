@@ -156,7 +156,10 @@ function fileReader(fname) {
     let ind = figurecontainer.data.length
     if(ind>1) { // delete extra traces
         if(currentEditable!=0){
-            Plotly.update(figurecontainer,clone(iniPointsD),clone(layout))
+            let tmp = clone(iniPointsD)
+            delete tmp.x
+            delete tmp.y
+            Plotly.update(figurecontainer,tmp,clone(layout))
             $(`.scatterlayer .trace:first-of-type .points path`).css({'pointer-events':'all'})
             points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
             currentEditable = 0
@@ -329,7 +332,10 @@ function startDragBehavior() {
             Plotly.restyle(figurecontainer, {x: [dpsx], y: [dpsy]}, currentEditable)
         };
     });
-    drag.on("dragend", updateOnServer)
+    drag.on("dragend", ()=>{
+        fullData[currentEditable] = data
+        updateOnServer()
+    } )
     d3.selectAll(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).call(drag);
 };
 
