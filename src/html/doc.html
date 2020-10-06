@@ -246,11 +246,7 @@
                     for a single value of 1st axis which can be changed using the provided slider. 
                     
                     Now, for working with multiple data simultaneously files can be added through <label class="dom">File > Add File</label>.
-                    Alternatively, the plot utility button
-                    <svg viewBox="0 0 512 512" >
-                        <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
-                    </svg>
-                    can be used for adding other column of the current file.
+                    Otherwise you can add other columns of the same file using the plot list dash board.
                     Although all the editing features are available only for one plot at a moment, 
                     others lines can be selected alternatively to edit, from the same plot utility or by
                     pressing <label class="dom">Ctrl+TAB</label>.
@@ -281,11 +277,7 @@
             <div class="textarea">
                 <p> The main window has basically 3 parts, Menu bar, Tool bar, and the Plot area. 
                     Most of the menubar options are self-explanatory and are detailed in the following sections.
-                    Tool bar contains the column selector, plots utility
-                    <svg viewBox="0 0 512 512" >
-                        <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
-                    </svg>
-                    and slider. Appropriate columns can be set from the column selector, while setting primary editable plot and 
+                    Tool bar contains the column selector and slider. Appropriate columns can be set from the column selector, while setting primary editable plot and 
                     adding or removing plots is done from the plot utility. 
                     The slider, available only when working with 3D data, is used
                     to change the X/Y value for which the corresponding 2D cut is plotted.
@@ -348,12 +340,8 @@
                 </li>
             
                 <li><b><i>Edit multiple data simultaneously.</i></b> You can edit multiple columns of the same or different files
-                    simultaneously. After loading a file additional files can be added through <label for="" class="dom">File > Add
-                        File</label>, or you can just use different column of the same file using the plot utility
-                        <svg viewBox="0 0 512 512" >
-                            <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
-                        </svg>.
-                        
+                    simultaneously. After loading a file additional files can be added through the plot list dashboard 
+                    <label for="" class="dom">View > Toggle Plot List</label>
                     <p></p>
                 </li>
             
@@ -465,6 +453,8 @@
                     <li><label class="key">Shfit+Ctrl+S</label> Save As.</li>
                     <li><label class="key">Ctrl+R</label> Reload the window.</li>
                     <li><label class="key">Ctrl+Q</label> Close the application.</li>
+                    <li><label class="key">Ctrl+K</label> Open plot setting window.</li>
+                    <li><label class="key">Ctrl+B</label> Toggle plot list dashboard.</li>
                     <li><label class="key">F11</label> Toggle fullscreen.</li>
                     <li><label class="key">Ctrl+TAB</label> Switch editable line.</li>
                     <li><label class="key">Ctrl+W</label> Toggle axis of projection for 3D data.</li>
@@ -551,7 +541,7 @@
         const {shell,ipcRenderer} = require("electron");
         // ipcRenderer.on("doc", console.log)
         // ipcRenderer.on("doc", ()=> {console.log('egeger'); showThis(3)})
-
+        document.getElementById('charsubtitle').innerHTML =`Version ${require('../../package.json').version}` 
     </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 {
   "name": "interactive_data_editor",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
   "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",

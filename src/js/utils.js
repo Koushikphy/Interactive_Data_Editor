@@ -32,7 +32,7 @@ function parseData(strDps) {
 
 function expRotate(inp, i, j) { //Bunch up on i-th column and sort along j-th column
     var tmpData = inp.map(transpose);
-    if(!issame) issame = tmpData.every(v=>v.length==tmpData[0].length)
+    issame = tmpData.every(v=>v.length==tmpData[0].length)
 
     if (issame) return transpose(tmpData).map(transpose)
 

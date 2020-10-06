@@ -1,10 +1,15 @@
 const {iniPointsF} = require('../js/plotUtils')
-const {downloadImage } = require('../js/download') 
+const {downloadImage } = require('../js/download')
 
 
 function resizePlot() {
     window.dispatchEvent(new Event('resize'));
 }
+
+// function traceUpdate(){
+//     window.dispatchEvent(new Event('traceUpdate'))
+// }
+
 
 var fired=false
 function keyDownfired(){
@@ -147,6 +152,12 @@ function ipcTrigger(_,d){
     }else if(d=='tswap' && swapperIsOn){
         exitSwapper()
 
+    }else if(d=='tplots' && !$('#sidebar').width()){
+        openNav()
+
+    }else if(d=='tplots' && $('#sidebar').width()){
+        closeNav()
+
     }else if(d=='edat' || d=='fill' || d=='filter'){
         $('#filler').show()
         $('.extendUtils').slideUp()
@@ -259,9 +270,18 @@ ipcRenderer.on('checkClose', function (_,_) {
 
 
 window.addEventListener("resize", function(){
+
+
     $('#filler').width($('#container').parent().width())
     if(fullData.length && ddd) sliderChanged()
 })
+
+
+
+// window.addEventListener('traceUpdate',()=>{
+//     makeRows()
+// })
+
 
 $('#filler').width($('#container').parent().width())
 
@@ -351,6 +371,7 @@ document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHei
 
 for(let el of document.getElementsByClassName('closbtn')) el.onclick = ()=>{$('.popup').hide()}
 
+$("#fill").hide()
 for(let el of document.getElementsByClassName('utilBtn')) el.addEventListener("click",function(){
     $(this.parentElement).slideUp(300, ()=>{ $('#filler').hide() })
     if(!ddd) enableMenu(['lmfit','rgft'])

@@ -59,6 +59,13 @@ function dataFiller() {
     start= parseFloat($("#fstart").val());
     stop = parseFloat($("#fend").val());
     step = parseFloat($("#fstep").val());
+    if(document.getElementById('gridSel').selectedIndex) {
+        if(step != parseInt(step)) {
+            alertElec("Number of grid must be integer")
+        }
+        step = (stop-start)/(step -1)
+    }
+
     if(isNaN(start)|isNaN(step)|!step) { showStatus('Invalid inputs.'); return}
     let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
     
@@ -222,12 +229,40 @@ function clearFit(lm=false){
 }
 
 
+function saveFit(){
+
+    let dirname = path.dirname(fileNames[currentEditable]);
+    let filename = path.basename(fileNames[currentEditable], path.extname(fileNames[currentEditable]));
+    let extn = path.extname(fileNames[currentEditable]);
+    let save_name = path.join(dirname, filename + "_fit" + extn);
+
+    var tmp_name = dialog.showSaveDialogSync({
+        title: "Save As:",
+        defaultPath: save_name
+    });
+    if (tmp_name === undefined) return
+
+    try {
+        var txt = transpose([dpsx,dpsy,fitY]).map(i=>i.join('\t')).join('\n')
+        fs.writeFileSync(tmp_name, txt);
+        showStatus("Data Saved in file " + replaceWithHome(tmp_name));
+        saved = true;
+    } catch (error) {
+        showStatus("Something went wrong! Couldn't save the data...")
+        return false;
+    }
+}
+
+
+
+var fitY;
 function polyfit(){
     let n = parseInt($('#polyInp').val())
     if(n>=dpsx.length) {
         showStatus(`Fitting of order ${n} is not possible.`); return
     }
     let [fity, coeff] = regressionFit(dpsx, dpsy, n)
+    fitY = fity
     Plotly.restyle(figurecontainer, {'x':[dpsx], 'y': [fity]}, 1)
 
     document.getElementById('formulaStr').innerHTML = coeff.map((el,i)=>{
@@ -270,6 +305,7 @@ function lmfit(){
         bordercolor : '#000000'
         }]},
     1)
+    fitY = fity
 }
 
 

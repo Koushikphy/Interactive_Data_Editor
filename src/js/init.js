@@ -48,7 +48,9 @@ if (fl !== null) recentLocation = fl;
 
 function getFile(params) { // get the filename from the argument list
     try {
-        if(params.starswith('-') || params.starswith('--')) return false
+        // console.log(params)
+        // console.log(typeof(params))
+        if(params.startsWith('-') || params.startsWith('--')) return false
         let file =  path.resolve(process.cwd(),params)
         fileReader(file)
     } catch (error) {

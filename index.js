@@ -242,7 +242,7 @@ const homeMenuTemplate = [
                         if(mainWindow!=window) window.close()
                       })
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfs', '3dview', "spr", 'af', 'arf', 'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
+                    for (let i of ['save', 'saveas', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     men.getMenuItemById("pax").visible = true;
@@ -266,14 +266,6 @@ const homeMenuTemplate = [
         label: "View",
         submenu: [
             {
-                label: 'Open Plot Settings',
-                accelerator: 'CmdOrCtrl+K',
-                id: 'tfs',
-                enabled: false,
-                click() {
-                    mainWindow.webContents.send("menuTrigger", "pdash")
-                }
-            }, {
                 label: "Plot along X",
                 accelerator: 'CmdOrCtrl+W',
                 id: 'pax',
@@ -294,7 +286,23 @@ const homeMenuTemplate = [
                     Menu.getApplicationMenu().getMenuItemById("pay").visible = false;
                     mainWindow.webContents.send("menuTrigger", "pa");
                 }
-            }, {
+            },{
+                label: 'Open Plot Settings',
+                accelerator: 'CmdOrCtrl+K',
+                id: 'tfs',
+                enabled: false,
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "pdash")
+                }
+            },{
+                label: 'Toggle Plot List',
+                accelerator: 'CmdOrCtrl+B',
+                id: 'tpl',
+                enabled: false,
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "tplots")
+                }
+            },{
                 label: "Toggle Swapper",
                 enabled: false,
                 id: 'swapen',
