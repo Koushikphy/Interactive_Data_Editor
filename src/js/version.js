@@ -10,7 +10,7 @@ function _versionCheck() {
             var res = dialog.showMessageBoxSync({
                 type: "question",
                 title: "Update available!!!",
-                message: `A new version of the software ${new_ver} is available.\n Do you want to download it now?`,
+                message: `A new version of the software ${new_ver} is available.\nDo you want to download it now?`,
                 buttons: ['OK', "Cancel"]
             })
             if (!res) {

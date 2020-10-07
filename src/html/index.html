@@ -40,7 +40,7 @@
         <div id="split-bar"></div>
         <div class="closebtn" onclick="closeNav()">X</div>
         <div class="sideheader"> Plots</div>
-        <div id="lockAllAxes">
+        <div id="lockAllAxes"> <!-- onclick="isAxesLocked =!isAxesLocked; document.getElementById('lockAxes').checked=isAxesLocked"> -->
             <input type="checkbox" id="lockAxes" name="axes" value="lockAxes" onclick="isAxesLocked =this.checked"> 
             <span for="lockAxes">Lock Axes</span>
         </div>
@@ -215,13 +215,13 @@
             </div>
         </div>
 
-        <div id="popupPlotList" class="popup">
+        <!-- <div id="popupPlotList" class="popup">
             <div class="title">
                 <label class='titletxt'>List of Plots</label>
                 <b class='closbtn' title="Close">X</b>
             </div>
             <div class="popmain"></div>
-        </div>
+        </div> -->
 
         <div id = "branding">
             <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')">

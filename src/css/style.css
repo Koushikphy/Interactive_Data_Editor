@@ -249,7 +249,7 @@ button:active {
 
 
 
-#plotlist{
+/* #plotlist{
     padding: 1px;
     width: 1.25pc;
     padding-top: 3px;
@@ -261,7 +261,7 @@ button:active {
     background: radial-gradient(#eee, transparent) !important;
     box-shadow: none;
     outline: none;
-}
+} */
 
 .disabled {
     pointer-events: none;
