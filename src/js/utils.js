@@ -11,6 +11,7 @@ function alertElec(msg, type=1, title="Failed to execute."){
         message: msg,
         buttons: ['OK']
     });
+    throw 'Halted from alert' 
 }
 
 
@@ -19,10 +20,9 @@ function parseData(strDps) {
          transpose(dat.trim().split("\n").map(line=>
             line.trim().split(/[\s\t]+/).map(val =>{
                 y = parseFloat(val)
-                if(isNaN(y)){
-                    alertElec("Bad data found !!!\nCheck the file before openning.")
-                    throw "badData"
-                }
+                if(isNaN(y)) alertElec("Bad data found !!!\nCheck the file before openning.")
+                    // throw "badData"
+                // }
                 return y
             })
         ))

@@ -6,10 +6,6 @@ function resizePlot() {
     window.dispatchEvent(new Event('resize'));
 }
 
-// function traceUpdate(){
-//     window.dispatchEvent(new Event('traceUpdate'))
-// }
-
 
 var fired=false
 function keyDownfired(){
@@ -81,7 +77,7 @@ window.onkeydown = function hotKeys(e) {
     }else if((e.key=="c" || e.key=="C") && index.length && !e.ctrlKey){
         changeSign()
 
-    }else if((e.key=="p" || e.key=="P") && index.length){
+    }else if((e.key=="p" || e.key=="P") && index.length && swapperIsOn){
         swapData()
 
     }else if((e.key=="v" || e.key=="V") && e.ctrlKey){
@@ -165,7 +161,7 @@ function ipcTrigger(_,d){
         if(!ddd) disableMenu(['lmfit','rgft'])
 
     }else if(d=='rgft' || d=='lmfit'){
-        if(figurecontainer.data.length>1) {alertElec('Supported only for one plot at a time.'); return}
+        if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
         Plotly.addTraces(figurecontainer, {...iniPointsF, x: [dpsx[0]], y:[dpsy[0]]});
         setTimeout(resizePlot, 300)
         disableMenu(['edat','fill','filter','af','arf',d=='rgft' ? 'lmfit':'rgft'])
@@ -277,10 +273,6 @@ window.addEventListener("resize", function(){
 })
 
 
-
-// window.addEventListener('traceUpdate',()=>{
-//     makeRows()
-// })
 
 
 $('#filler').width($('#container').parent().width())

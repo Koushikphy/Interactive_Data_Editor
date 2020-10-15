@@ -124,8 +124,21 @@ function updateData(init=false,all=true) {
 };
 
 
+function fileOpener(fname){
+    try{
+        return parseData(fs.readFileSync(fname, "utf8"))
+    } catch(err) {
+        if (err.code === 'ENOENT') {
+            recentFiles = recentFiles.filter(x => x != fname);
+            recentMenu();
+            alertElec("File doesn't exist", 1, "Can't open file")
+        }
+    }
+}
+
+
 function fileLoader() {
-    const fname = dialog.showOpenDialogSync(remote.getCurrentWindow(),{
+    var fname = dialog.showOpenDialogSync(remote.getCurrentWindow(),{
         defaultPath: recentLocation,
         properties: ['openFile',"multiSelections"]
     });
@@ -148,17 +161,8 @@ function fileReader(fname) {
     });
     if (res) return;
 
-    // parse the file and data
-    try{
-        data = parseData(fs.readFileSync(fname, "utf8"))
-    } catch(err) {
-        if (err.code === 'ENOENT') {
-            showStatus("File doesn't exist.")
-            recentFiles = recentFiles.filter(x => x != fname);
-            recentMenu();
-            return;
-        }
-    }
+
+    data = fileOpener(fname)
     ddd = data.length != 1;
 
     //clear everything....
@@ -166,37 +170,34 @@ function fileReader(fname) {
     issame = false; firstSave = true; swapper = false;
     undoStack = []; redoStack = []; swapperIsOn = false;
 
-    let ind = figurecontainer.data.length
-    if(ind>1) { // delete extra traces
+    if(figurecontainer.data.length>1) { // delete extra traces
         if(currentEditable!=0){
             let tmp = clone(iniPointsD)
-            delete tmp.x
-            delete tmp.y
+            delete tmp.x; delete tmp.y // iniPointsD x/y is not in update format
             Plotly.update(figurecontainer,tmp,clone(layout))
             $(`.scatterlayer .trace:first-of-type .points path`).css({'pointer-events':'all'})
             points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
             currentEditable = 0
         }
-        Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,ind))
+        Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,figurecontainer.data.length))
     }
-
-    // if(index.length) Plotly.restyle(figurecontainer, {selectedpoints: [null]});
 
     visibleMenu(['pax','swapen'])
     hideMenu(['swapen'])
 
-    let dirname = path.dirname(fname);
-    let filename = path.basename(fname, path.extname(fname));
-    let extn = path.extname(fname);
+    let dirname   = path.dirname(fname);
+    let filename  = path.basename(fname, path.extname(fname));
+    let extn      = path.extname(fname);
     let save_name = path.join(dirname, filename + "_new" + extn);
-    recentLocation = dirname;
+    recentLocation= dirname;
+
+    fullDataCols = [clone(col)]
+    fullData     = [data]
+    fileNames    = [fname]
+    saveNames    = [save_name]
+    legendNames  = [path.basename(fname) + ` ${col.y+1}:${col.z+1}`]
 
     ddd ? setUpFor3d() : setUpFor2d();
-    fullDataCols =[clone(col)]
-    fullData =[data]
-    fileNames =[fname]
-    saveNames =[save_name]
-    legendNames =[path.basename(fname) + ` ${col.y+1}:${col.z+1}`]
     setUpColumns();
     updateData(true,false);
     showStatus('Data file loaded ...');
@@ -213,10 +214,46 @@ function fileReader(fname) {
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
     $("#zCol").removeClass("rightBorder")
-    // $('#plotlist').removeClass('disabled')
     makeRows()
 }
 
+
+
+function addNewFileDialog() {
+    if (swapped) alertElec("Plot along X before adding a new file.",0,"Can't add the file!!!")
+
+    var fname = dialog.showOpenDialogSync(remote.getCurrentWindow(),{
+        defaultPath: recentLocation,
+        properties: ['openFile',"multiSelections"]
+    });
+    if (fname !== undefined) for(let i of fname) addNewFile(i);
+}
+
+
+function addNewFile(fname) {
+    // let dat = parseData(fs.readFileSync(fname, "utf8"))
+    // if(dat==undefined) return
+    dat = fileOpener(fname)
+    if (fullData[0].length != dat.length) alertElec("Trying to open a file with different grid.\nThis is not supported for 3D data.",1,"Can't add the file!!!")
+        // return
+    // }
+
+    let dirname = path.dirname(fname);
+    let filename = path.basename(fname, path.extname(fname));
+    let extn = path.extname(fname);
+    let save_name = path.join(dirname, filename + "_new" + extn);
+
+    fullData.push(dat); //add at the end
+    fullDataCols.push(clone(col));
+    fileNames.push(fname);
+    saveNames.push(save_name);
+    legendNames.push(path.basename(fname) + ` ${col.y + 1}:${col.z + 1}`)
+    addTrace();
+    recentFiles = recentFiles.filter(x => x != fname);
+    recentFiles.push(fname);
+    recentMenu();
+    makeRows()
+}
 
 
 
@@ -386,7 +423,7 @@ function updateOnServer() {
 
 
 
-function changeEditable(index,reset=false){ // we can just swap s and z anyways  //TODO : merge swapper into this
+function changeEditable(index,reset=false){ 
     if (swapperIsOn) {
         [col.s, col.z] = [col.z, col.s]
         sCol.selectedIndex = col.s;
@@ -394,7 +431,7 @@ function changeEditable(index,reset=false){ // we can just swap s and z anyways 
         colsChanged(col.s);
         updateOnServer();
         return
-    } 
+    }
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
 
     let line1 = figurecontainer._fullData[currentEditable].line
@@ -424,10 +461,10 @@ function changeEditable(index,reset=false){ // we can just swap s and z anyways 
     col = fullDataCols[currentEditable]
     dpsy = data[th_in][col.z];
     dpsx = data[th_in][col.y];
-    for (let i = 0; i < dpsx.length; i++) points[i].index = i
+    dpsx.forEach((_,i)=>{points[i].index = i})
     startDragBehavior();
     firstSave = true; undoStack = []; redoStack = []
-    zCol.selectedIndex = col.z 
+    zCol.selectedIndex = col.z
     document.title = "Interactive Data Editor - " + replaceWithHome(fileNames[currentEditable])
     updateOnServer()
 }
@@ -438,59 +475,22 @@ function changeEditable2(ind){ // used for deleting trace below the currentedita
     $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
     $(`.scatterlayer .trace:nth-of-type(${ind+1}) .points path`).css({'pointer-events':'all'})
     currentEditable = ind
-    points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points`)
-            .getElementsByTagName("path");
-    for (let i = 0; i < dpsx.length; i++) points[i].index = i
+    points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points`).getElementsByTagName("path");
+    dpsx.forEach((_,i)=>{points[i].index = i})
 }
 
 
 
-function addNewFileDialog() {
-    if (swapperIsOn) {
-        alertElec("Plot along X before adding a new file.",0,"Can't add the file!!!")
-        return
-    }
-    var fname = dialog.showOpenDialogSync(remote.getCurrentWindow(),{
-        defaultPath: recentLocation,
-        properties: ['openFile']
-    });
-    if (fname !== undefined) addNewFile(fname[0]);
-}
-
-
-function addNewFile(fname) {
-    let dat = parseData(fs.readFileSync(fname, "utf8"))
-    if(dat==undefined) return
-    if (fullData[0].length != dat.length) {
-        alertElec("Trying to open a file with different grid.\nThis is not supported for 3D data.",0,"Can't add the file!!!")
-        return
-    }
-
-    let dirname = path.dirname(fname);
-    let filename = path.basename(fname, path.extname(fname));
-    let extn = path.extname(fname);
-    let save_name = path.join(dirname, filename + "_new" + extn);
-
-    fullData.push(dat); //add at the end
-    fullDataCols.push(clone(col));
-    fileNames.push(fname);
-    saveNames.push(save_name);
-    legendNames.push(path.basename(fname) + ` ${col.y + 1}:${col.z + 1}`)
-    addTrace();
-    recentFiles = recentFiles.filter(x => x != fname);
-    recentFiles.push(fname);
-    recentMenu();
-    makeRows()
-}
 
 
 function addTrace(){
     let ind = fullData.length-1
-    let thisTrace = clone(iniPointsD)
-
-    thisTrace.name = legendNames[ind]
-    thisTrace.x = fullData[ind][th_in][fullDataCols[ind].y]
-    thisTrace.y = fullData[ind][th_in][fullDataCols[ind].z]
+    let thisTrace = {
+        ... iniPointsD,
+        x : fullData[ind][th_in][fullDataCols[ind].y],
+        y : fullData[ind][th_in][fullDataCols[ind].z],
+        name : legendNames[ind]
+    }
     delete thisTrace.marker.color
     delete thisTrace.line.color
     Plotly.addTraces(figurecontainer, thisTrace);
@@ -499,33 +499,21 @@ function addTrace(){
 
 var swapperIsOn = false
 function openSwapper() {
-    if (fileNames.length!=1) {
-        alertElec("Can't use this feature when multiple files are open.",0,"Operation Unavailable")
-        return
+    if (fileNames.length!=1) alertElec("Can't use this feature when multiple files are open.",0,"Operation Unavailable")
+    let thisTrace = {
+        ... iniPointsD,
+        x : data[th_in][col.y],
+        y : data[th_in][col.s],
+        name : path.basename(fileNames[0]) + ` ${col.y +1}:${col.s +1}`
     }
+    thisTrace.line.color = thisTrace.marker.color = colorList[1]
+    Plotly.addTraces(figurecontainer, thisTrace)
+    Plotly.relayout(figurecontainer, {selectdirection: 'h'} )
+
     swapperIsOn = true;
     $("#sCol, #sColInp").show();
     $("#zCol").addClass("rightBorder")
-    let len = figurecontainer.data.length
-    if (len > 2) { // we just need two traces
-        Plotly.deleteTraces(figurecontainer,Plotly.d3.range(2,len))
-    } else if (len == 1) {
-        let thisTrace = clone(iniPointsD)
-        thisTrace.line.color = thisTrace.marker.color = colorList[1]
-        Plotly.addTraces(figurecontainer, thisTrace)
-    }
-    let lname = path.basename(fileNames[0])
-    Plotly.update(figurecontainer, {
-        x: [data[th_in][col.y], data[th_in][col.y]],
-        y: [data[th_in][col.z], data[th_in][col.s]],
-        name: [
-            lname + ` ${col.y +1 }:${col.z +1}`,
-            lname + ` ${col.y +1}:${col.s +1}`
-        ]
-    },{selectdirection: 'h'})
     disableMenu(['edat','fill','filter','af','arf'])
-    // traceUpdate()
-    // $('#plotlist').addClass('disabled')
 }
 
 
@@ -536,9 +524,7 @@ function exitSwapper() {
     data = fullData[0]
     $("#sCol, #sColInp").hide();
     $("#zCol").removeClass("rightBorder")
-    // $('#plotlist').removeClass('disabled')
     enableMenu(['edat','fill','filter','af','arf'])
-    // traceUpdate()
 }
 
 
@@ -555,8 +541,7 @@ function saveAs() {
 
 
 function saveData() {
-    tmpData = data
-    if (swapped) tmpData = expRotate(tmpData, col.y, col.x)
+    var tmpData = swapped ? expRotate(data, col.y, col.x) : data
     try {
         var txt = tmpData.map(x => transpose(x).map( y=>y.map( i=>i.toFixed(8) ).join('\t')).join('\n')).join('\n\n')
         fs.writeFileSync(saveNames[currentEditable], txt);
@@ -564,6 +549,7 @@ function saveData() {
         saved = true;
     } catch (error) {
         showStatus("Something went wrong! Couldn't save the data...")
+        console.error(error)
         return false;
     }
 };
@@ -586,11 +572,9 @@ function isswap() {
             fullData[i] = expRotate(fullData[i], fullDataCols[i].x, fullDataCols[i].y)
         }
         alertElec("File(s) have different grid points along the Y axis.", 0, "Can't Plot along Y!!!")
-        return false
     }
     swapped = !swapped;
-    // let [n1,n2] = swapped ? ["X", "Y"] : ["Y", "X"];
-    // xName = n2;
+
     data = fullData[currentEditable]
     col = fullDataCols[currentEditable]
     xName = swapped ? "Y" : "X"
@@ -627,16 +611,13 @@ function unDo() {
 
 function doIt(olddata) {
     var arr, tmpSwapped, tmpTh_in;
-    // console.log(data);
     [tmpTh_in, col, tmpSwapped, arr] = JSON.parse(olddata);
     if (tmpSwapped != swapped) isswap();
-    // console.log(data)
 
     zCol.selectedIndex = col.z;
     sCol.selectedIndex = col.s;
     th_in = tmpTh_in
     data[th_in] = arr;
-    // console.log(data)
 
     sliderChanged()
     updatePlot(all = false);
@@ -646,99 +627,6 @@ function doIt(olddata) {
 }
 
 
-
-
-// function buildDOM(){
-//     var txt =''
-//     for(let i=0; i<fileNames.length; i++){
-//         let fileName = fileNames[i]
-//         let shortName = path.basename(fileName)
-//         fileName = replaceWithHome(fileName)
- 
-//         //making custom button for the currently editable
-//         // for simlicity lets just make the currenteditable trace undeletable
-//         let buttomTxt = currentEditable != i ?
-//             `<button class="clsBtn" onclick="tools(2,${i})" title='Remove this file'>`:
-//             `<button class="clsBtnD" title='Can not remove currently editing plot' disabled>`
-
-//         let checked = currentEditable==i? 'checked':''
-
-//         // col label, x,y is uneditable for simplicity just now, maybe added later
-//         let colLen=fullData[i][0].length
-//         let colLabel = `<label>${ddd ? fullDataCols[i].x+1+':' : '' }${fullDataCols[i].y+1}:</label>`
-//         colLabel += `<select onchange="updatePlotPop(${i},this.selectedIndex)" title='Change data column'>`
-//         for(let j=0; j<colLen; j++){
-//             colLabel += `<option ${fullDataCols[i].z==j ? 'selected' : ''}>${j+1}</option>`
-//         }
-//         colLabel+='</select>'
-
-//         txt += 
-//         `<div class="row">
-//             <label class="index">${i+1}.</label>
-//             <label class="filename" title='${fileName}'>${shortName}</label>
-
-//             <div class="tools">
-//                 <input  class='radio' type="radio" onclick="tools(0,${i})" title='Select this as editable' ${checked}>
-//                 <button class="copyBtn" onclick="tools(1,${i})" title='Use this file'>
-//                     <svg viewBox="0 0 1792 1792">
-//                         <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
-//                     </svg>
-//                     </button>
-//                 ${buttomTxt}
-//                     <svg viewBox="0 0 1792 1792">
-//                         <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
-//                     </svg>
-//                 </button>
-//             </div>
-//             <div class="popSelector">
-//                 ${colLabel}
-//             </div>
-//         </div><br>`
-//     }
-//     txt+='<br>'
-//     document.querySelector('#popupPlotList>.popmain').innerHTML = txt  // use this
-// }
-
-
-// function tools(option,index){
-//     if(option==0){ //select editable
-//         if(currentEditable!=index) changeEditable(index)
-//     }else if (option==1) { // clone this
-//         fullData.push(fullData[index]); //not cloning same file
-//         fullDataCols.push(clone(fullDataCols[index]))
-//         fileNames.push(fileNames[index])
-//         saveNames.push(saveNames[index])
-//         legendNames.push(clone(legendNames[index]))
-//         addTrace()
-//     }else if(option==2) { // close this
-//         if(fileNames.length==1) return // nothing to delete here
-//         if(index <=currentEditable) changeEditable2(currentEditable-1) // currentEditable is changed within the function
-
-//         Plotly.deleteTraces(figurecontainer,index)
-//         fullData.splice(index,1)
-//         fullDataCols.splice(index,1)
-//         fileNames.splice(index,1)
-//         saveNames.splice(index,1)
-//         legendNames.splice(index,1)
-//     }
-//     buildDOM()
-// }
-
-
-// function updatePlotPop(index, cl){
-//     fullDataCols[index].z = cl
-//     legendNames[index] =path.basename(fileNames[index]) + ` ${fullDataCols[index].y+1}:${fullDataCols[index].z+1}`
-//     Plotly.restyle(figurecontainer, {
-//         y:[fullData[index][th_in][fullDataCols[index].z]],
-//         name : [legendNames[index]]
-//     }, index)
-
-//     if(index==currentEditable){
-//         col.z = cl
-//         dpsy = data[th_in][col.z];
-//     }
-//     zCol.selectedIndex = col.z 
-// }
 
 
 function settingWindow(){
@@ -845,7 +733,6 @@ $('#split-bar').mousedown(function (e) {
         var x = e.pageX - $('#sidebar').offset().left;
         if (x > window.innerWidth / 5.5 && x < window.innerWidth / 2.5) {
             $('#sidebar').width(x - 2);
-            // $('#full').css("margin-left", x);
             minWidth = x;
             resizePlot()
         }

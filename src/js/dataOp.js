@@ -9,10 +9,7 @@ function copyThis() {
 
 function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
-    if(!t1.every((v,i)=>v===data[th_in][col.y][i])){
-        alertElec("Copy paste between different data set is not supported!")
-        return;
-    }
+    if(!t1.every((v,i)=>v===data[th_in][col.y][i])) alertElec("Copy paste between different data set is not supported!")
     saveOldData();
     data[th_in][col.y] = t1
     data[th_in][col.z] = t2
@@ -21,7 +18,6 @@ function pasteThis() {
 
 
 function swapData() {
-    if (!swapperIsOn) return;
     saveOldData();
     for (let i of index) [data[th_in][col.z][i], data[th_in][col.s][i]] = [data[th_in][col.s][i], data[th_in][col.z][i]]
     endJobs({minimal:false})
@@ -43,10 +39,10 @@ function moveReflect(right, mirror){
 function repeatMirror() {
     last  = parseFloat($("#einp").val());
     times = parseFloat($("#etime").val());
-    if(!last|!times) { showStatus('Invalid inputs.'); return}
+    if(!last|!times) alertElec('Invalid inputs.')
     mirror = $("#repSel")[0].selectedIndex;
 
-    if(! data.every(e=>e[col.y].includes(last))){ alertElec("Endpoint must exist !!!"); return}
+    if(! data.every(e=>e[col.y].includes(last))) alertElec("Endpoint must exist !!!")
 
     data = repeatMirrorData(data, col.y, last, times, mirror)
     endJobs({startdrag:true,minimal:false})
@@ -56,23 +52,18 @@ function repeatMirror() {
 
 
 function dataFiller() {
-    start= parseFloat($("#fstart").val());
-    stop = parseFloat($("#fend").val());
-    step = parseFloat($("#fstep").val());
+    let start= parseFloat($("#fstart").val());
+    let stop = parseFloat($("#fend").val());
+    let step = parseFloat($("#fstep").val());
+    let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
     if(document.getElementById('gridSel').selectedIndex) {
-        if(step != parseInt(step)) {
-            alertElec("Number of grid must be integer")
-        }
+        if(step != parseInt(step)) alertElec("Number of grid must be integer")
         step = (stop-start)/(step -1)
     }
 
-    if(isNaN(start)|isNaN(step)|!step) { showStatus('Invalid inputs.'); return}
-    let allowRegression = $("#expSel")[0].selectedIndex ? true : false;
+    if(isNaN(start)|isNaN(step)|!step) alertElec('Invalid inputs.')
     
-    if(!data[0][col.y].every((i,j,k)=> j==0 ? true:i>k[j-1])){
-        alertElec('Monotonically increasing values required for interpolation.')
-        return
-    }
+    if(!data[0][col.y].every((i,j,k)=> j==0 ? true:i>k[j-1])) alertElec('Monotonically increasing values required for interpolation.')
 
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
     endJobs({startdrag:true,minimal:false})
@@ -170,11 +161,20 @@ function autoSmooth() {
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply mooving average at endpoints"}
-        for (let i of ind) dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
+        // for (let i of ind) dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
+        for (let i of ind) dpsy[i] = _mv( dpsx.slice(i-1,i+2),dpsy.slice(i-1,i+2)) // for uneven grid
         data[th_in][col.z] = dpsy;
         endJobs({serVerUpdate:false})
     } catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
+    }
+    function _mv(xx,yy){
+        // xx and yy should be a length of 3
+        h = xx[1] - xx[0]
+        hp= xx[2] - xx[1]
+        val = ( yy[0]/h  + yy[2]/hp )/( 1.0/h + 1.0/hp)
+    
+        return (yy[1]+val)/2.0
     }
 }
 
@@ -193,7 +193,7 @@ function setValue(val){
     saveOldData();
     let value = parseFloat(val);
     if (isNaN(value) ) return;
-    for (let ind of index) data[th_in][col.z][ind] = value;
+    for (let i of index) data[th_in][col.z][i] = value;
     endJobs()
 }
 

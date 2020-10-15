@@ -254,10 +254,9 @@ function fileReader(fname) {
     var tmpDat = fs.readFileSync(fname, "utf8").trim().split(/\r?\n\s*\r?\n/).map(dat=>{
         let res = dat.trim().split("\n").map( block=>block.trim().split(/[\s\t]+/).map(x=>{
             y = parseFloat(x)
-            if(isNaN(y)){
-                alertElec("Bad data found !!!\nCheck the file before openning.")
-                throw "badData"
-            }
+            if(isNaN(y)) alertElec("Bad data found !!!\nCheck the file before openning.")
+                // throw "badData"
+            // }
             return y
         }))
         return transpose(res)
