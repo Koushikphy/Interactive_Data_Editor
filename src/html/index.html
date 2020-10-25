@@ -71,15 +71,9 @@
                 <select class="sWheel" id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
             </div>
 
-<!-- 
-            <button id="plotlist" title="Open List of plots" onclick="buildDOM();$('#popupPlotList').show()">
-                <svg viewBox="0 0 512 512">
-                    <path d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"/>
-                </svg>
-            </button> -->
 
             <div id="range-div" class='3D' > 
-                <input type="range" name="" id="range" min=0 max=10000 step=1 value=0 onclick="this.blur()">
+                <input type="range" name="" id="range" min=0 max=100 step=1 value=0 onclick="this.blur()">
                 <span id="thumb"></span>
             </div>
         </div>
@@ -215,13 +209,7 @@
             </div>
         </div>
 
-        <!-- <div id="popupPlotList" class="popup">
-            <div class="title">
-                <label class='titletxt'>List of Plots</label>
-                <b class='closbtn' title="Close">X</b>
-            </div>
-            <div class="popmain"></div>
-        </div> -->
+
 
         <div id = "branding">
             <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://koushikphy.github.io/')">

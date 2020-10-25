@@ -29,6 +29,10 @@ ipcMain.on("colchanged", function (e, d) {
     mainWindow.webContents.send("colchanged", d);
 })
 
+ipcMain.on("exportAll", function (e, d) {
+    mainWindow.webContents.send("exportAll", d);
+})
+
 
 ipcMain.on('checkClose', function (eg, d) {
     mainWindow.destroy();
@@ -53,11 +57,7 @@ app.on('ready', function () {
         protocol: 'file:',
         slashes: true
     }));
-    // if (!app.isPackaged) mainWindow.webContents.openDevTools();
-    // mainWindow.webContents.openDevTools();
-    // mainWindow.on('closed', function(){
-    // app.quit();
-    // })
+
     mainWindow.on('close', function (e) {
         e.preventDefault();
         mainWindow.webContents.send('checkClose', 'isCloseAble');
@@ -127,7 +127,6 @@ const helpMenu = {
             click() {
                 var childWindow = new BrowserWindow({
                     icon: path.join(__dirname, 'figs/charts.png'),
-                    // resizable : false,
                     minWidth: 500,
                     maxWidth : 700,
                     width:600,
@@ -242,11 +241,9 @@ const homeMenuTemplate = [
                         if(mainWindow!=window) window.close()
                       })
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'pax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
+                    for (let i of ['save', 'saveas', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'tax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
-                    men.getMenuItemById("pax").visible = true;
-                    men.getMenuItemById('pay').visible = false;
                     mainWindow.reload();
                 }
             },
@@ -266,33 +263,20 @@ const homeMenuTemplate = [
         label: "View",
         submenu: [
             {
-                label: "Plot along X",
-                accelerator: 'CmdOrCtrl+W',
-                id: 'pax',
-                visible: true,
-                enabled: false,
-                click() {
-                    Menu.getApplicationMenu().getMenuItemById("pax").visible = false;
-                    Menu.getApplicationMenu().getMenuItemById("pay").visible = true;
-                    mainWindow.webContents.send("menuTrigger", "pa");
-                }
-            }, {
-                label: 'Plot along Y',
-                accelerator: 'CmdOrCtrl+W',
-                id: 'pay',
-                visible: false,
-                click() {
-                    Menu.getApplicationMenu().getMenuItemById("pax").visible = true;
-                    Menu.getApplicationMenu().getMenuItemById("pay").visible = false;
-                    mainWindow.webContents.send("menuTrigger", "pa");
-                }
-            },{
                 label: 'Open Plot Settings',
                 accelerator: 'CmdOrCtrl+K',
                 id: 'tfs',
                 enabled: false,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "pdash")
+                }
+            },{
+                label: "Toggle Axis",
+                accelerator: 'CmdOrCtrl+W',
+                id: 'tax',
+                enabled: false,
+                click(){
+                    mainWindow.webContents.send("menuTrigger", "tax");
                 }
             },{
                 label: 'Toggle Plot List',

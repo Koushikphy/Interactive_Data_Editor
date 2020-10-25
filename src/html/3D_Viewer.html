@@ -151,12 +151,15 @@
     </select></div>
 
 
-    <div class="mySelect"  id="marker">
+    <div class="mySelect" id="marker">
         <input onclick="mark_clicked(this)" type="checkbox">
         <span>Markers</span>
-
     </div>
 
+    <div class="mySelect" id='plotAll'>
+        <input onclick="ipcRenderer.send('exportAll', this.checked)" type="checkbox">
+        <span>Plot all</span>
+    </div>
 
     <div class="borders">
         Axes Ranges ⇒
@@ -166,39 +169,37 @@
     </div>
     </div>
     <script>
-        // var xxx = [], yyy = [], zzz = [], data = [],
         var data = [], swapped = false, first = true, currentType = 0, colLen=0, ii=1;
 
         const figurecontainer = document.getElementById("figurecontainer")
         const {ipcRenderer} = require('electron');
         const Plotly = require('plotly.js-gl3d-dist');
         const stat = document.getElementById('status');
-        var updatePlot = updatePlotWire  // changable function
 
 
 
         document.getElementById("colSel").onwheel = function(e){
             let cur = this.selectedIndex
             let add = e.deltaY >0 ? 1 : -1
-            if((colLen==cur && add==1) || (cur==0 && add==-1) ) return
+            if((colLen==cur+1 && add==1) || (cur==0 && add==-1) ) return
             this.selectedIndex = cur + add
-            // this.dispatchEvent(new Event('change'))
             ipcRenderer.send('colchanged', cur + add)
         }
 
 
+
         ipcRenderer.on("sdata", (e, d)=> {
             [data, swapped, zVal, tmpCL] = d;
-            ii = swapped ? 0: 1
+            // console.log(data[0][2][0][0])
+            ii = swapped ? 0: 1;
             if(tmpCL !=colLen){
-                colLen = tmpCL
-                txt = ''
-                for(let i=0; i<=colLen; i++) txt += `<option value="${i+1}">${i+1}</option>` 
-                document.getElementById("colSel").innerHTML = txt
-            }
-            document.getElementById("colSel").selectedIndex = zVal
-            updatePlot();
+                colLen = tmpCL;
+                document.getElementById("colSel").innerHTML = new Array(colLen).fill(0).map((_,j)=>`<option value="${j+1}">${j+1}</option>`).join('');
+            };
+            document.getElementById("colSel").selectedIndex = zVal;
+            updatePlot()
         })
+
 
 
         function makeLayOutRanges(){
@@ -210,8 +211,9 @@
                 layoutRange["scene.xaxis.autorange"] = true
             } else{
                 ll = ll.split(",").map(x => parseFloat(x))
-                if (isNaN(ll[0])) ll[0] = getMin(data[0])
-                if (isNaN(ll[1])) ll[1] = getMax(data[0])
+                if (isNaN(ll[0])) ll[0] = getMin(0)
+                if (isNaN(ll[1])) ll[1] = getMax(0)
+                layoutRange["scene.xaxis.autorange"] = false
                 layoutRange["scene.xaxis.range"] = ll
             }
 
@@ -220,8 +222,9 @@
                 layoutRange["scene.yaxis.autorange"] = true
             } else{
                 ll = ll.split(",").map(x => parseFloat(x))
-                if (isNaN(ll[0])) ll[0] = getMin(data[1])
-                if (isNaN(ll[1])) ll[1] = getMax(data[1])
+                if (isNaN(ll[0])) ll[0] = getMin(1)
+                if (isNaN(ll[1])) ll[1] = getMax(1)
+                layoutRange["scene.yaxis.autorange"] = false
                 layoutRange["scene.yaxis.range"] = ll
             }
 
@@ -233,7 +236,7 @@
                 ll = ll.split(",").map(x => parseFloat(x))
 
                 if(currentType==1){ //surface type
-                    var rr = [getMin(data[2]), getMax(data[2])]
+                    var rr = [getMin(2), getMax(2)]
                     if (isNaN(ll[0])) ll[0] = rr[0]
                     if (isNaN(ll[1])) ll[1] = rr[1]
                     
@@ -246,33 +249,34 @@
                         "cmax" : cmax
                     }
                 } else{
-                    if (isNaN(ll[0])) ll[0] = getMin(data[2])
-                    if (isNaN(ll[1])) ll[1] = getMax(data[2])
+                    if (isNaN(ll[0])) ll[0] = getMin(2)
+                    if (isNaN(ll[1])) ll[1] = getMax(2)
                 }
+                layoutRange["scene.zaxis.autorange"] = false
                 layoutRange["scene.zaxis.range"] = ll
             }
             return currentType==1? [cRange, layoutRange] : layoutRange
         }
 
 
+
+        function updatePlot(){
+            stat.innerHTML = '<b>Please Wait...</b>'
+            setTimeout(()=>{  // to update the html first
+                var pl = currentType ? updatePlotSurf() : updatePlotWire();
+                pl.then(_=>{
+                    stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
+                });
+            },50)
+        }
+
+
         //common functions******************************
         function changePlotType(dom){
-            stat.innerHTML = 'Please Wait...'
-            let index = dom.selectedIndex;
-            dom.blur()
-            let mark = document.getElementById('marker')
-            setTimeout(function(){
-                if(index){
-                    updatePlot = updatePlotSurf
-                    mark.style.display = 'none'
-                }else{
-                    updatePlot =updatePlotWire
-                    mark.style.display = 'inline-block'
-                }
-                first = true
-                currentType=index
-                updatePlot()
-            },10)
+            dom.blur();
+            currentType = dom.selectedIndex;
+            document.getElementById('marker').style.display = currentType ? 'none' : 'inline-block';
+            updatePlot()
         }
 
 
@@ -288,24 +292,49 @@
 
         // functions for wieframe*****************************
 
-        function updatePlotWire() {
-            var res = makeRotation();
-            var dat = data.map((el,i)=>el.concat(res[i]))
 
-            if ( first || figurecontainer.data.length != dat[0].length) {
-                Plotly.newPlot(figurecontainer, initData(dat[0].length), layout, { displaylogo: false ,responsive: true});
-                first = false
-            };
+        function updatePlotWire() {
+            let res = data.map(makeRotation)
+            let dat = [0,0,0].map((_,i)=>[...data.flatMap(e=>e[i]),...res.flatMap(e=>e[i])]) //   data.map((el,i)=>el.concat(res[i]))
             let layR = makeLayOutRanges()
-            Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, layR).then(_=>{
-                stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
-            });
+            if ( first || figurecontainer.data.length != dat[0].length) {
+                return Plotly.newPlot(figurecontainer,
+                    dat[0].map((_,j)=>(
+                        {
+                            type: 'scatter3d',
+                            mode: "lines",
+                            x: dat[0][j],
+                            y: dat[1][j],
+                            z: dat[2][j],
+                            marker: {
+                                size: 1.7,
+                                color: "#1f77b4"
+                            },
+                            line: {
+                                color: '#ff7f0e'
+                            },
+                            hoverinfo: "x+y+z",
+                            hoverlabel: {
+                                bgcolor: "#2ca02c"
+                            },
+                        }
+                    )),
+                    layout,
+                    {displaylogo: false ,responsive: true}
+                ).then(()=>{
+                    Plotly.relayout(figurecontainer, layR);   // doesn't work well if this done with the above update call
+                    first = false;
+                })
+            } else{
+               return Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, layR)
+            }
         };
 
 
-        function makeRotation() {
-            if(data[0].every(v=>v.length==data[0][0].length)) return data.map(transpose)
-            var tmpDa = data.map(el=>[].concat(...el))//.filter(x => x !== undefined))
+
+        function makeRotation(da) {
+            if(da[0].every(v=>v.length==da[0][0].length)) return da.map(transpose)
+            var tmpDa = da.map(el=>[].concat(...el))//.filter(x => x !== undefined))
             var unq = [...new Set(tmpDa[ii])].sort((a, b) => a - b);
             var res = [0,0,0].map(_=>new Array(unq.length).fill(0).map(_=> new Array()))
             tmpDa[ii].forEach((el,i)=>{
@@ -319,93 +348,67 @@
 
 
         function mark_clicked(mark) {
-            if (mark.checked) {
-                Plotly.restyle(figurecontainer, {
-                    'mode': "markers+lines"
-                });
-            } else {
-                Plotly.restyle(figurecontainer, {
-                    'mode': "lines"
-                });
-            };
+            Plotly.restyle(figurecontainer, {'mode': mark.checked ? "markers+lines" : "lines"})
         };
 
-
-        function initData(length) {
-            var pl_data = [];
-            for (var i = 0; i < length; i++) {
-                pl_data.push({
-                    type: 'scatter3d',
-                    mode: "lines",
-                    x: [1, 2],
-                    y: [1, 2],
-                    z: [1, 2],
-                    marker: {
-                        size: 1.7,
-                        color: "#1f77b4"
-                    },
-                    line: {
-                        color: '#ff7f0e'
-                    },
-                    hoverinfo: "x+y+z",
-                    hoverlabel: {
-                        bgcolor: "#2ca02c"
-                    },
-                })
-            };
-            return pl_data
-        };
 
         // functions for surface ***********************
 
         function updatePlotSurf() {
-            if(first){
-                Plotly.newPlot(figurecontainer, sIniData, layout, { displaylogo: false ,responsive: true});
-                first = false
-            }
-
             var [cR, lR] = makeLayOutRanges()
-            Plotly.update(figurecontainer, { 'x': [data[0]], 'y': [data[1]], 'z': [data[2]], ...cR }, lR).then(_=>{
-                stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
-            });
+
+            if(first || figurecontainer.data.length != data.length){
+                return Plotly.newPlot(figurecontainer, 
+                data.map(el=>(
+                    {
+                        type: 'surface',
+                        hoverinfo: "x+y+z",
+                        colorscale: "Portland",
+                        showscale: false,
+                        hoverlabel: {
+                            bgcolor: "#2ca02c"
+                        },
+                        x: el[0],
+                        y: el[1],
+                        z: el[2],
+                        ... cR
+                    }
+                    )),
+                    layout,
+                    { displaylogo: false ,responsive: true}
+                ).then(()=>{
+                    Plotly.relayout(figurecontainer, lR);
+                    first = false;
+                })
+            } else{
+                return Plotly.update(figurecontainer, { 
+                    'x': data.map(el=>el[0]),
+                    'y': data.map(el=>el[1]),
+                    'z': data.map(el=>el[2]),
+                    ...cR }, lR)
+            }
         };
 
 
 
-        var sIniData = [{
-            type: 'surface',
-            hoverinfo: "x+y+z",
-            colorscale: "Portland",
-            showscale: false,
-            hoverlabel: {
-                bgcolor: "#2ca02c"
-            },
-            z: [
-                [1]
-            ],
-            x: [
-                [1]
-            ],
-            y: [
-                [1]
-            ]
-        }];
+        // *********************************************
 
-
-
-        function getMin(dat){
+        function getMin(col){
             var m = Infinity
-            for(let i of dat){
-                for(let j of i) m = m<=j? m: j
+            for(let arr of data){
+                for(let i of arr[col]){
+                    for(let j of i) m = m<=j? m: j
+                }
             }
             return m
         }
 
-
-        function getMax(dat){
-            var n =-Infinity
-            for(let i of dat){
-                for(let j of i) n = n>=j? n: j
+        function getMax(col){
+            var n = -Infinity
+            for(let arr of data){
+                for(let i of arr[col]){
+                    for(let j of i) n = n>=j? n: j
+                }
             }
             return n
         }
@@ -416,7 +419,6 @@
         };
 
 
-        
         var layout = {
             margin: {
                 t: 0,

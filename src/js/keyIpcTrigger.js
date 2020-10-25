@@ -130,7 +130,7 @@ function ipcTrigger(_,d){
     }else if(d=='3dview'){
         openViewer()
 
-    }else if(d=='pa' && ddd){
+    }else if(d=='tax' && ddd){
         isswap()
 
     }else if(d=='spread'){
@@ -326,6 +326,10 @@ ipcRenderer.on("colchanged", (_,d)=>{ // incoming info from the viewer window
     colChanged(d)
 })
 
+ipcRenderer.on("exportAll", (_,d)=>{ // incoming info from the viewer window
+    exportAll = d
+    updateOnServer()
+})
 
 // load file if droped inside the window
 document.ondragover = document.ondrop = (ev) => ev.preventDefault()

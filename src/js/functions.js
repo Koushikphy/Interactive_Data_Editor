@@ -39,8 +39,8 @@ var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .
 
 enableMenu  = (list)=> { for(let i of list) menu.getMenuItemById(i).enabled = true}
 disableMenu = (list)=> { for(let i of list) menu.getMenuItemById(i).enabled = false}
-hideMenu    = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = true}
-visibleMenu = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = false}
+hideMenu    = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = false}
+visibleMenu = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = true}
 
 
 
@@ -65,7 +65,7 @@ function setUpFor2d(){
     if (fl !== null) col = fl
     col.x=0
     enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit'])
-    disableMenu(["pax", '3dview'])
+    disableMenu(["tax", '3dview'])
 }
 
 
@@ -76,7 +76,7 @@ function setUpFor3d(){
     setUpSlider();
     var fl = JSON.parse(localStorage.getItem("cols3d"));
     if (fl !== null) col = fl
-    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','pax', '3dview'])
+    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','tax', '3dview'])
     disableMenu(["rgft", 'lmfit'])
 }
 
@@ -182,8 +182,6 @@ function fileReader(fname) {
         Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,figurecontainer.data.length))
     }
 
-    visibleMenu(['pax','swapen'])
-    hideMenu(['swapen'])
 
     let dirname   = path.dirname(fname);
     let filename  = path.basename(fname, path.extname(fname));
@@ -410,15 +408,17 @@ function keyBoardDrag(moveDown) {
 }
 
 
+var exportAll = false
 function updateOnServer() {
     if (!viewerWindow) return;
 
-    var s_data=[
-        data.map(el=>el[swapped? col.y: col.x]),
-        data.map(el=>el[swapped? col.x: col.y]),
-        data.map(el=>el[col.z])
-    ]
-    viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length-1]);
+    var s_data = (exportAll ?fullData : [data] ).map((el,j)=>[
+        el.map(i=>i[swapped? fullDataCols[j].y: fullDataCols[j].x]),
+        el.map(i=>i[swapped? fullDataCols[j].x: fullDataCols[j].y]),
+        el.map(i=>i[fullDataCols[j].z])
+    ]);
+    // console.log(s_data[0][2][0][0])
+    viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length]);
 }
 
 
@@ -714,7 +714,7 @@ function openViewer() {
         protocol: 'file:',
         slashes: true
     }));
-    viewerWindow.on("closed", function () { viewerWindow = null })
+    viewerWindow.on("closed", function () { viewerWindow = null; exportAll=false })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
     // if (!app.isPackaged) viewerWindow.webContents.openDevTools();
