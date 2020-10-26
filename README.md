@@ -36,9 +36,6 @@ The software is available as pre-built binaries for different platforms. Install
 ## Quick Reference
 For a quick reference, documentation and FAQs [check this](https://koushikphy.github.io/posts/ide_quick_ref.html)
 
-## To-Do:
-- [ ] Moving average for unequally spaced grid
-
 
 ## Copyright and license
 Copyright © July 2020, Koushik Naskar. All rights reserved.
@@ -47,4 +44,3 @@ Licensed under the MIT License.
 
 ## Citaion
 If this software was helpful in your work, please cite this project as https://doi.org/10.5281/zenodo.3947508.
-
