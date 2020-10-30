@@ -1,3 +1,24 @@
+## v2.9.1
+1. Added multiplot surface plot option for the 3D viewer.
+1. Ranged selector, select intermediate points that are out of the view.
+2. Fixed several bugs.
+
+
+## v2.9.0
+### NEW:
+1. Directly load multiple files.
+3. List of plot is moved to a sidebar instead of the popup window.
+5. Lock axes when working with multiple files.
+7. Save fitted data.
+9. `Fill values` can now take number of gird or grid spacing
+
+### Fixed:
+2. Fixed bug with loading file directly from terminal.
+4. Fixed bug in undo.
+6. Fixed bug with swapper when working with multiple files.
+8. Fixed bug with 3D viewer not updating
+
+
 ## v2.8.0
 1. UI changes.
 2. doc style changes

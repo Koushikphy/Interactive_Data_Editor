@@ -207,7 +207,7 @@
         <img src="../../figs/charts.png" alt="Interactive Data Editor" height="13%",width='13%' id='charts'>
         <br>
         <label for="charts" id='chartitle'>Interactive Data Editor</label>
-        <label for="charts" id='charsubtitle'>v2.8.0</label>
+        <label for="charts" id='charsubtitle'>v2.9.1</label>
         <br>
         <!-- <label for="charts">v2.7.0</label> -->
         <a href="javascript:void(0)" class="page" id='getStart' onclick="showThis(0)">Getting Startted</a>
@@ -275,10 +275,10 @@
                 User Interface
             </div>
             <div class="textarea">
-                <p> The main window has basically 3 parts, Menu bar, Tool bar, and the Plot area. 
+                <p> The main window has basically 3 parts, Menu bar, Tool bar, Plot area and the Plot list dashboard. 
                     Most of the menubar options are self-explanatory and are detailed in the following sections.
-                    Tool bar contains the column selector and slider. Appropriate columns can be set from the column selector, while setting primary editable plot and 
-                    adding or removing plots is done from the plot utility. 
+                    Tool bar contains the column selector and slider. Appropriate columns can be set from the column selector, 
+                    while setting primary editable plot and adding or removing plots is done from the Plot list dashboard. 
                     The slider, available only when working with 3D data, is used
                     to change the X/Y value for which the corresponding 2D cut is plotted.
                 </p>
@@ -292,7 +292,8 @@
                     Apart from the main window this application has 2 external windows, which are accessed from the 'windows' menu in Menubar. 
                     Using the <label class='dom'>3D Plot Viewer</label> one can
                     view the complete 3D plot in real time as you edit the the 2D projection on main window. Two types of 3D plots are available
-                    here, surface type and wireframe type and either one can be selected using the provided menu.
+                    here, surface type and wireframe type and either one can be selected using the provided menu. By default it shows only the surface being edited,
+                    check <label class='dom'>Plot all</label> to show all the traces.
                     On the otherhand, with <label class='dom'>Spreadsheet</label> one can check the data in spreadsheet like editor, 
                     with all basic excel like feature e.g. editing, sorting, applying formulas etc. This is useful if you want to edit the 
                     data directly instead of the graphical way.
@@ -473,6 +474,7 @@
                     <li><label class="key">&lt;dot></dot></label> Move slider up.</li>
                     <li><label class="key">&lt;comma></label> Move slider down.</li>
                     <li><label class="key">P</label> Swap data between the selected lines.</li>
+                    <li><label class="key">Ctrl+A</label> Select intermediate points.</li>
                     <li><label class="key">Ctrl+C</label> Copy values from current 2D projection.</li>
                     <li><label class="key">Ctrl+V</label> Paste copied values.</li>
                     <li><label class="key">Ctrl+ Left/Right Arrow</label> Repeat selected points to left or right.</li>

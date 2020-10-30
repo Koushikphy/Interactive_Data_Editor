@@ -108,6 +108,10 @@ window.onkeydown = function hotKeys(e) {
     }else if(e.key=="ArrowRight" && !e.ctrlKey && e.shiftKey){
         moveReflect(true, true)
 
+    }else if ((e.key=="a" || e.key=="A") && e.ctrlKey) {
+        index = Plotly.d3.range(index[0], index[index.length-1]+1,1)
+        Plotly.restyle(figurecontainer, {selectedpoints : [index]})
+
     // }else{
     //     console.log('No available trigger',e.key)
     }

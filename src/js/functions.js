@@ -171,15 +171,13 @@ function fileReader(fname) {
     undoStack = []; redoStack = []; swapperIsOn = false;
 
     if(figurecontainer.data.length>1) { // delete extra traces
+        Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,figurecontainer.data.length))
         if(currentEditable!=0){
-            let tmp = clone(iniPointsD)
-            delete tmp.x; delete tmp.y // iniPointsD x/y is not in update format
-            Plotly.update(figurecontainer,tmp,clone(layout))
+            Plotly.update(figurecontainer, {... clone(iniPointsD), x:[[1]], y:[[1]]}, clone(layout))
             $(`.scatterlayer .trace:first-of-type .points path`).css({'pointer-events':'all'})
             points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
             currentEditable = 0
         }
-        Plotly.deleteTraces(figurecontainer,Plotly.d3.range(1,figurecontainer.data.length))
     }
 
 
@@ -229,12 +227,9 @@ function addNewFileDialog() {
 
 
 function addNewFile(fname) {
-    // let dat = parseData(fs.readFileSync(fname, "utf8"))
-    // if(dat==undefined) return
     dat = fileOpener(fname)
     if (fullData[0].length != dat.length) alertElec("Trying to open a file with different grid.\nThis is not supported for 3D data.",1,"Can't add the file!!!")
-        // return
-    // }
+
 
     let dirname = path.dirname(fname);
     let filename = path.basename(fname, path.extname(fname));
@@ -253,6 +248,20 @@ function addNewFile(fname) {
     makeRows()
 }
 
+function addTrace(){
+    let ind = fullData.length-1
+    let thisTrace = {
+        ... clone(iniPointsD),
+        x : fullData[ind][th_in][fullDataCols[ind].y],
+        y : fullData[ind][th_in][fullDataCols[ind].z],
+        name : legendNames[ind]
+    }
+
+    delete thisTrace.marker.color
+    delete thisTrace.line.color
+
+    Plotly.addTraces(figurecontainer, thisTrace);
+}
 
 
 var cRange=false,cRangeY=[NaN, NaN]; //hidden feature
@@ -481,20 +490,6 @@ function changeEditable2(ind){ // used for deleting trace below the currentedita
 
 
 
-
-
-function addTrace(){
-    let ind = fullData.length-1
-    let thisTrace = {
-        ... iniPointsD,
-        x : fullData[ind][th_in][fullDataCols[ind].y],
-        y : fullData[ind][th_in][fullDataCols[ind].z],
-        name : legendNames[ind]
-    }
-    delete thisTrace.marker.color
-    delete thisTrace.line.color
-    Plotly.addTraces(figurecontainer, thisTrace);
-}
 
 
 var swapperIsOn = false
