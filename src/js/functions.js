@@ -420,19 +420,26 @@ function keyBoardDrag(moveDown) {
 var exportAll = false
 function updateOnServer() {
     if (!viewerWindow) return;
+    if(!exportAll) {
+        var s_data = [[
+            data.map(i=>i[swapped? col.y: col.x]),
+            data.map(i=>i[swapped? col.x: col.y]),
+            data.map(i=>i[col.z])
+        ]]
+    } else{
+        var s_data = fullData.map((el,j)=>[
+            el.map(i=>i[swapped? fullDataCols[j].y: fullDataCols[j].x]),
+            el.map(i=>i[swapped? fullDataCols[j].x: fullDataCols[j].y]),
+            el.map(i=>i[fullDataCols[j].z])
+        ])
+    }
 
-    var s_data = (exportAll ?fullData : [data] ).map((el,j)=>[
-        el.map(i=>i[swapped? fullDataCols[j].y: fullDataCols[j].x]),
-        el.map(i=>i[swapped? fullDataCols[j].x: fullDataCols[j].y]),
-        el.map(i=>i[fullDataCols[j].z])
-    ]);
-    // console.log(s_data[0][2][0][0])
     viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length]);
 }
 
 
 
-function changeEditable(index,reset=false){ 
+function changeEditable(index,reset=false){
     if (swapperIsOn) {
         [col.s, col.z] = [col.z, col.s]
         sCol.selectedIndex = col.s;

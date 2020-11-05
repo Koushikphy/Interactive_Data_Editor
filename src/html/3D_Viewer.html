@@ -190,7 +190,7 @@
 
         ipcRenderer.on("sdata", (e, d)=> {
             [data, swapped, zVal, tmpCL] = d;
-            // console.log(data[0][2][0][0])
+            // console.log('received')
             ii = swapped ? 0: 1;
             if(tmpCL !=colLen){
                 colLen = tmpCL;
