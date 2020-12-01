@@ -201,7 +201,7 @@ function setValue(val){
 function removeBadData(){
     saveOldData()
     data[th_in] = data[th_in].map(x=>x.filter((_,i)=>!index.includes(i)))
-    endJobs({clearIndex:true,startdrag:true})
+    endJobs({clearIndex:true,startdrag:true,minimal:false})
 }
 
 
