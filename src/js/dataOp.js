@@ -265,7 +265,7 @@ function polyfit(){
     fitY = fity
     Plotly.restyle(figurecontainer, {'x':[dpsx], 'y': [fity]}, 1)
 
-    document.getElementById('formulaStr').innerHTML = coeff.map((el,i)=>{
+    document.getElementById('formulaStr').innerHTML = 'y = '+coeff.map((el,i)=>{
         if(i==0) return el.toPrecision(5)
         return `${el>0?'+':''}${el.toPrecision(5)}${i>1? `x<sup>${i}</sup>` : 'x'}`
     }).join(' ')
