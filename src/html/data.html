@@ -29,7 +29,8 @@
 
 	function save(tmp) {
 		data = fs.readFileSync( require('path').join(__dirname, tmp),"utf8");
-		var save_name = dialog.showSaveDialog({title:"Save File:",defaultPath:tmp});
+		var save_name = dialog.showSaveDialogSync({title:"Save File:",defaultPath:tmp});
+		console.log(save_name)
 		fs.writeFileSync(save_name,data);
 	}
 </script>
