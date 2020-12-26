@@ -109,11 +109,11 @@ function updateData(init=false,all=true) {
     if(isAxesLocked){
         for(let i=0; i<fullDataCols.length; i++) {
             fullDataCols[i] = JSON.parse(JSON.stringify(col))
-            legendNames[i] = path.basename(fileNames[i]) + ` ${col.y + 1}:${col.z + 1}`
+            legendNames[i] = path.basename(fileNames[i]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
         }
     } else {
         fullDataCols[currentEditable] = JSON.parse(JSON.stringify(col));
-        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${col.y + 1}:${col.z + 1}`
+        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
     }
 
     if(ddd) setUpSlider()
@@ -287,7 +287,7 @@ function updatePlot(all = true) {
         Plotly.restyle(figurecontainer, {
             'x': [data[th_in][col.y], data[th_in][col.y]],
             'y': [data[th_in][col.z], data[th_in][col.s]],
-            'name': [col.z,col.s].map(e=> path.basename(fileNames[0]) + ` ${col.y+1}:${e+1}`)
+            'name': [ col.z,col.s].map(e=> path.basename(fileNames[0]) + ` ${(swapped? col.x: col.y) +1}:${e+1}`)
         })
     } else if (all) {
         Plotly.restyle(figurecontainer, {
@@ -339,22 +339,24 @@ function setUpSlider(){
     }
 }
 
+
 function colChanged(value) {
     col.z = value;
     if(isAxesLocked){
         for(let i=0; i<fullDataCols.length; i++){
             fullDataCols[i].z = value
-            legendNames[i] = path.basename(fileNames[i]) + ` ${col.y + 1}:${col.z + 1}`
+            legendNames[i] = path.basename(fileNames[i]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
         }
         updatePlot(all = true);
     } else{
         fullDataCols[currentEditable].z = col.z = value;
-        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${col.y + 1}:${col.z + 1}`
+        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
         updatePlot(all = false);
     }
 
     updateOnServer();
     if(oldDpsLen!=dpsx.length){
+        $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'all'})
         startDragBehavior()
         oldDpsLen=dpsx.length
     }
