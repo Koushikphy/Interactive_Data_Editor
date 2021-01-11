@@ -1,5 +1,5 @@
 {
-  "name": "interactive_data_editor",
+  "name": "interactive-data-editor",
   "version": "2.9.1",
   "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
@@ -21,13 +21,6 @@
       "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}",
       "!**/libscripts"
     ],
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "perMachine": false,
-      "differentialPackage": true,
-      "displayLanguageSelector": true
-    },
     "dmg": {
       "contents": [
         {
@@ -45,7 +38,8 @@
     "linux": {
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "snap"
       ],
       "category": "Office",
       "desktop": {
@@ -57,6 +51,17 @@
         "msi",
         "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "differentialPackage": true,
+      "displayLanguageSelector": true
+    },
+    "snap":{
+      "confinement" : "strict",
+      "grade":"stable"
     }
   },
   "devDependencies": {
