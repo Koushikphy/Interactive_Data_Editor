@@ -2,7 +2,6 @@ require('v8-compile-cache');
 const {remote,ipcRenderer,shell} = require('electron');
 const {Menu,MenuItem,app} = remote;
 const menu = Menu.getApplicationMenu();
-
 var recentLocation, recentFiles = [];
 
 
@@ -46,33 +45,32 @@ var fl = JSON.parse(localStorage.getItem("recent"));
 if (fl !== null) recentLocation = fl;
 
 
-function getFile(params) { // get the filename from the argument list
-    try {
-        // console.log(params)
-        // console.log(typeof(params))
-        if(params.startsWith('-') || params.startsWith('--')) return false
-        let file =  path.resolve(process.cwd(),params)
-        fileReader(file)
-    } catch (error) {
-        console.log(error)
+function openFileFromArgs(fileList){
+    if(!fileList.length) return
+    window.onload =()=>{ // path and fileReader still not available
+        try{
+            var files = fileList.map(e=>path.resolve(process.cwd(),e))
+            fileReader(files[0])
+            for (let i = 1; i < files.length; i++) {
+                addNewFile(files[i])
+                
+            }
+        } catch (error){
+            console.log(error)
+        }
     }
 }
-
+// lets just consider anything that does not start with `-/--` is a file passed through the commandline
+var fileList = remote.process.argv.slice(1).filter(e=>!(e.startsWith('-') || e.startsWith('--')|| e.trim()=='.'))
 if (app.isPackaged) {
-    if (remote.process.argv.length > 1) {
-        window.onload = function () {
-            getFile(remote.process.argv[1])
-        };
-    } else {
+    if(fileList.length){
+        openFileFromArgs(fileList)
+    } else{
         require('../lib/particles.min');
         document.getElementById('particle').style.opacity = 1
     }
     require('../js/version').versionCheck()
 } else {
     document.getElementById('particle').remove();
-    if (remote.process.argv.length > 2) {
-        window.onload = function () {
-            getFile(remote.process.argv[2])
-        };
-    };
+    if(fileList.length) openFileFromArgs(fileList)
 }
