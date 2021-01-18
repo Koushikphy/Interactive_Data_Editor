@@ -6,7 +6,8 @@ var recentLocation, recentFiles = [];
 
 
 function replaceWithHome(name) { // replaces full path name with the short one
-    var home = process.env.HOME || process.env.USERPROFILE;
+    // var home = process.env.HOME || process.env.USERPROFILE;
+    var home = require('os').userInfo().homedir;
     if (name.includes(home)) {
         return name.replace(home, "~")
     } else {
