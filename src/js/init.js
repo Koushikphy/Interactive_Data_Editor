@@ -2,12 +2,13 @@ require('v8-compile-cache');
 const {remote,ipcRenderer,shell} = require('electron');
 const {Menu,MenuItem,app} = remote;
 const menu = Menu.getApplicationMenu();
-var recentLocation, recentFiles = [];
+const os = require('os');
+var recentLocation=os.userInfo().homedir, recentFiles = [];
 
 
 function replaceWithHome(name) { // replaces full path name with the short one
     // var home = process.env.HOME || process.env.USERPROFILE;
-    var home = require('os').userInfo().homedir;
+    var home = os.userInfo().homedir;
     if (name.includes(home)) {
         return name.replace(home, "~")
     } else {
