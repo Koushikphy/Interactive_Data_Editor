@@ -21,3 +21,33 @@ parts:
     # See 'snapcraft plugins'
     plugin: nil
 
+plugs:
+  gnome-3-28-1804:
+    interface: content
+    target: $SNAP/gnome-platform
+    default-provider: gnome-3-28-1804
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes
+  - browser-support
+  - cups-control
+  - home
+  - network
+  - opengl
+  - pulseaudio
+  - removable-media
+  - unity7
+  - desktop
+  - desktop-legacy
+  - gsettings
+  - wayland
+  - x11
