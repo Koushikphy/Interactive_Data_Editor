@@ -38,16 +38,3 @@ plugs:
     interface: content
     target: $SNAP/data-dir/sounds
     default-provider: gtk-common-themes
-  - browser-support
-  - cups-control
-  - home
-  - network
-  - opengl
-  - pulseaudio
-  - removable-media
-  - unity7
-  - desktop
-  - desktop-legacy
-  - gsettings
-  - wayland
-  - x11
