@@ -61,7 +61,8 @@
     },
     "snap":{
       "confinement" : "strict",
-      "grade":"stable"
+      "grade":"stable",
+      "plugs" : ["default", "removable-media"]
     }
   },
   "devDependencies": {
