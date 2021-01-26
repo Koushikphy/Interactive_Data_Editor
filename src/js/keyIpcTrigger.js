@@ -285,6 +285,7 @@ $('#filler').width($('#container').parent().width())
 
 figurecontainer.on("plotly_selected", (ev)=>{
     if (ev != undefined) {
+        // console.log(ev)
         index = [];
         for (let pt of ev.points) {
             if(pt.curveNumber == currentEditable) index.push(pt.pointIndex);

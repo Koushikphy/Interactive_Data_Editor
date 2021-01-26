@@ -15,11 +15,15 @@ const slider = document.getElementById('range')
 const thumb  = document.getElementById('thumb')
 const figurecontainer = document.getElementById("figurecontainer")
 
+// array of JSONs => {data, fName, sName, }
+var dataList=[];
+// array of JSONs => {dataIndex, col:{x,y,z,s}, lName}
+var traceList=[];
 
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
     col = {x: 0, y: 0, z: 0,s: 0}, currentEditable = 0, xName = "X";
-    lockXc = 1, swapped = 0, issame = false, swapper = false, ddd = false,
+    lockXc = 1, swapped = 0, issame = false, swapper = false, ddd = false, oldDpsLen=0,
     th_in = 0, undoStack = [], redoStack = [], isAxesLocked=false;
 
 
@@ -267,6 +271,7 @@ function addTrace(){
 var cRange=false,cRangeY=[NaN, NaN]; //hidden feature
 function setCutRange(){
     if(!cRange) return
+    // should also include other traces if they are currently plotted
     let a=Math.min(...dpsy), b=Math.max(...dpsy);
     let [aY,bY] = cRangeY;
     a = isNaN(aY)? a: Math.max(aY,a)
@@ -312,7 +317,6 @@ function updatePlot(all = true) {
 
 
 
-var oldDpsLen=0
 function sliderChanged(shift=0){
     if((shift==-1 && th_in==0) || (shift==+1 && th_in==data.length-1)) return
     th_in +=shift
@@ -420,23 +424,26 @@ function keyBoardDrag(moveDown) {
 
 
 var exportAll = false
+var timer;
 function updateOnServer() {
     if (!viewerWindow) return;
-    if(!exportAll) {
-        var s_data = [[
-            data.map(i=>i[swapped? col.y: col.x]),
-            data.map(i=>i[swapped? col.x: col.y]),
-            data.map(i=>i[col.z])
-        ]]
-    } else{
-        var s_data = fullData.map((el,j)=>[
-            el.map(i=>i[swapped? fullDataCols[j].y: fullDataCols[j].x]),
-            el.map(i=>i[swapped? fullDataCols[j].x: fullDataCols[j].y]),
-            el.map(i=>i[fullDataCols[j].z])
-        ])
-    }
-
-    viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length]);
+    clearTimeout(timer);
+    timer = setTimeout(()=>{  //send updated value only once within .5 sec
+        if(!exportAll) {
+            var s_data = [[
+                data.map(i=>i[swapped? col.y: col.x]),
+                data.map(i=>i[swapped? col.x: col.y]),
+                data.map(i=>i[col.z])
+            ]]
+        } else{
+            var s_data = fullData.map((el,j)=>[
+                el.map(i=>i[swapped? fullDataCols[j].y: fullDataCols[j].x]),
+                el.map(i=>i[swapped? fullDataCols[j].x: fullDataCols[j].y]),
+                el.map(i=>i[fullDataCols[j].z])
+            ])
+        }
+        viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length]);
+    },500)
 }
 
 
