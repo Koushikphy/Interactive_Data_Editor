@@ -26,7 +26,7 @@ window.onkeyup = function hotDKeys(e) {
 
 window.onkeydown = function hotKeys(e) {
     if (document.activeElement.type == "text") return
-
+    // console.log(e)
     if(e.key==' '){
         if(cRangeY.every(i=>isNaN(i))){
             Plotly.relayout(figurecontainer, {
@@ -270,16 +270,11 @@ ipcRenderer.on('checkClose', function (_,_) {
 
 
 window.addEventListener("resize", function(){
-
-
-    $('#filler').width($('#container').parent().width())
+    $('#filler').width($('#container').width())
     if(fullData.length && ddd) sliderChanged()
 })
 
-
-
-
-$('#filler').width($('#container').parent().width())
+$('#filler').width($('#container').width())
 
 
 

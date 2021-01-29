@@ -4,7 +4,7 @@
 <head>
     <title>Interactive Data Editor</title>
     <link href="../css/style.css" rel="stylesheet">
-    <script> 
+    <script>
         if (typeof module === 'object') { window.module = module; module = undefined;}
     </script>
 </head>
@@ -41,7 +41,7 @@
         <div class="closebtn" onclick="closeNav()">X</div>
         <div class="sideheader"> Plots</div>
         <div id="lockAllAxes"> <!-- onclick="isAxesLocked =!isAxesLocked; document.getElementById('lockAxes').checked=isAxesLocked"> -->
-            <input type="checkbox" id="lockAxes" name="axes" value="lockAxes" onclick="isAxesLocked =this.checked"> 
+            <input type="checkbox" id="lockAxes" name="axes" value="lockAxes" onclick="isAxesLocked =this.checked">
             <span for="lockAxes">Lock Axes</span>
         </div>
         <div id="files"></div>
@@ -72,7 +72,7 @@
             </div>
 
 
-            <div id="range-div" class='3D' > 
+            <div id="range-div" class='3D' >
                 <input type="range" name="" id="range" min=0 max=100 step=1 value=0 onclick="this.blur()">
                 <span id="thumb"></span>
             </div>
@@ -82,7 +82,7 @@
             <div id="extendUtils2D" class="borders">
 
                 <div id="rgFit" style="padding:3px">
-                    <span > Order of polynomial </span> 
+                    <span > Order of polynomial </span>
                     <input id="polyInp" type="number" value="1" min="1">
                     <input type="submit" value="Solve" onclick="polyfit()" class="rgfit-buttons">
                     <input type="submit" value="Save" onclick="saveFit()" class="rgfit-buttons">
@@ -107,17 +107,17 @@
                         Damping factor <input id='dampVal' type="text" value="1.5">
                         Step Size <input id='stepVal' type="text" value='1e-2'>
                         Error Tolerance <input id='etVal' type="text" value='1e-5'>
-                        Error gradient <input id='egVal' type="text" value='1e-8'>  
+                        Error gradient <input id='egVal' type="text" value='1e-8'>
                     </div>
                 </div>
             </div>
 
             <div id="figurecontainer"></div>
 
-            <div id="filler">
-                <div class="borders">
+            <!-- <div id="filler"> -->
+                <div class="borders" id="filler">
                     <div id='fill' class="extendUtils">
-                        <span  class="fillTmp">Start</span> 
+                        <span  class="fillTmp">Start</span>
                         <input type="text" id="fstart" tabindex="1">
                         <span class="shift">
                             Extrapolate
@@ -125,11 +125,11 @@
                         <select id="expSel" tabindex="4">
                             <option>Closest</option>
                             <option>Regression</option>
-                        </select> 
+                        </select>
                         <br>
-                        <span  class="fillTmp">End</span>  <input type="text" id="fend" tabindex="2">
+                        <span class="fillTmp">End</span>  <input type="text" id="fend" tabindex="2">
                         <input type="submit" value="OK" onclick="dataFiller()" class="utilBtn shift" tabindex="4">
-                        <input type="submit" value="Cancel" class="utilBtn">
+                        <input type="submit" value="Cancel" class="utilBtn"style="margin-top: 1px;">
                         <span style="margin-left: 7px">
                             &#9432;<span style="font-size:.9pc;"> This operation is not reversible. You may want to save before proceeding.</span><br>
                         </span>
@@ -168,7 +168,7 @@
                     </div>
                 </div>
 
-            </div>
+            <!-- </div> -->
         </div>
 
 
@@ -219,7 +219,7 @@
     </div>
 
     <script>
-        document.getElementById('versionname').innerHTML =`Version ${require('../../package.json').version}` 
+        document.getElementById('versionname').innerHTML =`Version ${require('../../package.json').version}`
     </script>
 
     <script src='../js/init.js'></script>

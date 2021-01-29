@@ -2,7 +2,7 @@ require('v8-compile-cache');
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
-var mainWindow;
+var mainWindow = null;
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 process.env.NODE_ENV = 'production';
 
@@ -14,11 +14,22 @@ const {
     shell,
 } = electron;
 
+const gotTheLock = app.requestSingleInstanceLock()
+
+if(!gotTheLock){
+    app.quit()
+} else{
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        if (mainWindow) {
+          if (mainWindow.isMinimized()) mainWindow.restore()
+          mainWindow.focus()
+        }
+      })
+}
 
 ipcMain.on("back", function (e, d) {
     mainWindow.webContents.send("back", d);
 })
-
 
 ipcMain.on("plotsetting", function (e, d) {
     mainWindow.webContents.send("plotsetting", d);
@@ -34,7 +45,7 @@ ipcMain.on("exportAll", function (e, d) {
 })
 
 
-ipcMain.on('checkClose', function (eg, d) {
+ipcMain.on('checkClose', function (e, d) {
     mainWindow.destroy();
     app.quit();
 })

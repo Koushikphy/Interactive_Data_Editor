@@ -681,9 +681,13 @@ function settingWindow(){
 }
 
 
-
+var editorWindow=null
 function spreadsheet() {
-    let editorWindow = new BrowserWindow({
+    if(editorWindow) {
+        editorWindow.focus()
+        return
+    }
+    editorWindow = new BrowserWindow({
         minWidth: 1200,
         title: "Interactive Data Editor",
         show: false,
@@ -701,6 +705,8 @@ function spreadsheet() {
     editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
+    editorWindow.on("closed", function () { editorWindow = null })
+
     // if (!app.isPackaged) editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready", function () {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
@@ -710,6 +716,10 @@ function spreadsheet() {
 
 var viewerWindow=null; // this variable is used inside the update on server function
 function openViewer() {
+    if(viewerWindow) {
+        viewerWindow.focus()
+        return
+    }
     viewerWindow = new BrowserWindow({
         show: false,
         title: "Interactive Data Editor",
@@ -804,11 +814,14 @@ function tools(option,index){
 function makeRows() {
     $('#files').html(
         fileNames.map((i,j)=>{
+            var selTxt = "<select class='flSelect'>" +fullData[j][0].map((_,j)=>j).map(i=>`<option>${i+1}</option>`).join(' ') + "</select>"
             return `
         <div class="fList ${currentEditable==j? 'selected': ''}" >
             <div class="fName" onclick="tools(0,${j})" title=${replaceWithHome(i)}>
                 ${j+1}. ${path.basename(i)}
             </div>
+            <div class="flTools">
+            ${selTxt}:${selTxt}:${selTxt}
             <div class="fclsBtn" onclick="tools(2,${j})" title='Remove this file' ${currentEditable==j? 'style="pointer-events: none;opacity: 0.4;"': ''}>
                 <svg viewBox="0 0 1792 1792">
                     <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
@@ -818,6 +831,7 @@ function makeRows() {
                 <svg viewBox="0 0 1792 1792">
                     <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
                 </svg>
+            </div>
             </div>
         </div>`}).join(' ')
     )
