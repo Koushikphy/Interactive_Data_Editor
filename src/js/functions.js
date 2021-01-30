@@ -24,7 +24,7 @@ var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendName
     data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
     col = {x: 0, y: 0, z: 0,s: 0}, currentEditable = 0, xName = "X";
     lockXc = 1, swapped = 0, issame = false, swapper = false, ddd = false, oldDpsLen=0,
-    th_in = 0, undoStack = [], redoStack = [], isAxesLocked=false;
+    th_in = 0, undoStack = [], redoStack = [];
 
 
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
@@ -87,9 +87,7 @@ function setUpFor3d(){
 
 function setUpColumns(){
     for(let i in col) col[i] = col[i] < data[0].length ? col[i] : 0
-    var op = "";
-    for (var i = 1; i <= data[0].length; i++) op += `<option>${i}</option>`
-    $("#xCol, #yCol, #zCol, #sCol").html(op)
+    $("#xCol, #yCol, #zCol, #sCol").html(data[0].map((_,i)=>`<option>${i+1}</option>`).join(''))
     xCol.selectedIndex = col.x;
     yCol.selectedIndex = col.y;
     zCol.selectedIndex = col.z;
@@ -110,15 +108,9 @@ function updateData(init=false,all=true) {
     } else{
         [col.x, col.y] = [col.y, col.x]
     }
-    if(isAxesLocked){
-        for(let i=0; i<fullDataCols.length; i++) {
-            fullDataCols[i] = JSON.parse(JSON.stringify(col))
-            legendNames[i] = path.basename(fileNames[i]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
-        }
-    } else {
-        fullDataCols[currentEditable] = JSON.parse(JSON.stringify(col));
-        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
-    }
+
+    fullDataCols[currentEditable] = JSON.parse(JSON.stringify(col));
+    legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
 
     if(ddd) setUpSlider()
 
@@ -346,17 +338,10 @@ function setUpSlider(){
 
 function colChanged(value) {
     col.z = value;
-    if(isAxesLocked){
-        for(let i=0; i<fullDataCols.length; i++){
-            fullDataCols[i].z = value
-            legendNames[i] = path.basename(fileNames[i]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
-        }
-        updatePlot(all = true);
-    } else{
-        fullDataCols[currentEditable].z = col.z = value;
-        legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
-        updatePlot(all = false);
-    }
+
+    fullDataCols[currentEditable].z = col.z = value;
+    legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
+    updatePlot(all = false);
 
     updateOnServer();
     if(oldDpsLen!=dpsx.length){
@@ -746,16 +731,19 @@ function openViewer() {
 
 
 
-var minWidth = window.innerWidth / 4.5
+
+var minWidth = $(".colBar").width()+30
+var curWidth = minWidth
+// var minWidth =$(".sideBar").width()*3+30 // window.innerWidth / 4.5
 
 $('#split-bar').mousedown(function (e) {
     e.preventDefault();
     $(document).mousemove(function (e) {
         e.preventDefault();
         var x = e.pageX - $('#sidebar').offset().left;
-        if (x > window.innerWidth / 5.5 && x < window.innerWidth / 2.5) {
+        if (x > minWidth && x < window.innerWidth / 2.5) {
             $('#sidebar').width(x - 2);
-            minWidth = x;
+            curWidth = x;
             resizePlot()
         }
     })
@@ -769,7 +757,7 @@ $(document).mouseup(function (e) {
 
 
 function openNav() {
-    $("#sidebar").css("width",minWidth)
+    $("#sidebar").css("width",curWidth)
     $("#sidebar").css("border-width","1")
     setTimeout(resizePlot,100)
     makeRows()
@@ -782,12 +770,13 @@ function closeNav() {
     setTimeout( resizePlot,100)
     setTimeout(()=>{
         $("#sidebar").css("border-width","0")
-    },100)
+    },50)
 }
 
 
 
-function tools(option,index){
+function tools(option,index,ev){
+    console.log(option,index)
     if(option==0){ //select editable
         if(currentEditable!=index) changeEditable(index)
     }else if (option==1) { // clone this
@@ -809,32 +798,61 @@ function tools(option,index){
         legendNames.splice(index,1)
     }
     makeRows()
+    ev.stopPropagation()
 }
 
+function tools2(option,index,ev,elem){
+    ev.stopPropagation()
+    let val = elem.selectedIndex
+    if(index==currentEditable){
+        if(option=='z'){
+            colChanged(val)
+            zCol.selectedIndex = val
+        }else if(option=='y'){
+            yCol.selectedIndex = val
+            updateData()
+        }else if(option=='x'){
+            xCol.selectedIndex=val 
+            updateData()
+        }
+    }else{
+        fullDataCols[index][option] = val
+        updatePlot(true)
+    }
+}
 
 function makeRows() {
     $('#files').html(
-        fileNames.map((i,j)=>{
-            var selTxt = "<select class='flSelect'>" +fullData[j][0].map((_,i)=>`<option>${i+1}</option>`).join(' ') + "</select>"
-            return `
-        <div class="fList ${currentEditable==j? 'selected': ''}" >
-            <div class="fName" onclick="tools(0,${j})" title=${replaceWithHome(i)}>
-                ${j+1}. ${path.basename(i)}
-            </div>
-            <div class="flTools">
-            ${selTxt}:${selTxt}:${selTxt}
-            <div class="fclsBtn" onclick="tools(2,${j})" title='Remove this file' ${currentEditable==j? 'style="pointer-events: none;opacity: 0.4;"': ''}>
-                <svg viewBox="0 0 1792 1792">
-                    <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/>
-                </svg>
-            </div>
-            <div class="fcpyBtn" onclick="tools(1,${j})" title='Use this file'>
-                <svg viewBox="0 0 1792 1792">
-                    <path d="M1664 1632v-1088q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47h-1088q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128v-160q0-13-9.5-22.5t-22.5-9.5h-1088q-13 0-22.5 9.5t-9.5 22.5v1088q0 13 9.5 22.5t22.5 9.5h160v128h-160q-66 0-113-47t-47-113v-1088q0-66 47-113t113-47h1088q66 0 113 47t47 113z"/>
-                </svg>
-            </div>
-            </div>
-        </div>`}).join(' ')
-    )
-    // document.getElementById('lockAllAxes').style.display = fullData.length >1 ? 'block': 'none'
+        fileNames.map((i,j)=>`
+            <div class="fList ${currentEditable==j? 'selected': ''}"  onclick="tools(0,${j},event)" >
+                <div class="nameBar">
+                    <div class="fName" title='file name'>
+                        ${j+1}. ${path.basename(i)}
+                    </div>
+                    <img class="fcpyBtn" title='Use this file' src="./copy.svg" onclick="tools(1,${j},event)"">
+                    <img class="fclsBtn" title='Remove this file' src="./close.svg" onclick="tools(2,${j},event)">
+                </div>
+
+                <div class="colBar">
+                    <div class="sideBar" style="display:${ddd?"inline-flex":"none"}" >
+                        <span>X</span>
+                        <select onclick="tools2('x',${j},event,this)">
+                            ${fullData[j][0].map((_,k)=>`<option ${k==fullDataCols[j].x? "selected": ""} >${k+1}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="sideBar">
+                        <span>${ddd?"Y":"X"}</span>
+                        <select onclick="tools2('y',${j},event,this)">
+                            ${fullData[j][0].map((_,k)=>`<option ${k==fullDataCols[j].y? "selected": ""} >${k+1}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="sideBar">
+                        <span>${ddd?"Z":"Y"}</span>
+                        <select onclick="tools2('z',${j},event,this)">
+                            ${fullData[j][0].map((_,k)=>`<option ${k==fullDataCols[j].z? "selected": ""} >${k+1}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+            </div>`
+        ).join(' '))
 }

@@ -181,6 +181,7 @@ function ipcTrigger(_,d){
     }
 }
 
+// openNav()
 
 
 const conMenu = Menu.buildFromTemplate([
