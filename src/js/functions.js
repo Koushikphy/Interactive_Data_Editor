@@ -497,10 +497,11 @@ function changeEditable(index,reset=false){
 
 function changeEditable2(ind){ // used for deleting trace below the currenteditable
     if (swapperIsOn) return
-    $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
-    $(`.scatterlayer .trace:nth-of-type(${ind+1}) .points path`).css({'pointer-events':'all'})
+    // $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
     currentEditable = ind
-    points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points`).getElementsByTagName("path");
+    $(`.scatterlayer .trace .points path`).css({'pointer-events':'none'})
+    $(`.scatterlayer .trace:nth-of-type(${ind+1}) .points path`).css({'pointer-events':'all'})
+    points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${ind+1}) .points`).getElementsByTagName("path");
     dpsx.forEach((_,i)=>{points[i].index = i})
 }
 
@@ -814,7 +815,7 @@ function tools(option,index){
 function makeRows() {
     $('#files').html(
         fileNames.map((i,j)=>{
-            var selTxt = "<select class='flSelect'>" +fullData[j][0].map((_,j)=>j).map(i=>`<option>${i+1}</option>`).join(' ') + "</select>"
+            var selTxt = "<select class='flSelect'>" +fullData[j][0].map((_,i)=>`<option>${i+1}</option>`).join(' ') + "</select>"
             return `
         <div class="fList ${currentEditable==j? 'selected': ''}" >
             <div class="fName" onclick="tools(0,${j})" title=${replaceWithHome(i)}>
@@ -835,5 +836,5 @@ function makeRows() {
             </div>
         </div>`}).join(' ')
     )
-    document.getElementById('lockAllAxes').style.display = fullData.length >1 ? 'block': 'none'
+    // document.getElementById('lockAllAxes').style.display = fullData.length >1 ? 'block': 'none'
 }
