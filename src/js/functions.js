@@ -442,7 +442,7 @@ function changeEditable(index,reset=false){
         updateOnServer();
         return
     }
-    $(`.scatterlayer .trace: .points path`).css({'pointer-events':'none'})
+    $(`.scatterlayer .trace .points path`).css({'pointer-events':'none'})
 
     let line1 = figurecontainer._fullData[currentEditable].line
     let marker1 = figurecontainer._fullData[currentEditable].marker

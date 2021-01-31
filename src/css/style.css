@@ -498,7 +498,7 @@ a:focus{
     font-family:'Times New Roman', Times, serif;
     font-size: 1.3pc;
     width: fit-content;
-    float: left;
+    /* float: left; */
     display: inline-block;
     overflow: auto;
     margin:2px;
