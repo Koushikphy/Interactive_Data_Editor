@@ -854,14 +854,24 @@ a:focus{
     margin-bottom: 5px;
 }
 
+:root{
+    --selectColor : darkred
+}
 .selected{
-    background-color: #f5f4f4;
+    /* background-color: rgb(238, 252, 238); */
     border-width: 1px;
     border-style: solid;
-    box-shadow: 0 10px 7px 0 rgb(0 0 0 / 20%);
-    background-image: linear-gradient(180deg, #c1c1c1, transparent);
+    /* box-shadow: 0 10px 7px 0 rgb(0 0 0 / 20%); */
+    background-image: linear-gradient(180deg, rgb(250, 233, 236), transparent);
+    color: var(--selectColor);
+}
+.selected select{
+    color: var(--selectColor);
 }
 
+.selected select option{
+    color: var(--selectColor);
+}
 
 
 .colBar{
@@ -898,6 +908,7 @@ a:focus{
     background-color: rgb(255, 255, 255);
     text-align-last: center;
 }
+
 
 .sideBar span{
     min-width: 1.5pc;

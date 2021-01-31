@@ -87,25 +87,26 @@
 
 
     <div id="full" >
-        <div class="borders column" id="container" style="padding-top: 4px;">
+        <div class="borders" id="container" style="padding-top: 4px;">
 
-            <div class="mySelect 3D" >
-                <span id='xLabel'>X</span>
-                <select class="testSelect sWheel" id="xCol" onchange="updateData();this.blur()"></select>
+            <div class="column">
+                <div class="mySelect 3D" >
+                    <span id='xLabel'>X</span>
+                    <select class="testSelect sWheel" id="xCol" onchange="updateData();this.blur()"></select>
+                </div>
+
+                <div class="mySelect">
+                    <span id='yLabel'>Y</span>
+                    <select class="testSelect sWheel" id="yCol" onchange="updateData();this.blur()"></select>
+                </div>
+
+                <div class="mySelect">
+                    <span id='zLabel'>Z</span>
+                    <select class="testSelect sWheel" id="zCol" onchange="colChanged(this.selectedIndex);this.blur()">
+                    </select>
+                    <select class="sWheel" id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
+                </div>
             </div>
-
-            <div class="mySelect">
-                <span id='yLabel'>Y</span>
-                <select class="testSelect sWheel" id="yCol" onchange="updateData();this.blur()"></select>
-            </div>
-
-            <div class="mySelect">
-                <span id='zLabel'>Z</span>
-                <select class="testSelect sWheel" id="zCol" onchange="colChanged(this.selectedIndex);this.blur()">
-                </select>
-                <select class="sWheel" id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
-            </div>
-
 
             <div id="range-div" class='3D' >
                 <input type="range" name="" id="range" min=0 max=100 step=1 value=0 onclick="this.blur()">

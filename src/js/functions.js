@@ -442,7 +442,7 @@ function changeEditable(index,reset=false){
         updateOnServer();
         return
     }
-    $(`.scatterlayer .trace:nth-of-type(${currentEditable+1}) .points path`).css({'pointer-events':'none'})
+    $(`.scatterlayer .trace: .points path`).css({'pointer-events':'none'})
 
     let line1 = figurecontainer._fullData[currentEditable].line
     let marker1 = figurecontainer._fullData[currentEditable].marker
@@ -776,7 +776,7 @@ function closeNav() {
 
 
 function tools(option,index,ev){
-    console.log(option,index)
+    ev.stopPropagation()
     if(option==0){ //select editable
         if(currentEditable!=index) changeEditable(index)
     }else if (option==1) { // clone this
@@ -788,8 +788,8 @@ function tools(option,index,ev){
         addTrace()
     }else if(option==2) { // close this
         if(fileNames.length==1) return // nothing to delete here
+        if(index==currentEditable) return
         if(index <=currentEditable) changeEditable2(currentEditable-1) // currentEditable is changed within the function
-
         Plotly.deleteTraces(figurecontainer,index)
         fullData.splice(index,1)
         fullDataCols.splice(index,1)
@@ -798,7 +798,6 @@ function tools(option,index,ev){
         legendNames.splice(index,1)
     }
     makeRows()
-    ev.stopPropagation()
 }
 
 function tools2(option,index,ev,elem){
@@ -817,6 +816,8 @@ function tools2(option,index,ev,elem){
         }
     }else{
         fullDataCols[index][option] = val
+        let colC = fullDataCols[index]
+        legendNames[index] = path.basename(fileNames[index]) + ` ${(swapped? colC.x: colC.y) + 1}:${colC.z + 1}`
         updatePlot(true)
     }
 }
