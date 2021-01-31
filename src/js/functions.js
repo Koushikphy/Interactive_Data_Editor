@@ -15,9 +15,9 @@ const slider = document.getElementById('range')
 const thumb  = document.getElementById('thumb')
 const figurecontainer = document.getElementById("figurecontainer")
 
-// array of JSONs => {data, fName, sName, }
+// array of JSONs => {data, fName, sName, savedOnce}
 var dataList=[];
-// array of JSONs => {dataIndex, col:{x,y,z,s}, lName}
+// array of JSONs => {dataIndex, col:{x,y,z,s}}
 var traceList=[];
 
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
@@ -428,7 +428,7 @@ function updateOnServer() {
             ])
         }
         viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length]);
-    },500)
+    },500) // a half second pause before sending the data
 }
 
 
@@ -732,9 +732,7 @@ function openViewer() {
 
 
 
-var minWidth = $(".colBar").width()+30
-var curWidth = minWidth
-// var minWidth =$(".sideBar").width()*3+30 // window.innerWidth / 4.5
+var minWidth, curWidth;
 
 $('#split-bar').mousedown(function (e) {
     e.preventDefault();
@@ -856,4 +854,5 @@ function makeRows() {
                 </div>
             </div>`
         ).join(' '))
+        curWidth = minWidth = $(".colBar").width()+30
 }

@@ -1,3 +1,9 @@
+## *v2.9.2
+1. Use a single instance of the software.
+2. If viewer/spreadsheet window is open when clicking the viewer menu button it will just focus it instead of opening a new windo.
+3. New plot dashboard style to quickly change column directly from the dashboard
+4. Improved data communication between main and viewerwindow.
+
 ## v2.9.1
 1. Added multiplot surface plot option for the 3D viewer.
 1. Ranged selector, select intermediate points that are out of the view.
