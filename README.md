@@ -1,7 +1,7 @@
 # Interactive Data Editor
 ### <i>A Software to interactively edit data in a graphical manner.</i>
   
-[![Version](https://img.shields.io/badge/Version-2.9.1-brightgreen.svg)]() 
+[![Version](https://img.shields.io/badge/Version-2.9.2-brightgreen.svg)]() 
 [![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Koushikphy/Interactive_Data_Editor/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3947507.svg)](https://doi.org/10.5281/zenodo.3947507)
 [![Version](https://img.shields.io/badge/Web-https://koushikphy.github.io/ide/-success.svg)](https://koushikphy.github.io/ide/)
