@@ -59,15 +59,18 @@
       "differentialPackage": true,
       "displayLanguageSelector": true
     },
-    "snap":{
-      "confinement" : "strict",
-      "grade":"stable",
-      "plugs" : ["default", "removable-media"]
+    "snap": {
+      "confinement": "strict",
+      "grade": "stable",
+      "plugs": [
+        "default",
+        "removable-media"
+      ]
     }
   },
   "devDependencies": {
-    "electron": "^9.0.5",
-    "electron-builder": "^22.4.1",
+    "electron": "^11.2.1",
+    "electron-builder": "^22.9.1",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
@@ -76,7 +79,7 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
-    "plotly.js-gl3d-dist": "^1.54.5",
-    "v8-compile-cache": "^2.1.1"
+    "plotly.js-gl3d-dist": "^1.58.4",
+    "v8-compile-cache": "^2.2.0"
   }
 }
