@@ -59,7 +59,8 @@ app.on('ready', function () {
         icon: path.join(__dirname, "figs/charts.png"),
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            contextIsolation:false
         },
     });
     mainWindow.maximize();
@@ -91,7 +92,8 @@ const helpMenu = {
                     icon: path.join(__dirname, 'figs/charts.png'),
                     webPreferences: {
                         nodeIntegration: true,
-                        enableRemoteModule: true
+                        enableRemoteModule: true,
+                        contextIsolation:false
                     }
                 });
                 childWindow.loadURL(url.format({
@@ -114,7 +116,8 @@ const helpMenu = {
                     title: "Interactive Data Editor - Sample Data",
                     webPreferences: {
                         nodeIntegration: true,
-                        enableRemoteModule: true
+                        enableRemoteModule: true,
+                        contextIsolation:false
                     }
                 });
                 childWindow.loadURL(url.format({
@@ -144,7 +147,8 @@ const helpMenu = {
                     title: "Interactive Data Editor - About",
                     webPreferences: {
                         nodeIntegration: true,
-                        enableRemoteModule: true
+                        enableRemoteModule: true,
+                        contextIsolation:false
                     },
                     height:650
                 });

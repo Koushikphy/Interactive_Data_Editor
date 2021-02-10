@@ -634,7 +634,8 @@ function settingWindow(){
         title: "Interactive Data Editor - Plot Settings",
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            contextIsolation:false
         }
     });
     settingEditWindow.loadURL(url.format({
@@ -679,7 +680,8 @@ function spreadsheet() {
         show: false,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            contextIsolation:false
         }
     });
     editorWindow.maximize();
@@ -712,7 +714,8 @@ function openViewer() {
         minWidth: 1200,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            contextIsolation:false
         }
     });
     viewerWindow.maximize();

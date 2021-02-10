@@ -379,7 +379,8 @@ function openPlotSetting(){
         title: "Interactive Data Editor - Plot Settings",
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            contextIsolation:false
         }
     });
     settingEditWindow.loadURL(url.format({
