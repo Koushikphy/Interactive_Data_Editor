@@ -325,6 +325,7 @@ ipcRenderer.on("plotsetting", (_,d)=>{ // incoming info from the plotsetting win
 ipcRenderer.on("colchanged", (_,d)=>{ // incoming info from the viewer window
     zCol.selectedIndex = d
     colChanged(d)
+    makeRows()
 })
 
 ipcRenderer.on("exportAll", (_,d)=>{ // incoming info from the viewer window

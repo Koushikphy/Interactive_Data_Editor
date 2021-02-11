@@ -350,6 +350,7 @@ function colChanged(value) {
         oldDpsLen=dpsx.length
     }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
+    makeRows()
 };
 
 
