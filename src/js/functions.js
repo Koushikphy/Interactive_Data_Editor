@@ -350,7 +350,7 @@ function colChanged(value) {
         oldDpsLen=dpsx.length
     }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
-    makeRows()
+    // makeRows()
 };
 
 
@@ -777,8 +777,9 @@ function closeNav() {
 
 
 
-function tools(option,index,ev){
+function tools(option,index,ev,elem){
     ev.stopPropagation()
+    if(ev.target.localName=="select") return
     if(option==0){ //select editable
         if(currentEditable!=index) changeEditable(index)
     }else if (option==1) { // clone this
@@ -800,6 +801,7 @@ function tools(option,index,ev){
         legendNames.splice(index,1)
     }
     makeRows()
+
 }
 
 function tools2(option,index,ev,elem){
@@ -827,7 +829,7 @@ function tools2(option,index,ev,elem){
 function makeRows() {
     $('#files').html(
         fileNames.map((i,j)=>`
-            <div class="fList ${currentEditable==j? 'selected': ''}"  onclick="tools(0,${j},event)" >
+            <div class="fList ${currentEditable==j? 'selected': ''}"  onclick="tools(0,${j},event,this)" >
                 <div class="nameBar">
                     <div class="fName" title='file name'>
                         ${j+1}. ${path.basename(i)}
@@ -839,19 +841,19 @@ function makeRows() {
                 <div class="colBar">
                     <div class="sideBar" style="display:${ddd?"inline-flex":"none"}" >
                         <span>X</span>
-                        <select onclick="tools2('x',${j},event,this)">
+                        <select onchange="tools2('x',${j},event,this)">
                             ${fullData[j][0].map((_,k)=>`<option ${k==fullDataCols[j].x? "selected": ""} >${k+1}</option>`).join('')}
                         </select>
                     </div>
                     <div class="sideBar">
                         <span>${ddd?"Y":"X"}</span>
-                        <select onclick="tools2('y',${j},event,this)">
+                        <select onchange="tools2('y',${j},event,this)">
                             ${fullData[j][0].map((_,k)=>`<option ${k==fullDataCols[j].y? "selected": ""} >${k+1}</option>`).join('')}
                         </select>
                     </div>
                     <div class="sideBar">
                         <span>${ddd?"Z":"Y"}</span>
-                        <select onclick="tools2('z',${j},event,this)">
+                        <select onchange="tools2('z',${j},event,this)">
                             ${fullData[j][0].map((_,k)=>`<option ${k==fullDataCols[j].z? "selected": ""} >${k+1}</option>`).join('')}
                         </select>
                     </div>
@@ -860,3 +862,4 @@ function makeRows() {
         ).join(' '))
         curWidth = minWidth = $(".colBar").width()+30
 }
+
