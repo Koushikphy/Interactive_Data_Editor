@@ -206,6 +206,7 @@ function fileReader(fname) {
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
     $("#zCol").removeClass("rightBorder")
+    saveRemminder()
     makeRows()
 }
 

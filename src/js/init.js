@@ -76,3 +76,11 @@ if (app.isPackaged) {
     document.getElementById('particle').remove();
     if(fileList.length) openFileFromArgs(fileList)
 }
+
+
+
+var fl = JSON.parse(localStorage.getItem("autosave"));
+var autoSave = fl!==null? parseInt(fl) : 0; // autosave file every, 0 means no autosave
+var autoSaveMenuItems = menu.getMenuItemById('autosave').submenu.items;
+autoSaveMenuItems.forEach(e=>{e.checked=false})
+autoSaveMenuItems[{0:0,1:1,5:2,10:3}[autoSave]].checked = true

@@ -225,12 +225,50 @@ const homeMenuTemplate = [
                 click() {
                     mainWindow.webContents.send("menuTrigger", "saveas");
                 }
-            }
-            ,{
+            },
+            {
                 label : "Export as image",
                 click() {
                     mainWindow.webContents.send("menuTrigger", "trigdown");
                 }
+            }
+            ,{
+                label : "Auto Save",
+                id: 'autosave',
+                submenu:[
+                    {
+                        label : "Off",
+                        checked: false,
+                        type: "checkbox",
+                        click() {
+                            mainWindow.webContents.send("menuTrigger", "autosave0");
+                        }
+                    },
+                    {
+                        label : "1 min",
+                        checked: false,
+                        type: "checkbox",
+                        click() {
+                            mainWindow.webContents.send("menuTrigger", "autosave1");
+                        }
+                    },
+                    {
+                        label : "5 min",
+                        checked: false,
+                        type: "checkbox",
+                        click() {
+                            mainWindow.webContents.send("menuTrigger", "autosave5");
+                        }
+                    },
+                    {
+                        label : "10 min",
+                        checked: false,
+                        type: "checkbox",
+                        click() {
+                            mainWindow.webContents.send("menuTrigger", "autosave10");
+                        }
+                    }
+                ]
             },
             {
                 type: 'separator'

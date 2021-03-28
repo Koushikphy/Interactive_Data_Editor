@@ -312,44 +312,69 @@ function lmfit(){
 
 
 function diff12(){
-    data = data.map(el=>[...el, el[4].map((i,j)=>i-el[3][j])])
-    fullData[currentEditable] = data
+    if(data[0].length != 6) alertElec('Data not in proper structure')
+    data = data.map(el=>[...el, el[4].map((i,j)=>{
+            let val = i-el[3][j];
+            return val>0? val: 0; // clamp to 0 
+        })]
+    )
     col.z = 6
+    fullDataCols[currentEditable].z = 6
+    fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
+    updateOnServer()
 }
 
 
 function merge12(){
+    if(data[0].length != 7) alertElec('Data not in proper structure')
     data = data.map(el=>{
-        el[4] = el[3].map((i,j)=> i+el[6][j]  )
+        el[4] = el[3].map((i,j)=>{
+            let val = i+el[6][j];
+            return val>0? val: 0; // clamp to 0 
+        })
         el.splice(6)
         return el
     })
     col.z = 4
-    updatePlot(false)
+    fullDataCols[currentEditable].z = 4
     fullData[currentEditable] = data
+    updatePlot(false)
     setUpColumns()
+    updateOnServer()
 }
 
 
 function diff23(){
-    data = data.map(el=>[...el, el[5].map((i,j)=>i-el[4][j])])
-    fullData[currentEditable] = data
+    if(data[0].length != 6) alertElec('Data not in proper structure')
+    data = data.map(el=>[...el, el[5].map((i,j)=>{
+        let val = i-el[4][j];
+        return val>0? val: 0; // clamp to 0 
+    })])
     col.z = 6
+    fullDataCols[currentEditable].z = 6
+    fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
+    updateOnServer()
 }
 
 
 function merge23(){
+    if(data[0].length != 7) alertElec('Data not in proper structure')
     data = data.map(el=>{
-        el[5] = el[4].map((i,j)=> i+el[6][j]  )
+        el[5] = el[4].map((i,j)=> {
+            let val = i+el[6][j];
+            return val>0? val: 0; // clamp to 0 
+        } )
         el.splice(6)
         return el
     })
-    fullData[currentEditable] = data
     col.z = 5
+    fullDataCols[currentEditable].z = 5
+    fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
+    updateOnServer()
 }

@@ -112,7 +112,22 @@ window.onkeydown = function hotKeys(e) {
         index = Plotly.d3.range(index[0], index[index.length-1]+1,1)
         Plotly.restyle(figurecontainer, {selectedpoints : [index]})
 
-    // }else{
+    }else if(e.key=="1" && e.ctrlKey){
+        diff12()
+
+    }else if(e.key=="2" && e.ctrlKey){
+        merge12()
+
+    }else if(e.key=="3" && e.ctrlKey){
+        diff23()
+
+    }else if(e.key=="4" && e.ctrlKey){
+        merge23()
+
+
+
+
+        // }else{
     //     console.log('No available trigger',e.key)
     }
 };
@@ -178,8 +193,27 @@ function ipcTrigger(_,d){
     }else if(d=='trigdown'){
         $('#popupEx').show()
 
+        
+    }else if(d.substring(0,8)=='autosave'){
+        autoSave = parseInt(d.substring(8))
+        autoSaveMenuItems.forEach(e=>{e.checked=false})
+        autoSaveMenuItems[{0:0,1:1,5:2,10:3}[autoSave]].checked = true
+        saveRemminder()
+        localStorage.setItem( "autosave", JSON.stringify(autoSave))
     }
 }
+
+
+var saveRemminderTimer;
+function saveRemminder(){
+    clearInterval(saveRemminderTimer);
+    if(!autoSave) return
+    saveRemminderTimer=setInterval(()=>{
+        firstSave? showStatus("You may want to save the file."):saveData();
+    },autoSave*1000*60)
+}
+
+
 
 // openNav()
 
@@ -384,3 +418,9 @@ document.getElementById("valinput").onchange = document.getElementById('valBtn')
     setValue($('#valinput').val())
     $('.popup').hide()
 }
+
+
+// document.getElementById("autoSaveVal").onchange = document.getElementById('autoSaveBtn').onclick = ()=>{
+//     autoSave = parseInt($('#autoSaveVal').val()*1000)
+//     $('.popup').hide()
+// }
