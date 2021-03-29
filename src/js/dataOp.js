@@ -1,4 +1,4 @@
-const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit, alertElec} = require('../js/utils');
+const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
 
 
 // copy paste values between different x/y
