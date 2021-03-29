@@ -124,9 +124,6 @@ window.onkeydown = function hotKeys(e) {
     }else if(e.key=="4" && e.ctrlKey){
         merge23()
 
-
-
-
         // }else{
     //     console.log('No available trigger',e.key)
     }

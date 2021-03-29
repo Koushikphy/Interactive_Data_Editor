@@ -546,6 +546,7 @@ function saveData() {
         fs.writeFileSync(saveNames[currentEditable], txt);
         showStatus("Data Saved in file " + replaceWithHome(saveNames[currentEditable]));
         saved = true;
+        saveRemminder();
     } catch (error) {
         showStatus("Something went wrong! Couldn't save the data...")
         console.error(error)

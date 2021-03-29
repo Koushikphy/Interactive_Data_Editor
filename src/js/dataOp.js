@@ -1,4 +1,4 @@
-const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
+const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit, alertElec} = require('../js/utils');
 
 
 // copy paste values between different x/y
@@ -312,6 +312,7 @@ function lmfit(){
 
 
 function diff12(){
+    if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 6) alertElec('Data not in proper structure')
     data = data.map(el=>[...el, el[4].map((i,j)=>{
             let val = i-el[3][j];
@@ -328,6 +329,7 @@ function diff12(){
 
 
 function merge12(){
+    if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 7) alertElec('Data not in proper structure')
     data = data.map(el=>{
         el[4] = el[3].map((i,j)=>{
@@ -347,6 +349,7 @@ function merge12(){
 
 
 function diff23(){
+    if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 6) alertElec('Data not in proper structure')
     data = data.map(el=>[...el, el[5].map((i,j)=>{
         let val = i-el[4][j];
@@ -362,6 +365,7 @@ function diff23(){
 
 
 function merge23(){
+    if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 7) alertElec('Data not in proper structure')
     data = data.map(el=>{
         el[5] = el[4].map((i,j)=> {
