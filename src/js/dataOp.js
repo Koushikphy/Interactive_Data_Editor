@@ -309,16 +309,14 @@ function lmfit(){
 }
 
 
+// clip value to only positive ones
+const clip = (val)=> val>0 ? val : 0;
 
 
 function diff12(){
     if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 6) alertElec('Data not in proper structure')
-    data = data.map(el=>[...el, el[4].map((i,j)=>{
-            let val = i-el[3][j];
-            return val>0? val: 0; // clamp to 0 
-        })]
-    )
+    data = data.map(el=>[...el, el[4].map((i,j)=> clip(i-el[3][j]))])
     col.z = 6
     fullDataCols[currentEditable].z = 6
     fullData[currentEditable] = data
@@ -328,16 +326,13 @@ function diff12(){
 }
 
 
+
 function merge12(){
     if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 7) alertElec('Data not in proper structure')
     data = data.map(el=>{
-        el[4] = el[3].map((i,j)=>{
-            let val = i+el[6][j];
-            return val>0? val: 0; // clamp to 0 
-        })
-        el.splice(6)
-        return el
+        el[4] = el[3].map((i,j)=> i+clip(el[6][j]))
+        return el.slice(0,6)
     })
     col.z = 4
     fullDataCols[currentEditable].z = 4
@@ -351,10 +346,7 @@ function merge12(){
 function diff23(){
     if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 6) alertElec('Data not in proper structure')
-    data = data.map(el=>[...el, el[5].map((i,j)=>{
-        let val = i-el[4][j];
-        return val>0? val: 0; // clamp to 0 
-    })])
+    data = data.map(el=>[...el, el[5].map((i,j)=> clip(i-el[4][j]))])
     col.z = 6
     fullDataCols[currentEditable].z = 6
     fullData[currentEditable] = data
@@ -368,12 +360,8 @@ function merge23(){
     if(swapped) alertElec('Operation not available in swapped mode');
     if(data[0].length != 7) alertElec('Data not in proper structure')
     data = data.map(el=>{
-        el[5] = el[4].map((i,j)=> {
-            let val = i+el[6][j];
-            return val>0? val: 0; // clamp to 0 
-        } )
-        el.splice(6)
-        return el
+        el[5] = el[4].map((i,j)=> i+clip(el[6][j]))
+        return el.slice(0,6)
     })
     col.z = 5
     fullDataCols[currentEditable].z = 5
