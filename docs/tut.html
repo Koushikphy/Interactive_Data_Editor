@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <title>Interactive Data Editor - Tutorial</title>
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/charts.png">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        p {
+            font-size: x-large;
+            text-align: justify;
+            padding-right: 10px;
+            padding-left: 5px;
+        }
+
+ 
+
+        #side {
+            width: fit-content;
+            margin-right: 5px;
+            background-color: beige;
+            padding-right: 10px;
+            font-size: 19px;
+            background-image: linear-gradient(180deg, #f4fbe4 0%, #ecfdee 100%);
+        }
+
+        #main {
+            flex: 1;
+            overflow: auto;
+            scroll-behavior: smooth;
+        }
+
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            text-align: justify;
+            padding-top: 65px;
+        }
+
+        h2 {
+            padding-left: 10px;
+        }
+
+        .tut{
+            padding : 10px 0 50px 3px
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://samp.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+    <script src="js/wow.min.js"></script>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded fixed-top">
+        <div class="container px-5">
+            <diav class="navbar-brand">
+                <img src="images/charts.png" alt="..." height="36">
+                <a href="index.html#home" style="color: #706c6c; font-size: x-large;">Interactive Data Editor</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse mx-5" id="navbarSupportedContent" style="font-weight: bold;">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item "><a class='nav-link ' href="index.html#home">Home</a></li>
+                <li class="nav-item"><a class='nav-link' href="index.html#about">About</a></li>
+                <li class="nav-item"><a class='nav-link' href="index.html#features">Features</a></li>
+                <li class="nav-item"><a class='nav-link' href="index.html#download">Download</a></li>
+                <li class="nav-item"><a class='nav-link' href="index.html#contact">Contact</a></li>
+                <li class="nav-item"><a class='nav-link active' href="#tutorial">Tutorial</a></li>
+
+            </ul>
+        </div>
+        </div>
+    </nav>
+
+
+    <div id='content'>
+        <div id="side">
+            <!-- <div style="text-align: center; margin-top: 21px; font-size: xx-large; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Interactive Data Editor</div> -->
+            <!-- <div style="text-align: center; font-size: large; font-style: italic;">v2.8.0</div> -->
+            <div style="text-align: center; margin-top: 13px; font-size: x-large; padding-bottom: 21px;">Reference</div>
+            <ul>
+                <li><a href="#load-file">Load data from file</a> </li>
+                <li><a href="#3d-viewer">3D Viewer</a> </li>
+                <li><a href="#edit-data">Edit data</a>
+                    <ul>
+                        <li><a href="#drag">Drag with mouse or keyboard</a> </li>
+                        <li><a href="#smooth-out">Smooth out data</a> </li>
+                        <li><a href="#smoothing-multiple">Smooth multiple data</a> </li>
+                    </ul>
+                </li>
+                <li><a href="#interpolate-data">Interpolate data</a></li>
+                <li><a href="#extend-data">Extend data, mirror or repeat</a></li>
+                <li><a href="#data-fitting">Data fitting</a>
+                    <ul>
+                        <li><a href="#rg-fitting">Polynomial regression</a> </li>
+                        <li><a href="#lm-fitting">Lavenberg-Marquardett fitting</a> </li>
+                    </ul>
+                </li>
+                <li><a href="#swap-data">Swap Data</a> </li>
+                <li><a href="#undo-redo">UnDo ReDo</a> </li>
+                <li><a href="#plot-settings">Plot settings</a> </li>
+                <li><a href="#export-as-image">Export plot as image</a> </li>
+                <li><a href="#spreadsheet">Work with spreadsheet</a> </li>
+                <li><a href="#3d-plotter">Work 3D plotter</a> </li>
+            </ul>
+        </div>
+        <div id="main">
+
+            <div class="tut">
+                <h2 id="load-file">Load File</h2>
+                <p>
+                    Directly load data from text file from <samp>File &gt; Open File</samp> or by pressing <kbd>Ctrl+O</kbd>.
+                    For 3D data select the required <var>X/Y</var> value from the provied slider or scrolling inside
+                    the plot.
+                    If you want to add multiple data set from other files, you can load them through
+                    <samp>File &gt; Add File</samp>.
+                    You can use the recent files menu to quickly load any of the last recent 10 files.
+                </p>
+                <video width="100%" height="500" controls="controls" controls loop>
+                    <source src="images/file_load.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+            <div class="tut">
+                <h2 id="3d-viewer">3D Viewer</h2>
+                <p>
+                    For easy editing 3D data files, a 2D projection for a particular <var>X/Y</var> value.
+                    To view the complete 3D plot open the 3D viewer window through the
+                    <samp>Window &gt; 3D Plot Viewer</samp>.
+                    The viewer updates in real time as you make updates in the main window.
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/3d_viewer.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+            <div class="tut">
+
+                <h2 id="edit-data">Edit data</h2>
+                <p>
+                    This software features different data editing options, available to use thourgh keyboard shortcuts
+                    and also through the right click context menu
+                </p>
+
+                <h3 id="drag">Move with mouse or keyboard</h3>
+                <p>
+                    Move any data points just dragging it mouse. By defualt data points is movable only in vertical
+                    direction (i.e. y-axis).
+                    Check the <samp>Edit &gt; Points movable horaizontally</samp> to move them in x-axis too.
+                    To drag multiple data points simultaneously and drag any of them.
+                    Also keyboard navigation keys can also be ued to move selected data points.
+                    Although this option is available only for mooving in y-axis.
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/edit_data.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+
+
+            <div class="tut">
+
+                <h3 id="smooth-out">Smooth out data</h3>
+                <p>
+                    Select data points that you want to smooth and press <kbd>D</kbd>.
+                    The data points will be replaced with a smoothing spline approximation
+                    Select data points that you want to smooth and press <kbd>D</kbd> or <kbd>M</kbd> or
+                    <kbd>E</kbd>
+                    to replace the data points
+                    with a smoothing spline approximation or moving average or by quadratic regression respectively.
+                    Bad data points can also be romeved or set by required value
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/data_edit_2.mp4" type="video/mp4">
+                </video>
+
+            </div>
+
+
+
+
+            <div class="tut">
+
+                <h3 id="smoothing-multiple">Smoothing multiple datasets simultaneously</h3>
+                <p>
+                    Data from multiple files or different colums from a same file can be opened for editing, though at any moment a single
+                    dataset can be edited. Editing between differnet data set can be toggled through the <samp>Plot Dashboard</samp> or 
+                     by pressing <kbd>Ctrl+TAB</kbd>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/multi_edit.mp4" type="video/mp4">
+                </video>
+
+            </div>
+
+
+
+
+
+            <div class="tut">
+
+
+                <h2 id="interpolate-data">Interpolate data</h2>
+                <p>
+                    Use interpolation to fill missing grid values or make the grid denser or
+                    vice-versa through <samp>Edit &gt; Fill Values</samp>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/interpolate.mp4" type="video/mp4">
+                </video>
+
+            </div>
+
+
+            <div class="tut">
+
+                <h2 id="extend-data">Extend Data</h2>
+                <p>
+                    Extend your dataset by repeating or mirroring using <samp>Edit &gt; Extend Data</samp>.
+                    This can be applied globally
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/extend.mp4" type="video/mp4">
+                </video>
+
+                <p>
+                    or locally
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/mirror_2.mp4" type="video/mp4">
+                </video>
+
+
+            </div>
+
+
+            <div class="tut">
+
+                <h2 id="data-fitting">Data fitting</h2>
+                <p>
+                    (Only) 2D data set can be fitted thorugh the following two types of fitting
+                </p>
+                <h3 id="rg-fitting">Polynomial regressing fitting</h3>
+                <p>
+                    Use <samp>Fitting &gt; Polynomial Regression fitting</samp>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/rgfit.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+
+
+
+            <div class="tut">
+
+                <h3 id="lm-fitting">Lavenberg-Marqardett fitting</h3>
+                <p>
+                    Use <samp>Fitting &gt; Lavenberg-Marqardett fitting</samp>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/lmfit.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+            <div class="tut">
+
+                <h2 id="swap-data">Swap data</h2>
+                <p>
+                    To swap data values between two data sets open swapper mode by
+                    <samp>View &gt; Toggle Swapper</samp>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/swapper.mp4" type="video/mp4">
+                </video>
+
+
+            </div>
+
+
+
+            <div class="tut">
+
+                <h2 id="undo-redo">UnDo ReDo</h2>
+                <p>
+                    You can undo or redo last 10 changes by pressing <kbd>Ctrl+Z</kbd>
+                    or <kbd>Shift+Ctrl+Z</kbd>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/undo-redo.mp4" type="video/mp4">
+                </video>
+
+
+
+
+            </div>
+
+
+            <div class="tut">
+
+                <h2 id="plot-settings">Plot settings</h2>
+                <p>
+                    To make any changes to the plot option/style like marker/line styles,
+                    font styles, open the setting window <samp>View &gt; Open Plot Settings</samp>
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/settings.mp4" type="video/mp4">
+                </video>
+
+
+
+            </div>
+
+
+            <div class="tut">
+
+                <h2 id="export-as-image">Export as image</h2>
+                <p>
+                    Save your plot in different format and resolution.
+                    Use <samp>File &gt; Export as image</samp> or click on the camera icon (<i class="fa fa-camera"></i> ) on the plot corner
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/export.mp4" type="video/mp4">
+                </video>
+
+
+
+            </div>
+
+            <div class="tut">
+
+
+                <h2 id="spreadsheet">Work with spreadsheet</h2>
+                <p>
+                    Open a spreadsheet containing the current data set through <samp>Window &gt; Spreadsheet</samp>.
+                    You can directly make changes to the data set
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/spreadsheet.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+
+            <div class="tut">
+
+                <h2 id="3d-plotter">Work with the 3D Plotter</h2>
+                <p>
+                    A 3D plotter is also provided to quickly plot 3D data sets
+                </p>
+                <video width="100%" height="500" controls="controls">
+                    <source src="images/plotter.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+<script>
+
+        new WOW().init();
+
+
+
+</script>
+</body>
+
+</html>
