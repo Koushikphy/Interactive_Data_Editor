@@ -157,7 +157,7 @@
 
             <div
                 style="text-align: center; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
-                <div style="font-size: 17px; padding-bottom: 21px; font-family: emoji;">Developed and Maintained by
+                <div style="font-size: 17px; padding-bottom: 21px;">Developed and Maintained by
                 </div>
                 <img src="./images/DSCN8500.JPG" alt="" width="250px" style="border-radius: 50%;width: 200px;">
                 <div style="font-size: larger; padding-top: 15px;">
@@ -191,10 +191,10 @@
 
 
         $(window).scroll(function () {
-            var scrollDistance = $(window).scrollTop();
+            var scrollDistance = $(window).scrollTop() + $(window).height()/2;
 
             $('section').each(function (i) {
-                if ($(this).position().top - 100 <= scrollDistance) {
+                if ($(this).position().top <= scrollDistance) {
                     $('.navbar-nav a.active').removeClass('active');
                     $('.navbar-nav a').eq(i).addClass('active');
                 }
