@@ -236,6 +236,12 @@ color: #FFF;
   width: 200px;
 }
 
+@media (min-width:400px){
+.navbar_container{
+  padding-left: 10px;
+}
+
+}
 @media (max-width:400px){
   .myImage{
   width: 80%;
@@ -243,9 +249,7 @@ color: #FFF;
 .imageContainer{
   width: 350px;
 }
-.navbar_container{
-  padding: 5px;
-}
+
 .brand_name{
   font-size: 1rem;
 }
@@ -268,11 +272,15 @@ color: #FFF;
   .brand_name{
     display: none;
   }
+  
 }
 
 
 
 .brand_name{
+  color: #706c6c; font-weight: 700;
+}
+.brand_name:hover{
   color: #706c6c; font-weight: 700;
 }
 
