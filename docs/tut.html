@@ -71,6 +71,7 @@
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         crossorigin="anonymous"></script>
     <script src="js/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.5.0/dist/lazyload.min.js"></script>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded fixed-top">
         <div class="container px-5">
@@ -140,7 +141,7 @@
                     <samp>File &gt; Add File</samp>.
                     You can use the recent files menu to quickly load any of the last recent 10 files.
                 </p>
-                <video width="100%" height="500" controls="controls" controls loop>
+                <video  class="lazy" width="100%" height="500" controls="controls" controls loop>
                     <source src="images/file_load.mp4" type="video/mp4">
                 </video>
             </div>
@@ -154,7 +155,7 @@
                     <samp>Window &gt; 3D Plot Viewer</samp>.
                     The viewer updates in real time as you make updates in the main window.
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/3d_viewer.mp4" type="video/mp4">
                 </video>
             </div>
@@ -177,7 +178,7 @@
                     Also keyboard navigation keys can also be ued to move selected data points.
                     Although this option is available only for mooving in y-axis.
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/edit_data.mp4" type="video/mp4">
                 </video>
             </div>
@@ -197,7 +198,7 @@
                     with a smoothing spline approximation or moving average or by quadratic regression respectively.
                     Bad data points can also be romeved or set by required value
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/data_edit_2.mp4" type="video/mp4">
                 </video>
 
@@ -214,7 +215,7 @@
                     dataset can be edited. Editing between differnet data set can be toggled through the <samp>Plot Dashboard</samp> or 
                      by pressing <kbd>Ctrl+TAB</kbd>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/multi_edit.mp4" type="video/mp4">
                 </video>
 
@@ -232,7 +233,7 @@
                     Use interpolation to fill missing grid values or make the grid denser or
                     vice-versa through <samp>Edit &gt; Fill Values</samp>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/interpolate.mp4" type="video/mp4">
                 </video>
 
@@ -246,14 +247,14 @@
                     Extend your dataset by repeating or mirroring using <samp>Edit &gt; Extend Data</samp>.
                     This can be applied globally
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/extend.mp4" type="video/mp4">
                 </video>
 
                 <p>
                     or locally
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/mirror_2.mp4" type="video/mp4">
                 </video>
 
@@ -271,7 +272,7 @@
                 <p>
                     Use <samp>Fitting &gt; Polynomial Regression fitting</samp>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/rgfit.mp4" type="video/mp4">
                 </video>
             </div>
@@ -286,7 +287,7 @@
                 <p>
                     Use <samp>Fitting &gt; Lavenberg-Marqardett fitting</samp>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/lmfit.mp4" type="video/mp4">
                 </video>
             </div>
@@ -299,7 +300,7 @@
                     To swap data values between two data sets open swapper mode by
                     <samp>View &gt; Toggle Swapper</samp>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/swapper.mp4" type="video/mp4">
                 </video>
 
@@ -315,7 +316,7 @@
                     You can undo or redo last 10 changes by pressing <kbd>Ctrl+Z</kbd>
                     or <kbd>Shift+Ctrl+Z</kbd>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/undo-redo.mp4" type="video/mp4">
                 </video>
 
@@ -332,7 +333,7 @@
                     To make any changes to the plot option/style like marker/line styles,
                     font styles, open the setting window <samp>View &gt; Open Plot Settings</samp>
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/settings.mp4" type="video/mp4">
                 </video>
 
@@ -348,7 +349,7 @@
                     Save your plot in different format and resolution.
                     Use <samp>File &gt; Export as image</samp> or click on the camera icon (<i class="fa fa-camera"></i> ) on the plot corner
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/export.mp4" type="video/mp4">
                 </video>
 
@@ -364,7 +365,7 @@
                     Open a spreadsheet containing the current data set through <samp>Window &gt; Spreadsheet</samp>.
                     You can directly make changes to the data set
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/spreadsheet.mp4" type="video/mp4">
                 </video>
             </div>
@@ -377,7 +378,7 @@
                 <p>
                     A 3D plotter is also provided to quickly plot 3D data sets
                 </p>
-                <video width="100%" height="500" controls="controls">
+                <video  class="lazy" width="100%" height="500" controls="controls">
                     <source src="images/plotter.mp4" type="video/mp4">
                 </video>
             </div>
@@ -392,7 +393,9 @@
 <script>
 
         new WOW().init();
-
+        var lazyLoadInstance = new LazyLoad({
+  // Your custom settings go here
+});
 
 
 </script>
