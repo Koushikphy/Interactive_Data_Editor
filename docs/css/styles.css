@@ -287,3 +287,25 @@ color: #FFF;
 
 
 
+
+@media (max-width:500px){
+  .mobile{
+    display: block;
+  }
+  .desktop{
+    display: none;
+  }
+}
+
+@media (min-width:500px){
+  .mobile{
+    display: none;
+  }
+  .desktop{
+    display: block;
+  }
+}
+
+
+
+
