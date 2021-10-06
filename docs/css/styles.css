@@ -26,8 +26,8 @@ a{
 
 .logo{
   border: 1px solid black;
-  padding: 3px;
-  width: 200px;
+  padding: 1rem;
+  width: fit-content;
 }
 
 .dlink{
@@ -97,6 +97,19 @@ background: #FFF;
 .myCard:hover{
   box-shadow: rgb(0 0 0 / 5%) 0px 10px 10px;
 }
+
+@media (max-width:600px){
+  .myCard{
+    width: 80%;
+  }
+}
+
+@media (min-width:600px){
+  .myCard{
+    width: 70%;
+  }
+}
+
 
 section{
   /* height: 100vh; */
@@ -175,8 +188,8 @@ transition: none;
 }
 #home h2 {
   /* margin-top: 299px; */
-  font-size: 39px;
-  line-height: 49px; 
+  font-size: 2.5rem;
+  /* line-height: 49px;  */
 
   text-align: right;  
 }
@@ -184,7 +197,7 @@ transition: none;
 color:#F9690E;
 }
 #home p { 
-  font-size: 22px; 
+  font-size: 1.5rem; 
 margin-bottom:20px;
 line-height:35px; 
 
@@ -218,4 +231,22 @@ color: #FFF;
   padding-bottom: 30px;
   color: #fff;
   background: #222222;
+}
+
+
+.myImage{
+  border-radius: 50%;
+  width: 200px;
+}
+
+@media (max-width:400px){
+  .myImage{
+  width: 80%;
+  }
+}
+
+@media (min-width:400px){
+  .imageContainer{
+    width: 350px;
+  }
 }
