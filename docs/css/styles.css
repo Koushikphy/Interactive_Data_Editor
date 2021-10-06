@@ -187,10 +187,7 @@ transition: none;
   color: #000;
 }
 #home h2 {
-  /* margin-top: 299px; */
   font-size: 2.5rem;
-  /* line-height: 49px;  */
-
   text-align: right;  
 }
 #home h2 b{
@@ -203,7 +200,7 @@ line-height:35px;
 
   text-align: right;}
 #home a{
-width: 150px;
+width: fit-content;
 margin: 0;
 display: block;
 /* background: transparent; */
@@ -212,7 +209,7 @@ float: right;
 }
 #home a:hover{
 text-align: center;
-width: 150px;
+width: fit-content;
 margin: 0 auto;
 display: block;
 background: #F9690E;
@@ -242,11 +239,43 @@ color: #FFF;
 @media (max-width:400px){
   .myImage{
   width: 80%;
+}
+.imageContainer{
+  width: 350px;
+}
+.navbar_container{
+  padding: 5px;
+}
+.brand_name{
+  font-size: 1rem;
+}
+
+#home h2{
+  font-size: 1.5rem;
+}
+#home p{
+  font-size: 1rem;
+
+}
+#home a{
+  font-size: 1rem;
+}
+
+}
+
+
+@media (max-width:300px){
+  .brand_name{
+    display: none;
   }
 }
 
-@media (min-width:400px){
-  .imageContainer{
-    width: 350px;
-  }
+
+
+.brand_name{
+  color: #706c6c; font-weight: 700;
 }
+
+
+
+
