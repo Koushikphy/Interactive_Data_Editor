@@ -49,7 +49,7 @@
         </div>
     </nav>
 
-    <section id="home" class="desktop">
+    <section id="home" class="desktop myScroll">
         <div class='tag_line wow fadeInLeft'>
 
             <h2>Interactive Data Editor</h2>
@@ -59,7 +59,7 @@
         </div>
     </section>
 
-    <section class="mobile " style="height: 100vh !important; margin-top: 10%;">
+    <section class="mobile myScroll" style="height: 100vh !important; margin-top: 10%;">
 
         <img src='images/screenshot.gif' alt="" width="100%">
         <div class=' wow fadeInUp ' style="text-align: center; padding: 5px;">
@@ -73,7 +73,7 @@
 
 
     <section id="about">
-        <div class="container wow fadeInUp  myCard">
+        <div class="container wow fadeInUp  myCard myScroll">
             We have all worked with data at some point of time. Depending on the source, the data may not
             be regular, smooth and uniform, and requires refinement before applying for any practical use. This software
             lets you do that very easily and efficiently in a graphical way including many others useful data operation.
@@ -93,7 +93,7 @@
 
 
     <section id="features">
-        <div class="container wow fadeInUp myCard">
+        <div class="container wow fadeInUp myCard myScroll">
             Interactive Data Editor supports several useful features to work with data,<br>
             <br>
             <ol>
@@ -124,7 +124,7 @@
 
     <section id="download">
         <!-- style="background: linear-gradient(to bottom, #fadcdd, #d1f2fa)"> -->
-        <div class="container wow fadeInUp myCard">
+        <div class="container wow fadeInUp myCard myScroll">
             The software is available as pre-built binaries for different platforms. Install the appropriate installer
             for your system
 
@@ -166,7 +166,7 @@
 
 
     <section id="contact">
-        <div class="container myCard wow fadeIn imageContainer">
+        <div class="container myCard wow fadeIn imageContainer myScroll">
             <div
                 style="text-align: center; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
                 <div style="font-size: medium; padding-bottom: 21px;">Developed and Maintained by
@@ -200,17 +200,35 @@
         new WOW().init();
 
 
+        function inViewport($el) {
+            var elH = $el.outerHeight(),
+                H   = $(window).height(),
+                r   = $el[0].getBoundingClientRect(), t=r.top, b=r.bottom;
+            return Math.max(0, t>0? Math.min(elH, H-t) : Math.min(b, H))*100/elH;
+        }
+
 
 
         $(window).scroll(function () {
-            var scrollDistance = $(window).scrollTop() + $(window).height()/2;
+            var inVews = $('.myScroll').map(function(){
+                return inViewport($(this))
+            })
 
-            $('section').each(function (i) {
-                if ($(this).position().top <= scrollDistance) {
-                    $('.navbar-nav a.active').removeClass('active');
-                    $('.navbar-nav a').eq(i).addClass('active');
+            var maxIndex = 0
+            var max = inVews[0]
+
+            for (var i = 1; i < inVews.length; i++) {
+                if (inVews[i] > max) {
+                    maxIndex = i;
+                    max = inVews[i];
                 }
-            });
+            }
+
+            // maxIndex = maxIndex - maxIndex>2?1:0
+
+            $('.navbar-nav a.active').removeClass('active');
+            $('.navbar-nav a').eq(maxIndex>1?maxIndex-1:maxIndex).addClass('active');
+
         }).scroll();
     </script>
 
