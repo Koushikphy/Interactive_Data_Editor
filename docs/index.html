@@ -34,8 +34,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
         </div>
-        <!-- <div class="container"> -->
-    <!-- </div> -->
+
         <div class="collapse navbar-collapse mx-5" id="navbarSupportedContent" style="font-weight: bold;">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item "><a class='nav-link active' href="#home">Home</a></li>
@@ -49,28 +48,29 @@
         </div>
     </nav>
 
-    <section id="home" class="desktop myScroll">
-        <div class='tag_line wow fadeInLeft'>
+    <div id ='home' class="myScroll">
+        <section id="homeMain" class="desktop">
+            <div class='tag_line wow fadeInLeft'>
 
-            <h2>Interactive Data Editor</h2>
-            <p>A Software to interactively edit data in a graphical manner</p>
-            <a class="btn btn-primary btn-lg scroll" href="#download">Download</a>
+                <h2>Interactive Data Editor</h2>
+                <p>A Software to interactively edit data in a graphical manner</p>
+                <a class="btn btn-primary btn-lg scroll" href="#download">Download</a>
 
-        </div>
-    </section>
+            </div>
+        </section>
 
-    <section class="mobile myScroll" style="height: 100vh !important; margin-top: 10%;">
+        <section class="mobile" style="height: 100vh !important; margin-top: 10%;">
 
-        <img src='images/screenshot.gif' alt="" width="100%">
-        <div class=' wow fadeInUp ' style="text-align: center; padding: 5px;">
+            <img src='images/screenshot.gif' alt="" width="100%">
+            <div class=' wow fadeInUp ' style="text-align: center; padding: 5px;">
 
-            <h2>Interactive Data Editor</h2>
-            <p>A Software to interactively edit data in a graphical manner</p>
-            <a class="btn btn-primary btn-lg scroll" href="#download">Download</a>
+                <h2>Interactive Data Editor</h2>
+                <p>A Software to interactively edit data in a graphical manner</p>
+                <a class="btn btn-primary btn-lg scroll" href="#download">Download</a>
 
-        </div>
-    </section>
-
+            </div>
+        </section>
+    </div>
 
     <section id="about">
         <div class="container wow fadeInUp  myCard myScroll">
@@ -224,10 +224,10 @@
                 }
             }
 
-            // maxIndex = maxIndex - maxIndex>2?1:0
+
 
             $('.navbar-nav a.active').removeClass('active');
-            $('.navbar-nav a').eq(maxIndex>1?maxIndex-1:maxIndex).addClass('active');
+            $('.navbar-nav a').eq(maxIndex).addClass('active');
 
         }).scroll();
     </script>

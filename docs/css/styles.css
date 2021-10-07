@@ -145,7 +145,7 @@ transition: none;
   border-radius: 5px;
 }
 
-#home{
+#homeMain{
   padding-bottom: 100px;
   overflow: hidden;
   height: 100vh;
@@ -162,7 +162,7 @@ transition: none;
     right: 0;
     margin:0 50px 50px 0;
 }
-#home::after{
+#homeMain::after{
   
   position: absolute;
   content: '';
@@ -173,17 +173,17 @@ transition: none;
   width:100%;
   height:100%;
   z-index:-1;
-  opacity: 0.8;
+  opacity: 0.9;
   margin-top: 80px;
   display: block;
 }
-#home.item {
+#homeMain.item {
   height: 558px;
   background-repeat: no-repeat;
   background-position: 50% 0;
   background-size: cover;
 }
-#home.banner-inner {
+#homeMain.banner-inner {
   position: absolute;
   top: 0;
   left: 0;
@@ -191,20 +191,20 @@ transition: none;
   height: 100%;
   color: #000;
 }
-#home h2 {
+#homeMain h2 {
   font-size: 2.5rem;
   text-align: right;  
 }
-#home h2 b{
+#homeMain h2 b{
 color:#F9690E;
 }
-#home p { 
+#homeMain p { 
   font-size: 1.5rem; 
 margin-bottom:20px;
 line-height:35px; 
 
   text-align: right;}
-#home a{
+#homeMain a{
 width: fit-content;
 margin: 0;
 display: block;
@@ -212,7 +212,7 @@ display: block;
 border: 2px solid #fff;
 float: right;
 }
-#home a:hover{
+#homeMain a:hover{
 text-align: center;
 width: fit-content;
 margin: 0 auto;
@@ -221,10 +221,10 @@ background: #F9690E;
 border: 2px solid #F9690E;
 color: #FFF;
 }
-#home.banner-inner h2 > span {
+#homeMain.banner-inner h2 > span {
   color: #45aed6;
 }
-#home.banner-inner .btn {
+#homeMain.banner-inner .btn {
   margin-top: 10px;
 } 
 
@@ -257,14 +257,14 @@ color: #FFF;
   font-size: 1rem;
 }
 
-#home h2{
+#homeMain h2{
   font-size: 1.5rem;
 }
-#home p{
+#homeMain p{
   font-size: 1rem;
 
 }
-#home a{
+#homeMain a{
   font-size: 1rem;
 }
 }

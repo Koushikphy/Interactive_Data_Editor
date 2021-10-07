@@ -22,7 +22,7 @@
         }
 
         p {
-            font-size: x-large;
+            font-size: 1.3rem;
             text-align: justify;
             padding-right: 10px;
             padding-left: 5px;
@@ -35,7 +35,7 @@
             margin-right: 5px;
             background-color: beige;
             padding-right: 10px;
-            font-size: 19px;
+            font-size: 1.2rem;
             background-image: linear-gradient(180deg, #f4fbe4 0%, #ecfdee 100%);
         }
 
@@ -61,6 +61,21 @@
         .tut{
             padding : 10px 0 50px 3px
         }
+
+        .mobileHidden{
+            display: block;
+        }
+        @media (max-width:800px){
+            #content{
+                flex-direction: column;
+            }
+            #side{
+                width: 100%;
+            }
+            .mobileHidden{
+            display: none;
+        }
+        }
     </style>
 </head>
 
@@ -73,16 +88,17 @@
     <script src="js/wow.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.5.0/dist/lazyload.min.js"></script>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm rounded fixed-top">
-        <div class="container px-5">
-            <diav class="navbar-brand">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm rounded">
+        <div class="container w-100 navbar_container" >
+            <diav class="navbar-brand w-100">
                 <img src="images/charts.png" alt="..." height="36">
-                <a href="index.html#home" style="color: #706c6c; font-size: x-large;">Interactive Data Editor</a>
+                <a href="index.html#home"  class="brand_name">Interactive Data Editor</a>
+                <button style="float:right;" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+
         <div class="collapse navbar-collapse mx-5" id="navbarSupportedContent" style="font-weight: bold;">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item "><a class='nav-link ' href="index.html#home">Home</a></li>
@@ -99,7 +115,7 @@
 
 
     <div id='content'>
-        <div id="side">
+        <div id="side" >
             <!-- <div style="text-align: center; margin-top: 21px; font-size: xx-large; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Interactive Data Editor</div> -->
             <!-- <div style="text-align: center; font-size: large; font-style: italic;">v2.8.0</div> -->
             <div style="text-align: center; margin-top: 13px; font-size: x-large; padding-bottom: 21px;">Reference</div>
@@ -394,9 +410,20 @@
 
         new WOW().init();
         var lazyLoadInstance = new LazyLoad({
-  // Your custom settings go here
-});
+        // Your custom settings go here
+        });
 
+        $(window).scroll(function (){
+            var scroll = $(window).scrollTop();
+
+            if (scroll >=20) {
+                $('#side').removeClass('mobileHidden');
+
+            }
+            else {
+                $('#side').addClass('mobileHidden');
+            }
+        });//.scroll();
 
 </script>
 </body>
