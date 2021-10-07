@@ -113,13 +113,18 @@ background: #FFF;
 
 section{
   /* height: 100vh; */
-  font-size: 21px;
+  font-size: 1.3rem;
   padding-bottom: 100px;
   padding-top: 111px;
 
 }
 
 
+@media (max-width:500px) {
+  section{
+    font-size: 1.1rem;
+  }
+}
 
 #side>ul *{
   color: var(--bs-primary) !important;
@@ -246,9 +251,7 @@ color: #FFF;
   .myImage{
   width: 80%;
 }
-.imageContainer{
-  width: 350px;
-}
+
 
 .brand_name{
   font-size: 1rem;
@@ -264,7 +267,16 @@ color: #FFF;
 #home a{
   font-size: 1rem;
 }
+}
 
+
+
+
+
+@media (min-width:450px){
+  .imageContainer{
+    width: 400px;
+  }
 }
 
 
