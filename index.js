@@ -133,7 +133,7 @@ const helpMenu = {
         {
             label: "Homepage",
             click() {
-                shell.openExternal("https://koushikphy.github.io/ide/");
+                shell.openExternal("https://koushikphy.github.io/Interactive_Data_Editor/");
             }
         },
         {
