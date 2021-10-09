@@ -34,7 +34,7 @@ The software is available as pre-built binaries for different platforms. Install
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/interactive-data-editor)  
 
 ## Quick Reference
-For a quick reference, documentation and FAQs [https://koushikphy.github.io/Interactive_Data_Editor/](https://koushikphy.github.io/Interactive_Data_Editor/)  
+For a quick reference, documentation and FAQs check out [https://koushikphy.github.io/Interactive_Data_Editor/](https://koushikphy.github.io/Interactive_Data_Editor/).  
 
 
 ## Copyright and license
