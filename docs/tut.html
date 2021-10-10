@@ -2,6 +2,17 @@
 <html lang="en">
 
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-209772498-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-209772498-1');
+    </script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,7 +39,7 @@
             padding-left: 5px;
         }
 
- 
+
 
         #side {
             width: fit-content;
@@ -58,40 +69,47 @@
             padding-left: 10px;
         }
 
-        .tut{
-            padding : 10px 0 50px 3px
+        .tut {
+            padding: 10px 0 50px 3px
         }
 
-        .mobileHidden{
+        .mobileHidden {
             display: block;
         }
-        @media (max-width:800px){
-            #content{
+
+        @media (max-width:800px) {
+            #content {
                 flex-direction: column;
             }
-            #side{
+
+            #side {
                 width: 100%;
             }
-            .mobileHidden{
-            display: none;
-        }
+
+            .mobileHidden {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
     <script src="js/wow.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.5.0/dist/lazyload.min.js"></script>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm rounded">
-        <div class="container w-100 navbar_container" >
+        <div class="container w-100 navbar_container">
             <diav class="navbar-brand w-100">
                 <img src="images/charts.png" alt="..." height="36">
-                <a href="index.html#home"  class="brand_name">Interactive Data Editor</a>
-                <button style="float:right;" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <a href="index.html#home" class="brand_name">Interactive Data Editor</a>
+                <button style="float:right;" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
         </div>
@@ -112,7 +130,7 @@
 
 
     <div id='content'>
-        <div id="side" >
+        <div id="side">
             <!-- <div style="text-align: center; margin-top: 21px; font-size: xx-large; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Interactive Data Editor</div> -->
             <!-- <div style="text-align: center; font-size: large; font-style: italic;">v2.8.0</div> -->
             <div style="text-align: center; margin-top: 13px; font-size: x-large; padding-bottom: 21px;">Reference</div>
@@ -147,15 +165,16 @@
             <div class="tut">
                 <h2 id="load-file">Load File</h2>
                 <p>
-                    Directly load data from text file from <samp>File &gt; Open File</samp> or by pressing <kbd>Ctrl+O</kbd>.
+                    Directly load data from text file from <samp>File &gt; Open File</samp> or by pressing
+                    <kbd>Ctrl+O</kbd>.
                     For 3D data select the required <var>X/Y</var> value from the provied slider or scrolling inside
                     the plot.
                     If you want to add multiple data set from other files, you can load them through
                     <samp>File &gt; Add File</samp>.
                     You can use the recent files menu to quickly load any of the last recent 10 files.
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls" controls loop>
-                    <source  data-src="images/file_load.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls" controls loop>
+                    <source data-src="images/file_load.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -168,8 +187,8 @@
                     <samp>Window &gt; 3D Plot Viewer</samp>.
                     The viewer updates in real time as you make updates in the main window.
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/3d_viewer.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/3d_viewer.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -191,8 +210,8 @@
                     Also keyboard navigation keys can also be ued to move selected data points.
                     Although this option is available only for mooving in y-axis.
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/edit_data.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/edit_data.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -211,8 +230,8 @@
                     with a smoothing spline approximation or moving average or by quadratic regression respectively.
                     Bad data points can also be romeved or set by required value
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/data_edit_2.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/data_edit_2.mp4" type="video/mp4">
                 </video>
 
             </div>
@@ -224,12 +243,14 @@
 
                 <h3 id="smoothing-multiple">Smoothing multiple datasets simultaneously</h3>
                 <p>
-                    Data from multiple files or different colums from a same file can be opened for editing, though at any moment a single
-                    dataset can be edited. Editing between differnet data set can be toggled through the <samp>Plot Dashboard</samp> or 
-                     by pressing <kbd>Ctrl+TAB</kbd>
+                    Data from multiple files or different colums from a same file can be opened for editing, though at
+                    any moment a single
+                    dataset can be edited. Editing between differnet data set can be toggled through the <samp>Plot
+                        Dashboard</samp> or
+                    by pressing <kbd>Ctrl+TAB</kbd>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/multi_edit.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/multi_edit.mp4" type="video/mp4">
                 </video>
 
             </div>
@@ -246,8 +267,8 @@
                     Use interpolation to fill missing grid values or make the grid denser or
                     vice-versa through <samp>Edit &gt; Fill Values</samp>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/interpolate.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/interpolate.mp4" type="video/mp4">
                 </video>
 
             </div>
@@ -260,15 +281,15 @@
                     Extend your dataset by repeating or mirroring using <samp>Edit &gt; Extend Data</samp>.
                     This can be applied globally
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/extend.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/extend.mp4" type="video/mp4">
                 </video>
 
                 <p>
                     or locally
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/mirror_2.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/mirror_2.mp4" type="video/mp4">
                 </video>
 
 
@@ -285,8 +306,8 @@
                 <p>
                     Use <samp>Fitting &gt; Polynomial Regression fitting</samp>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/rgfit.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/rgfit.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -300,8 +321,8 @@
                 <p>
                     Use <samp>Fitting &gt; Lavenberg-Marqardett fitting</samp>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/lmfit.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/lmfit.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -313,8 +334,8 @@
                     To swap data values between two data sets open swapper mode by
                     <samp>View &gt; Toggle Swapper</samp>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/swapper.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/swapper.mp4" type="video/mp4">
                 </video>
 
 
@@ -329,8 +350,8 @@
                     You can undo or redo last 10 changes by pressing <kbd>Ctrl+Z</kbd>
                     or <kbd>Shift+Ctrl+Z</kbd>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/undo-redo.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/undo-redo.mp4" type="video/mp4">
                 </video>
 
 
@@ -346,8 +367,8 @@
                     To make any changes to the plot option/style like marker/line styles,
                     font styles, open the setting window <samp>View &gt; Open Plot Settings</samp>
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/settings.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/settings.mp4" type="video/mp4">
                 </video>
 
 
@@ -360,10 +381,11 @@
                 <h2 id="export-as-image">Export as image</h2>
                 <p>
                     Save your plot in different format and resolution.
-                    Use <samp>File &gt; Export as image</samp> or click on the camera icon (<i class="fa fa-camera"></i> ) on the plot corner
+                    Use <samp>File &gt; Export as image</samp> or click on the camera icon (<i class="fa fa-camera"></i>
+                    ) on the plot corner
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/export.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/export.mp4" type="video/mp4">
                 </video>
 
 
@@ -378,8 +400,8 @@
                     Open a spreadsheet containing the current data set through <samp>Window &gt; Spreadsheet</samp>.
                     You can directly make changes to the data set
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/spreadsheet.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/spreadsheet.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -391,8 +413,8 @@
                 <p>
                     A 3D plotter is also provided to quickly plot 3D data sets
                 </p>
-                <video  class="lazy" width="100%" height="500" controls="controls">
-                    <source  data-src="images/plotter.mp4" type="video/mp4">
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/plotter.mp4" type="video/mp4">
                 </video>
             </div>
 
@@ -403,18 +425,18 @@
 
         </div>
     </div>
-<script>
+    <script>
 
         new WOW().init();
         var lazyLoadInstance = new LazyLoad({
-        // Your custom settings go here
+            // Your custom settings go here
         });
 
-        $('#main').scroll(function (){
+        $('#main').scroll(function () {
             var scroll = $('#main').scrollTop();
 
-            
-            if (scroll >=20) {
+
+            if (scroll >= 20) {
                 $('#side').addClass('mobileHidden');
 
             }
@@ -423,7 +445,7 @@
             }
         });//.scroll();
 
-</script>
+    </script>
 </body>
 
 </html>
