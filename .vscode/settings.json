@@ -20,6 +20,7 @@
         "LICENSE":true,
         "gulpFile.js":true,
         "**/*.min.*":true,
+        "**/**.svg":true,
         "**/*.woff2":true
 
     }

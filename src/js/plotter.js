@@ -318,15 +318,19 @@ function updatePlot(){
 }
 
 
+
 function getMinMax(col){
-    var [min, max] = [Infinity, -Infinity]
-    fullData[currentIndex][col].forEach(el=>{
-        el.forEach(x=>{
-            min = x<min ? x:min
-            max = x>max ? x:max
-        })
-    })
-    return [min,max]
+    var [m, n] = [Infinity, -Infinity]
+    for(let i=0;i<fullData.length;i++){
+        c = fullDataCols[i][col]
+        for(let j of fullData[i][c]){
+            for(let k of j){
+                n = n >= k ? n : k
+                m = m <= k ? m : k
+            }
+        }
+    }
+    return [m,n]
 }
 
 
@@ -342,18 +346,18 @@ function getRange(lim,col) {
 
 
 function setXRange(lim) {
-    var [lim, _] = getRange(lim, fullDataCols[currentIndex].x);
+    var [lim, _] = getRange(lim, "x");
     Plotly.relayout(figurecontainer, {"scene.xaxis.range": lim});
 };
 
 
 function setYRange(lim) {
-    var [lim, _] = getRange(lim, fullDataCols[currentIndex].y);
+    var [lim, _] = getRange(lim, "y");
     Plotly.relayout(figurecontainer, {"scene.yaxis.range": lim});
 };
 
 function setZRange(lim) {
-    var [lim, [t1,t2]] = getRange(lim, fullDataCols[currentIndex].z);
+    var [lim, [t1,t2]] = getRange(lim, "z");
     Plotly.update(figurecontainer, {
         "cmin": t1,"cmax": t2
     },{

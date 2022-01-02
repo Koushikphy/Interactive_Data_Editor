@@ -417,9 +417,11 @@ function updateOnServer() {
     clearTimeout(timer);
     timer = setTimeout(()=>{  //send updated value only once within .5 sec
         if(!exportAll) {
+            let cx = swapped? col.y: col.x
+            let cy = swapped? col.x: col.y
             var s_data = [[
-                data.map(i=>i[swapped? col.y: col.x]),
-                data.map(i=>i[swapped? col.x: col.y]),
+                data.map(i=>i[cx]),
+                data.map(i=>i[cy]),
                 data.map(i=>i[col.z])
             ]]
         } else{
@@ -791,6 +793,7 @@ function tools(option,index,ev,elem){
         saveNames.push(saveNames[index])
         legendNames.push(clone(legendNames[index]))
         addTrace()
+        
     }else if(option==2) { // close this
         if(fileNames.length==1) return // nothing to delete here
         if(index==currentEditable) return
@@ -802,8 +805,8 @@ function tools(option,index,ev,elem){
         saveNames.splice(index,1)
         legendNames.splice(index,1)
     }
+    if(exportAll && currentEditable!=index) updateOnServer()
     makeRows()
-
 }
 
 function tools2(option,index,ev,elem){
@@ -825,6 +828,7 @@ function tools2(option,index,ev,elem){
         let colC = fullDataCols[index]
         legendNames[index] = path.basename(fileNames[index]) + ` ${(swapped? colC.x: colC.y) + 1}:${colC.z + 1}`
         updatePlot(true)
+        if (exportAll) updateOnServer()
     }
 }
 

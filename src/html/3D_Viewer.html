@@ -13,6 +13,7 @@
             src: local('Lato Regular'), local('Lato-Regular'), url(../css/S6uyw4BMUTPHjx4wXg.woff2) format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
+
         body {
             float: left;
             width: 98.5%;
@@ -20,45 +21,46 @@
             overflow: hidden;
             font-family: 'Lato', sans-serif;
         }
-        
 
-        select{
+
+        select {
             margin-right: 2pc;
             width: fit-content;
-            cursor: pointer; 
+            cursor: pointer;
             font-family: sans-serif;
             font-size: 90%;
-            padding:3px;
+            padding: 3px;
             color: #444;
             border: 1px solid #999;
             background-color: #fff;
             border-radius: 2px;
         }
 
-        select:hover,select:focus {
-            background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(40%, rgba(0,0,0, 0.05)), to(rgba(0,0,0, 0.10)));
-            background-image: -webkit-linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
-            background-image: linear-gradient(transparent, rgba(0,0,0, 0.05) 40%, rgba(0,0,0, 0.10));
+        select:hover,
+        select:focus {
+            background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(40%, rgba(0, 0, 0, 0.05)), to(rgba(0, 0, 0, 0.10)));
+            background-image: -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.10));
+            background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.10));
             outline: none;
         }
 
         select:active {
-        -webkit-box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
-                box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
-        border-color: #000;
+            -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset, 0 0 6px rgba(0, 0, 0, 0.20) inset;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset, 0 0 6px rgba(0, 0, 0, 0.20) inset;
+            border-color: #000;
         }
 
-        input[type=text]{
+        input[type=text] {
             /* padding: 0.3em 0.6em; */
             height: 1.55pc;
             display: inline-block;
             border: 1px solid #ccc;
             -webkit-box-shadow: inset 0 1px 3px #ddd;
-                    box-shadow: inset 0 1px 3px #ddd;
+            box-shadow: inset 0 1px 3px #ddd;
             border-radius: 1px;
             vertical-align: middle;
             -webkit-box-sizing: border-box;
-                    box-sizing: border-box;
+            box-sizing: border-box;
             margin-right: 10px;
             width: 7pc;
             padding-left: 5px;
@@ -69,11 +71,12 @@
             border-color: #129FEA;
         }
 
-        .floatdiv{
+        .floatdiv {
             position: absolute;
             top: 0;
         }
-        #figurecontainer{
+
+        #figurecontainer {
             height: 100%;
             width: 100%;
         }
@@ -81,21 +84,24 @@
         .borders {
             padding: 2px 0 2px 0;
             border: 1px solid black;
-            margin:5px 0 5px 0;
-            box-shadow: inset -2px -2px 3px 0px rgba(0,0,0,.15);
+            margin: 5px 0 5px 0;
+            box-shadow: inset -2px -2px 3px 0px rgba(0, 0, 0, .15);
             border-radius: 1px;
             width: 100%;
             background-color: white;
         }
-        #marker{
+
+        #marker {
             display: inline-block;
         }
-        #colSel{
+
+        #colSel {
             min-width: 2.7pc;
             margin-left: 3px;
             margin-right: 10px;
         }
-        .mySelect{
+
+        .mySelect {
             background-color: rgb(255, 255, 255);
             display: inline-flex;
             font-size: 1.05pc;
@@ -103,7 +109,8 @@
             border-radius: 2.3px;
             margin: 3px 7px 0 0;
         }
-        .mySelect select{
+
+        .mySelect select {
             border: none;
             padding: 0 !important;
             margin: 0 !important;
@@ -111,16 +118,16 @@
             font-size: 1.05pc !important;
             border-left: 1px solid black;
             background-color: rgb(255, 255, 255);
-            text-align-last:center
+            text-align-last: center
         }
 
-        .mySelect span{
+        .mySelect span {
             min-width: 2pc;
             padding: 0 3px 0 3px;
             text-align: center;
         }
 
-        .mySelect select:focus{
+        .mySelect select:focus {
             /* border: none; */
             outline: none;
         }
@@ -133,68 +140,71 @@
 <body>
     <div id="figurecontainer"></div>
     <div class="floatdiv">
-    <div id="status" style="margin-bottom: 5px;">
-        <i><b>Requesting data. Please wait...</b></i>
+        <div id="status" style="margin-bottom: 5px;">
+            <i><b>Requesting data. Please wait...</b></i>
+        </div>
+
+        <div class="mySelect">
+            <span>Z</span>
+            <select id="colSel" onchange="ipcRenderer.send('colchanged', this.value-1)">
+            </select>
+        </div>
+
+
+        <div class="mySelect">
+            <span>Plot Type</span>
+            <select id="typeSel" onchange="changePlotType(this)">
+                <option value="wire">Wire Frame</option>
+                <option value="surf">Surface</option>
+            </select>
+        </div>
+
+
+        <div class="mySelect" id="marker">
+            <input onclick="mark_clicked(this)" type="checkbox">
+            <span>Markers</span>
+        </div>
+
+        <div class="mySelect" id='plotAll'>
+            <input onclick="ipcRenderer.send('exportAll', this.checked)" type="checkbox">
+            <span>Plot all</span>
+        </div>
+
+        <div class="borders">
+            Axes Ranges ⇒
+            X <input onchange="setRange()" type="text" id='xInp'>
+            Y <input onchange="setRange()" type="text" id='yInp'>
+            Z <input onchange="setRange()" type="text" id='zInp'>
+        </div>
     </div>
-
-    <div class="mySelect">
-        <span>Z</span>
-        <select id="colSel" onchange="ipcRenderer.send('colchanged', this.value-1)">
-    </select></div>
-
-
-    <div class="mySelect">
-        <span>Plot Type</span>
-        <select id="typeSel" onchange="changePlotType(this)">
-            <option value="wire">Wire Frame</option>
-            <option value="surf">Surface</option>
-    </select></div>
-
-
-    <div class="mySelect" id="marker">
-        <input onclick="mark_clicked(this)" type="checkbox">
-        <span>Markers</span>
-    </div>
-
-    <div class="mySelect" id='plotAll'>
-        <input onclick="ipcRenderer.send('exportAll', this.checked)" type="checkbox">
-        <span>Plot all</span>
-    </div>
-
-    <div class="borders">
-        Axes Ranges ⇒
-        X <input onchange="setRange()" type="text" id='xInp' >
-        Y <input onchange="setRange()" type="text" id='yInp' >
-        Z <input onchange="setRange()" type="text" id='zInp' >
-    </div>
-    </div>
+    <script src="../lib/plotly-1.44.4.min.js"></script>
     <script>
-        var data = [], swapped = false, first = true, currentType = 0, colLen=0, ii=1;
+        var data = [], swapped = false, first = true, currentType = 0, colLen = 0, ii = 1;
 
         const figurecontainer = document.getElementById("figurecontainer")
-        const {ipcRenderer} = require('electron');
-        const Plotly = require('plotly.js-gl3d-dist');
+        const { ipcRenderer } = require('electron');
+        // const Plotly = require('plotly.js-gl3d-dist');  !<-- wait till bug in latest versions are fixed
         const stat = document.getElementById('status');
 
 
 
-        document.getElementById("colSel").onwheel = function(e){
+        document.getElementById("colSel").onwheel = function (e) {
             let cur = this.selectedIndex
-            let add = e.deltaY >0 ? 1 : -1
-            if((colLen==cur+1 && add==1) || (cur==0 && add==-1) ) return
+            let add = e.deltaY > 0 ? 1 : -1
+            if ((colLen == cur + 1 && add == 1) || (cur == 0 && add == -1)) return
             this.selectedIndex = cur + add
             ipcRenderer.send('colchanged', cur + add)
         }
 
 
 
-        ipcRenderer.on("sdata", (e, d)=> {
+        ipcRenderer.on("sdata", (e, d) => {
             [data, swapped, zVal, tmpCL] = d;
             // console.log('received')
-            ii = swapped ? 0: 1;
-            if(tmpCL !=colLen){
+            ii = swapped ? 0 : 1;
+            if (tmpCL != colLen) {
                 colLen = tmpCL;
-                document.getElementById("colSel").innerHTML = new Array(colLen).fill(0).map((_,j)=>`<option value="${j+1}">${j+1}</option>`).join('');
+                document.getElementById("colSel").innerHTML = new Array(colLen).fill(0).map((_, j) => `<option value="${j + 1}">${j + 1}</option>`).join('');
             };
             document.getElementById("colSel").selectedIndex = zVal;
             updatePlot()
@@ -202,14 +212,14 @@
 
 
 
-        function makeLayOutRanges(){
+        function makeLayOutRanges() {
             layoutRange = {}
             cRange = {}
 
             ll = document.getElementById("xInp").value
-            if(ll==""){
+            if (ll == "") {
                 layoutRange["scene.xaxis.autorange"] = true
-            } else{
+            } else {
                 ll = ll.split(",").map(x => parseFloat(x))
                 if (isNaN(ll[0])) ll[0] = getMin(0)
                 if (isNaN(ll[1])) ll[1] = getMax(0)
@@ -218,9 +228,9 @@
             }
 
             ll = document.getElementById("yInp").value
-            if(ll==""){
+            if (ll == "") {
                 layoutRange["scene.yaxis.autorange"] = true
-            } else{
+            } else {
                 ll = ll.split(",").map(x => parseFloat(x))
                 if (isNaN(ll[0])) ll[0] = getMin(1)
                 if (isNaN(ll[1])) ll[1] = getMax(1)
@@ -229,50 +239,51 @@
             }
 
             ll = document.getElementById("zInp").value
-            if(ll==""){
+            if (ll == "") {
                 layoutRange["scene.zaxis.autorange"] = true
                 cRange["cauto"] = true
-            } else{
+            } else {
                 ll = ll.split(",").map(x => parseFloat(x))
 
-                if(currentType==1){ //surface type
+                if (currentType == 1) { //surface type
                     var rr = [getMin(2), getMax(2)]
                     if (isNaN(ll[0])) ll[0] = rr[0]
                     if (isNaN(ll[1])) ll[1] = rr[1]
-                    
+
                     cmin = Math.max(ll[0], rr[0]);
                     cmax = Math.min(ll[1], rr[1]);
 
                     cRange = {
-                        "cauto" : false,
-                        "cmin" : cmin,
-                        "cmax" : cmax
+                        "cauto": false,
+                        "cmin": cmin,
+                        "cmax": cmax
                     }
-                } else{
+                } else {
                     if (isNaN(ll[0])) ll[0] = getMin(2)
                     if (isNaN(ll[1])) ll[1] = getMax(2)
                 }
                 layoutRange["scene.zaxis.autorange"] = false
                 layoutRange["scene.zaxis.range"] = ll
             }
-            return currentType==1? [cRange, layoutRange] : layoutRange
+
+            return currentType == 1 ? [cRange, layoutRange] : layoutRange
         }
 
 
 
-        function updatePlot(){
+        function updatePlot() {
             stat.innerHTML = '<b>Please Wait...</b>'
-            setTimeout(()=>{  // to update the html first
+            setTimeout(() => {  // to update the html first
                 var pl = currentType ? updatePlotSurf() : updatePlotWire();
-                pl.then(_=>{
+                pl.then(_ => {
                     stat.innerHTML = "<b>Plot Updated on:</b><i> " + new Date().toLocaleString() + "</i>";
                 });
-            },50)
+            }, 50)
         }
 
 
         //common functions******************************
-        function changePlotType(dom){
+        function changePlotType(dom) {
             dom.blur();
             currentType = dom.selectedIndex;
             document.getElementById('marker').style.display = currentType ? 'none' : 'inline-block';
@@ -281,8 +292,8 @@
 
 
 
-        function setRange(lim, axis){
-            if(currentType==1){
+        function setRange(lim, axis) {
+            if (currentType == 1) {
                 Plotly.update(figurecontainer, ...makeLayOutRanges())
             } else {
                 Plotly.relayout(figurecontainer, makeLayOutRanges())
@@ -291,15 +302,27 @@
 
 
         // functions for wieframe*****************************
+        colorList = ["#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#1f77b4"]
 
 
         function updatePlotWire() {
             let res = data.map(makeRotation)
-            let dat = [0,0,0].map((_,i)=>[...data.flatMap(e=>e[i]),...res.flatMap(e=>e[i])]) //   data.map((el,i)=>el.concat(res[i]))
             let layR = makeLayOutRanges()
-            if ( first || figurecontainer.data.length != dat[0].length) {
+
+            let dat = [0, 0, 0].map((_, i) => [...data.flatMap(e => e[i]), ...res.flatMap(e => e[i])]) //   data.map((el,i)=>el.concat(res[i]))
+            if (first || figurecontainer.data.length != dat[0].length) {
+
+                let breaks = [...data.map(e => e[0].length), ...res.map(e => e[0].length)]
+
+                function getTraceColor(i) {
+                    for (let j = 0; j < breaks.length; j++) {
+                        let val = breaks[j]
+                        if (i < val) return colorList[j % data.length]
+                        i -= val
+                    }
+                }
                 return Plotly.newPlot(figurecontainer,
-                    dat[0].map((_,j)=>(
+                    dat[0].map((_, j) => (
                         {
                             type: 'scatter3d',
                             mode: "lines",
@@ -308,10 +331,10 @@
                             z: dat[2][j],
                             marker: {
                                 size: 1.7,
-                                color: "#1f77b4"
+                                color: "#1f77b4"  //keeping the marker same color ???!
                             },
                             line: {
-                                color: '#ff7f0e'
+                                color: getTraceColor(j)
                             },
                             hoverinfo: "x+y+z",
                             hoverlabel: {
@@ -320,24 +343,24 @@
                         }
                     )),
                     layout,
-                    {displaylogo: false ,responsive: true}
-                ).then(()=>{
+                    { displaylogo: false, responsive: true }
+                ).then(() => {
                     Plotly.relayout(figurecontainer, layR);   // doesn't work well if this done with the above update call
                     first = false;
                 })
-            } else{
-               return Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, layR)
+            } else {
+                return Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, layR)
             }
         };
 
 
 
         function makeRotation(da) {
-            if(da[0].every(v=>v.length==da[0][0].length)) return da.map(transpose)
-            var tmpDa = da.map(el=>[].concat(...el))//.filter(x => x !== undefined))
+            if (da[0].every(v => v.length == da[0][0].length)) return da.map(transpose)
+            var tmpDa = da.map(el => [].concat(...el))//.filter(x => x !== undefined))
             var unq = [...new Set(tmpDa[ii])].sort((a, b) => a - b);
-            var res = [0,0,0].map(_=>new Array(unq.length).fill(0).map(_=> new Array()))
-            tmpDa[ii].forEach((el,i)=>{
+            var res = [0, 0, 0].map(_ => new Array(unq.length).fill(0).map(_ => new Array()))
+            tmpDa[ii].forEach((el, i) => {
                 var ind = unq.indexOf(el)
                 res[0][ind].push(tmpDa[0][i])
                 res[1][ind].push(tmpDa[1][i])
@@ -348,44 +371,45 @@
 
 
         function mark_clicked(mark) {
-            Plotly.restyle(figurecontainer, {'mode': mark.checked ? "markers+lines" : "lines"})
+            Plotly.restyle(figurecontainer, { 'mode': mark.checked ? "markers+lines" : "lines" })
         };
 
 
         // functions for surface ***********************
-
+        var colorScaleList = ["Portland", "Earth", "Greens", "Blackbody", "Hot", "Bluered", "Electric", "Jet", "YlOrRd", "RdBu"]
         function updatePlotSurf() {
             var [cR, lR] = makeLayOutRanges()
 
-            if(first || figurecontainer.data.length != data.length){
-                return Plotly.newPlot(figurecontainer, 
-                data.map(el=>(
-                    {
-                        type: 'surface',
-                        hoverinfo: "x+y+z",
-                        colorscale: "Portland",
-                        showscale: false,
-                        hoverlabel: {
-                            bgcolor: "#2ca02c"
-                        },
-                        x: el[0],
-                        y: el[1],
-                        z: el[2],
-                        ... cR
-                    }
+            if (first || figurecontainer.data.length != data.length) {
+                return Plotly.newPlot(figurecontainer,
+                    data.map((el, j) => (
+                        {
+                            type: 'surface',
+                            hoverinfo: "x+y+z",
+                            colorscale: colorScaleList[j],
+                            showscale: false,
+                            hoverlabel: {
+                                bgcolor: "#2ca02c"
+                            },
+                            x: el[0],
+                            y: el[1],
+                            z: el[2],
+                            ...cR
+                        }
                     )),
                     layout,
-                    { displaylogo: false ,responsive: true}
-                ).then(()=>{
+                    { displaylogo: false, responsive: true }
+                ).then(() => {
                     Plotly.relayout(figurecontainer, lR);
                     first = false;
                 })
-            } else{
-                return Plotly.update(figurecontainer, { 
-                    'x': data.map(el=>el[0]),
-                    'y': data.map(el=>el[1]),
-                    'z': data.map(el=>el[2]),
-                    ...cR }, lR)
+            } else {
+                return Plotly.update(figurecontainer, {
+                    'x': data.map(el => el[0]),
+                    'y': data.map(el => el[1]),
+                    'z': data.map(el => el[2]),
+                    ...cR
+                }, lR)
             }
         };
 
@@ -393,25 +417,40 @@
 
         // *********************************************
 
-        function getMin(col){
+        function getMin(col) {
             var m = Infinity
-            for(let arr of data){
-                for(let i of arr[col]){
-                    for(let j of i) m = m<=j? m: j
+            for (let arr of data) {
+                for (let i of arr[col]) {
+                    for (let j of i) m = m <= j ? m : j
                 }
             }
             return m
         }
 
-        function getMax(col){
+        function getMax(col) {
             var n = -Infinity
-            for(let arr of data){
-                for(let i of arr[col]){
-                    for(let j of i) n = n>=j? n: j
+            for (let arr of data) {
+                for (let i of arr[col]) {
+                    for (let j of i) n = n >= j ? n : j
                 }
             }
             return n
         }
+
+        // function getMinMax(col){
+        //     var n = -Infinity
+        //     var m = Infinity
+
+        //     for(let arr of data){
+        //         for(let i of arr[col]){
+        //             for(let j of i) {
+        //                 n = n>=j? n: j
+        //                 m = m<=j? m: j
+        //             }
+        //         }
+        //     }
+        //     return [n,m]
+        // }
 
 
         function transpose(m) {
@@ -431,7 +470,7 @@
             scene: {
                 aspectmode: "cube",
                 zaxis: {
-                    autorange: true,
+                    // autorange: true,
                     spikesides: false,
                 },
                 yaxis: {

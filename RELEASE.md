@@ -1,4 +1,10 @@
-## *v2.9.2
+## v2.9.3 
+1. 3D plot viewer now supports different color for different traces.
+2. Performance improvement for 3D plot viewer
+3. Bug fixed in syncing data between main editor and 3D plot viewer.
+4. 3D plotter bug fixed in setting range
+
+## v2.9.2
 1. Use a single instance of the software.
 2. If viewer/spreadsheet window is open when clicking the viewer menu button it will just focus it instead of opening a new window.
 3. New plot dashboard style to quickly change column directly from the dashboard.
