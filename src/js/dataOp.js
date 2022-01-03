@@ -130,6 +130,8 @@ function deleteInterpolate() {
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
         if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply spline at endpoints"}
+        if(!data[0][col.y].every((i,j,k)=> j==0 ? true:i>k[j-1])) throw {ty:'sS', msg:'Monotonically increasing values required.'}
+
         saveOldData()
         dpsy = data[th_in][col.z] = useSpline(dpsx, dpsy, ind)
         endJobs()

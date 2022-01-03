@@ -200,7 +200,6 @@
 
         ipcRenderer.on("sdata", (e, d) => {
             [data, swapped, zVal, tmpCL] = d;
-            // console.log('received')
             ii = swapped ? 0 : 1;
             if (tmpCL != colLen) {
                 colLen = tmpCL;
@@ -211,64 +210,67 @@
         })
 
 
-
-        function makeLayOutRanges() {
-            layoutRange = {}
-            cRange = {}
-
-            ll = document.getElementById("xInp").value
-            if (ll == "") {
-                layoutRange["scene.xaxis.autorange"] = true
-            } else {
-                ll = ll.split(",").map(x => parseFloat(x))
-                if (isNaN(ll[0])) ll[0] = getMin(0)
-                if (isNaN(ll[1])) ll[1] = getMax(0)
-                layoutRange["scene.xaxis.autorange"] = false
-                layoutRange["scene.xaxis.range"] = ll
-            }
-
-            ll = document.getElementById("yInp").value
-            if (ll == "") {
-                layoutRange["scene.yaxis.autorange"] = true
-            } else {
-                ll = ll.split(",").map(x => parseFloat(x))
-                if (isNaN(ll[0])) ll[0] = getMin(1)
-                if (isNaN(ll[1])) ll[1] = getMax(1)
-                layoutRange["scene.yaxis.autorange"] = false
-                layoutRange["scene.yaxis.range"] = ll
-            }
-
-            ll = document.getElementById("zInp").value
-            if (ll == "") {
-                layoutRange["scene.zaxis.autorange"] = true
-                cRange["cauto"] = true
-            } else {
-                ll = ll.split(",").map(x => parseFloat(x))
-
-                if (currentType == 1) { //surface type
-                    var rr = [getMin(2), getMax(2)]
-                    if (isNaN(ll[0])) ll[0] = rr[0]
-                    if (isNaN(ll[1])) ll[1] = rr[1]
-
-                    cmin = Math.max(ll[0], rr[0]);
-                    cmax = Math.min(ll[1], rr[1]);
-
-                    cRange = {
-                        "cauto": false,
-                        "cmin": cmin,
-                        "cmax": cmax
+        function makeLayOut() {
+            var layout = {
+                margin: {
+                    t: 0, r: 0, b: 0, l: 0, pad: 0
+                },
+                showlegend: false,
+                scene: {
+                    aspectmode: "cube",
+                    zaxis: {
+                        autorange: true,
+                        spikesides: false,
+                    },
+                    yaxis: {
+                        autorange: true,
+                        spikesides: false,
+                    },
+                    xaxis: {
+                        autorange: true,
+                        spikesides: false,
                     }
-                } else {
-                    if (isNaN(ll[0])) ll[0] = getMin(2)
-                    if (isNaN(ll[1])) ll[1] = getMax(2)
-                }
-                layoutRange["scene.zaxis.autorange"] = false
-                layoutRange["scene.zaxis.range"] = ll
+                },
             }
 
-            return currentType == 1 ? [cRange, layoutRange] : layoutRange
+            const con = {
+                "x": { "axis": "xaxis", "index": 0, "elem": "xInp" },
+                "y": { "axis": "yaxis", "index": 1, "elem": "yInp" },
+                "z": { "axis": "zaxis", "index": 2, "elem": "zInp" }
+            }
+
+            for (let ax of ["x", "y", "z"]) {
+                let key = con[ax]
+                let ll = document.getElementById(key.elem).value
+                if (ll != "") {
+                    ll = ll.split(",").map(parseFloat)
+                    if (isNaN(ll[0])) ll[0] = getMin(key.index)
+                    if (isNaN(ll[1])) ll[1] = getMax(key.index)
+                    layout.scene[key.axis] = { "autorange": false, "range": ll }
+                }
+            }
+            return layout
         }
 
+
+        function makeColorRange() {
+            ll = document.getElementById("zInp").value
+            if (ll == "") {
+                return { "cauto": true }
+            } else {
+                ll = ll.split(",").map(x => parseFloat(x))
+
+                var rr = getMinMax(2)
+                if (isNaN(ll[0])) ll[0] = rr[0]
+                if (isNaN(ll[1])) ll[1] = rr[1]
+
+                return {
+                    "cauto": false,
+                    "cmin": Math.max(ll[0], rr[0]),
+                    "cmax": Math.min(ll[1], rr[1])
+                }
+            }
+        }
 
 
         function updatePlot() {
@@ -294,9 +296,9 @@
 
         function setRange(lim, axis) {
             if (currentType == 1) {
-                Plotly.update(figurecontainer, ...makeLayOutRanges())
+                Plotly.update(figurecontainer, makeLayOut(), makeColorRange())
             } else {
-                Plotly.relayout(figurecontainer, makeLayOutRanges())
+                Plotly.relayout(figurecontainer, makeLayOut())
             }
         }
 
@@ -306,21 +308,19 @@
 
 
         function updatePlotWire() {
-            let res = data.map(makeRotation)
-            let layR = makeLayOutRanges()
+            let dat = [[], [], []], breaks = [];
+            const ll = data.length;
+            data.forEach(d => {
+                r = makeRotation(d);
+                dat[0].push(...d[0], ...r[0]);
+                dat[1].push(...d[1], ...r[1]);
+                dat[2].push(...d[2], ...r[2]);
+                breaks.push(dat[0].length)
+            })
+            breaks = breaks.map((a=>b=>a+=b)(0))
 
-            let dat = [0, 0, 0].map((_, i) => [...data.flatMap(e => e[i]), ...res.flatMap(e => e[i])]) //   data.map((el,i)=>el.concat(res[i]))
             if (first || figurecontainer.data.length != dat[0].length) {
 
-                let breaks = [...data.map(e => e[0].length), ...res.map(e => e[0].length)]
-
-                function getTraceColor(i) {
-                    for (let j = 0; j < breaks.length; j++) {
-                        let val = breaks[j]
-                        if (i < val) return colorList[j % data.length]
-                        i -= val
-                    }
-                }
                 return Plotly.newPlot(figurecontainer,
                     dat[0].map((_, j) => (
                         {
@@ -334,7 +334,7 @@
                                 color: "#1f77b4"  //keeping the marker same color ???!
                             },
                             line: {
-                                color: getTraceColor(j)
+                                color: colorList[breaks.findIndex(e=>j<e)]
                             },
                             hoverinfo: "x+y+z",
                             hoverlabel: {
@@ -342,14 +342,11 @@
                             },
                         }
                     )),
-                    layout,
+                    makeLayOut(),
                     { displaylogo: false, responsive: true }
-                ).then(() => {
-                    Plotly.relayout(figurecontainer, layR);   // doesn't work well if this done with the above update call
-                    first = false;
-                })
+                ).then(() => { first = false; })
             } else {
-                return Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, layR)
+                return Plotly.update(figurecontainer, { 'x': dat[0], 'y': dat[1], 'z': dat[2] }, makeLayOut())
             }
         };
 
@@ -378,7 +375,6 @@
         // functions for surface ***********************
         var colorScaleList = ["Portland", "Earth", "Greens", "Blackbody", "Hot", "Bluered", "Electric", "Jet", "YlOrRd", "RdBu"]
         function updatePlotSurf() {
-            var [cR, lR] = makeLayOutRanges()
 
             if (first || figurecontainer.data.length != data.length) {
                 return Plotly.newPlot(figurecontainer,
@@ -394,22 +390,19 @@
                             x: el[0],
                             y: el[1],
                             z: el[2],
-                            ...cR
+                            ...makeColorRange()
                         }
                     )),
-                    layout,
+                    makeLayOut(),
                     { displaylogo: false, responsive: true }
-                ).then(() => {
-                    Plotly.relayout(figurecontainer, lR);
-                    first = false;
-                })
+                ).then(() => { first = false; })
             } else {
                 return Plotly.update(figurecontainer, {
                     'x': data.map(el => el[0]),
                     'y': data.map(el => el[1]),
                     'z': data.map(el => el[2]),
-                    ...cR
-                }, lR)
+                    ...makeColorRange()
+                }, makeLayOut())
             }
         };
 
@@ -437,20 +430,20 @@
             return n
         }
 
-        // function getMinMax(col){
-        //     var n = -Infinity
-        //     var m = Infinity
+        function getMinMax(col) {
+            var n = -Infinity
+            var m = Infinity
 
-        //     for(let arr of data){
-        //         for(let i of arr[col]){
-        //             for(let j of i) {
-        //                 n = n>=j? n: j
-        //                 m = m<=j? m: j
-        //             }
-        //         }
-        //     }
-        //     return [n,m]
-        // }
+            for (let arr of data) {
+                for (let i of arr[col]) {
+                    for (let j of i) {
+                        n = n >= j ? n : j
+                        m = m <= j ? m : j
+                    }
+                }
+            }
+            return [n, m]
+        }
 
 
         function transpose(m) {
