@@ -212,12 +212,11 @@
 
         function makeLayOut() {
             var layout = {
-                margin: {
-                    t: 0, r: 0, b: 0, l: 0, pad: 0
-                },
+                margin: { t: 0, r: 0, b: 0, l: 0, pad: 0 },
                 showlegend: false,
                 scene: {
                     aspectmode: "cube",
+                    camera: figurecontainer._fullLayout.scene.camera,  //preserves the camera position
                     zaxis: {
                         autorange: true,
                         spikesides: false,
@@ -246,7 +245,7 @@
                     ll = ll.split(",").map(parseFloat)
                     if (isNaN(ll[0])) ll[0] = getMin(key.index)
                     if (isNaN(ll[1])) ll[1] = getMax(key.index)
-                    layout.scene[key.axis] = { "autorange": false, "range": ll }
+                    layout.scene[key.axis] = { "spikesides": false, "autorange": false, "range": ll }
                 }
             }
             return layout
@@ -296,7 +295,7 @@
 
         function setRange(lim, axis) {
             if (currentType == 1) {
-                Plotly.update(figurecontainer, makeLayOut(), makeColorRange())
+                Plotly.update(figurecontainer, makeColorRange(), makeLayOut())
             } else {
                 Plotly.relayout(figurecontainer, makeLayOut())
             }
@@ -317,7 +316,7 @@
                 dat[2].push(...d[2], ...r[2]);
                 breaks.push(dat[0].length)
             })
-            breaks = breaks.map((a=>b=>a+=b)(0))
+            breaks = breaks.map((a => b => a += b)(0))
 
             if (first || figurecontainer.data.length != dat[0].length) {
 
@@ -334,7 +333,7 @@
                                 color: "#1f77b4"  //keeping the marker same color ???!
                             },
                             line: {
-                                color: colorList[breaks.findIndex(e=>j<e)]
+                                color: colorList[breaks.findIndex(e => j < e)]
                             },
                             hoverinfo: "x+y+z",
                             hoverlabel: {
@@ -442,7 +441,7 @@
                     }
                 }
             }
-            return [n, m]
+            return [m, n]
         }
 
 
