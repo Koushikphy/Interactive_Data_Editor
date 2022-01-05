@@ -1,4 +1,4 @@
-const Plotly= require('plotly.js-gl3d-dist')
+// const Plotly= require('plotly.js-gl3d-dist')
 const fs = require("fs")
 const {ipcRenderer, remote} = require('electron')
 const path= require('path')
