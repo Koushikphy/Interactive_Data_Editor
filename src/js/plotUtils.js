@@ -103,3 +103,25 @@ module.exports.iniPointsF = {
     },
     hoverinfo: 'x+y',
 };
+
+module.exports.iniPointsSm = {
+    x: [1],
+    y: [1],
+    type: 'scatter',
+    opacity: 1,
+    mode: 'markers+lines',
+    name : 'Smooth Approximation',
+    marker: {
+        symbol: "circle-dot",
+        color: '#b00',
+        size: 6,
+        opacity: 1
+    },
+    line: {
+        width: 2,
+        color: "#207104",
+        dash: 0,
+        shape: 'spline'
+    },
+    hoverinfo: 'x+y',
+};
