@@ -347,6 +347,13 @@ const homeMenuTemplate = [
                     mainWindow.webContents.send("menuTrigger", "tswap")
                 }
             },{
+                label: "Auto smoother",
+                enabled: true,
+                id: 'smt',
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "smt")
+                }
+            },{
                 role: 'togglefullscreen' 
             }
         ]

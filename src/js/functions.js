@@ -352,6 +352,10 @@ function colChanged(value) {
     }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
     // makeRows()
+    if(smooth.isActive){
+        fullDataCols[1].z = value;
+        updatePlot(all=true)
+    }
 };
 
 
@@ -873,103 +877,176 @@ function makeRows() {
 
 
 
-
-function smoother(x,y,smooth) {
-    const n = x.length;
-    var v   = new Array(n).fill(0).map(_=>new Array(7).fill(0));
-    var qty = new Array(n).fill(0);
-    var qu  = new Array(n).fill(0);
-    var u   = new Array(n).fill(0);
-
-    // setupuq
-    v[0][3] = x[1] - x[0]
-    for(let i=1;i<n-1;i++){
-        v[i][3] = x[i+1] - x[i]
-        v[i][0] = 1/v[i-1][3]
-        v[i][1] = -1/v[i][3] -1/v[i-1][3]
-        v[i][2] = 1/v[i][3]
-        v[i][4] = v[i][0]**2 + v[i][1]**2 + v[i][2]**2
-    }
-    for(let i=1;i<n-2;i++) v[i][5] = v[i][1]*v[i+1][0] + v[i][2]*v[i+1][1]
-    for(let i=1;i<n-3;i++) v[i][6] = v[i][2]*v[i+2][0]
-
-    var prev   = (y[1] - y[0])/v[0][3]
-
-    for(let i=1;i<n-1;i++){
-        diff = (y[i+1] - y[i])/v[i][3]
-        qty[i] = diff - prev
-        prev = diff
+   
+class Smoother {
+    #res= [];
+    constructor(){
+        this.isActive = false;
     }
 
-    // chol1s
-    var six1mp = 6.0 * ( 1.0 - smooth )
+    openSmooth = ()=>{
+        // check if only one trace is plotted
+        //enable/disable menus
+        if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
+        Plotly.addTraces(figurecontainer, {
+            x: [],
+            y: [],
+            type: 'scatter',
+            opacity: 1,
+            mode: 'markers+lines',
+            name : 'Fitted line',
+            marker: {
+                symbol: "circle-dot",
+                color: '#b00',
+                size: 6,
+                opacity: 1
+            },
+            line: {
+                width: 2,
+                color: "#207104",
+                dash: 0,
+                shape: 'spline'
+            },
+            hoverinfo: 'x+y',
+        });
+        disableMenu(['edat','fill','filter','af','arf', 'lmfit','rgft','swapen','tpl'])
+        $('#smooth').show()
 
-    for(let i=1;i<n-1;i++){
-        v[i][0] = six1mp*v[i][4] + 2.0*smooth*(v[i-1][3] + v[i][3])
-        v[i][1] = six1mp*v[i][5] + smooth*v[i][3]
-        v[i][2] = six1mp*v[i][6]
+        $('#extendUtils2D').slideDown()
+        fullData.push([])
+
+        fullDataCols.push(col)
+        this.isActive = true
+        document.getElementById('smoothApx').onclick = this.smoothApprox
+        document.getElementById('smoothApl').onclick = this.saveApprox
+        document.getElementById('smoothCls').onclick = this.closeSmooth
     }
 
-    if(n<4){
-        u[1] = qty[1]/v[1][0]
-    } else{
-        for (let i = 1; i < n-2; i++) {
-            ratio = v[i][1]/v[i][0]
-            v[i+1][0] -= ratio*v[i][1]
-            v[i+1][1] -= ratio*v[i][2]
-            v[i][1] = ratio
-            ratio = v[i][2]/v[i][0]
-            v[i+2][0] -= ratio*v[i][2]
-            v[i][2] = ratio
+    closeSmooth=()=>{
+        Plotly.deleteTraces(figurecontainer, 1);
+        enableMenu(['edat','fill','filter','af','arf', 'rgft','lmfit','swapen','tpl'])
+        setTimeout(resizePlot, 300)
+        $('#smooth').hide()
+        $('#extendUtils2D').slideUp()
+
+        fullData.splice(1,1)
+        fullDataCols.splice(1,1)
+        this.isActive = false
+    }
+
+    smoothApprox = () => {
+        const smtFactor = parseFloat(document.getElementById('smoothInp').value)
+        ///
+        // calculate and save in this.#res
+        ///
+        var cx = col.x
+        var cy = col.y
+        // smooth in one direction 
+        var res = data.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+        if(data.length!=1) {
+
+            // for 2D case, we have to smooth it in two direction...
+            // now rotate the direction to smooth in another direction
+            var [cx, cy] = [cy, cx];
+            res = expRotate(res, cx, cy)
+            var res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+            // rotate again to return the data in original structure.
+            var [cx, cy] = [cy, cx]
+            this.#res= expRotate(res,cx,cy)
+        } else{
+            this.#res = res
         }
-        // Forward substitution
-        u[0] = 0
-        v[0][2] = 0 
-        u[1] = qty[1]
-        for (let i = 1; i < n-2; i++) {
-            u[i+1] = qty[i+1] - v[i][1] * u[i] - v[i-1][2]*u[i-1]
+        fullData[1] = this.#res
+        updatePlot()
+    }
+
+    saveApprox = ()=>{
+        // modify the data with the approximation
+        data = this.#res
+        fullData[0] = data
+        this.closeSmooth()
+    }
+
+    #smoothOut(x,y,smooth){
+        const n = x.length;
+        var v   = new Array(n).fill(0).map(_=>new Array(7).fill(0));
+        var qty = new Array(n).fill(0);
+        var qu  = new Array(n).fill(0);
+        var u   = new Array(n).fill(0);
+    
+        // setupuq
+        v[0][3] = x[1] - x[0]
+        for(let i=1;i<n-1;i++){
+            v[i][3] = x[i+1] - x[i]
+            v[i][0] = 1/v[i-1][3]
+            v[i][1] = -1/v[i][3] -1/v[i-1][3]
+            v[i][2] = 1/v[i][3]
+            v[i][4] = v[i][0]**2 + v[i][1]**2 + v[i][2]**2
         }
-
-        // Back substitution.
-        u[n-1] = 0 
-        u[n-2] = u[n-2]/v[n-2][0]
-        for (let i = n-3; i >=1; i--) {
-            u[i] = u[i]/v[i][0] - u[i+1]*v[i][1]  - u[i+2]*v[i][2]
+        for(let i=1;i<n-2;i++) v[i][5] = v[i][1]*v[i+1][0] + v[i][2]*v[i+1][1]
+        for(let i=1;i<n-3;i++) v[i][6] = v[i][2]*v[i+2][0]
+    
+        var prev   = (y[1] - y[0])/v[0][3]
+        var diff, ratio;
+        for(let i=1;i<n-1;i++){
+            diff = (y[i+1] - y[i])/v[i][3]
+            qty[i] = diff - prev
+            prev = diff
         }
+    
+        // chol1s
+        var six1mp = 6.0 * ( 1.0 - smooth )
+    
+        for(let i=1;i<n-1;i++){
+            v[i][0] = six1mp*v[i][4] + 2.0*smooth*(v[i-1][3] + v[i][3])
+            v[i][1] = six1mp*v[i][5] + smooth*v[i][3]
+            v[i][2] = six1mp*v[i][6]
+        }
+    
+        if(n<4){
+            u[1] = qty[1]/v[1][0]
+        } else{
+            for (let i = 1; i < n-2; i++) {
+                ratio = v[i][1]/v[i][0]
+                v[i+1][0] -= ratio*v[i][1]
+                v[i+1][1] -= ratio*v[i][2]
+                v[i][1] = ratio
+                ratio = v[i][2]/v[i][0]
+                v[i+2][0] -= ratio*v[i][2]
+                v[i][2] = ratio
+            }
+            // Forward substitution
+            u[0] = 0
+            v[0][2] = 0 
+            u[1] = qty[1]
+            for (let i = 1; i < n-2; i++) {
+                u[i+1] = qty[i+1] - v[i][1] * u[i] - v[i-1][2]*u[i-1]
+            }
+    
+            // Back substitution.
+            u[n-1] = 0 
+            u[n-2] = u[n-2]/v[n-2][0]
+            for (let i = n-3; i >=1; i--) {
+                u[i] = u[i]/v[i][0] - u[i+1]*v[i][1]  - u[i+2]*v[i][2]
+            }
+        }
+    
+        // Construct Q * U.
+        prev = 0 
+        for (let i = 1; i < n; i++) {
+            qu[i] = (u[i] - u[i-1])/v[i-1][3]
+            qu[i-1] = qu[i] - prev
+            prev = qu[i]
+        }
+        qu[n-1]  = - qu[n-1]
+    
+        for (let i = 0; i < n; i++) {
+            qu[i] = y[i] - 6*(1-smooth)*qu[i]
+        }
+        return qu
     }
-
-    // Construct Q * U.
-    prev = 0 
-    for (let i = 1; i < n; i++) {
-        qu[i] = (u[i] - u[i-1])/v[i-1][3]
-        qu[i-1] = qu[i] - prev
-        prev = qu[i]
-    }
-    qu[n-1]  = - qu[n-1]
-
-    for (let i = 0; i < n; i++) {
-        qu[i] = y[i] - 6*(1-smooth)*qu[i]
-    }
-    return qu
 }
 
+smooth = new Smoother()
 
 
-
-function smooth(smt){
-    var cx = col.x
-    var cy = col.y
-    // smooth in one direction 
-    var res = data.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : smoother(dat[cy],y,smt)))
-    if(data.length==1) return res
-    // for 2D case, we have to smooth it in two direction...
-    // now rotate the direction to smooth in another direction
-    var [cx, cy] = [cy, cx];
-    res = expRotate(res, cx, cy)
-    var res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : smoother(dat[cy],y,smt)))
-    // rotate again to return the data in original structure.
-    var [cx, cy] = [cy, cx]
-    return expRotate(res,cx,cy)
-    }
-
-    

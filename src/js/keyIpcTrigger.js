@@ -164,6 +164,9 @@ function ipcTrigger(_,d){
     }else if(d=='tswap' && swapperIsOn){
         exitSwapper()
 
+    }else if(d=='smt'){
+        smooth.openSmooth()
+
     }else if(d=='tplots' && !$('#sidebar').width()){
         openNav()
 
