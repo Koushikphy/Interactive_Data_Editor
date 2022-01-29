@@ -68,7 +68,7 @@ function setUpFor2d(){
     var fl = JSON.parse(localStorage.getItem("cols2d"));
     if (fl !== null) col = fl
     col.x=0
-    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit'])
+    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit','smt'])
     disableMenu(["tax", '3dview'])
 }
 
@@ -80,7 +80,7 @@ function setUpFor3d(){
     setUpSlider();
     var fl = JSON.parse(localStorage.getItem("cols3d"));
     if (fl !== null) col = fl
-    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','tax', '3dview'])
+    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','tax', '3dview','smt'])
     disableMenu(["rgft", 'lmfit'])
 }
 
@@ -340,6 +340,13 @@ function setUpSlider(){
 function colChanged(value) {
     col.z = value;
 
+    if(smooth.isActive){
+        fullDataCols[0].z = fullDataCols[1].z = value;
+        updatePlot(all=true)
+        updateOnServer()
+        return
+    }
+
     fullDataCols[currentEditable].z = col.z = value;
     legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped? col.x: col.y) + 1}:${col.z + 1}`
     updatePlot(all = false);
@@ -352,10 +359,7 @@ function colChanged(value) {
     }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
     // makeRows()
-    if(smooth.isActive){
-        fullDataCols[1].z = value;
-        updatePlot(all=true)
-    }
+
 };
 
 
@@ -424,9 +428,9 @@ function updateOnServer() {
             let cx = swapped? col.y: col.x
             let cy = swapped? col.x: col.y
             var s_data = [[
-                data.map(i=>i[cx]),
-                data.map(i=>i[cy]),
-                data.map(i=>i[col.z])
+                fullData[currentEditable].map(i=>i[cx]),
+                fullData[currentEditable].map(i=>i[cy]),
+                fullData[currentEditable].map(i=>i[col.z])
             ]]
         } else{
             var s_data = fullData.map((el,j)=>[
@@ -442,6 +446,12 @@ function updateOnServer() {
 
 
 function changeEditable(index,reset=false){
+    if(smooth.isActive){ 
+        // when smooth mode is on just change the editable so that the other trace can be sent to the 3d Viewer 
+        currentEditable = currentEditable ? 0:1;
+        if(ddd) updateOnServer()
+        return
+    }
     if (swapperIsOn) {
         [col.s, col.z] = [col.z, col.s]
         sCol.selectedIndex = col.s;
@@ -499,9 +509,6 @@ function changeEditable2(ind){ // used for deleting trace below the currentedita
 }
 
 
-
-
-
 var swapperIsOn = false
 function openSwapper() {
     if (fileNames.length!=1) alertElec("Can't use this feature when multiple files are open.",0,"Operation Unavailable")
@@ -518,7 +525,7 @@ function openSwapper() {
     swapperIsOn = true;
     $("#sCol, #sColInp").show();
     $("#zCol").addClass("rightBorder")
-    disableMenu(['edat','fill','filter','af','arf'])
+    disableMenu(['edat','fill','filter','af','arf','smt'])
 }
 
 
@@ -529,7 +536,7 @@ function exitSwapper() {
     data = fullData[0]
     $("#sCol, #sColInp").hide();
     $("#zCol").removeClass("rightBorder")
-    enableMenu(['edat','fill','filter','af','arf'])
+    enableMenu(['edat','fill','filter','af','arf','smt'])
 }
 
 
@@ -559,7 +566,6 @@ function saveData() {
         return false;
     }
 };
-
 
 
 // plots along a different axis
@@ -874,21 +880,18 @@ function makeRows() {
 }
 
 
-
-
-
-   
 class Smoother {
-    #res= [];
+    #res= null;
     constructor(){
         this.isActive = false;
     }
 
-    openSmooth = ()=>{
+    openSmooth(){
         // check if only one trace is plotted
         //enable/disable menus
         if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
         Plotly.addTraces(figurecontainer, {
+            name:'Smooth Approximation',
             x: [],
             y: [],
             type: 'scatter',
@@ -898,7 +901,7 @@ class Smoother {
             marker: {
                 symbol: "circle-dot",
                 color: '#b00',
-                size: 6,
+                size: 3,
                 opacity: 1
             },
             line: {
@@ -914,8 +917,8 @@ class Smoother {
 
         $('#extendUtils2D').slideDown()
         fullData.push([])
-
         fullDataCols.push(col)
+        legendNames.push('Smooth Approximation')
         this.isActive = true
         document.getElementById('smoothApx').onclick = this.smoothApprox
         document.getElementById('smoothApl').onclick = this.saveApprox
@@ -926,21 +929,20 @@ class Smoother {
         Plotly.deleteTraces(figurecontainer, 1);
         enableMenu(['edat','fill','filter','af','arf', 'rgft','lmfit','swapen','tpl'])
         setTimeout(resizePlot, 300)
-        $('#smooth').hide()
         $('#extendUtils2D').slideUp()
+        $('#smooth').hide()
 
         fullData.splice(1,1)
         fullDataCols.splice(1,1)
+        currentEditable = 0;
         this.isActive = false
+        this.#res = null
     }
 
     smoothApprox = () => {
         const smtFactor = parseFloat(document.getElementById('smoothInp').value)
-        ///
-        // calculate and save in this.#res
-        ///
-        var cx = col.x
-        var cy = col.y
+
+        var cx = col.x,cy = col.y;
         // smooth in one direction 
         var res = data.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
         if(data.length!=1) {
@@ -949,10 +951,11 @@ class Smoother {
             // now rotate the direction to smooth in another direction
             var [cx, cy] = [cy, cx];
             res = expRotate(res, cx, cy)
-            var res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+            res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
             // rotate again to return the data in original structure.
             var [cx, cy] = [cy, cx]
             this.#res= expRotate(res,cx,cy)
+
         } else{
             this.#res = res
         }
@@ -962,6 +965,7 @@ class Smoother {
 
     saveApprox = ()=>{
         // modify the data with the approximation
+        if(this.#res==null) return
         data = this.#res
         fullData[0] = data
         this.closeSmooth()
@@ -970,9 +974,9 @@ class Smoother {
     #smoothOut(x,y,smooth){
         const n = x.length;
         var v   = new Array(n).fill(0).map(_=>new Array(7).fill(0));
-        var qty = new Array(n).fill(0);
-        var qu  = new Array(n).fill(0);
-        var u   = new Array(n).fill(0);
+        var qty = new Array(n)//.fill(0);
+        var qu  = new Array(n)//.fill(0);
+        var u   = new Array(n)//.fill(0);
     
         // setupuq
         v[0][3] = x[1] - x[0]
