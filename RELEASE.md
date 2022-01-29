@@ -1,3 +1,9 @@
+## v2.10.0
+1. *Auto Smoother* : Automatically smooth data by choosing a desired smoothing scale.
+2. Bug Fixes
+
+
+
 ## v2.9.3 
 1. 3D plot viewer now supports different color for different traces.
 2. Performance improvement for 3D plot viewer
@@ -37,7 +43,7 @@
 3. Plot setting window
 4. Plot list utility
 5. Mouse Scroll support for slider and column selector
-6. Coulumn selector from 3D Viewer window
+6. Column selector from 3D Viewer window
 7. Improved performance
 8. Minor bug fixes
 9. Improved 3D plotter  
@@ -134,5 +140,5 @@ Several UI changes and a new layout with a lot of new & useful features.
 1. Now this software will notify you if there's a new version available.
 
 #### Fixed:
-1. Now only horaizontal selection is allowed in swapper, also box zoom can be used.
+1. Now only horizontal selection is allowed in swapper, also box zoom can be used.
 2. Some points were not draggable.

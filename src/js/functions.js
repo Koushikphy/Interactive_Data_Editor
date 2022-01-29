@@ -205,6 +205,7 @@ function fileReader(fname) {
     document.getElementById('branding').style.display = 'block'
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
     $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
+    $("#rgFit,#lmFit,#smooth").hide()
     $("#zCol").removeClass("rightBorder")
     saveRemminder()
     makeRows()
@@ -358,7 +359,7 @@ function colChanged(value) {
         oldDpsLen=dpsx.length
     }
     if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
-    // makeRows()
+    makeRows()
 
 };
 
@@ -968,6 +969,8 @@ class Smoother {
         if(this.#res==null) return
         data = this.#res
         fullData[0] = data
+        updatePlot()
+        if(ddd) updateOnServer()
         this.closeSmooth()
     }
 

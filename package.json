@@ -1,11 +1,11 @@
 {
   "name": "interactive-data-editor",
-  "version": "2.9.3",
+  "version": "2.10.0",
   "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
   "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
   "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
-  "copyright": "Copyright © February,2021 Koushik Naskar",
+  "copyright": "Copyright © January,2022 Koushik Naskar",
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",

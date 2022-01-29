@@ -1,7 +1,7 @@
 # Interactive Data Editor
 ### <i>A Software to interactively edit data in a graphical manner.</i>
   
-[![Version](https://img.shields.io/badge/Version-2.9.3-brightgreen.svg)]() 
+[![Version](https://img.shields.io/badge/Version-2.10.0-brightgreen.svg)]() 
 [![MIT License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Koushikphy/Interactive_Data_Editor/blob/master/LICENSE)
 [![interactive-data-editor](https://snapcraft.io/interactive-data-editor/badge.svg)](https://snapcraft.io/interactive-data-editor)
 [![interactive-data-editor](https://snapcraft.io/interactive-data-editor/trending.svg?name=0)](https://snapcraft.io/interactive-data-editor)  
@@ -42,5 +42,5 @@ Copyright © July 2020, Koushik Naskar. All rights reserved.
 Licensed under the MIT License.  
 
 
-## ✨Citaion
+## ✨Citation
 If this software was helpful in your work, please cite this project as https://doi.org/10.5281/zenodo.3947507.  

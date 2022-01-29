@@ -207,10 +207,10 @@
         <img src="../../figs/charts.png" alt="Interactive Data Editor" height="13%",width='13%' id='charts'>
         <br>
         <label for="charts" id='chartitle'>Interactive Data Editor</label>
-        <label for="charts" id='charsubtitle'>v2.9.3</label>
+        <label for="charts" id='charsubtitle'>v2.10.0</label>
         <br>
         <!-- <label for="charts">v2.7.0</label> -->
-        <a href="javascript:void(0)" class="page" id='getStart' onclick="showThis(0)">Getting Startted</a>
+        <a href="javascript:void(0)" class="page" id='getStart' onclick="showThis(0)">Getting Started</a>
         <a href="javascript:void(0)" class="page" id='useInt'  onclick="showThis(1)">User Interface</a>
         <a href="javascript:void(0)" class="page" id='feaTure' onclick="showThis(2)">Features</a>
         <a href="javascript:void(0)" class="page" id='keyShort' onclick="showThis(3)">Keyboard Shortcuts</a>
@@ -219,7 +219,7 @@
             <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io/Interactive_Data_Editor/');"><img src="../../figs/internet.png" width="30" height="30"></a>
             <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../../figs/facebook.png" width="30" height="30"></a>
             <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"            width="30" height="30"></a>
-            <a title="Reach me on Gamil" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../../figs/gmail.png" width="30" height="30"></a>
+            <a title="Reach me on Gmail" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../../figs/gmail.png" width="30" height="30"></a>
 
         </div>
     </div>
@@ -230,7 +230,7 @@
         
         <div class="section" id='getstart'>
             <div class="title">
-                Getting Startted
+                Getting Started
             </div>
             <div class="textarea">
                 <p>We all have worked with data at some point of our work. Now, depending on the source, sometimes the data may not be regular,
@@ -241,7 +241,7 @@
                         <li> Edit/Refine data including many useful data operations.</li>
                         <li> Fit a function to the data.</li>
                     </ol>
-                    To get started load your data file (in plain text format and space delimitted) from menu <label class="dom"> File > Open file</label>
+                    To get started load your data file (in plain text format and space delimitated) from menu <label class="dom"> File > Open file</label>
                     and select the proper column. In case of 3D data the graph will be plotted as the projection
                     for a single value of 1st axis which can be changed using the provided slider. 
                     
@@ -299,7 +299,7 @@
                     data directly instead of the graphical way.
                 </p>
                 <p>
-                    A genaral 3D plotter for plotting surfaces is also provided and can be opened from <label for="" class="dom"> Files > 3D Plotter</label> 
+                    A general 3D plotter for plotting surfaces is also provided and can be opened from <label for="" class="dom"> Files > 3D Plotter</label> 
                     to plot and view 3D data. It supports multiple surfaces with basic plot configurations.
                 </p>
 
@@ -317,17 +317,26 @@
                 <li><b><i> Dragging data points.</i></b> You can edit a data points by dragging it with mouse or
                     using the keyboard Up/Down navigation keys. To drag multiple points select the points and just drag any of them.
                     By default data points are movable only along vertical direction. If you want to move the data points along
-                    horizontal direction too, then check <label for="" class="dom">Edit > Points movable horaizontally</label>.
+                    horizontal direction too, then check <label for="" class="dom">Edit > Points movable horizontally</label>.
                     <p></p>
                 </li>
-            
-                <li><b><i>Smooth out.</i></b> Automatically smooth out data using spline and linear kernel (Moving Average) smoother.
+
+                <li><b><i>Smooth out.</i></b> Smooth out data using spline and linear kernel (Moving Average) smoother.
                     To smooth out, select the portion of the data and press <label class="dom">D</label> or <label
                         class="dom">M</label> to smooth out using spline and moving average respectively. Press and hold <label
                         for="" class="dom">M</label> to apply moving average multiple times. These two methods can not be applied to the end points.
                         For that, a local quadratic regression method is added to extrapolate and smooth out by pressing <label class="dom">E</label>.
-                        This method can be applied to intermediate data points too. These methods are also available through the right click context menu.<p></p>
-                </li>
+                        This method can be applied to intermediate data points too. These methods are also available through the right click context menu.
+
+                        <br>
+                        <br>
+                        In addition to, manual selection to smooth the data, one can use the <b>Auto Smoother</b> feature of the software to smooth out the 
+                        complete data altogether. Open <label class="dom">Edit > Auto smoother</label> and chose a desired smoothing scale to get a smoothing approximation 
+                        to the original data. <p></p>
+                
+                    </li>
+
+
                 <li>
                     <b><i>Data fitting. </i></b> Data can be fitted with any given functional, although at the moment this software only support fitting 2D data. Two types of data
                     fitting options are provided with this software. First, a simple regression type fitting, to fit the data with a polynomial of any 
@@ -348,13 +357,13 @@
             
                 <li><b><i>Configure plot.</i></b> Configure the plot window as you like through using the plot setting from<label for="" class="dom">
                         View > Open Plot Settings</label>. Here you can choose the line and marker style of the plot, change
-                    legend, tiltle, axis label etc. 
+                    legend, tittle, axis label etc. 
                     Note, this application supports LaTeX rendering, so any valid LaTeX text can be used as title, axis labels or in legends.
                     
                     <p></p>
                 </li>
             
-                <li><b><i>Drag and Drop.</i></b> Instead of openning through the menu, files can be opened just by simply drag and
+                <li><b><i>Drag and Drop.</i></b> Instead of opening through the menu, files can be opened just by simply drag and
                     dropping inside the software window. This can be used to open a remote file by mounting the remote folder and dropping the file from there, as
                     for simplicity no option provided to directly open remote files. <p></p>
                 </li>
@@ -364,7 +373,7 @@
                         Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start,
                         stop and step values to fill the missing values in the data. Intermediate points will be filled using a Cubic spline and outside
                         values will just be copied from the nearest available value or by fitting a quadratic regression function.
-                        This operatoion can be applied to limited part of the data by unchecking the <label for="" class="dom">Set as grid </label> option
+                        This operation can be applied to limited part of the data by onchecking the <label for="" class="dom">Set as grid </label> option
                         <p></p>
                 </li>
             
@@ -451,7 +460,7 @@
                     <li><label class="key">Ctrl+O</label> Open file.</li>
                     <li><label class='key'>Shift+Ctrl+O</label> Add new file. </li>
                     <li><label class="key">Ctrl+S</label> Save file.</li>
-                    <li><label class="key">Shfit+Ctrl+S</label> Save As.</li>
+                    <li><label class="key">Shift+Ctrl+S</label> Save As.</li>
                     <li><label class="key">Ctrl+R</label> Reload the window.</li>
                     <li><label class="key">Ctrl+Q</label> Close the application.</li>
                     <li><label class="key">Ctrl+K</label> Open plot setting window.</li>
@@ -459,7 +468,7 @@
                     <li><label class="key">F11</label> Toggle fullscreen.</li>
                     <li><label class="key">Ctrl+TAB</label> Switch editable line.</li>
                     <li><label class="key">Ctrl+W</label> Toggle axis of projection for 3D data.</li>
-                    <li><label class="key">&lt;space></label> Auto-scale axeses.</li>
+                    <li><label class="key">&lt;space></label> Auto-scale axes.</li>
                     <li><label class="key">Z</label> Zoom mode.</li>
                     <li><label class="key">S</label> Selection mode.</li>
                     <li><label class="key">Arrow Up</label> Move up selected points.</li>

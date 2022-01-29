@@ -104,7 +104,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm rounded">
         <div class="container w-100 navbar_container">
-            <diav class="navbar-brand w-100">
+            <div class="navbar-brand w-100">
                 <img src="images/charts.png" alt="..." height="36">
                 <a href="index.html#home" class="brand_name">Interactive Data Editor</a>
                 <button style="float:right;" class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -140,7 +140,9 @@
                     <ul>
                         <li><a href="#drag">Drag with mouse or keyboard</a> </li>
                         <li><a href="#smooth-out">Smooth out data</a> </li>
+                        <li><a href="#auto-smoothing">Auto smoothing</a> </li>
                         <li><a href="#smoothing-multiple">Smooth multiple data</a> </li>
+                        
                     </ul>
                 </li>
                 <li><a href="#interpolate-data">Interpolate data</a></li>
@@ -166,7 +168,7 @@
                 <p>
                     Directly load data from text file from <samp>File &gt; Open File</samp> or by pressing <kbd>Ctrl+O</kbd>.
                     Now, chose appropriate columns for axes from the colum selector to plot the data. For 3D data select the 
-                    required <var>X/Y</var> value from the provied slider or scrolling inside the plot and the plot will done 
+                    required <var>X/Y</var> value from the provided slider or scrolling inside the plot and the plot will done 
                     for other two axes. If you want to add multiple data set from other files, you can load them through 
                     <samp>File &gt; Add File</samp>. You can use the recent files menu to quickly load any of the last recent 10 files.
                 </p>
@@ -192,14 +194,14 @@
             <div class="tut">
                 <h2 id="edit-data">Edit data</h2>
                 <p>
-                    This software features different data editing options, available to use thourgh keyboard shortcuts
+                    This software features different data editing options, available to use through keyboard shortcuts
                     and also through the right click context menu when some points are selected.
                 </p>
 
                 <h3 id="drag">Move with mouse or keyboard</h3>
                 <p>
-                    Move any selected data points just dragging it with mouse. By defualt data points is movable only in vertical
-                    direction (i.e. y-axis). Check the <samp>Edit &gt; Points movable horaizontally</samp> to move them in x-axis too.
+                    Move any selected data points just dragging it with mouse. By default data points is movable only in vertical
+                    direction (i.e. y-axis). Check the <samp>Edit &gt; Points movable horizontally</samp> to move them in x-axis too.
                     To drag multiple data points simultaneously select few data points and drag any of them.
                     Also keyboard navigation keys can also be used to move selected data points.
                 </p>
@@ -224,9 +226,22 @@
 
 
             <div class="tut">
+                <h3 id="auto-smoothing">Auto smoothing</h3>
+                <p>
+                    In addition to, manual selection to smooth the data, one can use the Auto Smoother feature of the software 
+                    to smooth out the complete data altogether. Open <samp>Edit > Auto Smoother</samp> and choose a desired smoothing scale 
+                    to get a smoothing approximation to the original data. Click <samp>Apply</samp> to save the data.
+                </p>
+                <video class="lazy" width="100%" height="500" controls="controls">
+                    <source data-src="images/autosmooth.mp4" type="video/mp4">
+                </video>
+            </div>
+
+
+            <div class="tut">
                 <h3 id="smoothing-multiple">Smoothing multiple datasets simultaneously</h3>
                 <p>
-                    Data from multiple files or different colums from a same file can be opened for editing, though at
+                    Data from multiple files or different column from a same file can be opened for editing, though at
                     any moment a single dataset can be edited. Editing between differnet data set can be toggled through
                     the <samp>Plot Dashboard</samp> or by pressing <kbd>Ctrl+TAB</kbd>.
                 </p>
@@ -234,6 +249,7 @@
                     <source data-src="images/multi_edit.mp4" type="video/mp4">
                 </video>
             </div>
+
 
 
             <div class="tut">
@@ -269,7 +285,7 @@
             <div class="tut">
                 <h2 id="data-fitting">Data fitting</h2>
                 <p>
-                    (Only) 2D data set can be fitted thorugh the following two types of fitting.
+                    (Only) 2D data set can be fitted through the following two types of fitting.
                 </p>
                 <h3 id="rg-fitting">Polynomial regressing fitting</h3>
                 <p>
