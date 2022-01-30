@@ -928,13 +928,15 @@ class Smoother {
 
     closeSmooth=()=>{
         Plotly.deleteTraces(figurecontainer, 1);
-        enableMenu(['edat','fill','filter','af','arf', 'rgft','lmfit','swapen','tpl'])
+        enableMenu(['edat','fill','filter','af','arf','swapen','tpl'])
+        if(!ddd) enableMenu(['rgft','lmfit'])
         setTimeout(resizePlot, 300)
         $('#extendUtils2D').slideUp()
         $('#smooth').hide()
 
         fullData.splice(1,1)
         fullDataCols.splice(1,1)
+        legendNames.splice(1,1)
         currentEditable = 0;
         this.isActive = false
         this.#res = null
@@ -942,6 +944,7 @@ class Smoother {
 
     smoothApprox = () => {
         const smtFactor = parseFloat(document.getElementById('smoothInp').value)
+        if(smtFactor>1 || smtFactor<0) alertElec("Smoothing factor must be in between 0 and 1")
 
         var cx = col.x,cy = col.y;
         // smooth in one direction 
