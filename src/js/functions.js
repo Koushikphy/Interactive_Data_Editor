@@ -882,15 +882,26 @@ function makeRows() {
 
 
 class Smoother {
-    #res= null;
     constructor(){
+        this.res= null;
         this.isActive = false;
+        this.initialDone = false;
     }
 
     openSmooth(){
         // check if only one trace is plotted
         //enable/disable menus
         if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
+        disableMenu(['edat','fill','filter','af','arf', 'lmfit','rgft','swapen','tpl'])
+        $('#smooth').show()
+        $('#extendUtils2D').slideDown()
+        document.getElementById('smoothApx').onclick = this.smoothApprox
+        document.getElementById('smoothApl').onclick = this.saveApprox
+        document.getElementById('smoothCls').onclick = this.closeSmooth
+        this.isActive = true
+    }
+
+    initalSetup=()=>{
         Plotly.addTraces(figurecontainer, {
             name:'Smooth Approximation',
             x: [],
@@ -909,21 +920,14 @@ class Smoother {
                 width: 2,
                 color: "#207104",
                 dash: 0,
-                shape: 'spline'
+                // shape: 'spline'
             },
             hoverinfo: 'x+y',
         });
-        disableMenu(['edat','fill','filter','af','arf', 'lmfit','rgft','swapen','tpl'])
-        $('#smooth').show()
-
-        $('#extendUtils2D').slideDown()
         fullData.push([])
         fullDataCols.push(col)
         legendNames.push('Smooth Approximation')
-        this.isActive = true
-        document.getElementById('smoothApx').onclick = this.smoothApprox
-        document.getElementById('smoothApl').onclick = this.saveApprox
-        document.getElementById('smoothCls').onclick = this.closeSmooth
+        this.initialDone = true
     }
 
     closeSmooth=()=>{
@@ -934,12 +938,15 @@ class Smoother {
         $('#extendUtils2D').slideUp()
         $('#smooth').hide()
 
-        fullData.splice(1,1)
-        fullDataCols.splice(1,1)
-        legendNames.splice(1,1)
         currentEditable = 0;
         this.isActive = false
-        this.#res = null
+        this.res = null
+        if (this.initialDone) {
+            fullData.splice(1,1)
+            fullDataCols.splice(1,1)
+            legendNames.splice(1,1)
+            this.initialDone = false
+        }
     }
 
     smoothApprox = () => {
@@ -952,28 +959,30 @@ class Smoother {
 
         var cx = col.x,cy = col.y;
         // smooth in one direction 
-        this.#res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+        this.res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+        // for 2D case, we have to smooth it in two direction...
+        //NOTE: here just ignoring the other side smoothing, this is simplier and the other side can be simply done with rotating the axis
         // if(data.length!=1) {
-        //     // for 2D case, we have to smooth it in two direction...
-        //     // now rotate the direction to smooth in another direction
         //     var [cx, cy] = [cy, cx];
+        //     // now rotate the direction to smooth in another direction
         //     res = expRotate(res, cx, cy)
         //     res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
         //     // rotate again to return the data in original structure.
         //     var [cx, cy] = [cy, cx]
-        //     this.#res= expRotate(res,cx,cy)
+        //     this.res= expRotate(res,cx,cy)
         // } else{
-        //     this.#res = res
+        //     this.res = res
         // }
-        // this.#res = res
-        fullData[1] = this.#res
+        // this.res = res
+        if(!this.initialDone) this.initalSetup()
+        fullData[1] = this.res
         updatePlot()
     }
 
     saveApprox = ()=>{
         // modify the data with the approximation
-        if(this.#res==null) return
-        data = this.#res
+        if(this.res==null) return
+        data = this.res
         fullData[0] = data
         updatePlot()
         if(ddd) updateOnServer()
