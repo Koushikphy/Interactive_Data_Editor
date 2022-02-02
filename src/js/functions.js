@@ -944,25 +944,28 @@ class Smoother {
 
     smoothApprox = () => {
         const smtFactor = parseFloat(document.getElementById('smoothInp').value)
+        const notAllCol = !document.getElementById('smCheck').checked
+        const notAllX    = !document.getElementById('smColCheck').checked
+        const cz = col.z
+
         if(smtFactor>1 || smtFactor<0) alertElec("Smoothing factor must be in between 0 and 1")
 
         var cx = col.x,cy = col.y;
         // smooth in one direction 
-        var res = data.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
-        if(data.length!=1) {
-
-            // for 2D case, we have to smooth it in two direction...
-            // now rotate the direction to smooth in another direction
-            var [cx, cy] = [cy, cx];
-            res = expRotate(res, cx, cy)
-            res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
-            // rotate again to return the data in original structure.
-            var [cx, cy] = [cy, cx]
-            this.#res= expRotate(res,cx,cy)
-
-        } else{
-            this.#res = res
-        }
+        this.#res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+        // if(data.length!=1) {
+        //     // for 2D case, we have to smooth it in two direction...
+        //     // now rotate the direction to smooth in another direction
+        //     var [cx, cy] = [cy, cx];
+        //     res = expRotate(res, cx, cy)
+        //     res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+        //     // rotate again to return the data in original structure.
+        //     var [cx, cy] = [cy, cx]
+        //     this.#res= expRotate(res,cx,cy)
+        // } else{
+        //     this.#res = res
+        // }
+        // this.#res = res
         fullData[1] = this.#res
         updatePlot()
     }

@@ -922,6 +922,20 @@ a:focus{
 }
 #smoothInp{
     width : 4rem;
-    margin: 0 2rem 0 1rem;
-
+    /* margin: 0 2rem 0 1rem; */
+    margin: 0!important;
+}
+/* #smCheck{
+    margin: auto 0 auto 0;
+} */
+#smGrid{
+    display: grid;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr .5fr; 
+    grid-column-gap: 9px; 
+    grid-row-gap: 2px;
+    margin: 0 19px 0 5px;
+}
+#smGrid input[type=checkbox]{
+    margin: auto 0 auto 0;
 }

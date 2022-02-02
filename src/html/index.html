@@ -108,12 +108,20 @@
 
 
 
-                <div id="smooth" style="padding:3px">
-                    <span > Smoothing parameter </span>
-                    <input id="smoothInp" type="number" value="1" min="0" max="1" step="0.01">
-                    <input type="submit" value="Smooth" id="smoothApx">
-                    <input type="submit" value="Apply" id="smoothApl">
-                    <input type="submit" value="Close" id="smoothCls"> <br>
+                <div id="smooth" style="padding:3px; display: flex; flex-direction: row;" >
+                    <div id='smGrid'>
+                        <span > Smoothing parameter </span>
+                        <input id="smoothInp" type="number" value="1" min="0" max="1" step="0.01">
+                        <span>Apply to all column</span>
+                        <input type="checkbox" id="smCheck">
+                        <span>Apply to all X</span>
+                        <input type="checkbox" id="smColCheck" checked>
+                    </div>
+                    <div style="margin: auto 0 auto 0;">
+                        <input type="submit" value="Smooth" id="smoothApx">
+                        <input type="submit" value="Apply" id="smoothApl">
+                        <input type="submit" value="Close" id="smoothCls"> <br>
+                    </div>
                 </div>
 
 
