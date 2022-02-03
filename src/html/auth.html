@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign In</title>
+    <script>
+        if (typeof module === 'object') { window.module = module; module = undefined;}
+    </script>
+    <style>
+        body{
+            text-align: center;
+        }
+        .grid{
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-template-rows: auto auto;
+            grid-gap: 7px;
+            margin: 1rem 0 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <label>The proxy <kbd id='prox'></kbd> requires a username and password.</label>
+    <div class="grid">
+        <label>Username</label>
+        <input type="text" id="id">
+        <label>Password</label>
+        <input type="password" id="pass">
+    </div>
+    <input type="submit" id='submit', value="Sign In">
+
+    <script>
+
+        const {ipcRenderer} = require('electron');
+
+        ipcRenderer.on('details',(_,d)=>{
+            document.getElementById('prox').innerText = `${d.host}:${d.port}`
+        })
+        document.getElementById('submit').addEventListener('click', () => {
+            const id = document.getElementById('id').value
+            const password = document.getElementById('pass').value
+            ipcRenderer.send('authSubmitted', {id, password})
+        })
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 require('v8-compile-cache');
 const electron = require('electron');
 const path = require('path');
-const url = require('url');
+// const url = require('url');
 var mainWindow = null;
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 process.env.NODE_ENV = 'production';
@@ -51,7 +51,71 @@ ipcMain.on('checkClose', function (e, d) {
 })
 
 
+// for capturing proxy authentication request
+let reservedLoginCallback = null
+let proxy = null
+let loginCount = 0
+ipcMain.on('authSubmitted', (_, {id, password}) => {
+    proxy.close()
+    reservedLoginCallback(id, password)
+    reservedLoginCallback = null
+    // have to check if authentication is successful
+    storeData([id,password]);
+})
+
+
+// naive way to store user auth
+// many others app store it this way so may not be that bad too.
+const fs = require('fs')
+function storeData(txt){
+    const file = `${app.getPath('userData')}/ide.conf`
+    fs.writeFileSync(file,txt.join(":::"))
+}
+
+function getData(){
+    const file = `${app.getPath('userData')}/ide.conf`
+    if(fs.existsSync(file)){
+        return fs.readFileSync(file,"utf8").split(":::");
+    }
+}
+
 app.on('ready', function () {
+    // capture proxy auth request
+    app.on('login', (event, webContents, request, authInfo, callback) => {
+        // console.log(authInfo, request)
+        if (!authInfo.isProxy) {return}
+        if (loginCount > 5) {return } // try for login 5 times if fails then just ignore
+        event.preventDefault()
+        aInfo = getData()
+        console.log(aInfo);
+        if(aInfo){
+            callback(aInfo[0],aInfo[1]);
+        }else {
+            reservedLoginCallback = callback
+            proxy = new BrowserWindow({
+                width: 450, 
+                height: 200, 
+                show:false,
+                modal:true, 
+                parent:mainWindow,
+                autoHideMenuBar:true,
+                title:"Sign In",
+                resizable:false,
+                webPreferences: {
+                    nodeIntegration: true,
+                    enableRemoteModule: true,
+                    contextIsolation:false
+                },})
+            proxy.loadFile("src/html/auth.html")
+            proxy.once('ready-to-show',()=>{
+                proxy.webContents.send('details', authInfo)
+                proxy.show();
+            })
+            loginCount++
+        }
+    }
+)
+
     mainWindow = new BrowserWindow({
         show: false,
         minWidth: 1200,
@@ -64,11 +128,12 @@ app.on('ready', function () {
         },
     });
     mainWindow.maximize();
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, './src/html/index.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, './src/html/index.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+    mainWindow.loadFile('./src/html/index.html')
 
     mainWindow.on('close', function (e) {
         e.preventDefault();
@@ -96,11 +161,12 @@ const helpMenu = {
                         contextIsolation:false
                     }
                 });
-                childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, './src/html/doc.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
+                // childWindow.loadURL(url.format({
+                //     pathname: path.join(__dirname, './src/html/doc.html'),
+                //     protocol: 'file:',
+                //     slashes: true
+                // }));
+                childWindow.loadFile('src/html/doc.html')
                 childWindow.maximize();
                 childWindow.setMenuBarVisibility(false);
                 childWindow.show();
@@ -120,11 +186,12 @@ const helpMenu = {
                         contextIsolation:false
                     }
                 });
-                childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, 'src/html/data.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
+                // childWindow.loadURL(url.format({
+                //     pathname: path.join(__dirname, 'src/html/data.html'),
+                //     protocol: 'file:',
+                //     slashes: true
+                // }));
+                childWindow.loadFile('src/html/data.html')
                 childWindow.setMenuBarVisibility(false);;
                 // childWindow.webContents.openDevTools()
             }
@@ -152,11 +219,12 @@ const helpMenu = {
                     },
                     height:650
                 });
-                childWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, './src/html/about.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
+                // childWindow.loadURL(url.format({
+                //     pathname: path.join(__dirname, './src/html/about.html'),
+                //     protocol: 'file:',
+                //     slashes: true
+                // }));
+                childWindow.loadFile('./src/html/about.html')
                 childWindow.setMenuBarVisibility(false);
                 // childWindow.webContents.openDevTools()
             }
@@ -276,11 +344,12 @@ const homeMenuTemplate = [
             {
                 label: "3D plotter",
                 click() {
-                    mainWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, './src/html/Plotter.html'),
-                        protocol: 'file:',
-                        slashes: true
-                    }));
+                    // mainWindow.loadURL(url.format({
+                    //     pathname: path.join(__dirname, './src/html/Plotter.html'),
+                    //     protocol: 'file:',
+                    //     slashes: true
+                    // }));
+                    mainWindow.loadFile('./src/html/Plotter.html')
                     Menu.setApplicationMenu(plotMenu);
                     // if (!app.isPackaged) mainWindow.webContents.openDevTools();
                 }
@@ -508,11 +577,12 @@ const plotMenuTemplate = [
         },{
             label: "Home",
             click(){
-                mainWindow.loadURL(url.format({
-                    pathname: path.join(__dirname, './src/html/index.html'),
-                    protocol: 'file:',
-                    slashes: true
-                }));
+                // mainWindow.loadURL(url.format({
+                //     pathname: path.join(__dirname, './src/html/index.html'),
+                //     protocol: 'file:',
+                //     slashes: true
+                // }));
+                mainWindow.loadFile('./src/html/index.html')
                 Menu.setApplicationMenu(homeMenu);
             }
         },
