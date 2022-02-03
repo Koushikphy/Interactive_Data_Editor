@@ -209,6 +209,7 @@ function fileReader(fname) {
     $("#zCol").removeClass("rightBorder")
     saveRemminder()
     makeRows()
+    analytics.send('fileload')
 }
 
 
@@ -715,6 +716,7 @@ function spreadsheet() {
     editorWindow.webContents.once("dom-ready", function () {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
     })
+    analytics.send('spreadsheet')
 }
 
 
@@ -745,6 +747,7 @@ function openViewer() {
     viewerWindow.setMenuBarVisibility(false);
     // if (!app.isPackaged) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready", updateOnServer)
+    analytics.send('3Dviewer')
 };
 
 
@@ -881,194 +884,47 @@ function makeRows() {
 }
 
 
-class Smoother {
+
+
+class Analytics{
     constructor(){
-        this.res= null;
-        this.isActive = false;
-        this.initialDone = false;
+        // read from userdata if client id is already given or is it a new client
+        const file = path.join(app.getPath('userData'),'ide.conf')
+        var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
+        this.cid = info.cid
+        if(this.cid===undefined){
+            const { v4: uuidv4} = require('uuid');
+            this.cid = uuidv4()
+            info.cid = this.cid
+            fs.writeFileSync(file,JSON.stringify(info))
+        }
+        if(!info.shown){
+            setTimeout(()=>{
+            dialog.showMessageBox(remote.getCurrentWindow(),{
+                type: "info",
+                title: "Note:",
+                message: "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
+            });
+            info.shown = true
+            fs.writeFileSync(file,JSON.stringify(info))
+        },1000)
+        }
+        // now read the analytics id, read from .env file
+        this.uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').split('=')[1]
     }
 
-    openSmooth(){
-        // check if only one trace is plotted
-        //enable/disable menus
-        if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
-        disableMenu(['edat','fill','filter','af','arf', 'lmfit','rgft','swapen','tpl'])
-        $('#smooth').show()
-        $('#extendUtils2D').slideDown()
-        document.getElementById('smoothApx').onclick = this.smoothApprox
-        document.getElementById('smoothApl').onclick = this.saveApprox
-        document.getElementById('smoothCls').onclick = this.closeSmooth
-        this.isActive = true
-    }
-
-    initalSetup=()=>{
-        Plotly.addTraces(figurecontainer, {
-            name:'Smooth Approximation',
-            x: [],
-            y: [],
-            type: 'scatter',
-            opacity: 1,
-            mode: 'markers+lines',
-            name : 'Fitted line',
-            marker: {
-                symbol: "circle-dot",
-                color: '#b00',
-                size: 3,
-                opacity: 1
-            },
-            line: {
-                width: 2,
-                color: "#207104",
-                dash: 0,
-                // shape: 'spline'
-            },
-            hoverinfo: 'x+y',
-        });
-        fullData.push([])
-        fullDataCols.push(col)
-        legendNames.push('Smooth Approximation')
-        this.initialDone = true
-    }
-
-    closeSmooth=()=>{
-        Plotly.deleteTraces(figurecontainer, 1);
-        enableMenu(['edat','fill','filter','af','arf','swapen','tpl'])
-        if(!ddd) enableMenu(['rgft','lmfit'])
-        setTimeout(resizePlot, 300)
-        $('#extendUtils2D').slideUp()
-        $('#smooth').hide()
-
-        currentEditable = 0;
-        this.isActive = false
-        this.res = null
-        if (this.initialDone) {
-            fullData.splice(1,1)
-            fullDataCols.splice(1,1)
-            legendNames.splice(1,1)
-            this.initialDone = false
-        }
-    }
-
-    smoothApprox = () => {
-        const smtFactor = parseFloat(document.getElementById('smoothInp').value)
-        const notAllCol = !document.getElementById('smCheck').checked
-        const notAllX    = !document.getElementById('smColCheck').checked
-        const cz = col.z
-
-        if(smtFactor>1 || smtFactor<0) alertElec("Smoothing factor must be in between 0 and 1")
-
-        var cx = col.x,cy = col.y;
-        // smooth in one direction 
-        this.res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
-        // for 2D case, we have to smooth it in two direction...
-        //NOTE: here just ignoring the other side smoothing, this is simplier and the other side can be simply done with rotating the axis
-        // if(data.length!=1) {
-        //     var [cx, cy] = [cy, cx];
-        //     // now rotate the direction to smooth in another direction
-        //     res = expRotate(res, cx, cy)
-        //     res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
-        //     // rotate again to return the data in original structure.
-        //     var [cx, cy] = [cy, cx]
-        //     this.res= expRotate(res,cx,cy)
-        // } else{
-        //     this.res = res
-        // }
-        // this.res = res
-        if(!this.initialDone) this.initalSetup()
-        fullData[1] = this.res
-        updatePlot()
-    }
-
-    saveApprox = ()=>{
-        // modify the data with the approximation
-        if(this.res==null) return
-        data = this.res
-        fullData[0] = data
-        updatePlot()
-        if(ddd) updateOnServer()
-        this.closeSmooth()
-    }
-
-    #smoothOut(x,y,smooth){
-        const n = x.length;
-        var v   = new Array(n).fill(0).map(_=>new Array(7).fill(0));
-        var qty = new Array(n)//.fill(0);
-        var qu  = new Array(n)//.fill(0);
-        var u   = new Array(n)//.fill(0);
-    
-        // setupuq
-        v[0][3] = x[1] - x[0]
-        for(let i=1;i<n-1;i++){
-            v[i][3] = x[i+1] - x[i]
-            v[i][0] = 1/v[i-1][3]
-            v[i][1] = -1/v[i][3] -1/v[i-1][3]
-            v[i][2] = 1/v[i][3]
-            v[i][4] = v[i][0]**2 + v[i][1]**2 + v[i][2]**2
-        }
-        for(let i=1;i<n-2;i++) v[i][5] = v[i][1]*v[i+1][0] + v[i][2]*v[i+1][1]
-        for(let i=1;i<n-3;i++) v[i][6] = v[i][2]*v[i+2][0]
-    
-        var prev   = (y[1] - y[0])/v[0][3]
-        var diff, ratio;
-        for(let i=1;i<n-1;i++){
-            diff = (y[i+1] - y[i])/v[i][3]
-            qty[i] = diff - prev
-            prev = diff
-        }
-    
-        // chol1s
-        var six1mp = 6.0 * ( 1.0 - smooth )
-    
-        for(let i=1;i<n-1;i++){
-            v[i][0] = six1mp*v[i][4] + 2.0*smooth*(v[i-1][3] + v[i][3])
-            v[i][1] = six1mp*v[i][5] + smooth*v[i][3]
-            v[i][2] = six1mp*v[i][6]
-        }
-    
-        if(n<4){
-            u[1] = qty[1]/v[1][0]
-        } else{
-            for (let i = 1; i < n-2; i++) {
-                ratio = v[i][1]/v[i][0]
-                v[i+1][0] -= ratio*v[i][1]
-                v[i+1][1] -= ratio*v[i][2]
-                v[i][1] = ratio
-                ratio = v[i][2]/v[i][0]
-                v[i+2][0] -= ratio*v[i][2]
-                v[i][2] = ratio
-            }
-            // Forward substitution
-            u[0] = 0
-            v[0][2] = 0 
-            u[1] = qty[1]
-            for (let i = 1; i < n-2; i++) {
-                u[i+1] = qty[i+1] - v[i][1] * u[i] - v[i-1][2]*u[i-1]
-            }
-    
-            // Back substitution.
-            u[n-1] = 0 
-            u[n-2] = u[n-2]/v[n-2][0]
-            for (let i = n-3; i >=1; i--) {
-                u[i] = u[i]/v[i][0] - u[i+1]*v[i][1]  - u[i+2]*v[i][2]
-            }
-        }
-    
-        // Construct Q * U.
-        prev = 0 
-        for (let i = 1; i < n; i++) {
-            qu[i] = (u[i] - u[i-1])/v[i-1][3]
-            qu[i-1] = qu[i] - prev
-            prev = qu[i]
-        }
-        qu[n-1]  = - qu[n-1]
-    
-        for (let i = 0; i < n; i++) {
-            qu[i] = y[i] - 6*(1-smooth)*qu[i]
-        }
-        return qu
+    // Starting from version 10, Interactive Data Editor will collect and share user data with the developer to give a  better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.
+    send(page='home',type='pageview'){
+        fetch('https://www.google-analytics.com/collect', {
+            method: 'POST',
+            body: `v=1&t=${type}&tid=${this.uuid}&cid=${this.cid}&dp=${page}`
+        }).then(d=>{
+            if(d.status!=200) console.error("Cannot post to analytics server")
+        })
     }
 }
 
-smooth = new Smoother()
 
 
+const analytics = new Analytics()
+analytics.send()

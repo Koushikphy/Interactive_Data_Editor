@@ -1,6 +1,6 @@
 {
   "name": "interactive-data-editor",
-  "version": "2.10.0",
+  "version": "2.11.0",
   "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
   "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
@@ -80,6 +80,7 @@
   },
   "dependencies": {
     "plotly.js-gl3d-dist": "^1.58.4",
+    "uuid": "^8.3.2",
     "v8-compile-cache": "^2.2.0"
   }
 }

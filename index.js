@@ -51,6 +51,11 @@ ipcMain.on('checkClose', function (e, d) {
 })
 
 
+const fs = require('fs')
+const file = path.join(app.getPath('userData'),'ide.conf')
+var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
+
+
 // for capturing proxy authentication request
 let reservedLoginCallback = null
 let proxy = null
@@ -59,34 +64,20 @@ ipcMain.on('authSubmitted', (_, {id, password}) => {
     proxy.close()
     reservedLoginCallback(id, password)
     reservedLoginCallback = null
-    // have to check if authentication is successful
-    storeData([id,password]);
+    // have to check if authentication is successful, only then write data
+    info.proxy = [id,password].join(":::")
+    fs.writeFileSync(file,JSON.stringify(info))
 })
 
 
-// naive way to store user auth
-// many others app store it this way so may not be that bad too.
-const fs = require('fs')
-function storeData(txt){
-    const file = `${app.getPath('userData')}/ide.conf`
-    fs.writeFileSync(file,txt.join(":::"))
-}
-
-function getData(){
-    const file = `${app.getPath('userData')}/ide.conf`
-    if(fs.existsSync(file)){
-        return fs.readFileSync(file,"utf8").split(":::");
-    }
-}
 
 app.on('ready', function () {
     // capture proxy auth request
     app.on('login', (event, webContents, request, authInfo, callback) => {
-        // console.log(authInfo, request)
-        if (!authInfo.isProxy) {return}
-        if (loginCount > 5) {return } // try for login 5 times if fails then just ignore
+        if (!authInfo.isProxy) return
+        if (loginCount > 5) return // try for login 5 times if fails then just ignore
         event.preventDefault()
-        aInfo = getData()
+        var aInfo = info.proxy;
         console.log(aInfo);
         if(aInfo){
             callback(aInfo[0],aInfo[1]);

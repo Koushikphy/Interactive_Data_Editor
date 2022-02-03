@@ -1,7 +1,12 @@
+## v2.11.0
+1. Proxy authentication implementated.
+2. New features in auto smoother.
+2. *NOTE:* From now on Interactive Data Editor will collect and share software usage data with developer.
+3. Fixed bugs in auto smoother.
+
 ## v2.10.0
 1. *Auto Smoother* : Automatically smooth data by choosing a desired smoothing scale.
 2. Bug Fixes
-
 
 
 ## v2.9.3 
