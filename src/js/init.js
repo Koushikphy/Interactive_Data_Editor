@@ -3,18 +3,28 @@ const {remote,ipcRenderer,shell} = require('electron');
 const {Menu,MenuItem,app} = remote;
 const menu = Menu.getApplicationMenu();
 const os = require('os');
-var recentLocation=os.userInfo().homedir, recentFiles = [];
+const path   = require('path')
+const fs     = require("fs");
+const {replaceWithHome} = require('../js/utils')
 
 
-function replaceWithHome(name) { // replaces full path name with the short one
-    // var home = process.env.HOME || process.env.USERPROFILE;
-    var home = os.userInfo().homedir;
-    if (name.includes(home)) {
-        return name.replace(home, "~")
-    } else {
-        return name
+class dataStore{
+    constructor(){
+        // every thing will be sotred in the `ide.conf` file
+        this.file = path.join(app.getPath('userData'),'ide.conf')
+        this.info = fs.existsSync(this.file) ? JSON.parse(fs.readFileSync(this.file,"utf8")) :{}
     }
-};
+    get(key,optionalValue) {
+        return this.info[key]===undefined ? optionalValue : this.info[key]
+    }
+    set(key, value){
+        this.info[key] = value
+        fs.writeFileSync(this.file,JSON.stringify(this.info, null, 4))
+    }
+}
+
+const store = new dataStore()
+
 
 function recentMenu() {// builds the recent file submenu
     var rrf = menu.getMenuItemById("rf").submenu;
@@ -33,18 +43,15 @@ function recentMenu() {// builds the recent file submenu
             click() {addNewFile(rc)}
         }))
     }
-    localStorage.setItem("files", JSON.stringify(recentFiles));
+    store.set('files', recentFiles)
+    // localStorage.setItem("files", JSON.stringify(recentFiles));
 };
 
 
-var fl = JSON.parse(localStorage.getItem("files"));
-if (fl !== null) {
-    recentFiles = fl;
-    recentMenu();
-}
+var recentFiles =store.get('files',[]) // JSON.parse(localStorage.getItem("files"));
+if (recentFiles.length!=0) recentMenu();
 
-var fl = JSON.parse(localStorage.getItem("recent"));
-if (fl !== null) recentLocation = fl;
+var recentLocation = store.get('recent',os.userInfo().homedir)
 
 
 function openFileFromArgs(fileList){
@@ -79,8 +86,8 @@ if (app.isPackaged) {
 
 
 
-var fl = JSON.parse(localStorage.getItem("autosave"));
-var autoSave = fl!==null? parseInt(fl) : 0; // autosave file every, 0 means no autosave
+// var fl = store.get('autosave',0)// JSON.parse(localStorage.getItem("autosave"));
+var autoSave = parseInt(store.get('autosave',0)) // fl!==null? parseInt(fl) : 0; // autosave file every, 0 means no autosave
 var autoSaveMenuItems = menu.getMenuItemById('autosave').submenu.items;
 autoSaveMenuItems.forEach(e=>{e.checked=false})
 autoSaveMenuItems[{0:0,1:1,5:2,10:3}[autoSave]].checked = true

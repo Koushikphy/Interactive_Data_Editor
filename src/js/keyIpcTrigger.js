@@ -199,7 +199,8 @@ function ipcTrigger(_,d){
         autoSaveMenuItems.forEach(e=>{e.checked=false})
         autoSaveMenuItems[{0:0,1:1,5:2,10:3}[autoSave]].checked = true
         saveRemminder()
-        localStorage.setItem( "autosave", JSON.stringify(autoSave))
+        // localStorage.setItem( "autosave", JSON.stringify(autoSave))
+        StorageEvent.set('autosave',autoSave)
     }
 }
 
@@ -214,8 +215,6 @@ function saveRemminder(){
 }
 
 
-
-// openNav()
 
 
 const conMenu = Menu.buildFromTemplate([

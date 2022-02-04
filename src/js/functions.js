@@ -1,6 +1,4 @@
 const Plotly = require('plotly.js-gl3d-dist');
-const fs     = require("fs");
-const path   = require('path')
 const url    = require('url')
 const $      = require('../lib/jquery.min')
 const {dialog,BrowserWindow} = remote;
@@ -15,10 +13,6 @@ const slider = document.getElementById('range')
 const thumb  = document.getElementById('thumb')
 const figurecontainer = document.getElementById("figurecontainer")
 
-// array of JSONs => {data, fName, sName, savedOnce}
-var dataList=[];
-// array of JSONs => {dataIndex, col:{x,y,z,s}}
-var traceList=[];
 
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
@@ -65,9 +59,8 @@ function setUpFor2d(){
     $('.3D').hide()
     $('#yLabel').html('X')
     $('#zLabel').html('Y')
-    var fl = JSON.parse(localStorage.getItem("cols2d"));
-    if (fl !== null) col = fl
-    col.x=0
+    col = store.get("cols2d",{x: 0, y: 0, z: 0,s: 0})
+    // col.x=0
     enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit','smt'])
     disableMenu(["tax", '3dview'])
 }
@@ -78,8 +71,7 @@ function setUpFor3d(){
     $('#yLabel').html('Y')
     $('#zLabel').html('Z')
     setUpSlider();
-    var fl = JSON.parse(localStorage.getItem("cols3d"));
-    if (fl !== null) col = fl
+    col= store.get("cols3d",{x: 0, y: 0, z: 0,s: 0}) 
     enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','tax', '3dview','smt'])
     disableMenu(["rgft", 'lmfit'])
 }
@@ -104,7 +96,8 @@ function updateData(init=false,all=true) {
     th_in = 0;
 
     if (!swapped){
-        localStorage.setItem( ddd? "cols3d" : "cols2d", JSON.stringify(col));
+        store.set(ddd? "cols3d" : "cols2d", col)
+        // localStorage.setItem( ddd? "cols3d" : "cols2d", JSON.stringify(col));
     } else{
         [col.x, col.y] = [col.y, col.x]
     }
@@ -198,7 +191,7 @@ function fileReader(fname) {
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
     recentMenu();
-    localStorage.setItem("recent", JSON.stringify(recentLocation));
+    store.set('recent',recentLocation);
     resizePlot();
 
     $("#particle").remove();
@@ -359,7 +352,7 @@ function colChanged(value) {
         startDragBehavior()
         oldDpsLen=dpsx.length
     }
-    if (!swapped) localStorage.setItem(ddd? "cols3d" : "cols2d", JSON.stringify(col));
+    if (!swapped) store.set(ddd? "cols3d" : "cols2d", col);
     makeRows()
 
 };
@@ -368,7 +361,7 @@ function colChanged(value) {
 function colsChanged(value) {
     col.s = value;
     updatePlot();
-    if (!swapped) localStorage.setItem("cols3d", JSON.stringify(col));
+    if (!swapped) store.set("cols3d", col);
 };
 
 
@@ -884,44 +877,29 @@ function makeRows() {
 }
 
 
-class dataStore{
-    constructor(){
-        // every thing will be sotred in the `ide.conf` file
-        this.file = path.join(app.getPath('userData'),'ide.conf')
-        this.info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
-    }
-    get(key) {
-        return this.info[key]
-    }
-    set(key, value){
-        this.info[key] = value
-        fs.writeFileSync(this.file,JSON.stringify(this.info), null, 4)
-    }
-}
+
 
 
 class Analytics{
     constructor(){
         // read from userdata if client id is already given or is it a new client
-        const file = path.join(app.getPath('userData'),'ide.conf')
-        var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
-        this.cid = info.cid
+        this.cid = store.get('cid')
         if(this.cid===undefined){
             const { v4: uuidv4} = require('uuid');
             this.cid = uuidv4()
-            info.cid = this.cid
-            fs.writeFileSync(file,JSON.stringify(info))
+            store.set('cid', this.cid)
         }
-        if(!info.shown){
+        var shown = store.get('shown',0)
+        store.set('shown',shown+1)
+        if(shown%10==0){ // shown after every 10 opening
             setTimeout(()=>{
             dialog.showMessageBox(remote.getCurrentWindow(),{
+                message:"User data share policy",
                 type: "info",
-                title: "Note:",
-                message: "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
+                title: "Note from developer !",
+                detail: "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
             });
-            info.shown = true
-            fs.writeFileSync(file,JSON.stringify(info))
-        },1000)
+        },300)
         }
         // now read the analytics id, read from .env file
         this.uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').split('=')[1]

@@ -4,6 +4,15 @@ const clamp = (x, lower, upper) => Math.max(lower, Math.min(x, upper));
 const transpose = (m)=>m[0].map((_, i) => m.map(x => x[i]));
 
 
+
+
+function replaceWithHome(name) { // replaces full path name with the short one
+    // var home = process.env.HOME || process.env.USERPROFILE;
+    var home = os.userInfo().homedir;
+    return name.includes(home) ? name.replace(home, "~") : name
+};
+
+
 function alertElec(msg, type=1, title="Failed to execute."){
     dialog.showMessageBox(remote.getCurrentWindow(),{
         type: type==1? "error": 'warning',
@@ -293,5 +302,6 @@ module.exports = {
     useRegression,
     useSpline,
     levenMarFit,
-    regressionFit
+    regressionFit,
+    replaceWithHome
 }

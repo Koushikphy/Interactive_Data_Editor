@@ -3,6 +3,7 @@
 2. New features in auto smoother.
 2. *NOTE:* From now on Interactive Data Editor will collect and share software usage data with developer.
 3. Fixed bugs in auto smoother.
+4. Persistent storage of user's configurations
 
 ## v2.10.0
 1. *Auto Smoother* : Automatically smooth data by choosing a desired smoothing scale.

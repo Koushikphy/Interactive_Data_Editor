@@ -118,11 +118,6 @@ app.on('ready', function () {
         },
     });
     mainWindow.maximize();
-    // mainWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, './src/html/index.html'),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
     mainWindow.loadFile('./src/html/index.html')
 
     mainWindow.on('close', function (e) {
@@ -151,11 +146,6 @@ const helpMenu = {
                         contextIsolation:false
                     }
                 });
-                // childWindow.loadURL(url.format({
-                //     pathname: path.join(__dirname, './src/html/doc.html'),
-                //     protocol: 'file:',
-                //     slashes: true
-                // }));
                 childWindow.loadFile('src/html/doc.html')
                 childWindow.maximize();
                 childWindow.setMenuBarVisibility(false);
@@ -176,14 +166,8 @@ const helpMenu = {
                         contextIsolation:false
                     }
                 });
-                // childWindow.loadURL(url.format({
-                //     pathname: path.join(__dirname, 'src/html/data.html'),
-                //     protocol: 'file:',
-                //     slashes: true
-                // }));
                 childWindow.loadFile('src/html/data.html')
                 childWindow.setMenuBarVisibility(false);;
-                // childWindow.webContents.openDevTools()
             }
         },
 
@@ -209,14 +193,8 @@ const helpMenu = {
                     },
                     height:650
                 });
-                // childWindow.loadURL(url.format({
-                //     pathname: path.join(__dirname, './src/html/about.html'),
-                //     protocol: 'file:',
-                //     slashes: true
-                // }));
                 childWindow.loadFile('./src/html/about.html')
                 childWindow.setMenuBarVisibility(false);
-                // childWindow.webContents.openDevTools()
             }
         },
         { 
@@ -334,14 +312,8 @@ const homeMenuTemplate = [
             {
                 label: "3D plotter",
                 click() {
-                    // mainWindow.loadURL(url.format({
-                    //     pathname: path.join(__dirname, './src/html/Plotter.html'),
-                    //     protocol: 'file:',
-                    //     slashes: true
-                    // }));
                     mainWindow.loadFile('./src/html/Plotter.html')
                     Menu.setApplicationMenu(plotMenu);
-                    // if (!app.isPackaged) mainWindow.webContents.openDevTools();
                 }
             },
             {
@@ -567,11 +539,6 @@ const plotMenuTemplate = [
         },{
             label: "Home",
             click(){
-                // mainWindow.loadURL(url.format({
-                //     pathname: path.join(__dirname, './src/html/index.html'),
-                //     protocol: 'file:',
-                //     slashes: true
-                // }));
                 mainWindow.loadFile('./src/html/index.html')
                 Menu.setApplicationMenu(homeMenu);
             }
@@ -593,7 +560,6 @@ const plotMenuTemplate = [
     ]
     },
     helpMenu
-
 ];
 
 
