@@ -64,7 +64,6 @@ ipcMain.on('authSubmitted', (_, {id, password}) => {
     proxy.close()
     reservedLoginCallback(id, password)
     reservedLoginCallback = null
-    // have to check if authentication is successful, only then write data
     info.proxy = [id,password].join(":::")
     fs.writeFileSync(file,JSON.stringify(info))
 })
@@ -74,12 +73,12 @@ ipcMain.on('authSubmitted', (_, {id, password}) => {
 app.on('ready', function () {
     // capture proxy auth request
     app.on('login', (event, webContents, request, authInfo, callback) => {
-        if (!authInfo.isProxy) return
+        if (!authInfo.isProxy) return // not proxy related login
         if (loginCount > 5) return // try for login 5 times if fails then just ignore
         event.preventDefault()
-        var aInfo = info.proxy;
-        console.log(aInfo);
-        if(aInfo){
+        var aInfo = info.proxy.split(":::");
+        // console.log(aInfo, loginCount);
+        if(aInfo && loginCount==0){ // loginCount>0 means proxy was not autheticated
             callback(aInfo[0],aInfo[1]);
         }else {
             reservedLoginCallback = callback
@@ -102,8 +101,8 @@ app.on('ready', function () {
                 proxy.webContents.send('details', authInfo)
                 proxy.show();
             })
-            loginCount++
         }
+        loginCount++
     }
 )
 
