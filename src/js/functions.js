@@ -884,6 +884,20 @@ function makeRows() {
 }
 
 
+class dataStore{
+    constructor(){
+        // every thing will be sotred in the `ide.conf` file
+        this.file = path.join(app.getPath('userData'),'ide.conf')
+        this.info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
+    }
+    get(key) {
+        return this.info[key]
+    }
+    set(key, value){
+        this.info[key] = value
+        fs.writeFileSync(this.file,JSON.stringify(this.info), null, 4)
+    }
+}
 
 
 class Analytics{
