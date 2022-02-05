@@ -58,10 +58,10 @@ var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
 
 // for capturing proxy authentication request
 let reservedLoginCallback = null
-let proxy = null
+let proxyPopUp = null
 let loginCount = 0
 ipcMain.on('authSubmitted', (_, {id, password}) => {
-    proxy.close()
+    proxyPopUp.close()
     reservedLoginCallback(id, password)
     reservedLoginCallback = null
     info.proxy = {"id":id, "password":password} 
@@ -82,8 +82,9 @@ app.on('ready', function () {
             callback(aInfo.id,aInfo.password);
         }else {
             reservedLoginCallback = callback
-            proxy = new BrowserWindow({
-                width: 450, 
+            if(proxyPopUp) proxyPopUp.close() // discard multiple popups
+            proxyPopUp = new BrowserWindow({
+                width: 400, 
                 height: 200, 
                 show:false,
                 modal:true, 
@@ -96,11 +97,13 @@ app.on('ready', function () {
                     enableRemoteModule: true,
                     contextIsolation:false
                 },})
-            proxy.loadFile("src/html/auth.html")
-            proxy.once('ready-to-show',()=>{
-                proxy.webContents.send('details', authInfo)
-                proxy.show();
+            proxyPopUp.loadFile("src/html/auth.html")
+            proxyPopUp.once('ready-to-show',()=>{
+                proxyPopUp.webContents.send('details', authInfo)
+                proxyPopUp.show();
             })
+            proxyPopUp.once('closed',()=>{proxyPopUp=null})
+
         }
         loginCount++
     }
@@ -149,7 +152,7 @@ const helpMenu = {
                 childWindow.loadFile('src/html/doc.html')
                 childWindow.maximize();
                 childWindow.setMenuBarVisibility(false);
-                childWindow.show();
+                childWindow.once('ready-to-show',childWindow.show)
             }
         }, {
             label: "Sample Data",
@@ -185,6 +188,7 @@ const helpMenu = {
                     minWidth: 500,
                     maxWidth : 700,
                     width:600,
+                    show:false,
                     title: "Interactive Data Editor - About",
                     webPreferences: {
                         nodeIntegration: true,
@@ -195,6 +199,7 @@ const helpMenu = {
                 });
                 childWindow.loadFile('./src/html/about.html')
                 childWindow.setMenuBarVisibility(false);
+                childWindow.once('ready-to-show',childWindow.show)
             }
         },
         { 

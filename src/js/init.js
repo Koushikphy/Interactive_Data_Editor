@@ -15,7 +15,7 @@ class dataStore{
         this.info = fs.existsSync(this.file) ? JSON.parse(fs.readFileSync(this.file,"utf8")) :{}
     }
     get(key,optionalValue) {
-        return this.info[key]===undefined ? optionalValue : this.info[key]
+        return this.info.hasOwnProperty(key) ? this.info[key]: optionalValue 
     }
     set(key, value){
         this.info[key] = value
@@ -44,11 +44,10 @@ function recentMenu() {// builds the recent file submenu
         }))
     }
     store.set('files', recentFiles)
-    // localStorage.setItem("files", JSON.stringify(recentFiles));
 };
 
 
-var recentFiles =store.get('files',[]) // JSON.parse(localStorage.getItem("files"));
+var recentFiles =store.get('files',[]) 
 if (recentFiles.length!=0) recentMenu();
 
 var recentLocation = store.get('recent',os.userInfo().homedir)
@@ -86,8 +85,8 @@ if (app.isPackaged) {
 
 
 
-// var fl = store.get('autosave',0)// JSON.parse(localStorage.getItem("autosave"));
-var autoSave = parseInt(store.get('autosave',0)) // fl!==null? parseInt(fl) : 0; // autosave file every, 0 means no autosave
+
+var autoSave = parseInt(store.get('autosave',0)) // autosave file every, 0 means no autosave
 var autoSaveMenuItems = menu.getMenuItemById('autosave').submenu.items;
 autoSaveMenuItems.forEach(e=>{e.checked=false})
 autoSaveMenuItems[{0:0,1:1,5:2,10:3}[autoSave]].checked = true

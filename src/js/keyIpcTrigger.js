@@ -200,7 +200,7 @@ function ipcTrigger(_,d){
         autoSaveMenuItems[{0:0,1:1,5:2,10:3}[autoSave]].checked = true
         saveRemminder()
         // localStorage.setItem( "autosave", JSON.stringify(autoSave))
-        StorageEvent.set('autosave',autoSave)
+        store.set('autosave',autoSave)
     }
 }
 
@@ -417,9 +417,3 @@ document.getElementById("valinput").onchange = document.getElementById('valBtn')
     setValue($('#valinput').val())
     $('.popup').hide()
 }
-
-
-// document.getElementById("autoSaveVal").onchange = document.getElementById('autoSaveBtn').onclick = ()=>{
-//     autoSave = parseInt($('#autoSaveVal').val()*1000)
-//     $('.popup').hide()
-// }

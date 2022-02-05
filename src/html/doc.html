@@ -199,6 +199,9 @@
             width: 1.3pc;
             height: 1.3pc;
         }
+        .page:focus{
+            outline: none;
+        }
 
     </style>
 </head>
@@ -536,6 +539,7 @@
         var current=0;
         secList[current].classList.add('shown')
         linkList[current].classList.add('visited')
+        secList[current].focus()
 
         function showThis(index){
             if(current==index) return
