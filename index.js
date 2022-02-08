@@ -10,6 +10,7 @@ const {
     app,
     BrowserWindow,
     Menu,
+    BrowserView,
     ipcMain,
     shell,
 } = electron;
@@ -106,8 +107,7 @@ app.on('ready', function () {
 
         }
         loginCount++
-    }
-)
+    })
 
     mainWindow = new BrowserWindow({
         show: false,

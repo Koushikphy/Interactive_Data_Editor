@@ -1,5 +1,5 @@
 const Plotly = require('plotly.js-gl3d-dist');
-const url    = require('url')
+// const url    = require('url')
 const $      = require('../lib/jquery.min')
 const {dialog,BrowserWindow} = remote;
 const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
@@ -648,11 +648,12 @@ function settingWindow(){
             contextIsolation:false
         }
     });
-    settingEditWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "pop.html"),
-        protocol: 'file:',
-        slashes: true
-    }));
+    // settingEditWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, "pop.html"),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+    settingEditWindow.loadFile("src/html/pop.html")
     settingEditWindow.setMenuBarVisibility(false);
 
     settingEditWindow.webContents.once("dom-ready", function () {
@@ -695,11 +696,12 @@ function spreadsheet() {
         }
     });
     editorWindow.maximize();
-    editorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "spreadsheet.html"),
-        protocol: 'file:',
-        slashes: true
-    }));
+    // editorWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, "spreadsheet.html"),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+    editorWindow.loadFile("src/html/spreadsheet.html")
     editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
@@ -730,11 +732,12 @@ function openViewer() {
         }
     });
     viewerWindow.maximize();
-    viewerWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '3D_Viewer.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+    // viewerWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, '3D_Viewer.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+    viewerWindow.loadFile('src/html/3D_Viewer.html')
     viewerWindow.on("closed", function () { viewerWindow = null; exportAll=false })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
@@ -907,6 +910,7 @@ class Analytics{
 
     // Starting from version 10, Interactive Data Editor will collect and share user data with the developer to give a  better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.
     send(page='home',type='pageview'){
+        if(!app.isPackaged) return  // do not send analytics in testing mode
         fetch('https://www.google-analytics.com/collect', {
             method: 'POST',
             body: `v=1&t=${type}&tid=${this.uuid}&cid=${this.cid}&dp=${page}`

@@ -1,7 +1,7 @@
 ## v2.11.0
-1. Proxy authentication implementated.
+1. Proxy authentication implemented.
 2. New features in auto smoother.
-2. *NOTE:* From now on Interactive Data Editor will collect and share software usage data with developer.
+2. *NOTE:* From now on Interactive Data Editor will collect and share software usage data with the developer.
 3. Fixed bugs in auto smoother.
 4. Persistent storage of user's configurations
 
