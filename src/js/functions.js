@@ -549,8 +549,12 @@ function saveAs() {
 
 function saveData() {
     var tmpData = swapped ? expRotate(data, col.y, col.x) : data
+    // https://www.npmjs.com/package/d3-format#locale_formatPrefix
+    //^ using d3 format, `g` means decimal/exponent notation, rounded to significant digits
+    // TODO: let the users chose what format to use for each column along with delimiter.
+    const fmt = Plotly.d3.format(".8g")
     try {
-        var txt = tmpData.map(x => transpose(x).map( y=>y.map( i=>i.toFixed(8) ).join('\t')).join('\n')).join('\n\n')
+        var txt = tmpData.map(x => transpose(x).map( y=>y.map(fmt).join('\t')).join('\n')).join('\n\n')
         fs.writeFileSync(saveNames[currentEditable], txt);
         showStatus("Data Saved in file " + replaceWithHome(saveNames[currentEditable]));
         saved = true;

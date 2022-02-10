@@ -254,7 +254,7 @@ function fileReader(fname) {
     var tmpDat = fs.readFileSync(fname, "utf8").trim().split(/\r?\n\s*\r?\n/).map(dat=>{
         let res = dat.trim().split("\n").map( block=>block.trim().split(/[\s\t]+/).map(x=>{
             y = parseFloat(x)
-            if(isNaN(y)) alertElec("Bad data found !!!\nCheck the file before openning.")
+            if(isNaN(y)) alertElec("Bad data found !!!\nCheck the file before opening.")
                 // throw "badData"
             // }
             return y
@@ -387,11 +387,12 @@ function openPlotSetting(){
             contextIsolation:false
         }
     });
-    settingEditWindow.loadURL(url.format({
-        pathname: path.join(__dirname, "./plotterpop.html"),
-        protocol: 'file:',
-        slashes: true
-    }));
+    // settingEditWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, "./plotterpop.html"),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+    settingEditWindow.loadFile('src/html/plotterpop.html')
     settingEditWindow.setMenuBarVisibility(false);
 
     let layout  = figurecontainer.layout

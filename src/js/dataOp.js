@@ -165,7 +165,7 @@ function autoSmooth() {
     try{
         let ind = index.filter((i)=>i<dpsx.length)
         if(!ind.length) throw {ty:'sS', msg: "No data points selected."}
-        if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply mooving average at endpoints"}
+        if(ind.includes(0) || ind.includes(dpsx.length-1)) throw {ty:'sS', msg: "Can't apply moving average at endpoints"}
         // for (let i of ind) dpsy[i] = (dpsy[i - 1] + dpsy[i] + dpsy[i + 1]) / 3.0
         for (let i of ind) dpsy[i] = _mv( dpsx.slice(i-1,i+2),dpsy.slice(i-1,i+2)) // for uneven grid
         data[th_in][col.z] = dpsy;
@@ -460,7 +460,7 @@ class Smoother {
         // smooth in one direction 
         this.res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
         // for 2D case, we have to smooth it in two direction...
-        //NOTE: here just ignoring the other side smoothing, this is simplier and the other side can be simply done with rotating the axis
+        //NOTE: here just ignoring the other side smoothing, this is simpler and the other side can be simply done with rotating the axis
         // if(data.length!=1) {
         //     var [cx, cy] = [cy, cx];
         //     // now rotate the direction to smooth in another direction

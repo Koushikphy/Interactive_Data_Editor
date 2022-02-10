@@ -68,7 +68,7 @@ function openFileFromArgs(fileList){
         }
     }
 }
-// lets just consider anything that does not start with `-/--` is a file passed through the commandline
+// lets just consider anything that does not start with `-/--` is a file passed through the command line
 var fileList = remote.process.argv.slice(1).filter(e=>!(e.startsWith('-') || e.startsWith('--')|| e.trim()=='.'))
 if (app.isPackaged) {
     if(fileList.length){

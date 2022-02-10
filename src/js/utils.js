@@ -29,7 +29,7 @@ function parseData(strDps) {
          transpose(dat.trim().split("\n").map(line=>
             line.trim().split(/[\s\t]+/).map(val =>{
                 y = parseFloat(val)
-                if(isNaN(y)) alertElec("Bad data found !!!\nCheck the file before openning.")
+                if(isNaN(y)) alertElec("Bad data found !!!\nCheck the file before opening.")
                     // throw "badData"
                 // }
                 return y
@@ -99,7 +99,7 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step ){
         if (fullArr.length == dat[0].length) return dat; // no interpolation required
         var xs = dat[col.y].slice(0)
         var lInd = dat[col.y].length - 1;
-        // check if regression is required by cheking the starting of the array
+        // check if regression is required by checking the starting of the array
         var backRegRequired = false, frontRegRequired = false;
         if(allowRegression && xs.length>=3){ // dont try to extrapolate if datalength is less than 3
             frontRegRequired = fullArr[0]<xs[0]
@@ -169,14 +169,14 @@ function useRegression(xx, yy, ind, condition=1){
         // take 3 numbers from both sides
         let xxs = xs.slice(Math.max(first-3,0),first).concat(xs.slice(last+1,last+4))
         let yys = ys.slice(Math.max(first-3,0),first).concat(ys.slice(last+1,last+4))
-        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points avialable"};
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points available"};
         exterp = new Regression(xxs,yys, 2)
         for (let i of ind) ys[i] = exterp.val(xs[i]);
 
     } else if(condition==2){ // data dataSupEnd
         let xxs= xs.slice(Math.max(first-3,0),first)
         let yys= ys.slice(Math.max(first-3,0),first)
-        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points avialable"};
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points available"};
         exterp = new Regression(xxs,yys, 2)
         let tmpVal = exterp.val(xs[first]) - ys[first]
         for (let i of ind) ys[i] += tmpVal;
@@ -184,7 +184,7 @@ function useRegression(xx, yy, ind, condition=1){
     } else if(condition==3){// dataSup start
         let xxs= xs.slice(last+1,last+4)
         let yys= ys.slice(last+1,last+4)
-        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points avialable"};
+        if(xxs.length<3) throw {ty:'sS', msg: "Not enough data points available"};
         exterp = new Regression(xxs,yys, 2)
         let tmpVal = exterp.val(xs[last]) - ys[last]
         for (let i of ind) ys[i] += tmpVal;
@@ -212,10 +212,10 @@ function regressionFit(xx,yy,n){
 
 
 function levenMarFit(dpsx, dpsy, funcStr, paramList, maxIter, parameters, maxVal, minVal, dampVal,stepVal, etVal, egVal){
-    if (!funcStr) throw 'Funtion is required.'
-    if (!paramList) throw 'Prameters list is required'
-    if (!maxIter) throw 'Maximum iteraion number is required'
-    // set an predifned damping, error tol, error convergence, step size
+    if (!funcStr) throw 'Function is required.'
+    if (!paramList) throw 'Parameters list is required'
+    if (!maxIter) throw 'Maximum iteration number is required'
+    // set an predefined damping, error tol, error convergence, step size
     var parLen = paramList.length
     if(!isNaN(parameters[0])){
         // console.log(parameters)
@@ -262,7 +262,7 @@ function levenMarFit(dpsx, dpsy, funcStr, paramList, maxIter, parameters, maxVal
 
     var olderror = Number.MIN_SAFE_INTEGER
     var converged = false
-    for (let iteraion=0;iteraion<maxIter && !converged; iteraion++) {
+    for (let iteration=0;iteration<maxIter && !converged; iteration++) {
         parameters = stepAhed( xs, ys, parameters, dampVal, stepVal, func);
         for (let k = 0; k < parameters.length; k++) {
             parameters[k] = Math.min( Math.max(minVal[k], parameters[k]),  maxVal[k]);

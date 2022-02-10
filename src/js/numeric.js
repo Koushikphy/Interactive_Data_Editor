@@ -1,6 +1,6 @@
 //mostly numeric functions.
 // functions here are all pure, i.e. 
-//doesnot depend on the outside parameter, and solely depend on the given argument
+//doesn't depend on the outside parameter, and solely depend on the given argument
 
 
 

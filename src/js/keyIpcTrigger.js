@@ -237,7 +237,7 @@ const conMenu = Menu.buildFromTemplate([
                 accelerator : 'D',
                 click : deleteInterpolate
             },{
-                label : 'Mooving Average',
+                label : 'Moving Average',
                 accelerator : 'M',
                 click : autoSmooth
             },{
@@ -249,7 +249,7 @@ const conMenu = Menu.buildFromTemplate([
     }
 ])
 
-figurecontainer.oncontextmenu= ()=>{ if(index.length) conMenu.popup() }// trigge only when some values are selected
+figurecontainer.oncontextmenu= ()=>{ if(index.length) conMenu.popup() }// trigger only when some values are selected
 
 
 
