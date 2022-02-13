@@ -21,7 +21,7 @@ function _versionCheck() {
 }
 
 function versionCheck(){
-    setTimeout(_versionCheck, 5000)
+    setTimeout(_versionCheck, 3000)
 }
 
 module.exports = {

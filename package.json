@@ -18,8 +18,11 @@
     "asar": true,
     "files": [
       "!gulpFile.js",
-      "!**/node_modules/*/{LICENSE,LICENSE.md,License,AUTHORS,CHANGES.md}",
-      "!**/libscripts"
+      "!**/node_modules/*/{LICENSE,License,AUTHORS}",
+      "!**/libscripts",
+      "!docs",
+      "!.vscode",
+      "!**/*.md"
     ],
     "dmg": {
       "contents": [
