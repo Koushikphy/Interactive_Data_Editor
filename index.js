@@ -10,7 +10,6 @@ const {
     app,
     BrowserWindow,
     Menu,
-    BrowserView,
     ipcMain,
     shell,
 } = electron;
@@ -28,23 +27,29 @@ if(!gotTheLock){
       })
 }
 
-ipcMain.on("back", function (e, d) {
-    mainWindow.webContents.send("back", d);
-})
+// ipcMain.on("back", function (e, d) {
+//     mainWindow.webContents.send("back", d);
+// })
 
-ipcMain.on("plotsetting", function (e, d) {
-    mainWindow.webContents.send("plotsetting", d);
-})
+// ipcMain.on("plotsetting", function (e, d) {
+//     mainWindow.webContents.send("plotsetting", d);
+// })
 
 
-ipcMain.on("colchanged", function (e, d) {
-    mainWindow.webContents.send("colchanged", d);
-})
+// ipcMain.on("colchanged", function (e, d) {
+//     mainWindow.webContents.send("colchanged", d);
+// })
 
-ipcMain.on("exportAll", function (e, d) {
-    mainWindow.webContents.send("exportAll", d);
-})
+// ipcMain.on("exportAll", function (e, d) {
+//     mainWindow.webContents.send("exportAll", d);
+// })
 
+
+for(let ch of ["back","plotsetting","colchanged","exportAll"]){
+    ipcMain.on(ch, function (_, d) {
+        mainWindow.webContents.send(ch, d);
+    })
+}
 
 ipcMain.on('checkClose', function (e, d) {
     mainWindow.destroy();

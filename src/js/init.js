@@ -84,8 +84,6 @@ if (app.isPackaged) {
 }
 
 
-
-
 var autoSave = parseInt(store.get('autosave',0)) // autosave file every, 0 means no autosave
 var autoSaveMenuItems = menu.getMenuItemById('autosave').submenu.items;
 autoSaveMenuItems.forEach(e=>{e.checked=false})
