@@ -392,6 +392,7 @@ class Smoother {
         if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
         disableMenu(['edat','fill','filter','af','arf', 'lmfit','rgft','swapen','tpl'])
         $('#smooth').show()
+        setTimeout(resizePlot, 300)
         $('#extendUtils2D').slideDown()
         document.getElementById('smoothApx').onclick = this.smoothApprox
         document.getElementById('smoothApl').onclick = this.saveApprox
