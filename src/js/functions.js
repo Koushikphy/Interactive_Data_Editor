@@ -71,7 +71,7 @@ function setUpFor3d(){
     $('#yLabel').html('Y')
     $('#zLabel').html('Z')
     setUpSlider();
-    col= store.get("cols3d",{x: 0, y: 0, z: 0,s: 0}) 
+    col= store.get("cols3d",{x: 0, y: 0, z: 0,s: 0})
     enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','tax', '3dview','smt'])
     disableMenu(["rgft", 'lmfit'])
 }
@@ -135,7 +135,7 @@ function fileLoader() {
         fileReader(fname[0]);
         for (let i = 1; i < fname.length; i++) {
             addNewFile(fname[i])
-            
+
         }
     }
 }
@@ -445,8 +445,8 @@ function updateOnServer() {
 
 
 function changeEditable(index,reset=false){
-    if(smooth.isActive){ 
-        // when smooth mode is on just change the editable so that the other trace can be sent to the 3d Viewer 
+    if(smooth.isActive){
+        // when smooth mode is on just change the editable so that the other trace can be sent to the 3d Viewer
         currentEditable = currentEditable ? 0:1;
         if(ddd) updateOnServer()
         return
@@ -575,7 +575,7 @@ function saveData() {
 // plots along a different axis
 function isswap() {
     if (!data.length) return;
-    
+
     // ! TODO: dont not use double exprotate, decide beforehand if its required or not
     for (let i = 0; i < fullData.length; i++) {
         [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
@@ -810,7 +810,7 @@ function tools(option,index,ev,elem){
         saveNames.push(saveNames[index])
         legendNames.push(clone(legendNames[index]))
         addTrace()
-        
+
     }else if(option==2) { // close this
         if(fileNames.length==1) return // nothing to delete here
         if(index==currentEditable) return
@@ -837,7 +837,7 @@ function tools2(option,index,ev,elem){
             yCol.selectedIndex = val
             updateData()
         }else if(option=='x'){
-            xCol.selectedIndex=val 
+            xCol.selectedIndex=val
             updateData()
         }
     }else{
