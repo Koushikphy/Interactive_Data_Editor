@@ -1,20 +1,21 @@
 {
   "name": "interactive-data-editor",
-  "version": "2.11.0",
-  "main": "index.js",
   "description": "A Software to interactively edit data in a graphical manner.",
-  "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
   "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
   "copyright": "Copyright © January,2022 Koushik Naskar",
+  "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
+  "version": "2.11.0",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish never"
   },
   "build": {
     "appId": "com.ide.app",
     "productName": "Interactive Data Editor",
+    "artifactName": "${name}_${version}_${arch}.${ext}",
     "asar": true,
     "files": [
       "!gulpFile.js",

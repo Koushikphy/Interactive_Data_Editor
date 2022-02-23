@@ -1,0 +1,128 @@
+name: Build and Release
+
+on:
+  # push:
+  #   branches: [ main ]
+  ##!!! Only run this (i.e. make release) manually
+  workflow_dispatch:
+
+jobs:
+  Windows_Build:
+    # Build executable for windows system
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: npm install and build
+        run: |
+          npm install
+          echo ${{secrets.GA_TOKEN}} > .env
+          npm run dist
+
+      - name: Display build files
+        run: ls -l dist
+
+      - name: Upload windows build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-builds
+          path: |
+            dist/*.exe
+            dist/*.msi
+          retention-days: 1
+
+  Linux_Build:
+    # Build executable for linux system
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: npm install and build
+        run: |
+          npm install
+          echo ${{secrets.GA_TOKEN}} > .env
+          npm run dist
+
+      - name: Display build files
+        run: ls -l dist
+
+      - name: Upload linux build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-builds
+          path: |
+            dist/*.snap
+            dist/*.deb
+            dist/*.AppImage
+          retention-days: 1
+
+
+  Snapstore_Release:
+    needs: [Linux_Build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download builds 
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+          name: linux-builds
+
+      - name: Display build files
+        run: ls -lR artifacts/
+
+      
+      - name: Release to Snap store
+        run: |
+          sudo snap install snapcraft --classic
+          echo "$SNAP_TOKEN" | snapcraft login --with -
+          snapcraft upload --release=stable artifacts/*.snap
+        env:
+          SNAPCRAFT_BUILD_ENVIRONMENT: host
+          SNAP_TOKEN: ${{secrets.SNAP_TOKEN}}
+
+
+
+  Github_Release:
+    needs: [Windows_Build, Linux_Build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+
+
+      - name: Download builds 
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Display build files
+        run: ls -lR artifacts/
+
+      - name: Get app version
+        id: app_version
+        uses: martinbeentjes/npm-get-version-action@master
+
+
+      - name: Release builds to Github
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "artifacts/*/*"
+          allowUpdates: true
+          tag: ${{ steps.app_version.outputs.current-version}}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          replacesArtifacts: true
+          artifactErrorsFailBuild: true
