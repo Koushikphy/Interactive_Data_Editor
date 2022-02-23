@@ -1,9 +1,9 @@
 name: Build and Release
 
 on:
-  # push:
-  #   branches: [ main ]
-  ##!!! Only run this (i.e. make release) manually
+  push:
+    branches: [ main ]
+  # manual dispatch of the workflow
   workflow_dispatch:
 
 jobs:

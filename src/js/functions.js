@@ -202,7 +202,7 @@ function fileReader(fname) {
     $("#zCol").removeClass("rightBorder")
     saveRemminder()
     makeRows()
-    analytics.send('fileload')
+    analytics.add('fileLoaded')
 }
 
 
@@ -237,7 +237,8 @@ function addNewFile(fname) {
     recentFiles = recentFiles.filter(x => x != fname);
     recentFiles.push(fname);
     recentMenu();
-    makeRows()
+    makeRows();
+    analytics.add('fileAdded');
 }
 
 function addTrace(){
@@ -413,9 +414,12 @@ function keyBoardDrag(moveDown) {
 }
 
 
-var exportAll = false
-var timer;
+var exportAll = false, counter=0, timer;
 function updateOnServer() {
+    // data operations are very frequent to sending all of them is overkill, lets send them every 5 operations
+    if(counter%5==0) analytics.add('ops')
+    counter++
+
     if (!viewerWindow) return;
     clearTimeout(timer);
     timer = setTimeout(()=>{  //send updated value only once within .5 sec
@@ -559,6 +563,7 @@ function saveData() {
         showStatus("Data Saved in file " + replaceWithHome(saveNames[currentEditable]));
         saved = true;
         saveRemminder();
+        analytics.add('saved')
     } catch (error) {
         showStatus("Something went wrong! Couldn't save the data...")
         console.error(error)
@@ -570,7 +575,7 @@ function saveData() {
 // plots along a different axis
 function isswap() {
     if (!data.length) return;
-
+    
     // ! TODO: dont not use double exprotate, decide beforehand if its required or not
     for (let i = 0; i < fullData.length; i++) {
         [fullDataCols[i].x, fullDataCols[i].y] = [fullDataCols[i].y, fullDataCols[i].x]
@@ -715,7 +720,6 @@ function spreadsheet() {
     editorWindow.webContents.once("dom-ready", function () {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
     })
-    analytics.send('spreadsheet')
 }
 
 
@@ -747,7 +751,6 @@ function openViewer() {
     viewerWindow.setMenuBarVisibility(false);
     // if (!app.isPackaged) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready", updateOnServer)
-    analytics.send('3Dviewer')
 };
 
 
@@ -909,22 +912,39 @@ class Analytics{
         },300)
         }
         // now read the analytics id, read from .env file
-        this.uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').split('=')[1]
+        const uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').split('=')[1]
+        this.uuid = uuid.trim()
+        this.queue = store.get('analyticsQueue',[])
+        // do not send analytics in testing mode
+        this.add()
+        // send analytics data only in production, otherwise dev mode will spam the data
+        if(app.isPackaged) setInterval(this.send.bind(this),1000*60*1) // send every 5 minutes
+    }
+
+    // analytics will save all the data in a queue and send all together in a single POST to analytics server every 5 minutes.
+    add(page='home'){
+        this.queue.push(page)
+        store.set('analyticsQueue',this.queue)
     }
 
     // Starting from version 10, Interactive Data Editor will collect and share user data with the developer to give a  better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.
-    send(page='home',type='pageview'){
-        if(!app.isPackaged) return  // do not send analytics in testing mode
-        fetch('https://www.google-analytics.com/collect', {
+    send(){
+        if(this.queue.length==0) return
+        const type='pageview'
+        fetch('https://www.google-analytics.com/batch', {
             method: 'POST',
-            body: `v=1&t=${type}&tid=${this.uuid}&cid=${this.cid}&dp=${page}`
+            body: this.queue.map(e=>`v=1&t=${type}&tid=${this.uuid}&cid=${this.cid}&dp=${e}`).join('\n')
         }).then(d=>{
-            if(d.status!=200) console.error("Cannot post to analytics server")
+            if(d.status==200) {
+                // analytics send successful
+                this.queue = []
+                store.set('analyticsQueue',this.queue)
+            }else {
+                console.error("Cannot post to analytics server")
+            }
         })
     }
 }
 
 
-
 const analytics = new Analytics()
-analytics.send()

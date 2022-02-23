@@ -406,7 +406,7 @@ const homeMenuTemplate = [
             id: "edat",
             enabled: false,
             click() {
-                mainWindow.webContents.send("menuTrigger", "edat")
+                mainWindow.webContents.send("menuTrigger", "extend")
             }
         }, {
             label: "Filter Data",

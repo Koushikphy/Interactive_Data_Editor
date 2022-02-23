@@ -145,39 +145,48 @@ function ipcTrigger(_,d){
 
     }else if(d=='3dview'){
         openViewer()
+        analytics.add('3Dviewer')
 
     }else if(d=='tax' && ddd){
         isswap()
+        analytics.add('swapAxis')
 
     }else if(d=='spread'){
         spreadsheet()
+        analytics.add('spreadsheet')
 
     }else if(d=='pamh'){
         lockXc = menu.getMenuItemById("pamh").checked ? 0 : 1
+        analytics.add('moveX')
 
     }else if(d=='fullscreen'){
         resizePlot()
 
     }else if(d=='tswap' && !swapperIsOn){
         openSwapper()
+        analytics.add('swapper')
 
     }else if(d=='tswap' && swapperIsOn){
         exitSwapper()
 
     }else if(d=='smt'){
         smooth.openSmooth()
+        analytics.add('autoSmooth')
 
     }else if(d=='tplots' && !$('#sidebar').width()){
         openNav()
+        analytics.add('plotList')
 
     }else if(d=='tplots' && $('#sidebar').width()){
         closeNav()
 
-    }else if(d=='edat' || d=='fill' || d=='filter'){
+    }else if(d=='extend' || d=='fill' || d=='filter'){
         $('#filler').show()
         $('.extendUtils').slideUp()
         $(`#${d}`).slideDown()
         if(!ddd) disableMenu(['lmfit','rgft'])
+        analytics.add(d)
+
 
     }else if(d=='rgft' || d=='lmfit'){
         if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
@@ -186,13 +195,15 @@ function ipcTrigger(_,d){
         disableMenu(['edat','fill','filter','af','arf',d=='rgft' ? 'lmfit':'rgft'])
         $(`#${d=='rgft' ? 'rgFit' : 'lmFit' }`).show()
         $('#extendUtils2D').slideDown()
+        analytics.add(d)
+
 
     }else if(d=='pdash'){
         settingWindow()
-
+        analytics.add('settingWindow')
     }else if(d=='trigdown'){
         $('#popupEx').show()
-
+        analytics.add('exportImage')
         
     }else if(d.substring(0,8)=='autosave'){
         autoSave = parseInt(d.substring(8))

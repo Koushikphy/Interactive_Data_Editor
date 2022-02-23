@@ -47,7 +47,6 @@ function repeatMirror() {
     data = repeatMirrorData(data, col.y, last, times, mirror)
     endJobs({startdrag:true,minimal:false})
     showStatus(`Data ${mirror ? 'mirrored' : 'repeated'} ${times} times...`)
-    analytics.send('extend')
 }
 
 
@@ -69,7 +68,6 @@ function dataFiller() {
     data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step )
     endJobs({startdrag:true,minimal:false})
     showStatus('Missing values are filled...');
-    analytics.send('filler')
 }
 
 
@@ -84,7 +82,6 @@ function filterData() {
 
     endJobs({minimal:false})
     showStatus('Data filtered...');
-    analytics.send('filter')
 }
 
 
@@ -141,23 +138,6 @@ function deleteInterpolate() {
     } catch(e){
         e.ty=='sS' ? showStatus(e.msg) : console.error(e.stack)
     }
-}
-
-// temporary macro function
-function autoSm(len=data.length){
-    for(let j=0;j<len;j++){
-        dpsYY = data[j][col.z]
-        dpsXX = data[j][col.y]
-        // for (let i of index) {
-        //     dps[i] = (dps[i - 1] + dps[i] + dps[i + 1]) / 3.0
-        // };
-        // data[j][col.z] = dps;
-
-
-        data[j][col.z] = useRegression(dpsXX, dpsYY, index) 
-    }
-    updatePlot()
-    updateOnServer()
 }
 
 
@@ -274,7 +254,7 @@ function polyfit(){
         if(i==0) return el.toPrecision(5)
         return `${el>0?'+':''}${el.toPrecision(5)}${i>1? `x<sup>${i}</sup>` : 'x'}`
     }).join(' ')
-    analytics.send('polyfit')
+    
 }
 
 
@@ -312,7 +292,6 @@ function lmfit(){
         }]},
     1)
     fitY = fity
-    analytics.send('lmfit')
 }
 
 
@@ -398,7 +377,7 @@ class Smoother {
         document.getElementById('smoothApl').onclick = this.saveApprox
         document.getElementById('smoothCls').onclick = this.closeSmooth
         this.isActive = true
-        analytics.send('smoother')
+        analytics.add('smoother')
     }
 
     initalSetup=()=>{
