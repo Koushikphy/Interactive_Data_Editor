@@ -122,7 +122,7 @@ jobs:
         with:
           artifacts: "artifacts/*/*"
           allowUpdates: true
-          tag: ${{ steps.app_version.outputs.current-version}}
+          tag: v${{ steps.app_version.outputs.current-version}}
           token: ${{ secrets.GITHUB_TOKEN }}
           replacesArtifacts: true
           artifactErrorsFailBuild: true
