@@ -912,13 +912,12 @@ class Analytics{
         },300)
         }
         // now read the analytics id, read from .env file
-        const uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').split('=')[1]
-        this.uuid = uuid.trim()
+        this.uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').trim()
         this.queue = store.get('analyticsQueue',[])
         // do not send analytics in testing mode
         this.add()
         // send analytics data only in production, otherwise dev mode will spam the data
-        if(app.isPackaged) setInterval(this.send.bind(this),1000*60*1) // send every 5 minutes
+        if(app.isPackaged) setInterval(this.send.bind(this),1000*60*5) // send every 5 minutes
     }
 
     // analytics will save all the data in a queue and send all together in a single POST to analytics server every 5 minutes.
