@@ -416,8 +416,8 @@ function keyBoardDrag(moveDown) {
 
 var exportAll = false, counter=0, timer;
 function updateOnServer() {
-    // data operations are very frequent to sending all of them is overkill, lets send them every 5 operations
-    if(counter%5==0) analytics.add('ops')
+    // data operations are very frequent to sending all of them is overkill, lets send them every 10 operations
+    if(counter%10==0) analytics.add('ops')
     counter++
 
     if (!viewerWindow) return;
@@ -917,7 +917,10 @@ class Analytics{
         // do not send analytics in testing mode
         this.add()
         // send analytics data only in production, otherwise dev mode will spam the data
-        if(app.isPackaged) setInterval(this.send.bind(this),1000*60*5) // send every 5 minutes
+        if(app.isPackaged) {
+            this.send() // send the load event immidiately
+            setInterval(this.send.bind(this),1000*60*10) // send every 10 minutes
+        }
     }
 
     // analytics will save all the data in a queue and send all together in a single POST to analytics server every 5 minutes.
