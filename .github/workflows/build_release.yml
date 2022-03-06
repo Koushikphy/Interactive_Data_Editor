@@ -126,3 +126,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           replacesArtifacts: true
           artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
