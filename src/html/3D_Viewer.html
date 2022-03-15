@@ -308,7 +308,6 @@
 
         function updatePlotWire() {
             let dat = [[], [], []], breaks = [];
-            const ll = data.length;
             data.forEach(d => {
                 r = makeRotation(d);
                 dat[0].push(...d[0], ...r[0]);
@@ -316,7 +315,7 @@
                 dat[2].push(...d[2], ...r[2]);
                 breaks.push(dat[0].length)
             })
-            breaks = breaks.map((a => b => a += b)(0))
+            // breaks = breaks.map((a => b => a += b)(0))
 
             if (first || figurecontainer.data.length != dat[0].length) {
 
