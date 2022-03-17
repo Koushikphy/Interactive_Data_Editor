@@ -83,7 +83,7 @@ jobs:
       - name: Display build files
         run: ls -lR artifacts/
 
-      
+      #  snapcraft export-login --snaps interactive-data-editor snap.login
       - name: Release to Snap store
         run: |
           sudo snap install snapcraft --classic

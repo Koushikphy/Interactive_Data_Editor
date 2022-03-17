@@ -221,7 +221,13 @@ function saveRemminder(){
     clearInterval(saveRemminderTimer);
     if(!autoSave) return
     saveRemminderTimer=setInterval(()=>{
-        firstSave? showStatus("You may want to save the file."):saveData();
+        if(firstSave){
+            showStatus("You may want to save the file.")
+        } else{ 
+            // if there is noting to save dont trigger the save 
+            // as it will send a analytics data
+            if (!saved) saveData()
+        }
     },autoSave*1000*60)
 }
 

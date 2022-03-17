@@ -552,7 +552,7 @@ function saveAs() {
 
 
 function saveData() {
-    if(saved) return
+    // if(saved) return
     var tmpData = swapped ? expRotate(data, col.y, col.x) : data
     // https://www.npmjs.com/package/d3-format#locale_formatPrefix
     //^ using d3 format, `g` means decimal/exponent notation, rounded to significant digits
