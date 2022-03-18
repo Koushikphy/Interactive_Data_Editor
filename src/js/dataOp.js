@@ -1,4 +1,5 @@
 const {repeatMirrorData,fillMissingGrid,useRegression,applyCutOFF,useSpline,levenMarFit,regressionFit} = require('../js/utils');
+const {splineSmoother,detectBadData, Spline} = require('../js/numeric');
 
 
 // copy paste values between different x/y
@@ -363,6 +364,9 @@ class Smoother {
         this.res= null;
         this.isActive = false;
         this.initialDone = false;
+        document.getElementById('smoothApx').onclick = this.smoothApprox
+        document.getElementById('smoothApl').onclick = this.saveApprox
+        document.getElementById('smoothCls').onclick = this.closeSmooth
     }
 
     openSmooth(){
@@ -373,9 +377,6 @@ class Smoother {
         $('#smooth').show()
         setTimeout(resizePlot, 300)
         $('#extendUtils2D').slideDown()
-        document.getElementById('smoothApx').onclick = this.smoothApprox
-        document.getElementById('smoothApl').onclick = this.saveApprox
-        document.getElementById('smoothCls').onclick = this.closeSmooth
         this.isActive = true
         analytics.add('smoother')
     }
@@ -388,7 +389,6 @@ class Smoother {
             type: 'scatter',
             opacity: 1,
             mode: 'markers+lines',
-            name : 'Fitted line',
             marker: {
                 symbol: "circle-dot",
                 color: '#b00',
@@ -438,7 +438,7 @@ class Smoother {
 
         var cx = col.x,cy = col.y;
         // smooth in one direction 
-        this.res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
+        this.res  = data.map((dat,ii)=>  (notAllX && ii!=th_in) ? dat : dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : splineSmoother(dat[cy],y,smtFactor)))
         // for 2D case, we have to smooth it in two direction...
         //NOTE: here just ignoring the other side smoothing, this is simpler and the other side can be simply done with rotating the axis
         // if(data.length!=1) {
@@ -467,86 +467,94 @@ class Smoother {
         if(ddd) updateOnServer()
         this.closeSmooth()
     }
-
-    #smoothOut(x,y,smooth){
-        const n = x.length;
-        var v   = new Array(n).fill(0).map(_=>new Array(7).fill(0));
-        var qty = new Array(n)//.fill(0);
-        var qu  = new Array(n)//.fill(0);
-        var u   = new Array(n)//.fill(0);
-    
-        // setupuq
-        v[0][3] = x[1] - x[0]
-        for(let i=1;i<n-1;i++){
-            v[i][3] = x[i+1] - x[i]
-            v[i][0] = 1/v[i-1][3]
-            v[i][1] = -1/v[i][3] -1/v[i-1][3]
-            v[i][2] = 1/v[i][3]
-            v[i][4] = v[i][0]**2 + v[i][1]**2 + v[i][2]**2
-        }
-        for(let i=1;i<n-2;i++) v[i][5] = v[i][1]*v[i+1][0] + v[i][2]*v[i+1][1]
-        for(let i=1;i<n-3;i++) v[i][6] = v[i][2]*v[i+2][0]
-    
-        var prev   = (y[1] - y[0])/v[0][3]
-        var diff, ratio;
-        for(let i=1;i<n-1;i++){
-            diff = (y[i+1] - y[i])/v[i][3]
-            qty[i] = diff - prev
-            prev = diff
-        }
-    
-        // chol1s
-        var six1mp = 6.0 * ( 1.0 - smooth )
-    
-        for(let i=1;i<n-1;i++){
-            v[i][0] = six1mp*v[i][4] + 2.0*smooth*(v[i-1][3] + v[i][3])
-            v[i][1] = six1mp*v[i][5] + smooth*v[i][3]
-            v[i][2] = six1mp*v[i][6]
-        }
-    
-        if(n<4){
-            u[1] = qty[1]/v[1][0]
-        } else{
-            for (let i = 1; i < n-2; i++) {
-                ratio = v[i][1]/v[i][0]
-                v[i+1][0] -= ratio*v[i][1]
-                v[i+1][1] -= ratio*v[i][2]
-                v[i][1] = ratio
-                ratio = v[i][2]/v[i][0]
-                v[i+2][0] -= ratio*v[i][2]
-                v[i][2] = ratio
-            }
-            // Forward substitution
-            u[0] = 0
-            v[0][2] = 0 
-            u[1] = qty[1]
-            for (let i = 1; i < n-2; i++) {
-                u[i+1] = qty[i+1] - v[i][1] * u[i] - v[i-1][2]*u[i-1]
-            }
-    
-            // Back substitution.
-            u[n-1] = 0 
-            u[n-2] = u[n-2]/v[n-2][0]
-            for (let i = n-3; i >=1; i--) {
-                u[i] = u[i]/v[i][0] - u[i+1]*v[i][1]  - u[i+2]*v[i][2]
-            }
-        }
-    
-        // Construct Q * U.
-        prev = 0 
-        for (let i = 1; i < n; i++) {
-            qu[i] = (u[i] - u[i-1])/v[i-1][3]
-            qu[i-1] = qu[i] - prev
-            prev = qu[i]
-        }
-        qu[n-1]  = - qu[n-1]
-    
-        for (let i = 0; i < n; i++) {
-            qu[i] = y[i] - 6*(1-smooth)*qu[i]
-        }
-        return qu
-    }
 }
 
 smooth = new Smoother()
+
+
+
+class AutoFixer{
+    constructor(){
+        this.active = true
+        window.addEventListener('keydown',(ev)=>{
+            if(ev.altKey && ev.key=='s') this.saveValue()
+        })
+        this.res = null
+    }
+
+    openAutoFixer(){
+        this.active = true
+        this.smoothElem = document.getElementById('autoSmot')
+        this.cutElem = document.getElementById('autoCut')
+        this.smoothElem.oninput = this.cutElem.oninput = this.runFixer
+        Plotly.addTraces(figurecontainer, {
+            name:'Approximated',
+            x: [],
+            y: [],
+            type: 'scatter',
+            opacity: 1,
+            mode: 'markers+lines',
+            marker: {
+                symbol: "circle-dot",
+                color: '#b00',
+                size: 3,
+                opacity: 1
+            },
+            line: {
+                width: 2,
+                color: "#207104",
+                dash: 0,
+                // shape: 'spline'
+            },
+            hoverinfo: 'x+y',
+        });
+    }
+
+    
+
+    closeAutoFixer(){
+        if(!this.active) return
+        Plotly.deleteTraces(figurecontainer,1)
+        this.active = false
+        this.res = null
+    }
+
+
+
+    runFixer= ()=>{
+        console.log('here', this.active,this)
+        if(!this.active) return
+        const smVal = parseFloat(this.smoothElem.value)
+        const cutVal = parseFloat(this.cutElem.value)
+        const badIndex = detectBadData(dpsx, dpsy, smVal, cutVal)
+        
+        // have to handle intermidiate, front end and last end data differently, 
+        // only spline can be applied to the intermidiate data but for the
+        // exterme data points have to apply regression datat.
+        
+        // remove all end point for now
+        const ind = badIndex.filter(i=>i!=0 && i!=dpsy.length)
+
+        // spline interpolation for intermidieate points
+        let xxs = dpsx.filter((_,i)=>!ind.includes(i))
+        let yys = dpsy.filter((_,i)=>!ind.includes(i))
+
+        let spl = new Spline(xxs,yys)
+        this.res = [...dpsy]
+        for (let i of ind) this.res[i] = spl.getVal(dpsx[i]);
+        // return yy
+
+        Plotly.restyle(figurecontainer, {x:[dpsx],y:[this.res]},1)
+    }
+
+    saveValue(){
+        console.log('ran saved value')
+        if(!this.active && this.res) return
+        data[th_in][col.z] =dpsy =  this.res
+        updatePlot()
+    }
+}
+const aFixer = new AutoFixer()
+
+
 

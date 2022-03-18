@@ -194,7 +194,9 @@ function useRegression(xx, yy, ind, condition=1){
 
 
 
+
 function useSpline(xx, yy, ind){
+    // modifies the input arrays in place
     let xxs = xx.filter((_,i)=>!ind.includes(i))
     let yys = yy.filter((_,i)=>!ind.includes(i))
 

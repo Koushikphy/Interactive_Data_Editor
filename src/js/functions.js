@@ -900,25 +900,26 @@ class Analytics{
             this.cid = uuidv4()
             store.set('cid', this.cid)
         }
-        var shown = store.get('shown',0)
-        store.set('shown',shown+1)
-        if(shown%10==0){ // shown after every 10 opening
-            setTimeout(()=>{
-            dialog.showMessageBox(remote.getCurrentWindow(),{
-                message:"User data share policy",
-                type: "info",
-                title: "Note from developer !",
-                detail: "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
-            });
-        },300)
-        }
+
         // now read the analytics id, read from .env file
         this.uuid = fs.readFileSync(path.join(app.getAppPath(),'.env'),'utf8').trim()
         this.queue = store.get('analyticsQueue',[])
         // do not send analytics in testing mode
-        this.add()
         // send analytics data only in production, otherwise dev mode will spam the data
         if(app.isPackaged) {
+            var shown = store.get('shown', 0)
+            store.set('shown', shown + 1)
+            if (shown % 10 == 0) { // shown after every 10 opening
+                setTimeout(() => {
+                    dialog.showMessageBox(remote.getCurrentWindow(), {
+                        message: "User data share policy",
+                        type: "info",
+                        title: "Note from developer !",
+                        detail: "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
+                    });
+                }, 300)
+            }
+            this.add()
             this.send() // send the load event immidiately
             setInterval(this.send.bind(this),1000*60*10) // send every 10 minutes
         }

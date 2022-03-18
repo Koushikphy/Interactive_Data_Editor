@@ -312,10 +312,130 @@ function stepAhed( xs, ys, parameters, damping, gradDiff, myfunc ) {
 }
 
 
+function splineSmoother(x,y,smooth){
+    const n = x.length;
+    var v   = new Array(n).fill(0).map(_=>new Array(7).fill(0));
+    var qty = new Array(n)//.fill(0);
+    var qu  = new Array(n)//.fill(0);
+    var u   = new Array(n)//.fill(0);
 
+    // setupuq
+    v[0][3] = x[1] - x[0]
+    for(let i=1;i<n-1;i++){
+        v[i][3] = x[i+1] - x[i]
+        v[i][0] = 1/v[i-1][3]
+        v[i][1] = -1/v[i][3] -1/v[i-1][3]
+        v[i][2] = 1/v[i][3]
+        v[i][4] = v[i][0]**2 + v[i][1]**2 + v[i][2]**2
+    }
+    for(let i=1;i<n-2;i++) v[i][5] = v[i][1]*v[i+1][0] + v[i][2]*v[i+1][1]
+    for(let i=1;i<n-3;i++) v[i][6] = v[i][2]*v[i+2][0]
+
+    var prev   = (y[1] - y[0])/v[0][3]
+    var diff, ratio;
+    for(let i=1;i<n-1;i++){
+        diff = (y[i+1] - y[i])/v[i][3]
+        qty[i] = diff - prev
+        prev = diff
+    }
+
+    // chol1s
+    var six1mp = 6.0 * ( 1.0 - smooth )
+
+    for(let i=1;i<n-1;i++){
+        v[i][0] = six1mp*v[i][4] + 2.0*smooth*(v[i-1][3] + v[i][3])
+        v[i][1] = six1mp*v[i][5] + smooth*v[i][3]
+        v[i][2] = six1mp*v[i][6]
+    }
+
+    if(n<4){
+        u[1] = qty[1]/v[1][0]
+    } else{
+        for (let i = 1; i < n-2; i++) {
+            ratio = v[i][1]/v[i][0]
+            v[i+1][0] -= ratio*v[i][1]
+            v[i+1][1] -= ratio*v[i][2]
+            v[i][1] = ratio
+            ratio = v[i][2]/v[i][0]
+            v[i+2][0] -= ratio*v[i][2]
+            v[i][2] = ratio
+        }
+        // Forward substitution
+        u[0] = 0
+        v[0][2] = 0 
+        u[1] = qty[1]
+        for (let i = 1; i < n-2; i++) {
+            u[i+1] = qty[i+1] - v[i][1] * u[i] - v[i-1][2]*u[i-1]
+        }
+
+        // Back substitution.
+        u[n-1] = 0 
+        u[n-2] = u[n-2]/v[n-2][0]
+        for (let i = n-3; i >=1; i--) {
+            u[i] = u[i]/v[i][0] - u[i+1]*v[i][1]  - u[i+2]*v[i][2]
+        }
+    }
+
+    // Construct Q * U.
+    prev = 0 
+    for (let i = 1; i < n; i++) {
+        qu[i] = (u[i] - u[i-1])/v[i-1][3]
+        qu[i-1] = qu[i] - prev
+        prev = qu[i]
+    }
+    qu[n-1]  = - qu[n-1]
+
+    for (let i = 0; i < n; i++) {
+        qu[i] = y[i] - 6*(1-smooth)*qu[i]
+    }
+    return qu
+}
+
+
+
+
+
+
+function normalizeDist(arr){
+    const sm = arr.reduce((i,j)=>i+j)
+    const mean = sm/arr.length
+    const std = Math.sqrt((arr.map(elem=>(elem-mean)**2).reduce((i,j)=>i+j))/arr.length)
+    return arr.map(elem=>(elem-mean)/std)
+}
+
+function percentile(arr, perc){
+    const sortedArr = [...arr].sort((i,j)=>i-j)
+    const lp= (arr.length-1)*perc/100
+    const lpC = parseInt(lp)
+    const lpF = lp - lpC
+    return (1-lpF)*sortedArr[lpC] + lpF ? lpF*sortedArr[lpC+1] : 0 
+}
+
+
+
+function detectBadData(xArr, yArr, smoothness, cutoff){
+    // var xArr = data[th_in][col.y]
+    // var yArr = data[th_in][col.z]
+    // get smoothing approximation 
+    var smoothedY = splineSmoother(xArr,yArr,smoothness/100)
+    // get difference
+    var diffY = smoothedY.map((elem,j)=>Math.abs(elem-yArr[j]))
+    // console.log(diff)
+    var nDist = normalizeDist(diffY)
+
+    var percVal = percentile(nDist,cutoff)
+    
+    var indexToRemove = []
+    nDist.forEach((elem,i)=>{
+        if(elem>percVal) indexToRemove.push(i)
+    })
+    return indexToRemove
+}
 
 module.exports ={
     Regression,
     Spline,
-    stepAhed
+    stepAhed,
+    splineSmoother,
+    detectBadData
 }

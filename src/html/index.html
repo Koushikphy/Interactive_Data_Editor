@@ -5,7 +5,7 @@
     <title>Interactive Data Editor</title>
     <link href="../css/style.css" rel="stylesheet">
     <script>
-        if (typeof module === 'object') { window.module = module; module = undefined;}
+        if (typeof module === 'object') { window.module = module; module = undefined; }
     </script>
 </head>
 
@@ -26,14 +26,22 @@
                 Copyright &copy; January,2022 Koushik Naskar
             </div>
 
-            <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io/Interactive_Data_Editor/');"><img src="../../figs/internet.png" width="30" height="30"></a>
-            <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../../figs/facebook.png" width="30" height="30"></a>
-            <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"            width="30" height="30"></a>
-            <a title="Reach me on Gmail" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../../figs/gmail.png" width="30" height="30"></a>
+            <a title="Open website" href="javascript:void(0)"
+                onclick="shell.openExternal('https://koushikphy.github.io/Interactive_Data_Editor/');"><img
+                    src="../../figs/internet.png" width="30" height="30"></a>
+            <a title="Follow me Facebook" href="javascript:void(0)"
+                onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img
+                    src="../../figs/facebook.png" width="30" height="30"></a>
+            <a title="Follow me on Github" href="javascript:void(0)"
+                onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"
+                    width="30" height="30"></a>
+            <a title="Reach me on Gmail" href="javascript:void(0)"
+                onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img
+                    src="../../figs/gmail.png" width="30" height="30"></a>
         </div>
     </div>
 
-    <div id='toastContainer'></div>  <!-- notification -->
+    <div id='toastContainer'></div> <!-- notification -->
 
 
     <div id="sidebar">
@@ -41,15 +49,15 @@
         <div class="closebtn" onclick="closeNav()">X</div>
         <div class="sideheader"> Plots</div>
         <div id="files"></div>
-        </div>
+    </div>
     </div>
 
 
-    <div id="full" >
+    <div id="full">
         <div class="borders" id="container" style="padding-top: 4px;">
 
             <div class="column">
-                <div class="mySelect 3D" >
+                <div class="mySelect 3D">
                     <span id='xLabel'>X</span>
                     <select class="testSelect sWheel" id="xCol" onchange="updateData();this.blur()"></select>
                 </div>
@@ -67,7 +75,7 @@
                 </div>
             </div>
 
-            <div id="range-div" class='3D' >
+            <div id="range-div" class='3D'>
                 <input type="range" name="" id="range" min=0 max=100 step=1 value=0 onclick="this.blur()">
                 <span id="thumb"></span>
             </div>
@@ -77,22 +85,23 @@
             <div id="extendUtils2D" class="borders">
 
                 <div id="rgFit" style="padding:3px">
-                    <span > Order of polynomial </span>
+                    <span> Order of polynomial </span>
                     <input id="polyInp" type="number" value="1" min="1">
                     <input type="submit" value="Solve" onclick="polyfit()" class="rgfit-buttons">
                     <input type="submit" value="Save" onclick="saveFit()" class="rgfit-buttons">
-                    <input type="submit" value="Close" onclick="closeFit($('#rgFit'));clearFit()" class="rgfit-buttons"> <br>
+                    <input type="submit" value="Close" onclick="closeFit($('#rgFit'));clearFit()" class="rgfit-buttons">
+                    <br>
                     Fitted Equation <span id='formulaStr'></span>
                 </div>
 
                 <div id="lmFit">
                     <div class="grid-container">
-                        Function <input id='funcStr' type="text" value="a+b*x" >
-                        Parameters List <input id='paramList'type="text" value="a,b">
+                        Function <input id='funcStr' type="text" value="a+b*x">
+                        Parameters List <input id='paramList' type="text" value="a,b">
                         <div class="grid-buttons">
                             <button onclick="lmfit()">Solve</button>
                             <button onclick="saveFit()">Save</button>
-                            <button onclick="closeFit($('#lmFit'));clearFit(true)" >Close</button>
+                            <button onclick="closeFit($('#lmFit'));clearFit(true)">Close</button>
                         </div>
 
                         Max Iterations <input id='iterationVal' type="text" value='1000'>
@@ -108,9 +117,9 @@
 
 
 
-                <div id="smooth" style="padding:3px; display: flex; flex-direction: row;" >
+                <div id="smooth" style="padding:3px; display: flex; flex-direction: row;">
                     <div id='smGrid'>
-                        <span > Smoothing parameter </span>
+                        <span> Smoothing parameter </span>
                         <input id="smoothInp" type="number" value="1" min="0" max="1" step="0.01">
                         <span>Apply to all column</span>
                         <input type="checkbox" id="smCheck">
@@ -124,64 +133,68 @@
                     </div>
                 </div>
 
-
-
+            </div>
+            <div>
+                <input type="number" name="" id="autoSmot" min="0" max="99" step="1" value="95">
+                <input type="number" name="" id="autoCut" min="0" max="99" step="1" value="95">
             </div>
 
             <div id="figurecontainer"></div>
 
-                <div class="borders" id="filler">
-                    <div id='fill' class="extendUtils">
-                        <span  class="fillTmp">Start</span>
-                        <input type="text" id="fstart" tabindex="1">
-                        <span class="shift">
-                            Extrapolate
-                        </span>
-                        <select id="expSel" tabindex="4">
-                            <option>Closest</option>
-                            <option>Regression</option>
-                        </select>
-                        <br>
-                        <span class="fillTmp">End</span>  <input type="text" id="fend" tabindex="2">
-                        <input type="submit" value="OK" onclick="dataFiller()" class="utilBtn shift" tabindex="4">
-                        <input type="submit" value="Cancel" class="utilBtn"style="margin-top: 1px;">
-                        <span style="margin-left: 7px">
-                            &#9432;<span style="font-size:.9pc;"> This operation is not reversible. You may want to save before proceeding.</span><br>
-                        </span>
-                        <select id='gridSel'>
-                            <option>Grid Spacing</option>
-                            <option>Grid Number</option>
-                        </select>
+            <div class="borders" id="filler">
+                <div id='fill' class="extendUtils">
+                    <span class="fillTmp">Start</span>
+                    <input type="text" id="fstart" tabindex="1">
+                    <span class="shift">
+                        Extrapolate
+                    </span>
+                    <select id="expSel" tabindex="4">
+                        <option>Closest</option>
+                        <option>Regression</option>
+                    </select>
+                    <br>
+                    <span class="fillTmp">End</span> <input type="text" id="fend" tabindex="2">
+                    <input type="submit" value="OK" onclick="dataFiller()" class="utilBtn shift" tabindex="4">
+                    <input type="submit" value="Cancel" class="utilBtn" style="margin-top: 1px;">
+                    <span style="margin-left: 7px">
+                        &#9432;<span style="font-size:.9pc;"> This operation is not reversible. You may want to save
+                            before proceeding.</span><br>
+                    </span>
+                    <select id='gridSel'>
+                        <option>Grid Spacing</option>
+                        <option>Grid Number</option>
+                    </select>
 
-                        <input type="text" id="fstep" tabindex="3" class="shift">
+                    <input type="text" id="fstep" tabindex="3" class="shift">
 
-                    </div>
-
-                    <div id="extend" class="extendUtils">
-                        Extend from  0 to <input type="text" id="einp" tabindex="1"> <br>
-                        Extend times <input type="text" id="etime" tabindex="2">
-                        <input type="submit" value="OK" onclick="repeatMirror()" class="utilBtn" tabindex="4">
-                        <input type="submit" value="Cancel" class="utilBtn" > <br>
-                        Extend by <select id="repSel" tabindex="3">
-                            <option>Repeat</option>
-                            <option>Mirror</option>
-                        </select><br>
-                    </div>
-
-                    <div id="filter" class="extendUtils">
-                        Condition<select id="flSel">
-                            <option>&lt;</option>
-                            <option>></option>
-                            <option>=</option>
-                        </select>
-                        <input type="text" id="flc"> <br>
-                        Fill with <input type="text" id="flf">
-                        <input type="submit" value="OK" onclick="filterData()" class="utilBtn">
-                        <input type="submit" value="Cancel" class="utilBtn" >
-                        &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before proceeding.</span> <br>
-                        Columns&nbsp; <input type="text" id="flcl">
-                    </div>
                 </div>
+
+                <div id="extend" class="extendUtils">
+                    Extend from 0 to <input type="text" id="einp" tabindex="1"> <br>
+                    Extend times <input type="text" id="etime" tabindex="2">
+                    <input type="submit" value="OK" onclick="repeatMirror()" class="utilBtn" tabindex="4">
+                    <input type="submit" value="Cancel" class="utilBtn"> <br>
+                    Extend by <select id="repSel" tabindex="3">
+                        <option>Repeat</option>
+                        <option>Mirror</option>
+                    </select><br>
+                </div>
+
+                <div id="filter" class="extendUtils">
+                    Condition<select id="flSel">
+                        <option>&lt;</option>
+                        <option>></option>
+                        <option>=</option>
+                    </select>
+                    <input type="text" id="flc"> <br>
+                    Fill with <input type="text" id="flf">
+                    <input type="submit" value="OK" onclick="filterData()" class="utilBtn">
+                    <input type="submit" value="Cancel" class="utilBtn">
+                    &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
+                        proceeding.</span> <br>
+                    Columns&nbsp; <input type="text" id="flcl">
+                </div>
+            </div>
 
         </div>
 
@@ -195,7 +208,7 @@
                 <b class='closbtn' title="Close">X</b>
             </div>
             <div class="popmain" style="text-align: left;">
-                &ensp; File Name <input type="text" id= "dfileName"><br>
+                &ensp; File Name <input type="text" id="dfileName"><br>
                 &ensp; File Type <select id="fileFormat">
                     <option>PDF</option>
                     <option>JPEG</option>
@@ -223,15 +236,16 @@
             </div>
         </div>
 
-        <div id = "branding">
-            <a title="Follow Me" href='javascript:void(0);' onclick="shell.openExternal('https://github.com/Koushikphy')">
+        <div id="branding">
+            <a title="Follow Me" href='javascript:void(0);'
+                onclick="shell.openExternal('https://github.com/Koushikphy')">
                 <i>Developed by </i> <b> Koushik Naskar</b>&ensp;
             </a><br>
         </div>
     </div>
 
     <script>
-        document.getElementById('versionname').innerHTML =`Version ${require('../../package.json').version}`
+        document.getElementById('versionname').innerHTML = `Version ${require('../../package.json').version}`
     </script>
 
     <script src='../js/init.js'></script>
