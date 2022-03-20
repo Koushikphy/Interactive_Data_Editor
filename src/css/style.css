@@ -187,7 +187,7 @@ select{
     text-align: center;
 }
 
-input[type=text]{
+input[type=text],input[type=number]{
     height: 1.55pc;
     display: inline-block;
     border: 1px solid #ccc;
@@ -202,7 +202,7 @@ input[type=text]{
     padding-left: 5px;
 }
 
-input[type=text]:focus {
+input[type=text]:focus, input[type=number]:focus {
     outline: 0;
     border-color: #129FEA;
 }
@@ -235,11 +235,8 @@ button:active {
 
 
 .borders {
-    padding: 2px 0 2px 0;
     border: 1px solid black;
-    /* box-shadow: inset -2px -2px 3px 0px rgba(0,0,0,.15); */
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,.15);
-
     border-radius: 1px;
     width: 100%;
     background-color: white;
@@ -251,19 +248,6 @@ button:active {
 
 
 
-/* #plotlist{
-    padding: 1px;
-    width: 1.25pc;
-    padding-top: 3px;
-    border: none;
-    background: radial-gradient(#eee, transparent)
-}
-
-#plotlist:active, #plotlist:focus, #plotlist:hover{
-    background: radial-gradient(#eee, transparent) !important;
-    box-shadow: none;
-    outline: none;
-} */
 
 .disabled {
     pointer-events: none;
@@ -293,94 +277,21 @@ button:active {
 
 
 
-#fill{
-    display: grid;
-    grid-template-columns: repeat(5,max-content);
-    grid-template-rows: repeat(3,max-content);
-    grid-template-areas: 
-    ". . . . bl"
-    ". . . . ."
-    "sl sl . ble ble";
-}
 
 .shift{
     margin: 0 3px 0 3px !important;
 }
 
-#fill >input[type=text]{
-    height: auto !important;
-    margin-right: 0px;
-}
-
-#gridSel{
-    /* grid-column: 1/3; */
-    width: fit-content;
-    background: none;
-    padding: 3px 0 3px 3px;
-    /* border: 0; */
-    margin-left: 0px;
-    margin-right: 0px;
-    grid-area: sl;
-} 
-.bl { grid-area: bl; background-color: lawngreen;}
-.ble { grid-area: ble;  background-color: lawngreen;}
-
-
-
-#flcl,#flf,#fstep,#fend,#fstart{
-    width:5pc;
-}
-.fillTmp{
-    margin-right: 5px;
-}
-.utilBtn{
-    width: 5pc;
-    margin-right: 3px;
-    height: 1.7pc
-}
 
 
 
 
-#flcl{
-    margin-left: 4px;
-}
 
-
-#expSel{
-    width:6pc;
-    margin-left: 0;
-    padding-left: 0;
-    padding-right: 0;
-}
-
-#repSel{
-    width:5.3pc;
-    margin-left: 12px;
-    padding-left: 0;
-}
-#flSel{
-    font-weight: bolder; font-size: medium; width: 2pc;-webkit-appearance: none;
-}
-#flf{
-    margin-left: 13px;
-}
-#flc{
-    width: 40px;margin: 0
-}
-#einp{
-    width: 50px
-}
-#etime{
-    width: 76px
-}
 
 
 .popup{
     width : 'fit-content';
-    /* text-align: center; */
     width: fit-content;
-
     height: fit-content;
     position: absolute;
     top: 200px;
@@ -389,12 +300,10 @@ button:active {
     border: 1px solid black;
     box-shadow: 8px 8px 6px -6px black;
     transition: opacity 0.3s;
-
-    /* opacity: 0;
-    visibility: hidden; */
     display: none;
     background: white;
 }
+
 .title{
     background-color: darkcyan;
     border-radius: 5px 5px 0 0;
@@ -452,11 +361,11 @@ a:focus{
     margin-left: 2pc
 }
 
-.rgfit-buttons{
+/* .rgfit-buttons{
     margin-left: 3px;
     width: 5pc;
     height: 1.5pc
-}
+} */
 
 .grid-container {
     margin-right: 5px;
@@ -581,14 +490,14 @@ a:focus{
 }
 
 
-
-.container {
-    background: #ffffff ;
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
+#container{
+    border: 1px solid black;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,.15);
+    border-radius: 1px;
+    width: 100%;
+    background-color: white;
+    padding: 2px 0;
 }
-
 
 #particle {
     /* position: absolute; */
@@ -601,27 +510,6 @@ a:focus{
     margin-bottom: 5pc;
 }
 
-
-
-
-
-#filler{
-    /* background-color: #aba7a729; */
-    position: fixed;
-    width: 98.5%  ;
-    /* height: 100%; */
-} 
-
-.extendUtils,#filler,#extendUtils2D,#rgFit,#lmFit{
-    display: none;
-    z-index: 99;
-
-}
-
-
-/* #rgFit{
-    padding:3px
-} */
 
 
 #workarea {
@@ -916,26 +804,151 @@ a:focus{
 }
 
 
-#smooth{
+/* -------------------------tool bar utilities------------------------------------------- */
+
+#toolBar{
     display: none;
-    padding: 2rem;
+    z-index: 99;
 }
-#smoothInp{
+
+#toolBar>div{
+    padding: .5em .2em .1em .2em;
+    align-items: center;
+    /* border:1px solid black;
+    margin-bottom: 3rem;  */
+}
+
+#toolBar  input[type="submit"]{
+    height: 2rem;
+}
+
+#toolBar  .toolbar_frontButton{
+    margin-left: .5em;
+}
+
+#rgfit div:last-child{
+    margin-top: .3rem;
+}
+
+
+#fill{
+    grid-auto-flow: column;
+    display: grid;
+    grid-template-columns: repeat(7,max-content);
+    grid-template-rows: repeat(2,max-content);
+    grid-row-gap: 0.2rem;
+    grid-column-gap: 0.5em;
+    align-items: center;
+   }
+#fill > select{
+   margin: 0 !important;
+   width: 100%;
+}
+
+#fill > input[type="text"]{
+   margin: 0;
+}
+#fill > input[type="submit"]{
+   line-height: 1em;
+   grid-row: span 2;
+   width: 100%;
+   margin-left: .9rem;
+}
+#fill label{
+   padding-left: .1em;
+}
+
+
+
+#extend{
+   grid-auto-flow: column;
+   display: grid;
+   grid-template-columns: repeat(4,max-content);
+   grid-template-rows: repeat(3,max-content);
+   grid-row-gap: 0.1em;
+   grid-column-gap:.5em;
+
+}
+#extend > input[type="submit"]{
+   grid-row:span 3;
+}
+#extend > select{
+   margin: 0 !important;
+   width: 100%;
+}
+#extend  input[type="text"]{
+   margin: 0;
+}
+#extend> label{
+   margin-right: 0.7em;
+}
+
+
+#filter{
+   display: grid;
+   grid-auto-flow: column;
+   grid-template-columns: repeat(4,max-content);
+   grid-template-rows: repeat(3,max-content);
+   grid-column-gap: .3em;
+   grid-row-gap: .1em;
+}
+
+#filter > input[type="submit"]{
+   grid-row: span 3;
+}
+#filter > label{
+   margin-right: 0.7em;
+}
+#filter select{
+   margin: 0;
+}
+
+
+.utilBtn{
+   width: 5pc;
+   margin-right: 3px;
+   height: 1.
+}
+
+
+#flSel{
+   font-weight: bolder; font-size: medium; width: 2pc;-webkit-appearance: none;
+}
+
+#smooth{
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: .5em;
+    grid-row-gap: 0.2em;
+    grid-template-columns: repeat(5,max-content);
+    grid-template-rows: repeat(3,max-content);
+}
+
+#smooth > input[type="submit"]{
+    grid-row:span 3;
+}
+#smooth > input[type="checkbox"]{
+    margin: auto 0 auto 0;
+}
+#smooth > input[type="number"]{
     width : 4rem;
-    /* margin: 0 2rem 0 1rem; */
     margin: 0!important;
 }
-/* #smCheck{
-    margin: auto 0 auto 0;
-} */
-#smGrid{
+
+#fixer{
     display: grid;
-    grid-template-rows: auto auto auto;
-    grid-template-columns: 1fr .5fr; 
-    grid-column-gap: 9px; 
-    grid-row-gap: 2px;
-    margin: 0 19px 0 5px;
+    grid-auto-flow: column;
+    grid-column-gap: .5em;
+    grid-row-gap: 0.3em;
+    grid-template-columns: repeat(4,max-content);
+    grid-template-rows: repeat(2,max-content);
+    align-items: center;
 }
-#smGrid input[type=checkbox]{
-    margin: auto 0 auto 0;
+
+#fixer > input[type="submit"]{
+    grid-row: span 2;
+}
+#fixer > input[type="number"]{
+    width: fit-content;
+    padding: 0 .3em;
 }

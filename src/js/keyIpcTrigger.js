@@ -180,23 +180,9 @@ function ipcTrigger(_,d){
     }else if(d=='tplots' && $('#sidebar').width()){
         closeNav()
 
-    }else if(d=='extend' || d=='fill' || d=='filter'){
-        $('#filler').show()
-        $('.extendUtils').slideUp()
-        $(`#${d}`).slideDown()
-        if(!ddd) disableMenu(['lmfit','rgft'])
-        analytics.add(d)
-
-
-    }else if(d=='rgft' || d=='lmfit'){
-        if(figurecontainer.data.length>1) alertElec('Supported only for one plot at a time.')
-        Plotly.addTraces(figurecontainer, {...iniPointsF, x: [dpsx[0]], y:[dpsy[0]]});
-        setTimeout(resizePlot, 300)
-        disableMenu(['edat','fill','filter','af','arf',d=='rgft' ? 'lmfit':'rgft'])
-        $(`#${d=='rgft' ? 'rgFit' : 'lmFit' }`).show()
-        $('#extendUtils2D').slideDown()
-        analytics.add(d)
-
+    }else if(toolbarutil.availableTools.includes(d)){
+        toolbarutil.openToolBar(d)
+    
 
     }else if(d=='pdash'){
         settingWindow()
@@ -320,12 +306,12 @@ ipcRenderer.on('checkClose', function (_,_) {
 })
 
 
-window.addEventListener("resize", function(){
-    $('#filler').width($('#container').width())
-    if(fullData.length && ddd) sliderChanged()
-})
+// window.addEventListener("resize", function(){
+//     $('#filler').width($('#container').width())
+//     if(fullData.length && ddd) sliderChanged()
+// })
 
-$('#filler').width($('#container').width())
+// $('#filler').width($('#container').width())
 
 
 
@@ -419,10 +405,9 @@ document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHei
 
 for(let el of document.getElementsByClassName('closbtn')) el.onclick = ()=>{$('.popup').hide()}
 
-$("#fill").hide()
 for(let el of document.getElementsByClassName('utilBtn')) el.addEventListener("click",function(){
     $(this.parentElement).slideUp(300, ()=>{ $('#filler').hide() })
-    if(!ddd) enableMenu(['lmfit','rgft'])
+    if(!ddd) enableMenu(['lmfit','rgfit'])
 })
 
 document.getElementById("dwBtn").onclick=()=>{

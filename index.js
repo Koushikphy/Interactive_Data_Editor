@@ -335,7 +335,7 @@ const homeMenuTemplate = [
                         if(mainWindow!=window) window.close()
                       })
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'tax', 'swapen', "edat", "fill", "filter", 'rgft', 'lmfit']) {
+                    for (let i of ['save', 'saveas', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'tax', 'swapen', "extend", "fill", "filter", 'rgfit', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     mainWindow.reload();
@@ -403,7 +403,7 @@ const homeMenuTemplate = [
             }
         }, {
             label: "Extend Data",
-            id: "edat",
+            id: "extend",
             enabled: false,
             click() {
                 mainWindow.webContents.send("menuTrigger", "extend")
@@ -416,11 +416,18 @@ const homeMenuTemplate = [
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
         },{
-            label: "Auto smoother",
+            label: "Auto Smoother",
             enabled: false,
-            id: 'smt',
+            id: 'smooth',
             click() {
-                mainWindow.webContents.send("menuTrigger", "smt")
+                mainWindow.webContents.send("menuTrigger", "smooth")
+            }
+        },{
+            label: "Auto Corrector",
+            enabled: false,
+            id: 'fixer',
+            click() {
+                mainWindow.webContents.send("menuTrigger", "fixer")
             }
         },{
             label: "Points movable horaizontally",
@@ -439,9 +446,9 @@ const homeMenuTemplate = [
             {
                 label: "Polynomial Regression Fitting",
                 enabled: false,
-                id:"rgft",
+                id:"rgfit",
                 click() {
-                    mainWindow.webContents.send("menuTrigger", "rgft")
+                    mainWindow.webContents.send("menuTrigger", "rgfit")
                 }
             },{
                 label: "Levenberg-Marquardt Fitting",

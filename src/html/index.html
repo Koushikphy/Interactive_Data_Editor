@@ -50,7 +50,6 @@
         <div class="sideheader"> Plots</div>
         <div id="files"></div>
     </div>
-    </div>
 
 
     <div id="full">
@@ -82,26 +81,34 @@
         </div>
 
         <div id="workarea">
-            <div id="extendUtils2D" class="borders">
+            <div id="toolBar" class="borders">
 
-                <div id="rgFit" style="padding:3px">
-                    <span> Order of polynomial </span>
-                    <input id="polyInp" type="number" value="1" min="1">
-                    <input type="submit" value="Solve" onclick="polyfit()" class="rgfit-buttons">
-                    <input type="submit" value="Save" onclick="saveFit()" class="rgfit-buttons">
-                    <input type="submit" value="Close" onclick="closeFit($('#rgFit'));clearFit()" class="rgfit-buttons">
-                    <br>
-                    Fitted Equation <span id='formulaStr'></span>
+                <div id="rgfit">
+                    <div>
+
+                        <label> Order of polynomial </label>
+                        <input id="polyInp" type="number" value="1" min="1">
+                        <input type="submit" value="Solve" id="rgfit_apply" class="toolbar_frontButton">
+                        <input type="submit" value="Save" id="rgfit_save">
+                        <input type="submit" value="Close" class="utilBtn">
+                    </div>
+                    <div>
+                        <label >
+                            Fitted Equation
+                        </label>
+                         <label id='formulaStr'></label>
+
+                    </div>
                 </div>
 
-                <div id="lmFit">
+                <div id="lmfit">
                     <div class="grid-container">
                         Function <input id='funcStr' type="text" value="a+b*x">
                         Parameters List <input id='paramList' type="text" value="a,b">
                         <div class="grid-buttons">
-                            <button onclick="lmfit()">Solve</button>
-                            <button onclick="saveFit()">Save</button>
-                            <button onclick="closeFit($('#lmFit'));clearFit(true)">Close</button>
+                            <button id="lmfit_apply">Solve</button>
+                            <button id="lmfit_save">Save</button>
+                            <button class="utilBtn">Close</button>
                         </div>
 
                         Max Iterations <input id='iterationVal' type="text" value='1000'>
@@ -116,86 +123,93 @@
                 </div>
 
 
+                <div id="smooth">
+                    <label>Smoothing parameter </label>
+                    <label>Apply to all column</label>
+                    <label>Apply to all blocks</label>
 
-                <div id="smooth" style="padding:3px; display: flex; flex-direction: row;">
-                    <div id='smGrid'>
-                        <span> Smoothing parameter </span>
-                        <input id="smoothInp" type="number" value="1" min="0" max="1" step="0.01">
-                        <span>Apply to all column</span>
-                        <input type="checkbox" id="smCheck">
-                        <span>Apply to all blocks</span>
-                        <input type="checkbox" id="smColCheck" checked>
-                    </div>
-                    <div style="margin: auto 0 auto 0;">
-                        <input type="submit" value="Smooth" id="smoothApx">
-                        <input type="submit" value="Apply" id="smoothApl">
-                        <input type="submit" value="Close" id="smoothCls"> <br>
-                    </div>
+                    <input id="smoothInp" type="number" value="1" min="0" max="1" step="0.01">
+                    <input type="checkbox" id="smCheck">
+                    <input type="checkbox" id="smColCheck" checked>
+
+                    <input type="submit" value="Smooth" id="smoothApx"  class="toolbar_frontButton">
+                    <input type="submit" value="Save" id="smoothApl" class="utilBtn">
+                    <input type="submit" value="Close" class="utilBtn">
+                </div>
+                
+                <div id="fixer">
+                    <label> Smoothness</label>
+                    <label> Cutoff</label>
+                    <input type="number" id="autoSmot" min="0" max="100" step="1" value="95">
+                    <input type="number" id="autoCut" min="0" max="100" step="1" value="95">
+
+                    <input type="submit" id='fixer_apply' value="Apply" class="toolbar_frontButton" title="Press Alt+S">
+                    <input type="submit" value="Cancel" class="utilBtn">
                 </div>
 
-            </div>
-            <div>
-                <input type="number" name="" id="autoSmot" min="0" max="99" step="1" value="95">
-                <input type="number" name="" id="autoCut" min="0" max="99" step="1" value="95">
-            </div>
 
-            <div id="figurecontainer"></div>
-
-            <div class="borders" id="filler">
                 <div id='fill' class="extendUtils">
-                    <span class="fillTmp">Start</span>
+                    <label>Start</label>
+                    <label>End</label>
                     <input type="text" id="fstart" tabindex="1">
-                    <span class="shift">
-                        Extrapolate
-                    </span>
-                    <select id="expSel" tabindex="4">
-                        <option>Closest</option>
-                        <option>Regression</option>
-                    </select>
-                    <br>
-                    <span class="fillTmp">End</span> <input type="text" id="fend" tabindex="2">
-                    <input type="submit" value="OK" onclick="dataFiller()" class="utilBtn shift" tabindex="4">
-                    <input type="submit" value="Cancel" class="utilBtn" style="margin-top: 1px;">
-                    <span style="margin-left: 7px">
-                        &#9432;<span style="font-size:.9pc;"> This operation is not reversible. You may want to save
-                            before proceeding.</span><br>
-                    </span>
-                    <select id='gridSel'>
+                    <input type="text" id="fend" tabindex="2">
+                    <label>Extrapolate</label>
+                    <select id='gridSel' tabindex="4">
                         <option>Grid Spacing</option>
                         <option>Grid Number</option>
                     </select>
-
-                    <input type="text" id="fstep" tabindex="3" class="shift">
-
+                    <select id="expSel" tabindex="3">
+                        <option>Closest</option>
+                        <option>Regression</option>
+                    </select>
+                    <input type="text" id="fstep" tabindex="5">
+                    <input type="submit" id ='fill_apply' value="Apply" class="utilBtn" class="utilBtn toolbar_frontButton" tabindex="6">
+                    <input type="submit" value="Cancel" class="utilBtn" tabindex="7">
                 </div>
+
 
                 <div id="extend" class="extendUtils">
-                    Extend from 0 to <input type="text" id="einp" tabindex="1"> <br>
-                    Extend times <input type="text" id="etime" tabindex="2">
-                    <input type="submit" value="OK" onclick="repeatMirror()" class="utilBtn" tabindex="4">
-                    <input type="submit" value="Cancel" class="utilBtn"> <br>
-                    Extend by <select id="repSel" tabindex="3">
+                    <label>Extend from</label>
+                    <label>Extend times</label>
+                    <label>Extend by</label>
+
+                    <div>
+                        <label>0 to</label>
+                        <input type="text" id="einp">
+                    </div>
+                    <input type="text" id="etime">
+                    <select id="repSel">
                         <option>Repeat</option>
                         <option>Mirror</option>
-                    </select><br>
+                    </select>
+                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton">
+                    <input type="submit" value="Cancel" class="utilBtn"> 
                 </div>
+
 
                 <div id="filter" class="extendUtils">
-                    Condition<select id="flSel">
-                        <option>&lt;</option>
-                        <option>></option>
-                        <option>=</option>
-                    </select>
-                    <input type="text" id="flc"> <br>
-                    Fill with <input type="text" id="flf">
-                    <input type="submit" value="OK" onclick="filterData()" class="utilBtn">
+                    <label> Condition</label>
+                    <label> Fill with</label>
+                    <label> Columns</label>
+                    <div>
+                        <select id="flSel">
+                            <option>&lt;</option>
+                            <option>></option>
+                            <option>=</option>
+                        </select>
+                        <input type="text" id="flc">
+                    </div>
+
+                    <input type="text" id="flf">
+                    <input type="text" id="flcl">
+
+                    <input type="submit" value="Apply" id="filter_apply" onclick="filterData()" class="utilBtn toolbar_frontButton">
                     <input type="submit" value="Cancel" class="utilBtn">
-                    &#9432;<span style="font-size:.9pc"> This operation is not reversible. You may want to save before
-                        proceeding.</span> <br>
-                    Columns&nbsp; <input type="text" id="flcl">
                 </div>
+                
             </div>
 
+            <div id="figurecontainer"></div>
         </div>
 
 

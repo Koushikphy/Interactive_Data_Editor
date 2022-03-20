@@ -1,8 +1,7 @@
 const Plotly = require('plotly.js-gl3d-dist');
-// const url    = require('url')
 const $      = require('../lib/jquery.min')
 const {dialog,BrowserWindow} = remote;
-const {clamp, clone, expRotate, parseData, transpose, alertElec} = require('../js/utils')
+const {clamp, clone, expRotate, parseData, transpose, alertElec,showStatus,showInfo} = require('../js/utils')
 const {layout, colorList, iniPointsD } = require('../js/plotUtils')
 
 const xCol   = document.getElementById("xCol")
@@ -20,7 +19,7 @@ var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendName
     lockXc = 1, swapped = 0, issame = false, swapper = false, ddd = false, oldDpsLen=0,
     th_in = 0, undoStack = [], redoStack = [];
 
-
+//start a new plot
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
     displaylogo:false,
     editable: true,
@@ -42,17 +41,6 @@ visibleMenu = (list)=> { for(let i of list) menu.getMenuItemById(i).visible = tr
 
 
 
-function showStatus(msg){
-    let toast = document.createElement('div')
-    toast.className = 'toast'
-    toast.innerHTML = `<p style="margin: 0;">${msg}</p>
-    <div class="toastTail" onclick=this.parentElement.remove()>
-        <div class="toastCross">X</div>
-    </div>`
-    document.getElementById('toastContainer').appendChild(toast)
-    setTimeout(function(){toast.classList.add('toastIn')},50 ) //slight flicker animation
-    setTimeout(function(){ toast.remove()}, 4321 ) // 4321 miliseconds to fade
-}
 
 
 function setUpFor2d(){
@@ -61,7 +49,7 @@ function setUpFor2d(){
     $('#zLabel').html('Y')
     col = store.get("cols2d",{x: 0, y: 0, z: 0,s: 0})
     // col.x=0
-    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','rgft', 'lmfit','smt'])
+    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf','rgfit', 'lmfit','smooth','fixer'])
     disableMenu(["tax", '3dview'])
 }
 
@@ -72,8 +60,8 @@ function setUpFor3d(){
     $('#zLabel').html('Z')
     setUpSlider();
     col= store.get("cols3d",{x: 0, y: 0, z: 0,s: 0})
-    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "edat", "fill", "filter", 'af', 'arf','tax', '3dview','smt'])
-    disableMenu(["rgft", 'lmfit'])
+    enableMenu(['save', 'saveas', 'tfs','tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf','tax', '3dview','smooth','fixer'])
+    disableMenu(["rgfit", 'lmfit'])
 }
 
 
@@ -197,8 +185,7 @@ function fileReader(fname) {
     $("#particle").remove();
     document.getElementById('branding').style.display = 'block'
     if (window["pJSDom"] instanceof Array) window["pJSDom"][0].pJS.fn.vendors.destroypJS();
-    $('#sCol,#sColInp,#filler,#extendUtils2D').hide()
-    $("#rgFit,#lmFit,#smooth").hide()
+    toolbarutil.closeToolBar()
     $("#zCol").removeClass("rightBorder")
     saveRemminder()
     makeRows()
@@ -318,6 +305,8 @@ function sliderChanged(shift=0){
         startDragBehavior()
         oldDpsLen=dpsx.length
     }
+    window.dispatchEvent(new Event('traceChanged'))
+    // console.log('sliderChanged')
 }
 
 
@@ -524,7 +513,7 @@ function openSwapper() {
     swapperIsOn = true;
     $("#sCol, #sColInp").show();
     $("#zCol").addClass("rightBorder")
-    disableMenu(['edat','fill','filter','af','arf','smt'])
+    disableMenu(['extend','fill','filter','af','arf','smt'])
 }
 
 
@@ -535,7 +524,7 @@ function exitSwapper() {
     data = fullData[0]
     $("#sCol, #sColInp").hide();
     $("#zCol").removeClass("rightBorder")
-    enableMenu(['edat','fill','filter','af','arf','smt'])
+    enableMenu(['extend','fill','filter','af','arf','smt'])
 }
 
 
@@ -911,12 +900,11 @@ class Analytics{
             store.set('shown', shown + 1)
             if (shown % 10 == 0) { // shown after every 10 opening
                 setTimeout(() => {
-                    dialog.showMessageBox(remote.getCurrentWindow(), {
-                        message: "User data share policy",
-                        type: "info",
-                        title: "Note from developer !",
-                        detail: "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
-                    });
+                    showInfo(
+                        "Note from developer !", 
+                        "User data share policy", 
+                        "Interactive Data Editor will collect and share user data with the developer to give a better user experience. Only data related to the software usage will be collected, and any sensitive information associated with the user's system will not be shared.",
+                    )
                 }, 300)
             }
             this.add()

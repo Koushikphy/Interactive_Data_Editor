@@ -83,8 +83,8 @@ module.exports.iniPointsD = {
 
 
 module.exports.iniPointsF = {
-    x: [1],
-    y: [1],
+    x: [],
+    y: [],
     type: 'scatter',
     opacity: 1,
     mode: 'lines',
@@ -105,23 +105,23 @@ module.exports.iniPointsF = {
 };
 
 module.exports.iniPointsSm = {
-    x: [1],
-    y: [1],
+    name:'Approximated',
+    x: [],
+    y: [],
     type: 'scatter',
     opacity: 1,
     mode: 'markers+lines',
-    name : 'Smooth Approximation',
     marker: {
         symbol: "circle-dot",
         color: '#b00',
-        size: 6,
+        size: 3,
         opacity: 1
     },
     line: {
-        width: 2,
+        width: 1.7,
         color: "#207104",
         dash: 0,
-        shape: 'spline'
+        // shape: 'spline'
     },
     hoverinfo: 'x+y',
 };
