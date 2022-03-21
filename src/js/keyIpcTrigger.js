@@ -169,9 +169,9 @@ function ipcTrigger(_,d){
     }else if(d=='tswap' && swapperIsOn){
         exitSwapper()
 
-    }else if(d=='smt'){
-        smooth.openSmooth()
-        analytics.add('autoSmooth')
+    // }else if(d=='smt'){
+    //     smooth.openSmooth()
+    //     analytics.add('autoSmooth')
 
     }else if(d=='tplots' && !$('#sidebar').width()){
         openNav()
@@ -306,18 +306,17 @@ ipcRenderer.on('checkClose', function (_,_) {
 })
 
 
-// window.addEventListener("resize", function(){
-//     $('#filler').width($('#container').width())
-//     if(fullData.length && ddd) sliderChanged()
-// })
-
-// $('#filler').width($('#container').width())
+window.addEventListener("resize", function(){
+    // reposition the slider thumb
+    let max = data.length-1;
+    let xPX = th_in * (figurecontainer.offsetWidth -6 - thumb.offsetWidth) / max+3;
+    thumb.style.left = `${xPX}px`
+})
 
 
 
 figurecontainer.on("plotly_selected", (ev)=>{
     if (ev != undefined) {
-        // console.log(ev)
         index = [];
         for (let pt of ev.points) {
             if(pt.curveNumber == currentEditable) index.push(pt.pointIndex);
@@ -334,7 +333,6 @@ figurecontainer.on("plotly_legendclick", function(){ // to catch the name if cha
 figurecontainer.on("plotly_relayout", (lay)=>{
     let keys = Object.keys(lay)
     // console.log(keys)
-
     if( keys.length==2 && keys.includes("xaxis.autorange") && keys.includes("yaxis.autorange")){
         cRange = false
         cRangeY = [NaN, NaN]

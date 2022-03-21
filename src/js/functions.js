@@ -344,7 +344,7 @@ function colChanged(value) {
     }
     if (!swapped) store.set(ddd? "cols3d" : "cols2d", col);
     makeRows()
-
+    window.dispatchEvent(new Event('traceChanged'))
 };
 
 

@@ -863,7 +863,7 @@ a:focus{
 #extend{
    grid-auto-flow: column;
    display: grid;
-   grid-template-columns: repeat(4,max-content);
+   grid-template-columns: max-content 2.5rem 4rem min-content min-content ;
    grid-template-rows: repeat(3,max-content);
    grid-row-gap: 0.1em;
    grid-column-gap:.5em;
@@ -878,6 +878,7 @@ a:focus{
 }
 #extend  input[type="text"]{
    margin: 0;
+   width: auto;
 }
 #extend> label{
    margin-right: 0.7em;
@@ -887,7 +888,8 @@ a:focus{
 #filter{
    display: grid;
    grid-auto-flow: column;
-   grid-template-columns: repeat(4,max-content);
+   grid-template-columns: max-content 1.5em 5em max-content max-content;
+   /* repeat(4,max-content); */
    grid-template-rows: repeat(3,max-content);
    grid-column-gap: .3em;
    grid-row-gap: .1em;
@@ -896,6 +898,11 @@ a:focus{
 #filter > input[type="submit"]{
    grid-row: span 3;
 }
+
+#filter input[type="text"]{
+    margin: 0;
+    width: auto;
+ }
 #filter > label{
    margin-right: 0.7em;
 }
@@ -904,16 +911,7 @@ a:focus{
 }
 
 
-.utilBtn{
-   width: 5pc;
-   margin-right: 3px;
-   height: 1.
-}
 
-
-#flSel{
-   font-weight: bolder; font-size: medium; width: 2pc;-webkit-appearance: none;
-}
 
 #smooth{
     display: grid;
@@ -952,3 +950,13 @@ a:focus{
     width: fit-content;
     padding: 0 .3em;
 }
+
+.utilBtn{
+    width: 5pc;
+    margin-right: 3px;
+ }
+ 
+ 
+ #flSel{
+    font-weight: bolder; font-size: medium; width: 1.5rem;-webkit-appearance: none;
+ }

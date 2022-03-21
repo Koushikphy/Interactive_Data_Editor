@@ -53,7 +53,6 @@ function repeatMirror() {
 
 
 function dataFiller() {
-    console.log('here')
     let start = parseFloat($("#fstart").val());
     let stop = parseFloat($("#fend").val());
     let step = parseFloat($("#fstep").val());
@@ -255,7 +254,6 @@ class FitData {
     }
 
     open = (type) => {
-        console.log('here',type)
         this.active = true
         this.type = type
         Plotly.addTraces(figurecontainer, iniPointsF);
@@ -423,6 +421,7 @@ class Smoother {
         updatePlot()
         if (ddd) updateOnServer()
         this.close()
+        saved = false
     }
 }
 
@@ -438,7 +437,7 @@ class AutoFixer {
         this.res = null
         this.shown = false
         window.addEventListener('traceChanged', this.runFixer)
-        document.getElementById('fixer_apply').onclick = this.runFixer
+        document.getElementById('fixer_apply').onclick = this.saveValue
         this.smoothElem = document.getElementById('autoSmot')
         this.cutElem = document.getElementById('autoCut')
         this.smoothElem.oninput = this.cutElem.oninput = this.runFixer
@@ -468,16 +467,17 @@ class AutoFixer {
 
         fixBadData(dpsx, dpsy, smVal, cutVal).then((x)=>{
             this.res = x
-            Plotly.restyle(figurecontainer, { x: [dpsx], y: [this.res] }, 1)
+            Plotly.restyle(figurecontainer, { x: [dpsx], y: [this.res], 'name':['Approximated'] }, 1)
         })
 
     }
 
     saveValue() {
-        console.log('ran saved value')
+        // console.log('ran saved value')
         if (!this.active && this.res) return
         data[th_in][col.z] = dpsy = this.res
         updatePlot()
+        saved = false
     }
 }
 const fixer = new AutoFixer()
@@ -496,7 +496,7 @@ class ToolBarUtils {
         document.getElementById('extend_apply').onclick = repeatMirror
         document.getElementById('filter_apply').onclick = filterData
 
-        // attach function runs
+        // attach function runs, these are ran when these toolbars is oped
         this.specialTools={
             'smooth':smooth,
             'fixer':fixer,

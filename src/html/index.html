@@ -93,10 +93,10 @@
                         <input type="submit" value="Close" class="utilBtn">
                     </div>
                     <div>
-                        <label >
+                        <label>
                             Fitted Equation
                         </label>
-                         <label id='formulaStr'></label>
+                        <label id='formulaStr'></label>
 
                     </div>
                 </div>
@@ -132,11 +132,11 @@
                     <input type="checkbox" id="smCheck">
                     <input type="checkbox" id="smColCheck" checked>
 
-                    <input type="submit" value="Smooth" id="smoothApx"  class="toolbar_frontButton">
+                    <input type="submit" value="Smooth" id="smoothApx" class="toolbar_frontButton">
                     <input type="submit" value="Save" id="smoothApl" class="utilBtn">
                     <input type="submit" value="Close" class="utilBtn">
                 </div>
-                
+
                 <div id="fixer">
                     <label> Smoothness</label>
                     <label> Cutoff</label>
@@ -163,7 +163,8 @@
                         <option>Regression</option>
                     </select>
                     <input type="text" id="fstep" tabindex="5">
-                    <input type="submit" id ='fill_apply' value="Apply" class="utilBtn" class="utilBtn toolbar_frontButton" tabindex="6">
+                    <input type="submit" id='fill_apply' value="Apply" class="utilBtn"
+                        class="utilBtn toolbar_frontButton" tabindex="6">
                     <input type="submit" value="Cancel" class="utilBtn" tabindex="7">
                 </div>
 
@@ -173,17 +174,17 @@
                     <label>Extend times</label>
                     <label>Extend by</label>
 
-                    <div>
-                        <label>0 to</label>
-                        <input type="text" id="einp">
-                    </div>
-                    <input type="text" id="etime">
-                    <select id="repSel">
+
+                    <label>0 to</label>
+
+                    <input type="text" id="etime" style="grid-column: span 2;">
+                    <select id="repSel" style="grid-column: span 2;">
                         <option>Repeat</option>
                         <option>Mirror</option>
                     </select>
+                    <input type="text" id="einp">
                     <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton">
-                    <input type="submit" value="Cancel" class="utilBtn"> 
+                    <input type="submit" value="Cancel" class="utilBtn">
                 </div>
 
 
@@ -191,22 +192,23 @@
                     <label> Condition</label>
                     <label> Fill with</label>
                     <label> Columns</label>
-                    <div>
+
                         <select id="flSel">
                             <option>&lt;</option>
                             <option>></option>
                             <option>=</option>
                         </select>
+                        
+                        
+                        <input type="text" id="flf" style="grid-column: span 2;">
+                        <input type="text" id="flcl" style="grid-column: span 2;">
                         <input type="text" id="flc">
-                    </div>
 
-                    <input type="text" id="flf">
-                    <input type="text" id="flcl">
-
-                    <input type="submit" value="Apply" id="filter_apply" onclick="filterData()" class="utilBtn toolbar_frontButton">
+                    <input type="submit" value="Apply" id="filter_apply" onclick="filterData()"
+                        class="utilBtn toolbar_frontButton">
                     <input type="submit" value="Cancel" class="utilBtn">
                 </div>
-                
+
             </div>
 
             <div id="figurecontainer"></div>

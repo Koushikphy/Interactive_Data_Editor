@@ -318,7 +318,6 @@ function fixBadData(xArr, yArr, smVal, cutVal) {
 
         var ind = detectBadData(xArr, yArr, smVal, cutVal)
         var tmpArr = [...yArr]
-
         // check how much start values it contains-------------------------------------------
         var indNew = []
         for (let i = 0; i < xArr.length; i++) {
@@ -330,7 +329,7 @@ function fixBadData(xArr, yArr, smVal, cutVal) {
         }
 
         if (indNew.length) {
-            tmpArr = useRegression(xArr, tmpArr, indNew, 3)
+            tmpArr = useRegression(xArr, tmpArr, indNew)
             ind = ind.filter(i => !indNew.includes(i))
         }
 
@@ -339,19 +338,19 @@ function fixBadData(xArr, yArr, smVal, cutVal) {
         var indNew = []
         for (let i = xArr.length - 1; i > 0; i--) {
             if (ind.includes(i)) {
-                indNew.push(i)
+                indNew.unshift(i)
             } else {
                 break
             }
         }
 
         if (indNew.length) {
-
-            tmpArr = useRegression(xArr, tmpArr, indNew, 2)
+            tmpArr = useRegression(xArr, tmpArr, indNew)
             ind = ind.filter(i => !indNew.includes(i))
         }
 
-
+        // NOTE: Spline is not always is the correct choice for the intermidiate 
+        // bad valus, can we decide, what to run spline or moving average ???
         // spline interpolation for intermidieate points
 
         let xxs = xArr.filter((_, i) => !ind.includes(i))
