@@ -140,8 +140,8 @@
                 <div id="fixer">
                     <label> Smoothness</label>
                     <label> Cutoff</label>
-                    <input type="number" id="autoSmot" min="0" max="100" step="1" value="95">
-                    <input type="number" id="autoCut" min="0" max="100" step="1" value="95">
+                    <input type="number" id="autoSmot" min="0" max="100" step="1" value="98">
+                    <input type="number" id="autoCut" min="0" max="100" step="1" value="98">
 
                     <input type="submit" id='fixer_apply' value="Apply" class="toolbar_frontButton" title="Press Alt+S">
                     <input type="submit" value="Cancel" class="utilBtn">
@@ -177,14 +177,14 @@
 
                     <label>0 to</label>
 
-                    <input type="text" id="etime" style="grid-column: span 2;">
-                    <select id="repSel" style="grid-column: span 2;">
+                    <input type="text" id="etime" style="grid-column: span 2;" tabindex="2">
+                    <select id="repSel" style="grid-column: span 2;" tabindex="3">
                         <option>Repeat</option>
                         <option>Mirror</option>
                     </select>
-                    <input type="text" id="einp">
-                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton">
-                    <input type="submit" value="Cancel" class="utilBtn">
+                    <input type="text" id="einp" tabindex="1">
+                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton" tabindex="4">
+                    <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
                 </div>
 
 
@@ -193,20 +193,20 @@
                     <label> Fill with</label>
                     <label> Columns</label>
 
-                        <select id="flSel">
-                            <option>&lt;</option>
+                        <select id="flSel" tabindex="1">
                             <option>></option>
+                            <option>&lt;</option>
                             <option>=</option>
                         </select>
                         
                         
-                        <input type="text" id="flf" style="grid-column: span 2;">
-                        <input type="text" id="flcl" style="grid-column: span 2;">
-                        <input type="text" id="flc">
+                        <input type="text" id="flf" style="grid-column: span 2;" tabindex="3">
+                        <input type="text" id="flcl" style="grid-column: span 2;" tabindex="4">
+                        <input type="text" id="flc" tabindex="2">
 
                     <input type="submit" value="Apply" id="filter_apply" onclick="filterData()"
-                        class="utilBtn toolbar_frontButton">
-                    <input type="submit" value="Cancel" class="utilBtn">
+                        class="utilBtn toolbar_frontButton" tabindex="4">
+                    <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
                 </div>
 
             </div>
