@@ -170,7 +170,7 @@ function applyCutOFF(data, colmn, condition, thrsh, fillVal) {
     return data.map(dat => {
         for (let tc of colmn) {
             dat[tc] = dat[tc].map(x => {
-                if ((condition == 0 && x < thrsh) || (condition == 1 && x > thrsh) || (condition == 0 && x == thrsh)) return fillVal
+                if ((condition == 0 && x > thrsh) || (condition == 1 && x < thrsh) || (condition == 0 && x == thrsh)) return fillVal
                 return x;
             })
         }

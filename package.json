@@ -4,7 +4,7 @@
   "author": "Koushik Naskar <koushik.naskar9@gmail.com>",
   "copyright": "Copyright © January,2022 Koushik Naskar",
   "homepage": "https://github.com/Koushikphy/Interactive-Data-Editor",
-  "version": "2.11.0",
+  "version": "2.12.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {

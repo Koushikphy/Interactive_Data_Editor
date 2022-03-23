@@ -1,3 +1,9 @@
+## v2.12.0
+1. *Auto Corrector*: Automatically detect and remove bad data.
+2. Bug fixes.
+
+
+
 ## v2.11.0
 1. Proxy authentication implemented.
 2. New features in auto smoother.

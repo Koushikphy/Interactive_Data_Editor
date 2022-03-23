@@ -477,6 +477,7 @@ class AutoFixer {
         if (!this.active && this.res) return
         data[th_in][col.z] = dpsy = this.res
         updatePlot()
+        Plotly.restyle(figurecontainer, {'name':['Approximated'] }, 1)
         saved = false
     }
 }
