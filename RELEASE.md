@@ -1,5 +1,5 @@
 ## v2.12.0
-1. *Auto Corrector*: Automatically detect and remove bad data.
+1. *Auto Corrector*: Automatically detect and rectify bad data.
 2. Bug fixes.
 
 

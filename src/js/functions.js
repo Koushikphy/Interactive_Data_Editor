@@ -588,6 +588,60 @@ function isswap() {
 };
 
 
+class UndoUtilities{
+
+    constructor(){
+        this.stackLen = 10
+        this.pointer = 0
+        this.stack = new Array(this.stackLen)
+    }
+
+    save(){
+        if (!data.length) return;
+        
+        this.stack[this.pointer] = [th_in, clone(col), swapped, clone(data[th_in])]
+        this.pointer ++
+
+
+
+        this.redoStack = []
+        if(this.undoStack.length == this.stackLen) this.undoStack.splice(0,1)
+        this.undoStack.push([th_in, clone(col), swapped, clone(data[th_in])])
+    }
+
+    undo(){
+        if (!this.undoStack.length) return;
+        let olddata = this.undoStack.pop()
+        this.perform(olddata)
+    }
+
+    redo(){
+        if (!this.redoStack.length) return;
+        let olddata = this.redoStack.pop()
+        this.perform(olddata)
+    }
+
+    perform(olddata){
+        var arr, tmpSwapped, tmpTh_in;
+        [tmpTh_in, col, tmpSwapped, arr] = olddata;
+        if (tmpSwapped != swapped) isswap();
+        console.log([tmpTh_in, col, tmpSwapped, arr])
+    
+        zCol.selectedIndex = col.z;
+        sCol.selectedIndex = col.s;
+        th_in = tmpTh_in
+        data[th_in] = arr;
+    
+        sliderChanged()
+        updatePlot(false);
+        startDragBehavior();
+        updateOnServer();
+        saved = false;
+    }
+}
+
+
+
 
 function saveOldData() {
     if (!data.length) return;
@@ -601,17 +655,15 @@ function saveOldData() {
 
 function reDo() {
     if (!redoStack.length) return;
-    let olddata = redoStack.pop();
     undoStack.push(JSON.stringify([th_in, col, swapped, data[th_in]]));
-    doIt(olddata);
+    doIt(redoStack.pop());
 }
 
 
 function unDo() {
     if (!undoStack.length) return;
-    let olddata = undoStack.pop()
     redoStack.push(JSON.stringify([th_in, col, swapped, data[th_in]]));
-    doIt(olddata);
+    doIt(undoStack.pop());
 }
 
 
@@ -624,10 +676,10 @@ function doIt(olddata) {
     sCol.selectedIndex = col.s;
     th_in = tmpTh_in
     data[th_in] = arr;
-
+    console.log('here', th_in, arr[8][50])
     sliderChanged()
-    updatePlot(all = false);
-    startDragBehavior();
+    // updatePlot(all = false);
+    // startDragBehavior();
     updateOnServer();
     saved = false;
 }
@@ -647,11 +699,6 @@ function settingWindow(){
             contextIsolation:false
         }
     });
-    // settingEditWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, "pop.html"),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
     settingEditWindow.loadFile("src/html/pop.html")
     settingEditWindow.setMenuBarVisibility(false);
 
@@ -670,8 +717,6 @@ function settingWindow(){
                 "color":figurecontainer._fullData[i].line.color
             }
         }))
-
-        // if (!app.isPackaged) settingEditWindow.webContents.openDevTools();
         settingEditWindow.webContents.send("plotsetting", [lay, plot]);
     })
     settingEditWindow.show()
@@ -695,18 +740,12 @@ function spreadsheet() {
         }
     });
     editorWindow.maximize();
-    // editorWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, "spreadsheet.html"),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
     editorWindow.loadFile("src/html/spreadsheet.html")
     editorWindow.setMenuBarVisibility(false);
 
     editorWindow.show();
     editorWindow.on("closed", function () { editorWindow = null })
 
-    // if (!app.isPackaged) editorWindow.webContents.openDevTools();
     editorWindow.webContents.once("dom-ready", function () {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
     })
@@ -730,20 +769,12 @@ function openViewer() {
         }
     });
     viewerWindow.maximize();
-    // viewerWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, '3D_Viewer.html'),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
     viewerWindow.loadFile('src/html/3D_Viewer.html')
     viewerWindow.on("closed", function () { viewerWindow = null; exportAll=false })
     viewerWindow.show();
     viewerWindow.setMenuBarVisibility(false);
-    // if (!app.isPackaged) viewerWindow.webContents.openDevTools();
     viewerWindow.webContents.once("dom-ready", updateOnServer)
 };
-
-
 
 
 

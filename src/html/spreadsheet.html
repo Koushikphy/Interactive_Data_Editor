@@ -12,7 +12,7 @@
     </head>
 
 <body>
-    <div id="container">
+    <div id="tool">
         <label id="fullS" style='margin: 10px 0 7px 0;'>Spreadsheet is loading, please wait...</label>
         <input type="submit" value="Update Data" onclick="updateData();" style="float: right" id="btn">
 
@@ -43,7 +43,7 @@
                 full.style.display = "none";
             }
             var height = window.innerHeight -
-                document.getElementById("container").offsetTop - 2 -
+                document.getElementById("tool").offsetTop - 2 -
                 document.getElementById("table").offsetTop;
 
             var wit = (window.innerWidth-450)/data[0][0].length
