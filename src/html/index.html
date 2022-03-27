@@ -46,7 +46,7 @@
 
     <div id="sidebar">
         <div id="split-bar"></div>
-        <div class="closebtn" onclick="closeNav()">X</div>
+        <div id='closeSideBar'>X</div>
         <div class="sideheader"> Plots</div>
         <div id="files"></div>
     </div>
@@ -58,24 +58,23 @@
             <div class="column">
                 <div class="mySelect 3D">
                     <span id='xLabel'>X</span>
-                    <select class="testSelect sWheel" id="xCol" onchange="updateData();this.blur()"></select>
+                    <select class="testSelect sWheel" id="xCol"></select>
                 </div>
 
                 <div class="mySelect">
                     <span id='yLabel'>Y</span>
-                    <select class="testSelect sWheel" id="yCol" onchange="updateData();this.blur()"></select>
+                    <select class="testSelect sWheel" id="yCol"></select>
                 </div>
 
                 <div class="mySelect">
                     <span id='zLabel'>Z</span>
-                    <select class="testSelect sWheel" id="zCol" onchange="colChanged(this.selectedIndex);this.blur()">
-                    </select>
-                    <select class="sWheel" id="sCol" onchange="colsChanged(this.selectedIndex);this.blur()"></select>
+                    <select class="testSelect sWheel" id="zCol"></select>
+                    <select class="sWheel" id="sCol"></select>
                 </div>
             </div>
 
             <div id="range-div" class='3D'>
-                <input type="range" name="" id="range" min=0 max=100 step=1 value=0 onclick="this.blur()">
+                <input type="range" name="" id="range" min=0 max=100 step=1 value=0>
                 <span id="thumb"></span>
             </div>
         </div>
@@ -183,7 +182,8 @@
                         <option>Mirror</option>
                     </select>
                     <input type="text" id="einp" tabindex="1">
-                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton" tabindex="4">
+                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton"
+                        tabindex="4">
                     <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
                 </div>
 
@@ -193,16 +193,16 @@
                     <label> Fill with</label>
                     <label> Columns</label>
 
-                        <select id="flSel" tabindex="1">
-                            <option>></option>
-                            <option>&lt;</option>
-                            <option>=</option>
-                        </select>
-                        
-                        
-                        <input type="text" id="flf" style="grid-column: span 2;" tabindex="3">
-                        <input type="text" id="flcl" style="grid-column: span 2;" tabindex="4">
-                        <input type="text" id="flc" tabindex="2">
+                    <select id="flSel" tabindex="1">
+                        <option>></option>
+                        <option>&lt;</option>
+                        <option>=</option>
+                    </select>
+
+
+                    <input type="text" id="flf" style="grid-column: span 2;" tabindex="3">
+                    <input type="text" id="flcl" style="grid-column: span 2;" tabindex="4">
+                    <input type="text" id="flc" tabindex="2">
 
                     <input type="submit" value="Apply" id="filter_apply" onclick="filterData()"
                         class="utilBtn toolbar_frontButton" tabindex="4">
@@ -223,19 +223,18 @@
                 <label class='titletxt'>Save Image</label>
                 <b class='closbtn' title="Close">X</b>
             </div>
-            <div class="popmain" style="text-align: left;">
-                &ensp; File Name <input type="text" id="dfileName"><br>
-                &ensp; File Type <select id="fileFormat">
+            <div class="popmain export">
+                <label>File Name </label> <input type="text" id="dfileName">
+                <label>File Type</label><select id="fileFormat">
                     <option>PDF</option>
                     <option>JPEG</option>
                     <option>PNG</option>
                     <option>SVG</option>
                     <option>WEBP</option>
-                </select><br>
-                &ensp; Resolution<input type="text" id="imRes" value="1920x1080"><br>
-                <div style='text-align:center;margin-top:10px'>
-                    <input type="submit" value="OK" id='dwBtn'>
-                </div>
+                </select>
+                <label>Resolution</label>
+                <input type="text" id="imRes" value="1920x1080">
+                <input type="submit" value="Save" id='dwBtn'>
             </div>
         </div>
 
@@ -245,10 +244,9 @@
                 <label class='titletxt'>Change Value</label>
                 <b class='closbtn' title="Close">X</b>
             </div>
-            <div class="popmain">
-                &ensp;Set value: &nbsp;
-                <input type="text" style="width:6pc" id='valinput'><br>
-                <input type="submit" id="valBtn" value="OK" style="margin-top:10px">
+            <div class="popmain setval">
+                <label>Set value</label> <input type="text" id='valinput'>
+                <input type="submit" id="valBtn" value="Ok">
             </div>
         </div>
 
@@ -258,6 +256,7 @@
                 <i>Developed by </i> <b> Koushik Naskar</b>&ensp;
             </a><br>
         </div>
+        <div id="test" data-click="4"></div>
     </div>
 
     <script>

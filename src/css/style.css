@@ -336,11 +336,6 @@ button:active {
 }
 
 
-#fileFormat{
-    width: 5pc;
-    padding: 0;
-    margin : 5px 0px 5px 10px;
-}
 
 
 a{
@@ -685,7 +680,7 @@ a:focus{
     line-height: 1.5pc;
 }
 
-.closebtn{
+#closeSideBar{
     float: right;
     font-size: 19px;
     padding-right: 3px;
@@ -803,6 +798,51 @@ a:focus{
     text-align: center;
 }
 
+.export{
+    grid-auto-flow: row;
+    display: grid;
+    grid-template-columns: repeat(2,max-content);
+    grid-template-rows: repeat(4,max-content);
+    grid-row-gap: 0.2rem;
+    grid-column-gap: 0.5em;
+    text-align: start;
+    padding: 0.7em 1.3em;
+}
+
+.export select{
+    padding: 0;
+    width: auto;
+    margin: 0;
+}
+.export input[type='text']{
+    margin: 0;
+}
+.export input[type='submit']{
+    grid-column: span 2;
+    width: fit-content;
+    padding: 0 1em;
+    margin: 0 auto;
+}
+
+.setval{
+    grid-auto-flow: row;
+    display: grid;
+    grid-template-columns: repeat(2,max-content);
+    grid-template-rows: repeat(2,max-content);
+    grid-row-gap: 1em;
+    grid-column-gap: 0.5em;
+    text-align: start;
+    padding: 0.7em 1.3em;
+}
+.setval input[type='text']{
+    margin: 0;
+}
+.setval input[type='submit']{
+    grid-column: span 2;
+    width: fit-content;
+    padding: 0 1em;
+    margin: 0 auto;
+}
 
 /* -------------------------tool bar utilities------------------------------------------- */
 

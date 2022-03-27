@@ -1,6 +1,6 @@
 const { repeatMirrorData, fillMissingGrid, useRegression, applyCutOFF, useSpline, levenMarFit, regressionFit, fixBadData } = require('../js/utils');
 const { splineSmoother } = require('../js/numeric');
-const { iniPointsSm } = require('../js/plotUtils')
+const { iniPointsSm, iniPointsF } = require('../js/plotUtils')
 
 // copy paste values between different x/y
 var copyVar;
@@ -11,7 +11,7 @@ function copyThis() {
 function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
     if (!t1.every((v, i) => v === data[th_in][col.y][i])) alertElec("Copy paste between different data set is not supported!")
-    saveOldData();
+    undoRedo.save()//saveOldData();
     data[th_in][col.y] = t1
     data[th_in][col.z] = t2
     endJobs()
@@ -19,14 +19,14 @@ function pasteThis() {
 
 
 function swapData() {
-    saveOldData();
+    undoRedo.save()//saveOldData();
     for (let i of index) [data[th_in][col.z][i], data[th_in][col.s][i]] = [data[th_in][col.s][i], data[th_in][col.z][i]]
     endJobs({ minimal: false })
 }
 
 
 function moveReflect(right, mirror) {
-    saveOldData();
+    undoRedo.save()//saveOldData();
     let ind = index[index.length - 1] + 1;
     let tmp = dpsy.slice(index[0], ind)
     if (!right) ind = index[0] - index.length;
@@ -90,7 +90,7 @@ function regWrapper(op = 1) {
     try {
         let ind = index.filter((i) => i < dpsx.length)
         if (!ind.length) throw { ty: 'sS', msg: "No data points selected." }
-        saveOldData()
+        undoRedo.save()//saveOldData()
         dpsy = data[th_in][col.z] = useRegression(dpsx, dpsy, ind, op)
         endJobs()
     } catch (e) {
@@ -110,7 +110,7 @@ function deleteInterpolate() {
         if (ind.includes(0) || ind.includes(dpsx.length - 1)) throw { ty: 'sS', msg: "Can't apply spline at endpoints" }
         if (!data[0][col.y].every((i, j, k) => j == 0 ? true : i > k[j - 1])) throw { ty: 'sS', msg: 'Monotonically increasing values required.' }
 
-        saveOldData()
+        undoRedo.save()//saveOldData()
         dpsy = data[th_in][col.z] = useSpline(dpsx, dpsy, ind)
         endJobs()
     } catch (e) {
@@ -144,7 +144,7 @@ function autoSmooth() {
 
 function changeSign() {
     let ind = index.filter((i) => i < dpsx.length)
-    saveOldData();
+    undoRedo.save()//saveOldData();
     for (let i of ind) data[th_in][col.z][i] = -data[th_in][col.z][i];
     endJobs()
 };
@@ -152,7 +152,7 @@ function changeSign() {
 
 
 function setValue(val) {
-    saveOldData();
+    undoRedo.save()//saveOldData();
     let value = parseFloat(val);
     if (isNaN(value)) return;
     for (let i of index) data[th_in][col.z][i] = value;
@@ -161,7 +161,7 @@ function setValue(val) {
 
 
 function removeBadData() {
-    saveOldData()
+    undoRedo.save()//saveOldData()
     data[th_in] = data[th_in].map(x => x.filter((_, i) => !index.includes(i)))
     endJobs({ clearIndex: true, startdrag: true, minimal: false })
 }
@@ -171,7 +171,7 @@ function endJobs({ resize = false, startdrag = false, clearIndex = false, serVer
     fullData[currentEditable] = data;
     minimal ? Plotly.restyle(figurecontainer, { y: [dpsy] }, currentEditable) : updatePlot(false);
     if (resize) resizePlot()
-    if (serVerUpdate) updateOnServer();
+    if (serVerUpdate) viewer3D.update() // updateOnServer();
     if (startdrag) startDragBehavior()
     if (clearIndex) {
         Plotly.restyle(figurecontainer, { selectedpoints: [null] })
@@ -195,7 +195,8 @@ function diff12() {
     fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
-    updateOnServer()
+    // updateOnServer()
+    viewer3D.update()
 }
 
 
@@ -211,7 +212,8 @@ function merge12() {
     fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
-    updateOnServer()
+    // updateOnServer()
+    viewer3D.update()
 }
 
 function diff23() {
@@ -223,7 +225,8 @@ function diff23() {
     fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
-    updateOnServer()
+    // updateOnServer()
+    viewer3D.update()
 }
 
 
@@ -239,7 +242,8 @@ function merge23() {
     fullData[currentEditable] = data
     updatePlot(false)
     setUpColumns()
-    updateOnServer()
+    // updateOnServer()
+    viewer3D.update()
 }
 
 
@@ -365,7 +369,7 @@ class Smoother {
         legendNames.push('Smooth Approximation')
         this.smoothApprox()
         analytics.add('smoother')
-        if (!this.shown && ddd){
+        if (!this.shown && ddd) {
             showStatus('Press Ctrl+Tab to view the approximated data in 3D viewer.')
             this.shown = true
         }
@@ -423,7 +427,8 @@ class Smoother {
         data = this.res
         fullData[0] = data
         updatePlot()
-        if (ddd) updateOnServer()
+        // if (ddd) updateOnServer()
+        viewer3D.update()
         this.close()
         saved = false
     }
