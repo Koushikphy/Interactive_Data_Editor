@@ -481,8 +481,8 @@ class AutoFixer {
         })
     }
 
-    saveValue() {
-        // console.log('ran saved value')
+    saveValue=() =>{
+        // console.log('ran saved value',!this.active,this.res)
         if (!this.active && this.res) return
         data[th_in][col.z] = dpsy = this.res
         updatePlot()

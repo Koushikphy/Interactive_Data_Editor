@@ -717,6 +717,7 @@ a:focus{
     margin-left: 5px;
     margin-right: 5px;
     flex-grow: 1;
+    cursor: pointer;
 }
 .fList{
     padding: 3px;
@@ -785,6 +786,7 @@ a:focus{
     padding: 0 !important;
     margin: 0 !important;
     min-width: 2pc !important;
+    width: fit-content;
     padding-left: 3px;
     font-size: 1.05pc !important;
     border-left: 1px solid black;

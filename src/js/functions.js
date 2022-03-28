@@ -768,7 +768,7 @@ class sideBarUtil {
         document.getElementById("files").innerHTML = fileNames.map((i, j) => `
             <div class="fList ${currentEditable == j ? 'selected' : ''}"  data-index=${j}>
                 <div class="nameBar">
-                    <div class="fName" title='file name' data-index=${j} >
+                    <div class="fName" title='${i}' data-index=${j} >
                         ${j + 1}. ${path.basename(i)}
                     </div>
                     <img class="fcpyBtn" title='Use this file' src="./copy.svg" data-index=${j} data-type='copy'>
@@ -798,69 +798,73 @@ class sideBarUtil {
             </div>`
         ).join(' ')
 
-        $('.fName').click(function (ev) {
-            $('.fList').removeClass('selected');
-            $(this).closest('.fList').addClass('selected')
-            let index = parseInt(this.dataset.index);
-            if (currentEditable != index) changeEditable(index)
-        })
+        $('.fName').click(this.editableManager)  
+        $('.fcpyBtn,.fclsBtn').click(this.traceManager) 
+        $('.sideSelector').on('change',this.columnManager)
 
-
-        $('.fcpyBtn,.fclsBtn').click((ev) => {
-            let type = ev.target.dataset.type;
-            let index = parseInt(ev.target.dataset.index)
-            if (type == 'copy') {
-                fullData.push(fullData[index]); //not cloning same file
-                fullDataCols.push(clone(fullDataCols[index]))
-                fileNames.push(fileNames[index])
-                saveNames.push(saveNames[index])
-                legendNames.push(clone(legendNames[index]))
-                addTrace()
-            } else if (type == 'close') {
-                if (index == currentEditable) return
-                if (index <= currentEditable) {
-                    if (swapperIsOn) return
-                    currentEditable = index
-                    $(`.scatterlayer .trace .points path`).css({ 'pointer-events': 'none' })
-                    $(`.scatterlayer .trace:nth-of-type(${index + 1}) .points path`).css({ 'pointer-events': 'all' })
-                    points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${index + 1}) .points`).getElementsByTagName("path");
-                    dpsx.forEach((_, i) => { points[i].index = i })
-                }
-                Plotly.deleteTraces(figurecontainer, index)
-                fullData.splice(index, 1)
-                fullDataCols.splice(index, 1)
-                fileNames.splice(index, 1)
-                saveNames.splice(index, 1)
-                legendNames.splice(index, 1)
-            }
-            this.buildSideBar()
-            if (viewer3D.exportAll && currentEditable != index) viewer3D.update()
-        })
-
-        $('.sideSelector').on('change', function (ev) {
-            let type = this.dataset.type;
-            let index = this.dataset.index
-            let val = this.selectedIndex
-            if (index == currentEditable) {
-                if (type == 'z') {
-                    zCol.selectedIndex = val
-                    colChanged(val)
-                } else if (type == 'y') {
-                    yCol.selectedIndex = val
-                    updateData()
-                } else if (type == 'x') {
-                    xCol.selectedIndex = val
-                    updateData()
-                }
-            } else {
-                fullDataCols[index][type] = val
-                let colC = fullDataCols[index]
-                legendNames[index] = path.basename(fileNames[index]) + ` ${(swapped ? colC.x : colC.y) + 1}:${colC.z + 1}`
-                updatePlot(true)
-                if (viewer3D.exportAll) viewer3D.update()
-            }
-        })
         this.curWidth = this.minWidth = $(".colBar").width() + 30
+    }
+
+    editableManager(){ // context dom
+        $('.fList').removeClass('selected');
+        $(this).closest('.fList').addClass('selected')
+        let index = parseInt(this.dataset.index);
+        if (currentEditable != index) changeEditable(index)
+    }
+
+    traceManager = (ev)=>{ //context instance
+        let type = ev.target.dataset.type;
+        let index = parseInt(ev.target.dataset.index)
+        if (type == 'copy') {
+            fullData.push(fullData[index]); //not cloning same file
+            fullDataCols.push(clone(fullDataCols[index]))
+            fileNames.push(fileNames[index])
+            saveNames.push(saveNames[index])
+            legendNames.push(clone(legendNames[index]))
+            addTrace()
+        } else if (type == 'close') {
+            if (index == currentEditable) return
+            if (index <= currentEditable) {
+                if (swapperIsOn) return
+                currentEditable = index
+                $(`.scatterlayer .trace .points path`).css({ 'pointer-events': 'none' })
+                $(`.scatterlayer .trace:nth-of-type(${index + 1}) .points path`).css({ 'pointer-events': 'all' })
+                points = figurecontainer.querySelector(`.scatterlayer .trace:nth-of-type(${index + 1}) .points`).getElementsByTagName("path");
+                dpsx.forEach((_, i) => { points[i].index = i })
+            }
+            Plotly.deleteTraces(figurecontainer, index)
+            fullData.splice(index, 1)
+            fullDataCols.splice(index, 1)
+            fileNames.splice(index, 1)
+            saveNames.splice(index, 1)
+            legendNames.splice(index, 1)
+        }
+        this.buildSideBar()
+        if (viewer3D.exportAll && currentEditable != index) viewer3D.update()
+    }
+
+    columnManager(){ //context dom
+        let type = this.dataset.type;
+        let index = this.dataset.index
+        let val = this.selectedIndex
+        if (index == currentEditable) {
+            if (type == 'z') {
+                zCol.selectedIndex = val
+                colChanged(val)
+            } else if (type == 'y') {
+                yCol.selectedIndex = val
+                updateData()
+            } else if (type == 'x') {
+                xCol.selectedIndex = val
+                updateData()
+            }
+        } else {
+            fullDataCols[index][type] = val
+            let colC = fullDataCols[index]
+            legendNames[index] = path.basename(fileNames[index]) + ` ${(swapped ? colC.x : colC.y) + 1}:${colC.z + 1}`
+            updatePlot(true)
+            if (viewer3D.exportAll) viewer3D.update()
+        }
     }
 
     openSideBar = () => {
