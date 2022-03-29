@@ -15,7 +15,7 @@ const figurecontainer = document.getElementById("figurecontainer")
 
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
-    col = { x: 0, y: 0, z: 0, s: 0 }, currentEditable = 0, xName = "X",lockXc = 1, 
+    col = { x: 0, y: 0, z: 0, s: 0 }, currentEditable = 0, xName = "X", lockXc = 1,
     swapped = 0, issame = false, swapper = false, ddd = false, oldDpsLen = 0, th_in = 0;
 
 //start a new plot
@@ -613,6 +613,7 @@ class UndoRedoUtilities {
         this.stackLen = 10
         this.undoStack = []
         this.redoStack = []
+        this.workingArr = [];
     }
 
     save = () => {
@@ -624,14 +625,14 @@ class UndoRedoUtilities {
 
     undo = () => {
         if (this.undoStack.length) {
-            this.redoStack.push(this.getData());
+            this.workingArr = this.redoStack;
             this.perform(this.undoStack.pop())
         }
     }
 
     redo = () => {
         if (this.redoStack.length) {
-            this.undoStack.push(this.getData());
+            this.workingArr = this.undoStack
             this.perform(this.redoStack.pop())
         }
     }
@@ -647,11 +648,11 @@ class UndoRedoUtilities {
         var arr, tmpSwapped, tmpTh_in;
         [tmpTh_in, col, tmpSwapped, arr] = JSON.parse(olddata);
         if (tmpSwapped != swapped) isswap();
-        // console.log([tmpTh_in, col, tmpSwapped, arr])
 
         zCol.selectedIndex = col.z;
         sCol.selectedIndex = col.s;
         th_in = tmpTh_in
+        this.workingArr.push(this.getData())
         data[th_in] = arr;
 
         sliderChanged()
@@ -798,21 +799,21 @@ class sideBarUtil {
             </div>`
         ).join(' ')
 
-        $('.fName').click(this.editableManager)  
-        $('.fcpyBtn,.fclsBtn').click(this.traceManager) 
-        $('.sideSelector').on('change',this.columnManager)
+        $('.fName').click(this.editableManager)
+        $('.fcpyBtn,.fclsBtn').click(this.traceManager)
+        $('.sideSelector').on('change', this.columnManager)
 
         this.curWidth = this.minWidth = $(".colBar").width() + 30
     }
 
-    editableManager(){ // context dom
+    editableManager() { // context dom
         $('.fList').removeClass('selected');
         $(this).closest('.fList').addClass('selected')
         let index = parseInt(this.dataset.index);
         if (currentEditable != index) changeEditable(index)
     }
 
-    traceManager = (ev)=>{ //context instance
+    traceManager = (ev) => { //context instance
         let type = ev.target.dataset.type;
         let index = parseInt(ev.target.dataset.index)
         if (type == 'copy') {
@@ -843,7 +844,7 @@ class sideBarUtil {
         if (viewer3D.exportAll && currentEditable != index) viewer3D.update()
     }
 
-    columnManager(){ //context dom
+    columnManager() { //context dom
         let type = this.dataset.type;
         let index = this.dataset.index
         let val = this.selectedIndex
@@ -886,7 +887,7 @@ class sideBarUtil {
     }
 
     updateSelector = () => {
-        if(!this.open) return
+        if (!this.open) return
         $(`.sideSelector[data-type="x"][data-index="${currentEditable}"`)[0].selectedIndex = xCol.selectedIndex
         $(`.sideSelector[data-type="y"][data-index="${currentEditable}"`)[0].selectedIndex = yCol.selectedIndex
         $(`.sideSelector[data-type="z"][data-index="${currentEditable}"`)[0].selectedIndex = zCol.selectedIndex

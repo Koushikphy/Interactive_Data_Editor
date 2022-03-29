@@ -481,7 +481,7 @@ class AutoFixer {
         })
     }
 
-    saveValue=() =>{
+    saveValue = () => {
         // console.log('ran saved value',!this.active,this.res)
         if (!this.active && this.res) return
         data[th_in][col.z] = dpsy = this.res
@@ -495,7 +495,6 @@ class AutoFixer {
     }
 }
 const fixer = new AutoFixer()
-
 
 
 class ToolBarUtils {
@@ -520,35 +519,37 @@ class ToolBarUtils {
     }
 
     openToolBar(tool) {
-        console.log(tool)
+        // console.log(tool)
+        if (this.active) this.closeToolBar(false)
         if (figurecontainer.data.length > 1) alertElec('Supported only for one plot at a time.')
-        if (this.active && this.currentTool == tool) return
+        // if (this.active && this.currentTool == tool) return
         $('#toolBar').show()
         $('#toolBar>div').slideUp()
         $(`#${tool}`).slideDown(350, () => { resizePlot() })
         this.currentTool = tool
         this.active = true
         this.specialTools[this.currentTool]?.open(this.currentTool)
-        disableMenu(this.getToolMenuList(tool))
+        // disableMenu(this.getToolMenuList(tool))
         analytics.add(tool)
     }
 
-    closeToolBar = () => {
+    closeToolBar = (complete = true) => {
         if (!this.active) return
-        $(`#${this.currentTool}`).slideUp(350, () => { $('#toolBar').hide(); resizePlot() })
-        enableMenu(this.getToolMenuList())
+        $(`#${this.currentTool}`).slideUp(350)
+        if (complete) setTimeout(() => { $('#toolBar').hide(); resizePlot() }, 350)
+        // enableMenu(this.getToolMenuList())
         this.specialTools[this.currentTool]?.close()
         this.active = false
         this.currentTool = null
     }
 
-    getToolMenuList(tool) {
-        let menuList = ['extend', 'fill', 'filter', 'smooth', 'fixer']
-        // when a toolbar is open/close also disable new file add, add file, swapper, plotlist
-        menuList.push('af', 'arf', 'swapen', 'tpl')
-        if (!ddd) menuList.push('lmfit', 'rgfit')
-        return menuList.filter(e => e != tool)
-    }
+    // getToolMenuList(tool) {
+    //     let menuList = ['extend', 'fill', 'filter', 'smooth', 'fixer']
+    //     // when a toolbar is open/close also disable new file add, add file, swapper, plotlist
+    //     menuList.push('af', 'arf', 'swapen', 'tpl')
+    //     if (!ddd) menuList.push('lmfit', 'rgfit')
+    //     return menuList.filter(e => e != tool)
+    // }
 }
 
 const toolbarutil = new ToolBarUtils()

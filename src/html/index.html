@@ -84,7 +84,6 @@
 
                 <div id="rgfit">
                     <div>
-
                         <label> Order of polynomial </label>
                         <input id="polyInp" type="number" value="1" min="1">
                         <input type="submit" value="Solve" id="rgfit_apply" class="toolbar_frontButton">
@@ -96,7 +95,6 @@
                             Fitted Equation
                         </label>
                         <label id='formulaStr'></label>
-
                     </div>
                 </div>
 
@@ -121,6 +119,63 @@
                     </div>
                 </div>
 
+                <div id='fill' class="extendUtils">
+                    <label>Start</label>
+                    <label>End</label>
+                    <input type="text" id="fstart" tabindex="1">
+                    <input type="text" id="fend" tabindex="2">
+                    <label>Extrapolate</label>
+                    <select id='gridSel' tabindex="4">
+                        <option>Grid Spacing</option>
+                        <option>Grid Number</option>
+                    </select>
+                    <select id="expSel" tabindex="3">
+                        <option>Closest</option>
+                        <option>Regression</option>
+                    </select>
+                    <input type="text" id="fstep" tabindex="5">
+                    <input type="submit" id='fill_apply' value="Apply" class="utilBtn"
+                        class="utilBtn toolbar_frontButton" tabindex="6">
+                    <input type="submit" value="Cancel" class="utilBtn" tabindex="7">
+                </div>
+
+                <div id="extend" class="extendUtils">
+                    <label>Extend from</label>
+                    <label>Extend times</label>
+                    <label>Extend by</label>
+
+                    <label>0 to</label>
+                    
+                    <input type="text" id="etime" style="grid-column: span 2;" tabindex="2">
+                    <select id="repSel" style="grid-column: span 2;" tabindex="3">
+                        <option>Repeat</option>
+                        <option>Mirror</option>
+                    </select>
+                    <input type="text" id="einp" tabindex="1">
+                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton"
+                        tabindex="4">
+                    <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
+                </div>
+
+                <div id="filter" class="extendUtils">
+                    <label> Condition</label>
+                    <label> Fill with</label>
+                    <label> Columns</label>
+
+                    <select id="flSel" tabindex="1">
+                        <option>></option>
+                        <option>&lt;</option>
+                        <option>=</option>
+                    </select>
+
+                    <input type="text" id="flf" style="grid-column: span 2;" tabindex="3">
+                    <input type="text" id="flcl" style="grid-column: span 2;" tabindex="4">
+                    <input type="text" id="flc" tabindex="2">
+
+                    <input type="submit" value="Apply" id="filter_apply" onclick="filterData()"
+                        class="utilBtn toolbar_frontButton" tabindex="4">
+                    <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
+                </div>
 
                 <div id="smooth">
                     <label>Smoothing parameter </label>
@@ -146,77 +201,12 @@
                     <input type="submit" value="Cancel" class="utilBtn">
                 </div>
 
-
-                <div id='fill' class="extendUtils">
-                    <label>Start</label>
-                    <label>End</label>
-                    <input type="text" id="fstart" tabindex="1">
-                    <input type="text" id="fend" tabindex="2">
-                    <label>Extrapolate</label>
-                    <select id='gridSel' tabindex="4">
-                        <option>Grid Spacing</option>
-                        <option>Grid Number</option>
-                    </select>
-                    <select id="expSel" tabindex="3">
-                        <option>Closest</option>
-                        <option>Regression</option>
-                    </select>
-                    <input type="text" id="fstep" tabindex="5">
-                    <input type="submit" id='fill_apply' value="Apply" class="utilBtn"
-                        class="utilBtn toolbar_frontButton" tabindex="6">
-                    <input type="submit" value="Cancel" class="utilBtn" tabindex="7">
-                </div>
-
-
-                <div id="extend" class="extendUtils">
-                    <label>Extend from</label>
-                    <label>Extend times</label>
-                    <label>Extend by</label>
-
-
-                    <label>0 to</label>
-
-                    <input type="text" id="etime" style="grid-column: span 2;" tabindex="2">
-                    <select id="repSel" style="grid-column: span 2;" tabindex="3">
-                        <option>Repeat</option>
-                        <option>Mirror</option>
-                    </select>
-                    <input type="text" id="einp" tabindex="1">
-                    <input type="submit" id="extend_apply" value="Apply" class="utilBtn toolbar_frontButton"
-                        tabindex="4">
-                    <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
-                </div>
-
-
-                <div id="filter" class="extendUtils">
-                    <label> Condition</label>
-                    <label> Fill with</label>
-                    <label> Columns</label>
-
-                    <select id="flSel" tabindex="1">
-                        <option>></option>
-                        <option>&lt;</option>
-                        <option>=</option>
-                    </select>
-
-
-                    <input type="text" id="flf" style="grid-column: span 2;" tabindex="3">
-                    <input type="text" id="flcl" style="grid-column: span 2;" tabindex="4">
-                    <input type="text" id="flc" tabindex="2">
-
-                    <input type="submit" value="Apply" id="filter_apply" onclick="filterData()"
-                        class="utilBtn toolbar_frontButton" tabindex="4">
-                    <input type="submit" value="Cancel" class="utilBtn" tabindex="5">
-                </div>
-
             </div>
-
             <div id="figurecontainer"></div>
         </div>
 
 
         <!-- POP UPs -->
-
         <!-- export image popup -->
         <div id="popupEx" class="popup">
             <div class="title">
