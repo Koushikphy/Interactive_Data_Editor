@@ -320,7 +320,6 @@ window.addEventListener("resize", function () {
 })
 
 
-
 figurecontainer.on("plotly_selected", (ev) => {
     if (ev != undefined) {
         index = [];

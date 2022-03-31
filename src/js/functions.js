@@ -423,8 +423,8 @@ class Viewer_3D {
             return
         }
         if (!ddd) return
-        this.viewerWindow = createWindow('src/html/3D_Viewer.html', "Interactive Data Editor -3D Viewer", true)
-        this.viewerWindow.on("closed", function () { this.viewerWindow = null; this.exportAll = false })
+        this.viewerWindow = createWindow('src/html/3D_Viewer.html', "Interactive Data Editor - 3D Viewer", true)
+        this.viewerWindow.on("closed", () => { this.viewerWindow = null; this.exportAll = false })
         this.viewerWindow.webContents.once("dom-ready", this.update)
     }
 
@@ -689,23 +689,26 @@ function createWindow(file, title, max = false) {
 
 var settingEditWindow = null
 function settingWindow() {
+    if (settingEditWindow) {
+        settingEditWindow.focus()
+        return
+    }
     settingEditWindow = createWindow("src/html/pop.html", "Interactive Data Editor - Plot Settings", false)
-    settingEditWindow.on("closed", function () { settingEditWindow = null })
-    settingEditWindow.webContents.once("dom-ready", function () {
-        let lay = figurecontainer.layout
-        let plot = figurecontainer.data.map((el, i) => ({
+    settingEditWindow.on("closed", () => { settingEditWindow = null })
+    settingEditWindow.webContents.once("dom-ready", () => {
+
+        settingEditWindow.webContents.send("plotsetting", [figurecontainer.layout, figurecontainer.data.map((el, i) => ({
             "Title": el.name,
             "Style": el.mode,
             "Marker": {
-                ...el.marker, // color is removed as colorway is used for easy iteration, get it from full
+                ...el.marker,
                 "color": figurecontainer._fullData[i].marker.color
             },
             "Line": {
                 ...el.line,
                 "color": figurecontainer._fullData[i].line.color
             }
-        }))
-        settingEditWindow.webContents.send("plotsetting", [lay, plot]);
+        }))]);
     })
 }
 
@@ -716,25 +719,13 @@ function spreadsheet() {
         editorWindow.focus()
         return
     }
-    editorWindow = createWindow("src/html/spreadsheet.html", "Interactive Data Editor", true)
-    editorWindow.on("closed", function () { editorWindow = null })
+    editorWindow = createWindow("src/html/spreadsheet.html", "Interactive Data Editor - Spreadsheet", true)
+    editorWindow.on("closed", () => { editorWindow = null })
 
-    editorWindow.webContents.once("dom-ready", function () {
+    editorWindow.webContents.once("dom-ready", () => {
         editorWindow.webContents.send("slider", [xName, col.x, data]);
     })
 }
-
-
-var viewerWindow = null; // this variable is used inside the update on server function
-function openViewer() {
-    if (viewerWindow) {
-        viewerWindow.focus()
-        return
-    }
-    viewerWindow = createWindow('src/html/3D_Viewer.html', "Interactive Data Editor - 3D Viewer", true)
-    viewerWindow.on("closed", function () { viewerWindow = null; exportAll = false })
-    viewerWindow.webContents.once("dom-ready", viewer3D.update)
-};
 
 
 class sideBarUtil {
