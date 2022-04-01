@@ -16,7 +16,7 @@ const figurecontainer = document.getElementById("figurecontainer")
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
     col = { x: 0, y: 0, z: 0, s: 0 }, currentEditable = 0, xName = "X", lockXc = 1,
-    swapped = 0, issame = false, swapper = false, ddd = false, oldDpsLen = 0, th_in = 0;
+    swapped = 0, issame = false, ddd = false, oldDpsLen = 0, th_in = 0;
 
 //start a new plot
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
@@ -74,7 +74,7 @@ function setUpColumns() {
 
 xCol.onchange = yCol.onchange = updateData
 zCol.onchange = (ev) => { colChanged(ev.target.selectedIndex) }
-sCol.onchange = (ev) => { colsChanged(ev.target.selectedIndex) }
+
 
 
 function updateData(init = false, all = true) {
@@ -146,7 +146,7 @@ function fileReader(fname) {
 
     //clear everything....
     swapped = 0; xName = "X"; saved = true, index = [];
-    issame = false; firstSave = true; swapper = false; swapperIsOn = false;
+    issame = false; firstSave = true
     undoRedo.reset()
 
 
@@ -266,7 +266,7 @@ function setCutRange() {
 
 function updatePlot(all = true) {
     //true means just update the current plot i.e. 0th, leave others as it is.
-    if (swapperIsOn) {
+    if (swapper.active) {
         Plotly.restyle(figurecontainer, {
             'x': [data[th_in][col.y], data[th_in][col.y]],
             'y': [data[th_in][col.z], data[th_in][col.s]],
@@ -348,11 +348,6 @@ function colChanged(value) {
 };
 
 
-function colsChanged(value) {
-    col.s = value;
-    updatePlot();
-    if (!swapped) store.set("cols3d", col);
-};
 
 
 function startDragBehavior() {
@@ -471,12 +466,13 @@ function changeEditable(index, reset = false) {
         viewer3D.update()
         return
     }
-    if (swapperIsOn) {
+    if (swapper.active) {
         [col.s, col.z] = [col.z, col.s]
         sCol.selectedIndex = col.s;
         zCol.selectedIndex = col.z;
-        colsChanged(col.s);
+        updatePlot();
         viewer3D.update()
+        if (!swapped) store.set("cols3d", col);
         return
     }
     $(`.scatterlayer .trace .points path`).css({ 'pointer-events': 'none' })
@@ -517,35 +513,51 @@ function changeEditable(index, reset = false) {
 }
 
 
-var swapperIsOn = false
-function openSwapper() {
-    if (fileNames.length != 1) alertElec("Can't use this feature when multiple files are open.", 0, "Operation Unavailable")
-    let thisTrace = {
-        ...iniPointsD,
-        x: data[th_in][col.y],
-        y: data[th_in][col.s],
-        name: path.basename(fileNames[0]) + ` ${col.y + 1}:${col.s + 1}`
+class ValueSwapper{
+    constructor(){
+        this.active  = false
+        this.affectMenu = ['extend', 'fill', 'filter', 'af', 'arf', 'smooth', "fixer"]
+        sCol.onchange = this.swapperColChanged
     }
-    thisTrace.line.color = thisTrace.marker.color = colorList[1]
-    Plotly.addTraces(figurecontainer, thisTrace)
-    Plotly.relayout(figurecontainer, { selectdirection: 'h' })
 
-    swapperIsOn = true;
-    $("#sCol, #sColInp").show();
-    $("#zCol").addClass("rightBorder")
-    disableMenu(['extend', 'fill', 'filter', 'af', 'arf', 'smt'])
+    open = ()=>{
+        if (figurecontainer.data.length!= 1) alertElec("Can't use this feature when multiple files are open.", 0, "Operation Unavailable")
+        let thisTrace = {
+            ...iniPointsD,
+            x: data[th_in][col.y],
+            y: data[th_in][col.s],
+            name: path.basename(fileNames[0]) + ` ${col.y + 1}:${col.s + 1}`
+        }
+        thisTrace.line.color = thisTrace.marker.color = colorList[1]
+        Plotly.addTraces(figurecontainer, thisTrace)
+        Plotly.relayout(figurecontainer, { selectdirection: 'h' })    
+        $("#sCol, #sColInp").show();
+        $("#zCol").addClass("rightBorder")
+        disableMenu(this.affectMenu)
+        this.active = true
+
+    }
+
+    close = ()=>{
+        this.active = false
+        Plotly.deleteTraces(figurecontainer, 1)
+        Plotly.relayout(figurecontainer, { selectdirection: 'any' });
+        data = fullData[0]
+        $("#sCol, #sColInp").hide();
+        $("#zCol").removeClass("rightBorder")
+        enableMenu(this.affectMenu)
+    }
+
+    swapperColChanged= (ev)=> {
+        col.s = ev.target.selectedIndex;
+        updatePlot();
+        if (!swapped) store.set("cols3d", col);
+    };
+    
 }
 
+const swapper = new ValueSwapper()
 
-function exitSwapper() {
-    swapperIsOn = false
-    Plotly.deleteTraces(figurecontainer, 1)
-    Plotly.relayout(figurecontainer, { selectdirection: 'any' });
-    data = fullData[0]
-    $("#sCol, #sColInp").hide();
-    $("#zCol").removeClass("rightBorder")
-    enableMenu(['extend', 'fill', 'filter', 'af', 'arf', 'smt'])
-}
 
 
 function saveAs() {
@@ -817,7 +829,7 @@ class sideBarUtil {
         } else if (type == 'close') {
             if (index == currentEditable) return
             if (index <= currentEditable) {
-                if (swapperIsOn) return
+                if (swapper.active) return
                 currentEditable = index
                 $(`.scatterlayer .trace .points path`).css({ 'pointer-events': 'none' })
                 $(`.scatterlayer .trace:nth-of-type(${index + 1}) .points path`).css({ 'pointer-events': 'all' })

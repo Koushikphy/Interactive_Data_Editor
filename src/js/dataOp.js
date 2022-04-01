@@ -366,7 +366,7 @@ class Smoother {
         Plotly.addTraces(figurecontainer, iniPointsSm);
         fullData.push([])
         fullDataCols.push(col)
-        legendNames.push('Smooth Approximation')
+        legendNames.push('Approximated')
         this.smoothApprox()
         analytics.add('smoother')
         if (!this.shown && ddd) {
@@ -520,9 +520,9 @@ class ToolBarUtils {
 
     openToolBar(tool) {
         // console.log(tool)
+        if (this.active && this.currentTool == tool) return
         if (this.active) this.closeToolBar(false)
         if (figurecontainer.data.length > 1) alertElec('Supported only for one plot at a time.')
-        // if (this.active && this.currentTool == tool) return
         $('#toolBar').show()
         $('#toolBar>div').slideUp()
         $(`#${tool}`).slideDown(350, () => { resizePlot() })

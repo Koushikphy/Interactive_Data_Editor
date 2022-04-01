@@ -822,8 +822,9 @@ a:focus{
 .export input[type='submit']{
     grid-column: span 2;
     width: fit-content;
-    padding: 0 1em;
+    padding: 0.2 1em;
     margin: 0 auto;
+    margin-top: 0.7em;
 }
 
 .setval{

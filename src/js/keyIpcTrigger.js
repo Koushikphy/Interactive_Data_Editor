@@ -76,7 +76,7 @@ window.onkeydown = function hotKeys(e) {
     } else if ((e.key == "c" || e.key == "C") && index.length && !e.ctrlKey) {
         changeSign()
 
-    } else if ((e.key == "p" || e.key == "P") && index.length && swapperIsOn) {
+    } else if ((e.key == "p" || e.key == "P") && index.length && swapper.active) {
         swapData()
 
     } else if ((e.key == "v" || e.key == "V") && e.ctrlKey) {
@@ -161,12 +161,12 @@ function ipcTrigger(_, d) {
     } else if (d == 'fullscreen') {
         resizePlot()
 
-    } else if (d == 'tswap' && !swapperIsOn) {
-        openSwapper()
+    } else if (d == 'tswap' && !swapper.active) {
+        swapper.open()
         analytics.add('swapper')
 
-    } else if (d == 'tswap' && swapperIsOn) {
-        exitSwapper()
+    } else if (d == 'tswap' && swapper.active) {
+        swapper.close()
 
 
     } else if (d == 'tplots' && !$('#sidebar').width()) {
