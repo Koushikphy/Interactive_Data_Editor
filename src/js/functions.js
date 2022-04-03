@@ -16,7 +16,7 @@ const figurecontainer = document.getElementById("figurecontainer")
 var fullData = [], fullDataCols = [], fileNames = [], saveNames = [], legendNames = [],
     data = [], dpsx = [], dpsy = [], index = [], saved = true, firstSave = true,
     col = { x: 0, y: 0, z: 0, s: 0 }, currentEditable = 0, xName = "X", lockXc = 1,
-    swapped = 0, issame = false, ddd = false, oldDpsLen = 0, th_in = 0;
+    swapped = 0, is3D = false, oldDpsLen = 0, th_in = 0;
 
 //start a new plot
 Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
@@ -86,7 +86,7 @@ function updateData(init = false, all = true) {
     th_in = 0;
 
     if (!swapped) {
-        store.set(ddd ? "cols3d" : "cols2d", col)
+        store.set(is3D ? "cols3d" : "cols2d", col)
     } else {
         [col.x, col.y] = [col.y, col.x]
     }
@@ -94,7 +94,7 @@ function updateData(init = false, all = true) {
     fullDataCols[currentEditable] = JSON.parse(JSON.stringify(col));
     legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped ? col.x : col.y) + 1}:${col.z + 1}`
 
-    if (ddd) setUpSlider()
+    if (is3D) setUpSlider()
 
     updatePlot(all);
     startDragBehavior();
@@ -123,10 +123,7 @@ function fileLoader() {
     });
     if (fname !== undefined) {
         fileReader(fname[0]);
-        for (let i = 1; i < fname.length; i++) {
-            addNewFile(fname[i])
-
-        }
+        for (let i = 1; i < fname.length; i++) addNewFile(fname[i])
     }
 }
 
@@ -140,13 +137,11 @@ function fileReader(fname) {
     });
     if (res) return;
 
-
     data = fileOpener(fname)
-    ddd = data.length != 1;
+    is3D = data.length != 1;
 
     //clear everything....
-    swapped = 0; xName = "X"; saved = true, index = [];
-    issame = false; firstSave = true
+    swapped = 0; xName = "X"; saved = true, index = [],firstSave = true;
     undoRedo.reset()
 
 
@@ -173,7 +168,7 @@ function fileReader(fname) {
     saveNames = [save_name]
     legendNames = [path.basename(fname) + ` ${col.y + 1}:${col.z + 1}`]
 
-    ddd ? setUpFor3d() : setUpFor2d();
+    is3D ? setUpFor3d() : setUpFor2d();
     setUpColumns();
     updateData(true, false);
     showStatus('Data file loaded ...');
@@ -243,24 +238,6 @@ function addTrace() {
     delete thisTrace.line.color
 
     Plotly.addTraces(figurecontainer, thisTrace);
-}
-
-
-var cRange = false, cRangeY = [NaN, NaN]; //hidden feature
-function setCutRange() {
-    if (!cRange) return
-    // should also include other traces if they are currently plotted
-    let a = Math.min(...dpsy), b = Math.max(...dpsy);
-    let [aY, bY] = cRangeY;
-    a = isNaN(aY) ? a : Math.max(aY, a)
-    b = isNaN(bY) ? b : Math.min(bY, b)
-
-    // upper cutoff is lower than the min value or lower cutoff is bigger than max value
-    if (a > b) a = b - 1 // improve this
-
-    ab = (b - a) * .03 // gives a slight padding in range
-    range = [a - ab, b + ab]
-    Plotly.relayout(figurecontainer, { "yaxis.autorange": false, "yaxis.range": [a - ab, b + ab], "xaxis.autorange": true })
 }
 
 
@@ -342,7 +319,7 @@ function colChanged(value) {
         startDragBehavior()
         oldDpsLen = dpsx.length
     }
-    if (!swapped) store.set(ddd ? "cols3d" : "cols2d", col);
+    if (!swapped) store.set(is3D ? "cols3d" : "cols2d", col);
     sidebar.updateSelector()
     window.dispatchEvent(new Event('traceChanged'))
 };
@@ -399,7 +376,6 @@ function keyBoardDrag(moveDown) {
 
 
 
-
 class Viewer_3D {
     constructor() {
         this.viewerWindow = null
@@ -417,7 +393,7 @@ class Viewer_3D {
             this.viewerWindow.focus()
             return
         }
-        if (!ddd) return
+        if (!is3D) return
         this.viewerWindow = createWindow('src/html/3D_Viewer.html', "Interactive Data Editor - 3D Viewer", true)
         this.viewerWindow.on("closed", () => { this.viewerWindow = null; this.exportAll = false })
         this.viewerWindow.webContents.once("dom-ready", this.update)
@@ -452,10 +428,6 @@ class Viewer_3D {
 }
 
 const viewer3D = new Viewer_3D()
-
-
-
-
 
 
 
@@ -780,20 +752,20 @@ class sideBarUtil {
                 </div>
 
                 <div class="colBar">
-                    <div class="sideBar" style="display:${ddd ? "inline-flex" : "none"}" >
+                    <div class="sideBar" style="display:${is3D ? "inline-flex" : "none"}" >
                         <span>X</span>
                         <select data-index=${j} data-type='x' class='sideSelector'>
                             ${fullData[j][0].map((_, k) => `<option ${k == fullDataCols[j].x ? "selected" : ""} >${k + 1}</option>`).join('')}
                         </select>
                     </div>
                     <div class="sideBar">
-                        <span>${ddd ? "Y" : "X"}</span>
+                        <span>${is3D ? "Y" : "X"}</span>
                         <select data-index=${j} data-type='y' class='sideSelector'>
                             ${fullData[j][0].map((_, k) => `<option ${k == fullDataCols[j].y ? "selected" : ""} >${k + 1}</option>`).join('')}
                         </select>
                     </div>
                     <div class="sideBar">
-                        <span>${ddd ? "Z" : "Y"}</span>
+                        <span>${is3D ? "Z" : "Y"}</span>
                         <select  data-index=${j} data-type='z' class='sideSelector'>
                             ${fullData[j][0].map((_, k) => `<option ${k == fullDataCols[j].z ? "selected" : ""} >${k + 1}</option>`).join('')}
                         </select>

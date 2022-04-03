@@ -146,7 +146,7 @@ function ipcTrigger(_, d) {
         viewer3D.open()
         analytics.add('3Dviewer')
 
-    } else if (d == 'tax' && ddd) {
+    } else if (d == 'tax' && is3D) {
         isswap()
         analytics.add('swapAxis')
 

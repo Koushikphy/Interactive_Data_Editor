@@ -8,6 +8,7 @@ function copyThis() {
     copyVar = JSON.stringify([dpsx, dpsy]);
 }
 
+
 function pasteThis() {
     var [t1, t2] = JSON.parse(copyVar);
     if (!t1.every((v, i) => v === data[th_in][col.y][i])) alertElec("Copy paste between different data set is not supported!")
@@ -66,7 +67,7 @@ function dataFiller() {
 
     if (!data[0][col.y].every((i, j, k) => j == 0 ? true : i > k[j - 1])) alertElec('Monotonically increasing values required for interpolation.')
 
-    data = fillMissingGrid(data, ddd, col, allowRegression, start, stop, step)
+    data = fillMissingGrid(data, is3D, col, allowRegression, start, stop, step)
     endJobs({ startdrag: true, minimal: false })
     showStatus('Missing values are filled...');
 }
@@ -180,6 +181,23 @@ function endJobs({ resize = false, startdrag = false, clearIndex = false, serVer
     saved = false;
 }
 
+
+var cRange = false, cRangeY = [NaN, NaN]; //hidden feature
+function setCutRange() {
+    if (!cRange) return
+    // should also include other traces if they are currently plotted
+    let a = Math.min(...dpsy), b = Math.max(...dpsy);
+    let [aY, bY] = cRangeY;
+    a = isNaN(aY) ? a : Math.max(aY, a)
+    b = isNaN(bY) ? b : Math.min(bY, b)
+
+    // upper cutoff is lower than the min value or lower cutoff is bigger than max value
+    if (a > b) a = b - 1 // improve this
+
+    ab = (b - a) * .03 // gives a slight padding in range
+    range = [a - ab, b + ab]
+    Plotly.relayout(figurecontainer, { "yaxis.autorange": false, "yaxis.range": [a - ab, b + ab], "xaxis.autorange": true })
+}
 
 
 // clip value to only positive ones
@@ -369,7 +387,7 @@ class Smoother {
         legendNames.push('Approximated')
         this.smoothApprox()
         analytics.add('smoother')
-        if (!this.shown && ddd) {
+        if (!this.shown && is3D) {
             showStatus('Press Ctrl+Tab to view the approximated data in 3D viewer.')
             this.shown = true
         }
@@ -427,7 +445,7 @@ class Smoother {
         data = this.res
         fullData[0] = data
         updatePlot()
-        // if (ddd) updateOnServer()
+        // if (is3D) updateOnServer()
         viewer3D.update()
         this.close()
         saved = false
@@ -547,7 +565,7 @@ class ToolBarUtils {
     //     let menuList = ['extend', 'fill', 'filter', 'smooth', 'fixer']
     //     // when a toolbar is open/close also disable new file add, add file, swapper, plotlist
     //     menuList.push('af', 'arf', 'swapen', 'tpl')
-    //     if (!ddd) menuList.push('lmfit', 'rgfit')
+    //     if (!is3D) menuList.push('lmfit', 'rgfit')
     //     return menuList.filter(e => e != tool)
     // }
 }

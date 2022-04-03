@@ -63,7 +63,7 @@ function parseData(strDps) {
 
 function expRotate(inp, i, j) { //Bunch up on i-th column and sort along j-th column
     var tmpData = inp.map(transpose);
-    issame = tmpData.every(v => v.length == tmpData[0].length)
+    let issame = tmpData.every(v => v.length == tmpData[0].length)
 
     if (issame) return transpose(tmpData).map(transpose)
 
@@ -108,7 +108,7 @@ function repeatMirrorData(data, ycol, last, times, mirror) {
 
 
 
-function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step) {
+function fillMissingGrid(data, is3D, col, allowRegression, start, stop, step) {
 
     var fullArr = [].concat(
         data[0][col.y].filter(x => x < start),
@@ -130,7 +130,7 @@ function fillMissingGrid(data, ddd, col, allowRegression, start, stop, step) {
 
         return dat.map((ys, j) => {
             if (j == col.y) return fullArr;
-            if (ddd && j == col.x) return new Array(fullArr.length).fill(dat[col.x][0])
+            if (is3D && j == col.x) return new Array(fullArr.length).fill(dat[col.x][0])
             var newArr = [];
             spl = new Spline(xs, ys)
 
