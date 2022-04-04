@@ -547,7 +547,7 @@ class ToolBarUtils {
         this.currentTool = tool
         this.active = true
         this.specialTools[this.currentTool]?.open(this.currentTool)
-        // disableMenu(this.getToolMenuList(tool))
+        disableMenu(["swapen"])
         analytics.add(tool)
     }
 
@@ -555,7 +555,7 @@ class ToolBarUtils {
         if (!this.active) return
         $(`#${this.currentTool}`).slideUp(350)
         if (complete) setTimeout(() => { $('#toolBar').hide(); resizePlot() }, 350)
-        // enableMenu(this.getToolMenuList())
+        enableMenu(["swapen"])
         this.specialTools[this.currentTool]?.close()
         this.active = false
         this.currentTool = null

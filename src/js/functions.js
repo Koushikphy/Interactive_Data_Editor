@@ -141,7 +141,7 @@ function fileReader(fname) {
     is3D = data.length != 1;
 
     //clear everything....
-    swapped = 0; xName = "X"; saved = true, index = [],firstSave = true;
+    swapped = 0; xName = "X"; saved = true, index = [], firstSave = true;
     undoRedo.reset()
 
 
@@ -485,15 +485,15 @@ function changeEditable(index, reset = false) {
 }
 
 
-class ValueSwapper{
-    constructor(){
-        this.active  = false
-        this.affectMenu = ['extend', 'fill', 'filter', 'af', 'arf', 'smooth', "fixer"]
+class ValueSwapper {
+    constructor() {
+        this.active = false
+        this.affectMenu = ['extend', 'fill', 'filter', 'af', 'arf', 'smooth', "fixer", "tpl"]
         sCol.onchange = this.swapperColChanged
     }
 
-    open = ()=>{
-        if (figurecontainer.data.length!= 1) alertElec("Can't use this feature when multiple files are open.", 0, "Operation Unavailable")
+    open = () => {
+        if (figurecontainer.data.length != 1) alertElec("Can't use this feature when multiple plots are open.", 0, "Operation Unavailable")
         let thisTrace = {
             ...iniPointsD,
             x: data[th_in][col.y],
@@ -502,30 +502,29 @@ class ValueSwapper{
         }
         thisTrace.line.color = thisTrace.marker.color = colorList[1]
         Plotly.addTraces(figurecontainer, thisTrace)
-        Plotly.relayout(figurecontainer, { selectdirection: 'h' })    
+        Plotly.relayout(figurecontainer, { selectdirection: 'h' })
         $("#sCol, #sColInp").show();
         $("#zCol").addClass("rightBorder")
         disableMenu(this.affectMenu)
         this.active = true
-
     }
 
-    close = ()=>{
-        this.active = false
+    close = () => {
         Plotly.deleteTraces(figurecontainer, 1)
         Plotly.relayout(figurecontainer, { selectdirection: 'any' });
         data = fullData[0]
         $("#sCol, #sColInp").hide();
         $("#zCol").removeClass("rightBorder")
         enableMenu(this.affectMenu)
+        this.active = false
     }
 
-    swapperColChanged= (ev)=> {
+    swapperColChanged = (ev) => {
         col.s = ev.target.selectedIndex;
         updatePlot();
         if (!swapped) store.set("cols3d", col);
     };
-    
+
 }
 
 const swapper = new ValueSwapper()

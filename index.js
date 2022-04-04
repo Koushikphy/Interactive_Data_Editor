@@ -357,14 +357,6 @@ const homeMenuTemplate = [
         label: "View",
         submenu: [
             {
-                label: 'Open Plot Settings',
-                accelerator: 'CmdOrCtrl+K',
-                id: 'tfs',
-                enabled: false,
-                click() {
-                    mainWindow.webContents.send("menuTrigger", "pdash")
-                }
-            },{
                 label: "Toggle Axis",
                 accelerator: 'CmdOrCtrl+W',
                 id: 'tax',
@@ -373,7 +365,14 @@ const homeMenuTemplate = [
                     mainWindow.webContents.send("menuTrigger", "tax");
                 }
             },{
-                label: 'Toggle Plot List',
+                label: "Toggle Swapper",
+                enabled: false,
+                id: 'swapen',
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "tswap")
+                }
+            },{
+                label: 'Toggle List of Plots',
                 accelerator: 'CmdOrCtrl+B',
                 id: 'tpl',
                 enabled: false,
@@ -381,11 +380,12 @@ const homeMenuTemplate = [
                     mainWindow.webContents.send("menuTrigger", "tplots")
                 }
             },{
-                label: "Toggle Swapper",
+                label: 'Open Plot Settings',
+                accelerator: 'CmdOrCtrl+K',
+                id: 'tfs',
                 enabled: false,
-                id: 'swapen',
                 click() {
-                    mainWindow.webContents.send("menuTrigger", "tswap")
+                    mainWindow.webContents.send("menuTrigger", "pdash")
                 }
             },{
                 role: 'togglefullscreen' 
