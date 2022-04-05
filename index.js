@@ -1,7 +1,8 @@
-require('v8-compile-cache');
+const remoteMain = require('@electron/remote/main')
 const electron = require('electron');
 const path = require('path');
 // const url = require('url');
+remoteMain.initialize()
 var mainWindow = null;
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 process.env.NODE_ENV = 'production';
@@ -26,23 +27,6 @@ if(!gotTheLock){
         }
       })
 }
-
-// ipcMain.on("back", function (e, d) {
-//     mainWindow.webContents.send("back", d);
-// })
-
-// ipcMain.on("plotsetting", function (e, d) {
-//     mainWindow.webContents.send("plotsetting", d);
-// })
-
-
-// ipcMain.on("colchanged", function (e, d) {
-//     mainWindow.webContents.send("colchanged", d);
-// })
-
-// ipcMain.on("exportAll", function (e, d) {
-//     mainWindow.webContents.send("exportAll", d);
-// })
 
 
 for(let ch of ["back","plotsetting","colchanged","exportAll"]){
@@ -101,7 +85,8 @@ app.on('ready', function () {
                 webPreferences: {
                     nodeIntegration: true,
                     enableRemoteModule: true,
-                    contextIsolation:false
+                    contextIsolation:false,
+                    nativeWindowOpen:true
                 },})
             proxyPopUp.loadFile("src/html/auth.html")
             proxyPopUp.once('ready-to-show',()=>{
@@ -122,9 +107,11 @@ app.on('ready', function () {
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
-            contextIsolation:false
+            contextIsolation:false,
+            nativeWindowOpen:true
         },
     });
+    remoteMain.enable(mainWindow.webContents);
     mainWindow.maximize();
     mainWindow.loadFile('./src/html/index.html')
 
@@ -151,7 +138,8 @@ const helpMenu = {
                     webPreferences: {
                         nodeIntegration: true,
                         enableRemoteModule: true,
-                        contextIsolation:false
+                        contextIsolation:false,
+                        nativeWindowOpen:true
                     }
                 });
                 childWindow.loadFile('src/html/doc.html')
@@ -171,7 +159,8 @@ const helpMenu = {
                     webPreferences: {
                         nodeIntegration: true,
                         enableRemoteModule: true,
-                        contextIsolation:false
+                        contextIsolation:false,
+                        nativeWindowOpen:true
                     }
                 });
                 childWindow.loadFile('src/html/data.html')
@@ -198,7 +187,8 @@ const helpMenu = {
                     webPreferences: {
                         nodeIntegration: true,
                         enableRemoteModule: true,
-                        contextIsolation:false
+                        contextIsolation:false,
+                        nativeWindowOpen:true
                     },
                     height:650
                 });

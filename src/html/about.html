@@ -5,10 +5,15 @@
     <title>Interactive Data Editor</title>
     <style type="text/css">
         a {
-            margin: 5px; 
-            text-decoration: underline; 
+            margin: 5px;
+            text-decoration: underline;
             color: black;
         }
+
+        .eLink {
+            margin: 0 0.3em;
+        }
+
 
         @font-face {
             font-family: 'Lato';
@@ -22,16 +27,18 @@
         body {
             font-family: 'Lato', sans-serif;
         }
-        @keyframes color-rotate{
-            from{
+
+        @keyframes color-rotate {
+            from {
                 filter: hue-rotate(0deg);
             }
-            to{
+
+            to {
                 filter: hue-rotate(360deg);
             }
         }
 
-        #logo{
+        #logo {
             animation: color-rotate 1s;
             animation-iteration-count: infinite;
             animation-direction: alternate;
@@ -60,32 +67,40 @@
             Copyright &copy; January,2022 Koushik Naskar
         </div>
 
-        <a title="Open website" href="javascript:void(0)" onclick="shell.openExternal('https://koushikphy.github.io/Interactive_Data_Editor/');"><img src="../../figs/internet.png" width="30" height="30"></a>
-        <a title="Follow me Facebook" href="javascript:void(0)" onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img src="../../figs/facebook.png" width="30" height="30"></a>
-        <a title="Follow me on Github" href="javascript:void(0)" onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"            width="30" height="30"></a>
-        <a title="Reach me on Gmail" href="javascript:void(0)" onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img src="../../figs/gmail.png" width="30" height="30"></a>
-        
+        <img title="Open website" src="../../figs/internet.png" width="30" height="30"
+            data-url="https://koushikphy.github.io/Interactive_Data_Editor/">
+        <img title="Follow me Facebook" src="../../figs/facebook.png" width="30" height="30"
+            data-url="https://www.facebook.com/koushik.naskar3"></a>
+        <img title="Follow me on Github" src="../../figs/github.png" width="30" height="30"
+            data-url="https://github.com/Koushikphy">
+        <img title="Reach me on Gmail" src="../../figs/gmail.png" width="30" height="30"
+            data-url="https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]">
+
 
         <div style="font-size: larger;font-weight:bold;margin-top: 3.8pc;margin-bottom: 5px">Powered By:</div>
-        <!-- <a href="javascript:void(0)"  onclick="op('https://nodejs.org/');"><img title="NodeJS" src="../../figs/node.png" width="100" height="60"></a> <br> -->
-        <a href="javascript:void(0)" style="margin-right: 10px" onclick="op('https://plot.ly/');"><img title="PlotlyJS" src="../../figs/plotly.png" width="120" height="40"></a>
-        <a href="javascript:void(0)" onclick="op('https://electronjs.org/');"><img title="ElectronJS" src="../../figs/electron.png"  width="130" height="40"></a> <br>
-        <a href="javascript:void(0)" onclick="op('https://jquery.com/');"><img title="jQuery" src="../../figs/jquery.png" width="120" height="40"></a>
-        <a href="javascript:void(0)" onclick="op('https://bossanova.uk/jexcel/v3/');"><img title="jExcel" src="../../figs/logo.svg" width="55"  height="45" title="fwehifwof"><img src="../../figs/logo-w.svg" width="100"  height="50" title="jExcel"></a>
-
-
+        <img title="PlotlyJS" src="../../figs/plotly.png" width="120" height="40" style="margin-right: 10px"
+            data-url="https://plot.ly/">
+        <img title="ElectronJS" src="../../figs/electron.png" width="130" height="40"
+            data-url="https://electronjs.org/"><br>
+        <img title="jQuery" src="../../figs/jquery.png" width="120" height="40" data-url="https://jquery.com/">
+        <img title="jExcel" src="../../figs/logo.svg" width="55" height="45"
+            data-url="https://bossanova.uk/jexcel/v3/"><img src="../../figs/logo-w.svg" width="100" height="50"
+            title="jExcel" data-url="https://bossanova.uk/jexcel/v3/">
 
 
     </div>
     <script>
 
-        document.getElementById('versionname').innerHTML =`Version ${require('../../package.json').version}` 
+        document.getElementById('versionname').innerHTML = `Version ${require('../../package.json').version}`
 
-        const {shell} = require('electron');
+        const { shell } = require('electron');
 
-        function op(link) {
-            shell.openExternal(link);
-        }
+
+        document.querySelectorAll('img').forEach((elem) => {
+            elem.onclick = function () {
+                shell.openExternal(this.dataset.url);
+            }
+        })
 
     </script>
 </body>

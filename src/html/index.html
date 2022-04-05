@@ -26,18 +26,14 @@
                 Copyright &copy; January,2022 Koushik Naskar
             </div>
 
-            <a title="Open website" href="javascript:void(0)"
-                onclick="shell.openExternal('https://koushikphy.github.io/Interactive_Data_Editor/');"><img
-                    src="../../figs/internet.png" width="30" height="30"></a>
-            <a title="Follow me Facebook" href="javascript:void(0)"
-                onclick="shell.openExternal('https://www.facebook.com/koushik.naskar3');"><img
-                    src="../../figs/facebook.png" width="30" height="30"></a>
-            <a title="Follow me on Github" href="javascript:void(0)"
-                onclick="shell.openExternal('https://github.com/Koushikphy');"><img src="../../figs/github.png"
-                    width="30" height="30"></a>
-            <a title="Reach me on Gmail" href="javascript:void(0)"
-                onclick="shell.openExternal('https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]');"><img
-                    src="../../figs/gmail.png" width="30" height="30"></a>
+            <img title="Open website" class="eLink" src="../../figs/internet.png" width="30" height="30"
+                data-url="https://koushikphy.github.io/Interactive_Data_Editor/">
+            <img title="Follow me Facebook" class="eLink" src="../../figs/facebook.png" width="30" height="30"
+                data-url="https://www.facebook.com/koushik.naskar3"></a>
+            <img title="Follow me on Github" class="eLink" src="../../figs/github.png" width="30" height="30"
+                data-url="https://github.com/Koushikphy">
+            <img title="Reach me on Gmail" class="eLink" src="../../figs/gmail.png" width="30" height="30"
+                data-url="https://mail.google.com/mail/?view=cm&fs=1&to=koushik.naskar9@gamil.com&su=[Interactive Data Editor]">
         </div>
     </div>
 
@@ -145,7 +141,7 @@
                     <label>Extend by</label>
 
                     <label>0 to</label>
-                    
+
                     <input type="text" id="etime" style="grid-column: span 2;" tabindex="2">
                     <select id="repSel" style="grid-column: span 2;" tabindex="3">
                         <option>Repeat</option>
@@ -183,11 +179,11 @@
                     <label>Apply to all blocks</label>
 
                     <input id="smoothInp" type="number" value="0.99" min="0" max="1" step="0.01">
-                    <input type="checkbox" id="smCheck">
-                    <input type="checkbox" id="smColCheck" checked>
+                    <input type="checkbox" id="smAllCol">
+                    <input type="checkbox" id="smAllBlock" checked>
 
                     <!-- <input type="submit" value="Smooth" id="smoothApx" class="toolbar_frontButton"> -->
-                    <input type="submit" value="Apply" id="smoothApl" class="toolbar_frontButton utilBtn">
+                    <input type="submit" value="Apply" id="smoothApl" class="toolbar_frontButton">
                     <input type="submit" value="Cancel" class="utilBtn">
                 </div>
 

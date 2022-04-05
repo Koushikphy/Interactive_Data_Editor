@@ -373,10 +373,23 @@ class Smoother {
     constructor() {
         this.res = null;
         this.isActive = false;
+        this.shown3D = false
         this.shown = false
+        this.inpElem = document.getElementById('smoothInp')
+        this.allColElem = document.getElementById('smAllCol')
+        this.allBlockElem = document.getElementById('smAllBlock')
+
+        this.inpElem.onmouseover = (ev) => { ev.target.focus() }
+        this.inpElem.oninput = this.smoothApprox
         document.getElementById('smoothApl').onclick = this.saveApprox
-        document.getElementById('smoothInp').onmouseover = (ev) => { ev.target.focus() }
-        document.getElementById('smoothInp').oninput = this.smoothApprox
+    }
+
+    colChangedProxy = () => {
+        if(!this.allColElem.checked) this.smoothApprox();
+    }
+    
+    sliderChangeProxy = () => {
+        if (!this.allBlockElem.checked) this.smoothApprox();
     }
 
     open = () => {
@@ -387,17 +400,20 @@ class Smoother {
         legendNames.push('Approximated')
         this.smoothApprox()
         analytics.add('smoother')
-        if (!this.shown && is3D) {
+        if (!this.shown3D && is3D) {
             showStatus('Press Ctrl+Tab to view the approximated data in 3D viewer.')
-            this.shown = true
+            this.shown3D = true
         }
+
+        window.addEventListener('columnChanged', this.colChangedProxy)
+        window.addEventListener('sliderChanged', this.sliderChangeProxy)
+        window.addEventListener('keydown', this.saveProxy)
     }
 
     close = () => {
         currentEditable = 0;
         this.isActive = false
         this.res = null
-
         try {
             Plotly.deleteTraces(figurecontainer, 1);
         } catch (error) {
@@ -406,14 +422,16 @@ class Smoother {
         fullData.splice(1, 1)
         fullDataCols.splice(1, 1)
         legendNames.splice(1, 1)
-
+        window.addEventListener('colChanged', this.colChangedProxy)
+        window.removeEventListener('sliderChanged', this.sliderChangeProxy)
+        window.removeEventListener('keydown', this.saveProxy)
     }
 
     smoothApprox = () => {
-
-        const smtFactor = parseFloat(document.getElementById('smoothInp').value)
-        const notAllCol = !document.getElementById('smCheck').checked
-        const notAllX = !document.getElementById('smColCheck').checked
+        if (!this.isActive) return
+        const smtFactor = parseFloat(this.inpElem.value)
+        const notAllCol = !this.allColElem.checked
+        const notAllX = !this.allBlockElem.checked
         const cz = col.z
         if (smtFactor > 1 || smtFactor < 0) alertElec("Smoothing factor must be in between 0 and 1")
 
@@ -424,10 +442,8 @@ class Smoother {
         //NOTE: here just ignoring the other side smoothing, this is simpler and the other side can be simply done with rotating the axis
         // if(data.length!=1) {
         //     var [cx, cy] = [cy, cx];
-        //     // now rotate the direction to smooth in another direction
         //     res = expRotate(res, cx, cy)
         //     res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
-        //     // rotate again to return the data in original structure.
         //     var [cx, cy] = [cy, cx]
         //     this.res= expRotate(res,cx,cy)
         // } else{
@@ -439,16 +455,23 @@ class Smoother {
         updatePlot()
     }
 
+    saveProxy = (ev) =>{
+        if (ev.altKey && ev.key == 's') this.saveApprox()
+    }
+
     saveApprox = () => {
         // modify the data with the approximation
         if (this.res == null) return
         data = this.res
         fullData[0] = data
         updatePlot()
-        // if (is3D) updateOnServer()
         viewer3D.update()
-        this.close()
+        // this.close()
         saved = false
+        if (!this.shown) {
+            showStatus('Press Alt+S to quickly apply the corrected approximation');
+            this.shown = true
+        }
     }
 }
 
@@ -458,12 +481,8 @@ const smooth = new Smoother()
 class AutoFixer {
     constructor() {
         this.active = false
-        window.addEventListener('keydown', (ev) => {
-            if (ev.altKey && ev.key == 's') this.saveValue()
-        })
         this.res = null
         this.shown = false
-        window.addEventListener('traceChanged', this.runFixer)
         document.getElementById('fixer_apply').onclick = this.saveValue
         this.smoothElem = document.getElementById('autoSmot')
         this.cutElem = document.getElementById('autoCut')
@@ -471,10 +490,17 @@ class AutoFixer {
         this.smoothElem.onmouseover = this.cutElem.onmouseover = (ev) => { ev.target.focus() }
     }
 
+    saveProxy = (ev) =>{
+        if (ev.altKey && ev.key == 's') this.saveValue()
+    }
+
     open = () => {
         this.active = true
         Plotly.addTraces(figurecontainer, iniPointsSm);
         this.runFixer()
+        window.addEventListener('sliderChanged', this.runFixer)
+        window.addEventListener('colChanged', this.runFixer)
+        window.addEventListener('keydown', this.saveProxy)
     }
 
     close = () => {
@@ -486,6 +512,9 @@ class AutoFixer {
         } catch (e) {
             console.log('AutoFixer Error: No trace found while trying to delete the approximated trace.')
         }
+        window.removeEventListener('sliderChanged', this.runFixer)
+        window.removeEventListener('colChanged', this.runFixer)
+        window.removeEventListener('keydown', this.saveProxy)
     }
 
     runFixer = () => {
@@ -560,14 +589,6 @@ class ToolBarUtils {
         this.active = false
         this.currentTool = null
     }
-
-    // getToolMenuList(tool) {
-    //     let menuList = ['extend', 'fill', 'filter', 'smooth', 'fixer']
-    //     // when a toolbar is open/close also disable new file add, add file, swapper, plotlist
-    //     menuList.push('af', 'arf', 'swapen', 'tpl')
-    //     if (!is3D) menuList.push('lmfit', 'rgfit')
-    //     return menuList.filter(e => e != tool)
-    // }
 }
 
 const toolbarutil = new ToolBarUtils()

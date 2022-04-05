@@ -28,8 +28,8 @@
 
     <script src="../lib/jsoneditor/jsoneditor.min.js"></script>
     <script>
-        const { remote, ipcRenderer } = require('electron');
-
+        const { ipcRenderer } = require('electron');
+        const { getCurrentWindow } = require('@electron/remote');
 
 
         var layout = {
@@ -397,7 +397,7 @@
 
 
         function closePage(){
-            remote.getCurrentWindow().close()
+            getCurrentWindow().close()
         }
 
         ipcRenderer.on('plotsetting', getUpdate)

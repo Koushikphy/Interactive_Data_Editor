@@ -1,6 +1,6 @@
 const Plotly = require('plotly.js-gl3d-dist');
 const $ = require('../lib/jquery.min')
-const { dialog, BrowserWindow } = remote;
+const { dialog, BrowserWindow, getCurrentWindow } = require('@electron/remote');
 const { clamp, clone, expRotate, parseData, transpose, alertElec, showStatus, showInfo } = require('../js/utils')
 const { layout, colorList, iniPointsD } = require('../js/plotUtils')
 
@@ -73,7 +73,7 @@ function setUpColumns() {
 }
 
 xCol.onchange = yCol.onchange = updateData
-zCol.onchange = (ev) => { colChanged(ev.target.selectedIndex) }
+zCol.onchange = (ev) => {colChanged(ev.target.selectedIndex);window.dispatchEvent(new Event('columnChanged')) }
 
 
 
@@ -117,7 +117,7 @@ function fileOpener(fname) {
 
 
 function fileLoader() {
-    var fname = dialog.showOpenDialogSync(remote.getCurrentWindow(), {
+    var fname = dialog.showOpenDialogSync(getCurrentWindow(), {
         defaultPath: recentLocation,
         properties: ['openFile', "multiSelections"]
     });
@@ -129,7 +129,7 @@ function fileLoader() {
 
 
 function fileReader(fname) {
-    if (!saved) var res = dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+    if (!saved) var res = dialog.showMessageBoxSync(getCurrentWindow(), {
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Do you want to open a new file without saving the changes?",
@@ -195,7 +195,7 @@ function fileReader(fname) {
 function addNewFileDialog() {
     if (swapped) alertElec("Plot along X before adding a new file.", 0, "Can't add the file!!!")
 
-    var fname = dialog.showOpenDialogSync(remote.getCurrentWindow(), {
+    var fname = dialog.showOpenDialogSync(getCurrentWindow(), {
         defaultPath: recentLocation,
         properties: ['openFile', "multiSelections"]
     });
@@ -283,7 +283,7 @@ function sliderChanged(shift = 0) {
         startDragBehavior()
         oldDpsLen = dpsx.length
     }
-    window.dispatchEvent(new Event('traceChanged'))
+    window.dispatchEvent(new Event('sliderChanged'))
 }
 
 
@@ -321,7 +321,6 @@ function colChanged(value) {
     }
     if (!swapped) store.set(is3D ? "cols3d" : "cols2d", col);
     sidebar.updateSelector()
-    window.dispatchEvent(new Event('traceChanged'))
 };
 
 
@@ -333,7 +332,7 @@ function startDragBehavior() {
     var oldDatX, oldDatY, pIndex;
 
     drag.origin(function () {
-        undoRedo.save()//saveOldData();
+        undoRedo.save()
         let [x, y] = this.getAttribute('transform').slice(10, -1).split(/,| /);
         pIndex = this.index
         if (index.length) {
@@ -659,7 +658,8 @@ function createWindow(file, title, max = false) {
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
-            contextIsolation: false
+            contextIsolation: false,
+            nativeWindowOpen:true
         }
     });
 
@@ -875,8 +875,7 @@ class Analytics {
         // read from userdata if client id is already given or is it a new client
         this.cid = store.get('cid')
         if (this.cid === undefined) {
-            const { v4: uuidv4 } = require('uuid');
-            this.cid = uuidv4()
+            this.cid = crypto.randomUUID();
             store.set('cid', this.cid)
         }
 

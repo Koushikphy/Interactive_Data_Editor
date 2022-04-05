@@ -1,8 +1,8 @@
 // const Plotly= require('plotly.js-gl3d-dist')
 const fs = require("fs")
-const {ipcRenderer, remote} = require('electron')
+const {ipcRenderer} = require('electron')
 const path= require('path')
-const { dialog, BrowserWindow, app } = remote
+const { dialog, BrowserWindow, app } = require('@electron/remote')
 const url = require('url')
 const xcol = document.getElementById('xcol')
 const ycol = document.getElementById('ycol')
@@ -384,14 +384,11 @@ function openPlotSetting(){
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
-            contextIsolation:false
+            contextIsolation:false,
+            nativeWindowOpen:true
         }
     });
-    // settingEditWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, "./plotterpop.html"),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
+
     settingEditWindow.loadFile('src/html/plotterpop.html')
     settingEditWindow.setMenuBarVisibility(false);
 

@@ -1,3 +1,4 @@
+const { ipcRenderer, shell } = require('electron');
 const { downloadImage } = require('../js/download')
 
 
@@ -14,16 +15,16 @@ function keyDownfired() {
     }
 }
 
-window.onkeyup = function hotDKeys(e) {
+window.addEventListener('keyup',function (e){
     if ((document.activeElement.type != "text") && (e.key == 'm' || e.key == 'M' || e.key == 'ArrowDown' || e.key == 'ArrowUp')) {
         fired = false
         fullData[currentEditable] = data;
         viewer3D.update()
     }
-}
+})
 
 
-window.onkeydown = function hotKeys(e) {
+window.addEventListener('keydown', function (e) {
     if (document.activeElement.type == "text") return
     // console.log(e)
     if (e.key == ' ') {
@@ -126,7 +127,7 @@ window.onkeydown = function hotKeys(e) {
         // }else{
         //     console.log('No available trigger',e.key)
     }
-};
+});
 
 
 function ipcTrigger(_, d) {
@@ -412,3 +413,8 @@ document.getElementById("valinput").onchange = document.getElementById('valBtn')
     setValue($('#valinput').val())
     $('.popup').hide()
 }
+
+
+$('.eLink').click(function () {
+    shell.openExternal(this.dataset.url)
+})

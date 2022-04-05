@@ -73,12 +73,11 @@
     }
   },
   "devDependencies": {
-    "electron": "^11.2.1",
+    "electron": "^17.3.1",
     "electron-builder": "^22.9.1"
   },
   "dependencies": {
-    "plotly.js-gl3d-dist": "^1.58.4",
-    "uuid": "^8.3.2",
-    "v8-compile-cache": "^2.2.0"
+    "@electron/remote": "^2.0.8",
+    "plotly.js-gl3d-dist": "^1.58.4"
   }
 }

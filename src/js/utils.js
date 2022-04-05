@@ -25,7 +25,7 @@ function replaceWithHome(name) { // replaces full path name with the short one
 
 
 function alertElec(msg, type = 1, title = "Failed to execute.") {
-    dialog.showMessageBox(remote.getCurrentWindow(), {
+    dialog.showMessageBox(getCurrentWindow(), {
         type: type == 1 ? "error" : 'warning',
         title: title,
         message: msg,
@@ -36,7 +36,7 @@ function alertElec(msg, type = 1, title = "Failed to execute.") {
 
 
 function showInfo(title, msg, detail) {
-    dialog.showMessageBox(remote.getCurrentWindow(), {
+    dialog.showMessageBox(getCurrentWindow(), {
         type: 'info',
         title: title,
         message: msg,

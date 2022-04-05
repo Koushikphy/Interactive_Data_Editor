@@ -1,6 +1,5 @@
-require('v8-compile-cache');
-const { remote, ipcRenderer, shell } = require('electron');
-const { Menu, MenuItem, app } = remote;
+
+const { Menu, MenuItem, app, process } = require('@electron/remote');
 const menu = Menu.getApplicationMenu();
 const os = require('os');
 const path = require('path')
@@ -69,7 +68,7 @@ function openFileFromArgs(fileList) {
     }
 }
 // lets just consider anything that does not start with `-/--` is a file passed through the command line
-var fileList = remote.process.argv.slice(1).filter(e => !(e.startsWith('-') || e.startsWith('--') || e.trim() == '.'))
+var fileList = process.argv.slice(1).filter(e => !(e.startsWith('-') || e.startsWith('--') || e.trim() == '.'))
 if (app.isPackaged) {
     if (fileList.length) {
         openFileFromArgs(fileList)
