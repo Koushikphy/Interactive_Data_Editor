@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../lib/jsoneditor/jsoneditor.min.css">
     <link rel="stylesheet" href="../css/pop.css">
 </head>
+
 <body>
 
     <div class='topbar'>
-        <button class = 'nav navfocus' id='plot' onclick="setPlotJSON(0)">
+        <button class='nav navfocus' id='plot' onclick="setPlotJSON(0)">
             Plots
-        </button><button class = 'nav' id='lay' onclick="setLayoutJSON()">
+        </button><button class='nav' id='lay' onclick="setLayoutJSON()">
             Layout
         </button>
     </div>
     <div id='main'>
-    <div class="container" id='plotcon'>
-        <select id='plotselect' onchange="editorPlot.update(plots[this.selectedIndex])"></select>
-        <div id="jsoneditorplot"></div>
-    </div>
-    <div class="container" id='laycon'>
-        <div id="jsoneditorlayout"></div>
-    </div>
+        <div class="container" id='plotcon'>
+            <select id='plotselect' onchange="editorPlot.update(plots[this.selectedIndex])"></select>
+            <div id="jsoneditorplot"></div>
+        </div>
+        <div class="container" id='laycon'>
+            <div id="jsoneditorlayout"></div>
+        </div>
     </div>
 
 
@@ -31,202 +33,200 @@
         const { ipcRenderer } = require('electron');
         const { getCurrentWindow } = require('@electron/remote');
 
-
         var layout = {
-        "margin": {
-            "t": 0,
-            "r": 0,
-            "b": 0,
-            "l": 0,
-            "pad": 0
-        },
-        "autorange": true,
-        "spikesides": false,
-        "showlegend": true,
-        "autosize": true,
-        "scene": {
-            "aspectmode": "manual",
-            "aspectratio": {
-                "x": 1,
-                "y": 1,
-                "z": 1
+            "margin": {
+                "t": 0,
+                "r": 0,
+                "b": 0,
+                "l": 0,
+                "pad": 0
             },
-            "zaxis": {
-                "title": {
-                    "text": "",
-                    "font": {
+            "autorange": true,
+            "spikesides": false,
+            "showlegend": true,
+            "autosize": true,
+            "scene": {
+                "aspectmode": "manual",
+                "aspectratio": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "zaxis": {
+                    "title": {
+                        "text": "",
+                        "font": {
+                            "family": "Times New Roman",
+                            "size": 10
+                        }
+                    },
+                    "showticklabels": true,
+                    "tickfont": {
                         "family": "Times New Roman",
-                        "size": 10
-                    }
+                        "size": 15
+                    },
+                    "tickmode": "auto",
+                    "dtick": 10,
+                    "tickvals": "",
+                    "ticktext": "",
+                    "ticks": "outside",
+                    "range": [
+                        "",
+                        ""
+                    ],
+                    "autorange": true,
+                    "spikesides": false,
+                    "showgrid": true,
+                    "zeroline": false,
+                    "showline": true
                 },
-                "showticklabels": true,
-                "tickfont": {
-                    "family": "Times New Roman",
-                    "size": 15
-                },
-                "tickmode": "auto",
-                "dtick": 10,
-                "tickvals": "",
-                "ticktext": "",
-                "ticks": "outside",
-                "range": [
-                    "",
-                    ""
-                ],
-                "autorange": true,
-                "spikesides": false,
-                "showgrid": true,
-                "zeroline": false,
-                "showline": true
-            },
-            "yaxis": {
-                "title": {
-                    "text": "",
-                    "font": {
+                "yaxis": {
+                    "title": {
+                        "text": "",
+                        "font": {
+                            "family": "Times New Roman",
+                            "size": 10
+                        }
+                    },
+                    "showticklabels": true,
+                    "tickfont": {
                         "family": "Times New Roman",
-                        "size": 10
-                    }
+                        "size": 15
+                    },
+                    "tickmode": "auto",
+                    "dtick": 10,
+                    "tickvals": "",
+                    "ticktext": "",
+                    "ticks": "outside",
+                    "range": [
+                        "",
+                        ""
+                    ],
+                    "autorange": true,
+                    "spikesides": false,
+                    "showgrid": true,
+                    "zeroline": false,
+                    "showline": true
                 },
-                "showticklabels": true,
-                "tickfont": {
-                    "family": "Times New Roman",
-                    "size": 15
-                },
-                "tickmode": "auto",
-                "dtick": 10,
-                "tickvals": "",
-                "ticktext": "",
-                "ticks": "outside",
-                "range": [
-                    "",
-                    ""
-                ],
-                "autorange": true,
-                "spikesides": false,
-                "showgrid": true,
-                "zeroline": false,
-                "showline": true
-            },
-            "xaxis": {
-                "title": {
-                    "text": "",
-                    "font": {
+                "xaxis": {
+                    "title": {
+                        "text": "",
+                        "font": {
+                            "family": "Times New Roman",
+                            "size": 10
+                        }
+                    },
+                    "showticklabels": true,
+                    "tickfont": {
                         "family": "Times New Roman",
-                        "size": 10
-                    }
-                },
-                "showticklabels": true,
-                "tickfont": {
-                    "family": "Times New Roman",
-                    "size": 15
-                },
-                "tickmode": "auto",
-                "dtick": 10,
-                "tickvals": "",
-                "ticktext": "",
-                "ticks": "outside",
-                "range": [
-                    "",
-                    ""
-                ],
-                "autorange": true,
-                "spikesides": false,
-                "showgrid": true,
-                "zeroline": false,
-                "showline": true
+                        "size": 15
+                    },
+                    "tickmode": "auto",
+                    "dtick": 10,
+                    "tickvals": "",
+                    "ticktext": "",
+                    "ticks": "outside",
+                    "range": [
+                        "",
+                        ""
+                    ],
+                    "autorange": true,
+                    "spikesides": false,
+                    "showgrid": true,
+                    "zeroline": false,
+                    "showline": true
+                }
             }
         }
-    }
-
 
         var plots = [
-        {
-            "type": "surface",
-            "hoverinfo": "x+y+z",
-            "colorscale": "Portland",
-            "opacity": 1,
-            "showscale": false,
-            "cmin": 0,
-            "cmax": 0,
-            "cauto": true,
-            "colorbar": {
-                "thickness": 30,
-                "dtick": 1,
-                "len": 1,
-                "x": 1.02,
-                "xpad": 10,
-                "y": 0.5,
-                "ypad": 10,
-                "tickfont": {
-                    "family": "Times New Roman",
-                    "size": 20
-                }
-            },
-            "contours": {
-                "x": {
-                    "show": false,
-                    "highlight": true,
-                    "start": 0,
-                    "end": 0,
-                    "size": 1,
-                    "color": "#000",
-                    "usecolormap": false,
-                    "width": 1
+            {
+                "type": "surface",
+                "hoverinfo": "x+y+z",
+                "colorscale": "Portland",
+                "opacity": 1,
+                "showscale": false,
+                "cmin": 0,
+                "cmax": 0,
+                "cauto": true,
+                "colorbar": {
+                    "thickness": 30,
+                    "dtick": 1,
+                    "len": 1,
+                    "x": 1.02,
+                    "xpad": 10,
+                    "y": 0.5,
+                    "ypad": 10,
+                    "tickfont": {
+                        "family": "Times New Roman",
+                        "size": 20
+                    }
                 },
-                "y": {
-                    "show": false,
-                    "highlight": true,
-                    "start": 0,
-                    "end": 0,
-                    "size": 1,
-                    "color": "#000",
-                    "usecolormap": false,
-                    "width": 1
+                "contours": {
+                    "x": {
+                        "show": false,
+                        "highlight": true,
+                        "start": 0,
+                        "end": 0,
+                        "size": 1,
+                        "color": "#000",
+                        "usecolormap": false,
+                        "width": 1
+                    },
+                    "y": {
+                        "show": false,
+                        "highlight": true,
+                        "start": 0,
+                        "end": 0,
+                        "size": 1,
+                        "color": "#000",
+                        "usecolormap": false,
+                        "width": 1
+                    },
+                    "z": {
+                        "show": false,
+                        "highlight": true,
+                        "start": 0,
+                        "end": 0,
+                        "size": 1,
+                        "color": "#000",
+                        "usecolormap": false,
+                        "width": 1
+                    }
                 },
-                "z": {
-                    "show": false,
-                    "highlight": true,
-                    "start": 0,
-                    "end": 0,
-                    "size": 1,
-                    "color": "#000",
-                    "usecolormap": false,
-                    "width": 1
-                }
-            },
-            "hidesurface": false
-        }
-    ]
+                "hidesurface": false
+            }
+        ]
 
-        var colorPallete = ['Greys','YlGnBu','Greens','YlOrRd','Bluered','RdBu','Reds','Blues','Picnic','Rainbow','Portland','Jet','Hot','Blackbody','Earth','Electric','Viridis','Cividis']
+        var colorPallete = ['Greys', 'YlGnBu', 'Greens', 'YlOrRd', 'Bluered', 'RdBu', 'Reds', 'Blues', 'Picnic', 'Rainbow', 'Portland', 'Jet', 'Hot', 'Blackbody', 'Earth', 'Electric', 'Viridis', 'Cividis']
 
         const clone = (x) => JSON.parse(JSON.stringify(x))
-        const typeList = ["Arial", "Balto", "Courier New", "Droid Sans","Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
+        const typeList = ["Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman"]
         const schemaLayout = {
             'type': 'object',
             'title': 'Schema for Layout',
-            "properties":{
-                "title":{
-                    "properties":{
-                        "font":{
-                            "properties":{
-                                "family":{
-                                    "enum":typeList
+            "properties": {
+                "title": {
+                    "properties": {
+                        "font": {
+                            "properties": {
+                                "family": {
+                                    "enum": typeList
                                 },
-                                "size":{
-                                    "type":"number"
+                                "size": {
+                                    "type": "number"
                                 }
                             }
                         }
                     }
                 },
-                "tickfont":{
-                    "properties":{
-                        "family":{
-                            "enum":typeList
+                "tickfont": {
+                    "properties": {
+                        "family": {
+                            "enum": typeList
                         },
-                        "size":{
-                            "type":"number"
+                        "size": {
+                            "type": "number"
                         }
                     }
                 },
@@ -235,17 +235,17 @@
         const schemaPlot = {
             type: 'object',
             title: 'Schema for plot',
-            "properties":{
-                "colorscale":{
+            "properties": {
+                "colorscale": {
                     "enum": colorPallete
                 },
-                "tickfont":{
-                    "properties":{
-                        "family":{
-                            "enum":typeList
+                "tickfont": {
+                    "properties": {
+                        "family": {
+                            "enum": typeList
                         },
-                        "size":{
-                            "type":"number"
+                        "size": {
+                            "type": "number"
                         }
                     }
                 },
@@ -253,7 +253,7 @@
         }
 
         const optionsLayout = {
-            onChangeJSON: (json)=>{layout=json; sendBack()},
+            onChangeJSON: (json) => { layout = json; sendBack() },
             onColorPicker: function (parent, color, onChange) {
                 new JSONEditor.VanillaPicker({
                     parent: parent,
@@ -261,23 +261,23 @@
                     popup: 'bottom',
                     onChange: function (color) {
                         var alpha = color.rgba[3]
-                        var hex = (alpha === 1) ? color.hex.substr(0, 7) :color.hex
+                        var hex = (alpha === 1) ? color.hex.substr(0, 7) : color.hex
                         onChange(hex)
                     },
                 }).show();
             },
             mode: 'form',
-            mainMenuBar:false,
-            navigationBar:false,
-            schema : schemaLayout
+            mainMenuBar: false,
+            navigationBar: false,
+            schema: schemaLayout
         };
 
         const optionsPlot = {
-            onChangeJSON: function(json){
+            onChangeJSON: function (json) {
                 ind = plotsel.selectedIndex
                 oldTitle = plots[ind].Title
                 plots[ind] = json
-                if(oldTitle != json.Title) updateSelect()
+                if (oldTitle != json.Title) updateSelect()
                 plotsel.selectedIndex = ind
                 sendBack()
             },
@@ -288,15 +288,15 @@
                     popup: 'bottom',
                     onChange: function (color) {
                         var alpha = color.rgba[3]
-                        var hex = (alpha === 1) ? color.hex.substr(0, 7) :color.hex
+                        var hex = (alpha === 1) ? color.hex.substr(0, 7) : color.hex
                         onChange(hex)
                     },
                 }).show();
             },
             mode: 'form',
-            mainMenuBar:false,
-            navigationBar:false,
-            schema : schemaPlot
+            mainMenuBar: false,
+            navigationBar: false,
+            schema: schemaPlot
         };
 
         const plotdiv = document.getElementById('plot')
@@ -305,32 +305,32 @@
         const laycon = document.getElementById('laycon')
         const plotsel = document.getElementById('plotselect')
         const main = document.getElementById('main')
-        var layout, plots, filenames=[];
+        var layout, plots, filenames = [];
 
         updateSelect()
-        const editorPlot = new JSONEditor(document.getElementById('jsoneditorplot'),optionsPlot, plots[0]);
-        const editorLayout = new JSONEditor(document.getElementById('jsoneditorlayout'),optionsLayout, layout);
+        const editorPlot = new JSONEditor(document.getElementById('jsoneditorplot'), optionsPlot, plots[0]);
+        const editorLayout = new JSONEditor(document.getElementById('jsoneditorlayout'), optionsLayout, layout);
         document.querySelectorAll("select option[value='']").forEach(el => el.remove());
 
-        function updateSelect(){
+        function updateSelect() {
             var op = "";
-            for(let i=0;i<filenames.length;i++){
-                op+= `<option>${filenames[i]}</option>`
+            for (let i = 0; i < filenames.length; i++) {
+                op += `<option>${filenames[i]}</option>`
             }
             document.getElementById('plotselect').innerHTML = op
         }
 
-        function setPlotJSON(index){
+        function setPlotJSON(index) {
             editorPlot.update(plots[index])
             laycon.style.left = '100%'
             plotcon.style.left = '5%'
             plotdiv.classList.add('navfocus')
             laydiv.classList.remove('navfocus')
-            setTimeout(function(){main.scrollTop = 0},500)
+            setTimeout(function () { main.scrollTop = 0 }, 500)
         }
 
 
-        function setLayoutJSON(){
+        function setLayoutJSON() {
             plotcon.style.left = '-100%'
             laycon.style.left = '5%'
             plotdiv.classList.remove('navfocus')
@@ -338,7 +338,7 @@
         }
 
 
-        function getUpdate(_, d){
+        function getUpdate(_, d) {
             [layout, plots] = d
             layout.aspectratio = layout.scene.aspectratio
             layout.xaxis = layout.scene.xaxis
@@ -346,8 +346,8 @@
             layout.zaxis = layout.scene.zaxis
             delete layout.scene
             delete layout.margin
-            
-            for(let i=0; i<plots.length; i++){
+
+            for (let i = 0; i < plots.length; i++) {
                 filenames.push(plots[i].Title)
                 delete plots[i].Title
             }
@@ -358,7 +358,7 @@
         }
 
 
-        function sendBack(){
+        function sendBack() {
             //convert layout
             let layot = clone(layout)
             layot.margin = {
@@ -369,7 +369,7 @@
                 "pad": 0
             }
             layot.scene = {
-                "aspectmode":"manual",
+                "aspectmode": "manual",
                 "aspectratio": layot.aspectratio,
                 "xaxis": layot.xaxis,
                 "yaxis": layot.yaxis,
@@ -380,28 +380,24 @@
             delete layot.yaxis
             delete layot.zaxis
 
-
-
             //convert plots
-            var plotOut = {"type":[]} 
-            for(t of plots){
-                for(i in t){
-                    if(!(i in plotOut)) plotOut[i] = []
+            var plotOut = { "type": [] }
+            for (t of plots) {
+                for (i in t) {
+                    if (!(i in plotOut)) plotOut[i] = []
                     plotOut[i].push(t[i])
                 }
                 plotOut["type"].push("surface") // adding the removed surface
             }
-
-            ipcRenderer.send('plotsetting',[plotOut,layot])
+            ipcRenderer.send('plotsetting', [plotOut, layot])
         }
 
 
-        function closePage(){
+        function closePage() {
             getCurrentWindow().close()
         }
-
         ipcRenderer.on('plotsetting', getUpdate)
-
     </script>
 </body>
+
 </html>

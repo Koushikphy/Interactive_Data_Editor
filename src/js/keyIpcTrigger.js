@@ -415,6 +415,9 @@ document.getElementById("valinput").onchange = document.getElementById('valBtn')
 }
 
 
-$('.eLink').click(function () {
+$('.eLink').on('click',function () {
     shell.openExternal(this.dataset.url)
 })
+
+// blank eventlistner due to the bug in chrome version
+$('input[type=number]').on('wheel', ()=>{})

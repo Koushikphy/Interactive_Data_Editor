@@ -92,9 +92,7 @@
     <script>
 
         document.getElementById('versionname').innerHTML = `Version ${require('../../package.json').version}`
-
         const { shell } = require('electron');
-
 
         document.querySelectorAll('img').forEach((elem) => {
             elem.onclick = function () {

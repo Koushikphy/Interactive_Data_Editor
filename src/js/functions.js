@@ -73,7 +73,7 @@ function setUpColumns() {
 }
 
 xCol.onchange = yCol.onchange = updateData
-zCol.onchange = (ev) => {colChanged(ev.target.selectedIndex);window.dispatchEvent(new Event('columnChanged')) }
+zCol.onchange = (ev) => { colChanged(ev.target.selectedIndex); window.dispatchEvent(new Event('columnChanged')) }
 
 
 
@@ -143,6 +143,7 @@ function fileReader(fname) {
     //clear everything....
     swapped = 0; xName = "X"; saved = true, index = [], firstSave = true;
     undoRedo.reset()
+    swapper.close();
 
 
     if (figurecontainer.data.length > 1) { // delete extra traces
@@ -489,6 +490,7 @@ class ValueSwapper {
         this.active = false
         this.affectMenu = ['extend', 'fill', 'filter', 'af', 'arf', 'smooth', "fixer", "tpl"]
         sCol.onchange = this.swapperColChanged
+        $('#intSwap').on('click', this.toggleColumn);
     }
 
     open = () => {
@@ -502,17 +504,18 @@ class ValueSwapper {
         thisTrace.line.color = thisTrace.marker.color = colorList[1]
         Plotly.addTraces(figurecontainer, thisTrace)
         Plotly.relayout(figurecontainer, { selectdirection: 'h' })
-        $("#sCol, #sColInp").show();
+        $("#sCol, #sColInp,#intSwap").show();
         $("#zCol").addClass("rightBorder")
         disableMenu(this.affectMenu)
         this.active = true
     }
 
     close = () => {
+        if (!this.active) return
         Plotly.deleteTraces(figurecontainer, 1)
         Plotly.relayout(figurecontainer, { selectdirection: 'any' });
         data = fullData[0]
-        $("#sCol, #sColInp").hide();
+        $("#sCol, #sColInp,#intSwap").hide();
         $("#zCol").removeClass("rightBorder")
         enableMenu(this.affectMenu)
         this.active = false
@@ -523,6 +526,13 @@ class ValueSwapper {
         updatePlot();
         if (!swapped) store.set("cols3d", col);
     };
+
+    toggleColumn = () => {
+        [col.s, col.z] = [col.z, col.s]
+        zCol.selectedIndex = col.z
+        sCol.selectedIndex = col.s
+        updatePlot();
+    }
 
 }
 
@@ -659,7 +669,7 @@ function createWindow(file, title, max = false) {
             nodeIntegration: true,
             enableRemoteModule: true,
             contextIsolation: false,
-            nativeWindowOpen:true
+            nativeWindowOpen: true
         }
     });
 

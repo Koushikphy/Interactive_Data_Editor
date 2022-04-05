@@ -381,7 +381,13 @@ class Smoother {
 
         this.inpElem.onmouseover = (ev) => { ev.target.focus() }
         this.inpElem.oninput = this.smoothApprox
-        document.getElementById('smoothApl').onclick = this.saveApprox
+        document.getElementById('smoothApl').onclick = () =>{
+            this.saveApprox()
+            if (!this.shown) {
+                showStatus('Press Alt+S to quickly apply the corrected approximation');
+                this.shown = true
+            }
+        }
     }
 
     colChangedProxy = () => {
@@ -468,10 +474,6 @@ class Smoother {
         viewer3D.update()
         // this.close()
         saved = false
-        if (!this.shown) {
-            showStatus('Press Alt+S to quickly apply the corrected approximation');
-            this.shown = true
-        }
     }
 }
 

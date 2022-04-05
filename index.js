@@ -1,7 +1,6 @@
 const remoteMain = require('@electron/remote/main')
 const electron = require('electron');
 const path = require('path');
-// const url = require('url');
 remoteMain.initialize()
 var mainWindow = null;
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';

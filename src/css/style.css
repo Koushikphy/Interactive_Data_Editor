@@ -15,6 +15,7 @@
 
 .eLink{
     margin: 0 0.3em;
+    cursor: pointer;
 }
 
 
@@ -256,6 +257,12 @@ button:active {
     opacity: 0.4;
 }
 
+#intSwap{
+    display: none;
+    cursor: pointer;
+    width: fit-content;
+    font-weight: bolder;
+}
 #sCol{
     display: none;
     margin-left: 3px !important;

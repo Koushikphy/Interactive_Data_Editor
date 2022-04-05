@@ -1,4 +1,3 @@
-
 const { Menu, MenuItem, app, process } = require('@electron/remote');
 const menu = Menu.getApplicationMenu();
 const os = require('os');
