@@ -360,6 +360,7 @@ function startDragBehavior() {
     });
     drag.on("dragend", () => {
         fullData[currentEditable] = data
+        saved= false;
         viewer3D.update()
     })
     d3.selectAll(`.scatterlayer .trace:nth-of-type(${currentEditable + 1}) .points path`).call(drag);
@@ -387,6 +388,7 @@ class Viewer_3D {
     isOpen = () => {
         return this.viewerWindow
     }
+    
 
     open = () => {
         if (this.viewerWindow) {
@@ -400,8 +402,8 @@ class Viewer_3D {
     }
 
     update = () => {
-        // data operations are very frequent to sending all of them is overkill, lets send them every 10 operations
-        if (this.counter % 10 == 0) analytics.add('ops')
+        // data operations are very frequent to sending all of them is overkill, lets send them every 25 operations
+        if (this.counter % 25 == 0) analytics.add('ops')
         this.counter++
 
         if (!this.viewerWindow) return;
@@ -424,6 +426,10 @@ class Viewer_3D {
             }
             this.viewerWindow.webContents.send("sdata", [s_data, swapped, col.z, data[0].length]);
         }, 500) // a half second pause before sending the data
+    }
+
+    close =()=>{
+        if(this.viewerWindow) this.viewerWindow.close();
     }
 }
 

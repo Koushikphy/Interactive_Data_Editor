@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
-    "start": "electron .",
+    "start": "electron --trace-warnings .",
     "dist": "electron-builder --publish never"
   },
   "build": {

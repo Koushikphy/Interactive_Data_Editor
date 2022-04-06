@@ -15,7 +15,7 @@ function keyDownfired() {
     }
 }
 
-window.addEventListener('keyup',function (e){
+window.addEventListener('keyup', function (e) {
     if ((document.activeElement.type != "text") && (e.key == 'm' || e.key == 'M' || e.key == 'ArrowDown' || e.key == 'ArrowUp')) {
         fired = false
         fullData[currentEditable] = data;
@@ -264,7 +264,7 @@ figurecontainer.oncontextmenu = () => { if (index.length) conMenu.popup() }// tr
 
 // make all the popups draggable
 for (let elem of document.getElementsByClassName('title')) {
-    elem.onmousedown = function (e) {
+    elem.addEventListener('mousedown', function (e) {
         x = e.clientX;
         y = e.clientY;
         document.onmouseup = (e) => {
@@ -277,7 +277,7 @@ for (let elem of document.getElementsByClassName('title')) {
             x = e.clientX;
             y = e.clientY;
         };
-    }
+    })
 }
 
 
@@ -303,13 +303,17 @@ ipcRenderer.on("back", (_, d) => {
 ipcRenderer.on("menuTrigger", ipcTrigger)
 
 ipcRenderer.on('checkClose', function (_, _) {
-    if (!saved) var res = dialog.showMessageBoxSync({
+    var res = 0;
+    if (!saved) res = dialog.showMessageBoxSync({
         type: "warning",
         title: "Unsaved data found!!!",
         message: "Quit without saving?",
         buttons: ['Yes', "No"]
     });
-    if (!res) ipcRenderer.send('checkClose', 'closeIt');
+    if (!res) {
+        viewer3D.close();
+        ipcRenderer.send('checkClose', 'closeIt')
+    };
 })
 
 
@@ -382,42 +386,50 @@ document.body.ondrop = (ev) => {
 
 // attach change with mouse scroll functionality to selectors
 for (let elem of document.getElementsByClassName('sWheel')) {
-    elem.onwheel = function (e) {
+    elem.addEventListener('wheel', function (e) {
         let cur = this.selectedIndex
         let max = this.length - 1
         let add = e.deltaY > 0 ? 1 : -1
         if ((max == cur && add == 1) || (cur == 0 && add == -1)) return
         this.selectedIndex = cur + add
         this.dispatchEvent(new Event('change'))
-    }
-    elem.onmouseleave = elem.blur
+    }, { passive: true });
+    elem.addEventListener('mouseleave', elem.blur);
 }
 
+
+
 // attach change X/Y with mouse scroll functionality to the figurecontainer and slider
-figurecontainer.onmousewheel = slider.onmousewheel = function (ev) {
-    ev.deltaY < 0 ? sliderChanged(+1) : sliderChanged(-1)
-}
+[figurecontainer, slider].forEach(elem => {
+    elem.addEventListener('wheel', (ev) => {
+        if (fileNames.length) ev.deltaY < 0 ? sliderChanged(+1) : sliderChanged(-1)
+    }, { passive: true })
+})
 
 
 document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`
 
-for (let el of document.getElementsByClassName('closbtn')) el.onclick = () => { $('.popup').hide() }
+$('.closbtn').on('click', () => { $('.popup').hide() })
 
-
-document.getElementById("dwBtn").onclick = () => {
+$('#dwBtn').on('click', () => {
     downloadImage($('#dfileName').val(), $('#imRes').val(), $('#fileFormat').val())
     $('.popup').hide()
-}
+})
 
-document.getElementById("valinput").onchange = document.getElementById('valBtn').onclick = () => {
+$('#valinput').on('change', () => {
     setValue($('#valinput').val())
     $('.popup').hide()
-}
+})
 
+$('#valBtn').on('click', () => {
+    setValue($('#valinput').val())
+    $('.popup').hide()
+})
 
-$('.eLink').on('click',function () {
+$('.eLink').on('click', function () {
     shell.openExternal(this.dataset.url)
 })
 
 // blank eventlistner due to the bug in chrome version
-$('input[type=number]').on('wheel', ()=>{})
+// remove it when upstream chrome fixes it
+$('input[type=number]').on('wheel', () => { })

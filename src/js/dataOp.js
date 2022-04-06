@@ -531,8 +531,8 @@ class AutoFixer {
     }
 
     saveValue = () => {
-        // console.log('ran saved value',!this.active,this.res)
         if (!this.active && this.res) return
+        undoRedo.save()
         data[th_in][col.z] = dpsy = this.res
         updatePlot()
         Plotly.restyle(figurecontainer, { 'name': ['Approximated'] }, 1)
@@ -541,6 +541,7 @@ class AutoFixer {
             showStatus('Press Alt+S to quickly apply the corrected approximation');
             this.shown = true
         }
+        viewer3D.update()
     }
 }
 const fixer = new AutoFixer()
