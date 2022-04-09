@@ -78,7 +78,11 @@ function filterData() {
     let condition = $("#flSel")[0].selectedIndex;
     let thrsh = parseFloat($("#flc").val());
     let fillVal = parseFloat($("#flf").val());
-    let colmn = $("#flcl").val().split(',').map(x => parseFloat(x) - 1);
+    let colmn = $("#flcl").val().split(',').map(x => {
+        let xT = parseFloat(x);
+        if(xT>data[0].length) alertElec('Invalid column number');
+        return parseFloat(x) - 1;
+    });
 
     data = applyCutOFF(data, colmn, condition, thrsh, fillVal)
 
