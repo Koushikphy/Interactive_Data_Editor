@@ -72,10 +72,10 @@ function setUpColumns() {
     sCol.selectedIndex = col.s;
 }
 
-xCol.onchange = yCol.onchange = updateData
-zCol.onchange = (ev) => { colChanged(ev.target.selectedIndex); window.dispatchEvent(new Event('columnChanged')) }
 
-
+xCol.addEventListener('change', (ev) => { updateData() })
+yCol.addEventListener('change', (ev) => { updateData() })
+zCol.addEventListener('change', (ev) => { colChanged(ev.target.selectedIndex); window.dispatchEvent(new Event('columnChanged')) })
 
 function updateData(init = false, all = true) {
     if (!init) {
@@ -84,7 +84,6 @@ function updateData(init = false, all = true) {
         col.z = zCol.selectedIndex;
     }
     th_in = 0;
-
     if (!swapped) {
         store.set(is3D ? "cols3d" : "cols2d", col)
     } else {
@@ -360,7 +359,7 @@ function startDragBehavior() {
     });
     drag.on("dragend", () => {
         fullData[currentEditable] = data
-        saved= false;
+        saved = false;
         viewer3D.update()
     })
     d3.selectAll(`.scatterlayer .trace:nth-of-type(${currentEditable + 1}) .points path`).call(drag);
@@ -388,7 +387,7 @@ class Viewer_3D {
     isOpen = () => {
         return this.viewerWindow
     }
-    
+
 
     open = () => {
         if (this.viewerWindow) {
@@ -428,8 +427,8 @@ class Viewer_3D {
         }, 500) // a half second pause before sending the data
     }
 
-    close =()=>{
-        if(this.viewerWindow) this.viewerWindow.close();
+    close = () => {
+        if (this.viewerWindow) this.viewerWindow.close();
     }
 }
 
