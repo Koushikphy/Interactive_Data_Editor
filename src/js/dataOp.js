@@ -385,6 +385,7 @@ class Smoother {
 
         this.inpElem.onmouseover = (ev) => { ev.target.focus() }
         this.inpElem.oninput = this.smoothApprox
+        this.allBlockElem.onclick = this.smoothApprox
         document.getElementById('smoothApl').onclick = () =>{
             this.saveApprox()
             if (!this.shown) {
@@ -432,7 +433,7 @@ class Smoother {
         fullData.splice(1, 1)
         fullDataCols.splice(1, 1)
         legendNames.splice(1, 1)
-        window.addEventListener('colChanged', this.colChangedProxy)
+        window.removeEventListener('columnChanged', this.colChangedProxy)
         window.removeEventListener('sliderChanged', this.sliderChangeProxy)
         window.removeEventListener('keydown', this.saveProxy)
     }
