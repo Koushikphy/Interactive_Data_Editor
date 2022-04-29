@@ -70,8 +70,8 @@ app.on('ready', function () {
         if(aInfo && loginCount==0){ // loginCount>0 means proxy was not autheticated
             callback(aInfo.id,aInfo.password);
         }else {
+            if(proxyPopUp) return // discard multiple popups
             reservedLoginCallback = callback
-            if(proxyPopUp) proxyPopUp.close() // discard multiple popups
             proxyPopUp = new BrowserWindow({
                 width: 400, 
                 height: 200, 
