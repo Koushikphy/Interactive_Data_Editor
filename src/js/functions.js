@@ -302,12 +302,12 @@ function setUpSlider() {
 function colChanged(value) {
     col.z = value;
 
-    if (smooth.isActive) {
-        fullDataCols[0].z = fullDataCols[1].z = value;
-        updatePlot(all = true)
-        viewer3D.update()
-        return
-    }
+    // if (smooth.isActive) {
+    //     fullDataCols[0].z = fullDataCols[1].z = value;
+    //     updatePlot(all = true)
+    //     viewer3D.update()
+    //     return
+    // }
 
     fullDataCols[currentEditable].z = col.z = value;
     legendNames[currentEditable] = path.basename(fileNames[currentEditable]) + ` ${(swapped ? col.x : col.y) + 1}:${col.z + 1}`
@@ -437,12 +437,12 @@ const viewer3D = new Viewer_3D()
 
 
 function changeEditable(index, reset = false) {
-    if (smooth.isActive) {
-        // when smooth mode is on just change the editable so that the other trace can be sent to the 3d Viewer
-        currentEditable = currentEditable ? 0 : 1;
-        viewer3D.update()
-        return
-    }
+    // if (smooth.isActive) {
+    //     // when smooth mode is on just change the editable so that the other trace can be sent to the 3d Viewer
+    //     currentEditable = currentEditable ? 0 : 1;
+    //     viewer3D.update()
+    //     return
+    // }
     if (swapper.active) {
         [col.s, col.z] = [col.z, col.s]
         sCol.selectedIndex = col.s;

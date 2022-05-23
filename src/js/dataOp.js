@@ -375,9 +375,7 @@ const fitData = new FitData()
 
 class Smoother {
     constructor() {
-        this.res = null;
         this.isActive = false;
-        this.shown3D = false
         this.shown = false
         this.inpElem = document.getElementById('smoothInp')
         this.allColElem = document.getElementById('smAllCol')
@@ -395,44 +393,25 @@ class Smoother {
         }
     }
 
-    colChangedProxy = () => {
-        if(!this.allColElem.checked) this.smoothApprox();
-    }
-    
-    sliderChangeProxy = () => {
-        if (!this.allBlockElem.checked) this.smoothApprox();
-    }
-
     open = () => {
         this.isActive = true
         Plotly.addTraces(figurecontainer, iniPointsSm);
-        fullData.push([])
-        fullDataCols.push(col)
-        legendNames.push('Approximated')
         this.smoothApprox()
         analytics.add('smoother')
-        if (!this.shown3D && is3D) {
-            showStatus('Press Ctrl+Tab to view the approximated data in 3D viewer.')
-            this.shown3D = true
-        }
 
-        window.addEventListener('columnChanged', this.colChangedProxy)
-        window.addEventListener('sliderChanged', this.sliderChangeProxy)
+        window.addEventListener('columnChanged', this.smoothApprox)
+        window.addEventListener('sliderChanged', this.smoothApprox)
         window.addEventListener('keydown', this.saveProxy)
     }
 
     close = () => {
-        currentEditable = 0;
         this.isActive = false
-        this.res = null
         try {
             Plotly.deleteTraces(figurecontainer, 1);
         } catch (error) {
             console.log('AutoSmoother Error: No trace found while trying to delete the approximated trace.')
         }
-        fullData.splice(1, 1)
-        fullDataCols.splice(1, 1)
-        legendNames.splice(1, 1)
+
         window.removeEventListener('columnChanged', this.colChangedProxy)
         window.removeEventListener('sliderChanged', this.sliderChangeProxy)
         window.removeEventListener('keydown', this.saveProxy)
@@ -441,29 +420,8 @@ class Smoother {
     smoothApprox = () => {
         if (!this.isActive) return
         const smtFactor = parseFloat(this.inpElem.value)
-        const notAllCol = !this.allColElem.checked
-        const notAllX = !this.allBlockElem.checked
-        const cz = col.z
         if (smtFactor > 1 || smtFactor < 0) alertElec("Smoothing factor must be in between 0 and 1")
-
-        var cx = col.x, cy = col.y;
-        // smooth in one direction 
-        this.res = data.map((dat, ii) => (notAllX && ii != th_in) ? dat : dat.map((y, ind) => (ind == cx || ind == cy || (notAllCol && ind != cz)) ? y : splineSmoother(dat[cy], y, smtFactor)))
-        // for 2D case, we have to smooth it in two direction...
-        //NOTE: here just ignoring the other side smoothing, this is simpler and the other side can be simply done with rotating the axis
-        // if(data.length!=1) {
-        //     var [cx, cy] = [cy, cx];
-        //     res = expRotate(res, cx, cy)
-        //     res = res.map(dat=> dat.map((y,ind)=> (ind ==cx || ind == cy|| (notAllCol && ind!=cz)) ? y : this.#smoothOut(dat[cy],y,smtFactor)))
-        //     var [cx, cy] = [cy, cx]
-        //     this.res= expRotate(res,cx,cy)
-        // } else{
-        //     this.res = res
-        // }
-        // this.res = res
-        // if (!this.initialDone) this.initalSetup()
-        fullData[1] = this.res
-        updatePlot()
+        Plotly.restyle(figurecontainer, { x: [dpsx], y: [splineSmoother(dpsx, dpsy, smtFactor)], 'name': ['Approximated'] }, 1)
     }
 
     saveProxy = (ev) =>{
@@ -471,9 +429,13 @@ class Smoother {
     }
 
     saveApprox = () => {
-        // modify the data with the approximation
-        if (this.res == null) return
-        data = this.res
+
+        const smtFactor = parseFloat(this.inpElem.value)
+        const notAllCol = !this.allColElem.checked
+        const notAllX = !this.allBlockElem.checked
+        const cz = col.z
+        var cx = col.x, cy = col.y;
+        data = data.map((dat, ii) => (notAllX && ii != th_in) ? dat : dat.map((y, ind) => (ind == cx || ind == cy || (notAllCol && ind != cz)) ? y : splineSmoother(dat[cy], y, smtFactor)))
         fullData[0] = data
         updatePlot()
         viewer3D.update()
@@ -506,7 +468,7 @@ class AutoFixer {
         Plotly.addTraces(figurecontainer, iniPointsSm);
         this.runFixer()
         window.addEventListener('sliderChanged', this.runFixer)
-        window.addEventListener('colChanged', this.runFixer)
+        window.addEventListener('columnChanged', this.runFixer)
         window.addEventListener('keydown', this.saveProxy)
     }
 
@@ -520,7 +482,7 @@ class AutoFixer {
             console.log('AutoFixer Error: No trace found while trying to delete the approximated trace.')
         }
         window.removeEventListener('sliderChanged', this.runFixer)
-        window.removeEventListener('colChanged', this.runFixer)
+        window.removeEventListener('columnChanged', this.runFixer)
         window.removeEventListener('keydown', this.saveProxy)
     }
 
