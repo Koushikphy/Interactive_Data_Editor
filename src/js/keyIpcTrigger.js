@@ -407,7 +407,7 @@ for (let elem of document.getElementsByClassName('sWheel')) {
 })
 
 
-document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`
+
 
 $('.closbtn').on('click', () => { $('.popup').hide() })
 

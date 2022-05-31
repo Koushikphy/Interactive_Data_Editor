@@ -51,7 +51,7 @@ function exportPDF({ width=1920, height=1080}={}){
         <body><img/></body>
         </html>`);
         Plotly.toImage(figurecontainer, {format: 'svg', width, height}).then(imgdata => {
-            var win = new remote.BrowserWindow({width, height, show: false})
+            var win = new BrowserWindow({width, height, show: false})
             win.on('closed', () => {win = null})
             win.loadURL(`data:text/html,${html}`);
             
@@ -72,8 +72,3 @@ function exportPDF({ width=1920, height=1080}={}){
         })
     })
 }
-
-
-// module.exports = {
-//     downloadImage : downloadImage
-// }

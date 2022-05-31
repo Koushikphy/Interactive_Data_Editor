@@ -27,7 +27,9 @@ Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
     modeBarButtonsToAdd: [[{
         name: 'Save the image',
         icon: Plotly.Icons.camera,
-        click() { $('#popupEx').show() }
+        click() { document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`;
+                   $('#popupEx').show() 
+                }
     }]]
 });
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
