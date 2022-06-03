@@ -153,10 +153,8 @@ button:active {
 
 
 .popup{
-    width : 'fit-content';
+    width : fit-content;
     text-align: center;
-    width: fit-content;
-
     height: fit-content;
     position: absolute;
     top: 200px;
@@ -165,7 +163,7 @@ button:active {
     border: 1px solid black;
     box-shadow: 8px 8px 6px -6px black;
     transition: opacity 0.3s;
-    visibility: hidden; */
+    /* visibility: hidden;  */
     display: none;
     background: white;
 }

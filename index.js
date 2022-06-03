@@ -100,7 +100,7 @@ app.on('ready', function () {
 
     mainWindow = new BrowserWindow({
         show: false,
-        minWidth: 1200,
+        minWidth: 800,
         title: "Interactive Data Editor",
         icon: path.join(__dirname, "figs/charts.png"),
         webPreferences: {
@@ -178,9 +178,15 @@ const helpMenu = {
             click() {
                 var childWindow = new BrowserWindow({
                     icon: path.join(__dirname, 'figs/charts.png'),
-                    minWidth: 500,
-                    maxWidth : 700,
+                    height:650,
                     width:600,
+                    minWidth: 600,
+                    maxWidth : 700,
+                    minHeight:650,
+                    maxHeight:700,
+                    maximizable:false,
+                    minimizable:false,
+                    modal:true,
                     show:false,
                     title: "Interactive Data Editor - About",
                     webPreferences: {
@@ -189,7 +195,6 @@ const helpMenu = {
                         contextIsolation:false,
                         nativeWindowOpen:true
                     },
-                    height:650
                 });
                 childWindow.loadFile('./src/html/about.html')
                 childWindow.setMenuBarVisibility(false);
