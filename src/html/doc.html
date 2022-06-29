@@ -249,7 +249,7 @@
                     for a single value of 1st axis which can be changed using the provided slider. 
                     
                     Now, for working with multiple data simultaneously files can be added through <label class="dom">File > Add File</label>.
-                    Otherwise you can add other columns of the same file using the plot list dash board.
+                    Otherwise, you can add other columns of the same file using the plot list dashboard.
                     Although all the editing features are available only for one plot at a moment, 
                     others lines can be selected alternatively to edit, from the same plot utility or by
                     pressing <label class="dom">Ctrl+TAB</label>.
@@ -266,7 +266,7 @@
                     saving for first time, the application will ask for name and location of the file to save the data. 
                     Any consecutive saves will save the data in that same file. 
                     As usual use <label class="dom">File > Save As</label> to save in a different file.
-                    If you are working with multiple files then this will save the primary working datafile only. Also plots can
+                    If you are working with multiple files then this will save the primary working data file only. Also plots can
                     be exported in any desired resolutions in five file formats including, pdf, jpeg, png, svg and webp.
                 </p>
 
@@ -280,14 +280,14 @@
             <div class="textarea">
                 <p> The main window has basically 3 parts, Menu bar, Tool bar, Plot area and the Plot list dashboard. 
                     Most of the menubar options are self-explanatory and are detailed in the following sections.
-                    Tool bar contains the column selector and slider. Appropriate columns can be set from the column selector, 
+                    Toolbar contains the column selector and slider. Appropriate columns can be set from the column selector, 
                     while setting primary editable plot and adding or removing plots is done from the Plot list dashboard. 
                     The slider, available only when working with 3D data, is used
                     to change the X/Y value for which the corresponding 2D cut is plotted.
                 </p>
             
                 <p> The Plot area is where you view the 2D plot and make your edits. It has few useful buttons which become
-                    visible when the mouse is over this area. This plot window is fully responsive and you can select points, zoom, pan,
+                    visible when the mouse is over this area. This plot window is fully responsive, and you can select points, zoom, pan,
                     set axis ranges, labels etc. interactively with mouse. The right click context menu, appear only when some data points are 
                     selected, can be used to quickly smooth, remove or change data. 
                 </p>
@@ -295,9 +295,9 @@
                     Apart from the main window this application has 2 external windows, which are accessed from the 'windows' menu in Menubar. 
                     Using the <label class='dom'>3D Plot Viewer</label> one can
                     view the complete 3D plot in real time as you edit the the 2D projection on main window. Two types of 3D plots are available
-                    here, surface type and wireframe type and either one can be selected using the provided menu. By default it shows only the surface being edited,
+                    here, surface type and wireframe type and either one can be selected using the provided menu. By default, it shows only the surface being edited,
                     check <label class='dom'>Plot all</label> to show all the traces.
-                    On the otherhand, with <label class='dom'>Spreadsheet</label> one can check the data in spreadsheet like editor, 
+                    On the other hand, with <label class='dom'>Spreadsheet</label> one can check the data in spreadsheet like editor, 
                     with all basic excel like feature e.g. editing, sorting, applying formulas etc. This is useful if you want to edit the 
                     data directly instead of the graphical way.
                 </p>
@@ -319,7 +319,7 @@
                 <ol>
                 <li><b><i> Dragging data points.</i></b> You can edit a data points by dragging it with mouse or
                     using the keyboard Up/Down navigation keys. To drag multiple points select the points and just drag any of them.
-                    By default data points are movable only along vertical direction. If you want to move the data points along
+                    By default, data points are movable only along vertical direction. If you want to move the data points along
                     horizontal direction too, then check <label for="" class="dom">Edit > Points movable horizontally</label>.
                     <p></p>
                 </li>
@@ -337,7 +337,7 @@
                         complete data altogether. Open <label class="dom">Edit > Auto smoother</label> and chose a desired smoothing scale to get a smoothing approximation 
                         to the original data. 
                         
-                        To quickly rectily bad data points one can use the <b>Auto Corrector</b> option from the <label class="dom">Edit </label> menu. Chose proper smoothness and
+                        To quickly rectify bad data points one can use the <b>Auto Corrector</b> option from the <label class="dom">Edit </label> menu. Chose proper smoothness and
                         cutoff for locating the bad data and the software will provide with an corrected approximation. Press <label class="dom">Apply</label> or <label class="dom">Alt+S</label>
                         button to apply the changes
                         
@@ -382,7 +382,7 @@
                         Go to <label for="" class="dom">Data > Fill Missing Values</label> and fill out the start,
                         stop and step values to fill the missing values in the data. Intermediate points will be filled using a Cubic spline and outside
                         values will just be copied from the nearest available value or by fitting a quadratic regression function.
-                        This operation can be applied to limited part of the data by onchecking the <label for="" class="dom">Set as grid </label> option
+                        This operation can be applied to limited part of the data by on checking the <label for="" class="dom">Set as grid </label> option
                         <p></p>
                 </li>
             
@@ -449,7 +449,7 @@
                 <li>
                     <b><i>Spreadsheet.</i></b>
                         This software includes a spreadsheet like editor and can be opened through 
-                        <label for="" class="dom">Windows > Spreadsheet</label> with some of basic features 
+                        <label for="" class="dom">Windows > Spreadsheet</label> with some basic features 
                         like that of MS Excel including formula support. This can be used to view, edit, copy-paste data directly. 
                 <p></p>
                 </li>
@@ -561,8 +561,7 @@
         }
         // showThis(3)
         const {shell,ipcRenderer} = require("electron");
-        // ipcRenderer.on("doc", console.log)
-        // ipcRenderer.on("doc", ()=> {console.log('egeger'); showThis(3)})
+        
         document.getElementById('charsubtitle').innerHTML =`Version ${require('../../package.json').version}` 
     </script>
 </body>
