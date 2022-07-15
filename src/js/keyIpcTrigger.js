@@ -204,6 +204,7 @@ class AutoSaveUtil {
 
     setTimeOut = (val) => {
         this.timeOut = parseInt(val)
+        store.set('autosave', this.timeOut)
         this.autoSaveMenuItems.forEach(e => { e.checked = false })
         this.autoSaveMenuItems[{ 0: 0, 1: 1, 5: 2, 10: 3 }[this.timeOut]].checked = true
         this.resetReminder()
