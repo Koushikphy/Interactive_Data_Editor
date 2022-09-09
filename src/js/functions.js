@@ -514,6 +514,7 @@ class ValueSwapper {
         $("#sCol, #sColInp,#intSwap").show();
         $("#zCol").addClass("rightBorder")
         disableMenu(this.affectMenu)
+        sidebar.closeSideBar()
         this.active = true
     }
 
@@ -904,7 +905,9 @@ class Analytics {
         if (app.isPackaged) {
             var shown = store.get('shown', 0)
             store.set('shown', shown + 1)
-            if (shown % 10 == 0) { // shown after every 10 opening
+            // if (shown % 10 == 0) { // shown after every 10 opening
+            // }
+            if(shown==0){
                 setTimeout(() => {
                     showInfo(
                         "Note from developer !",
