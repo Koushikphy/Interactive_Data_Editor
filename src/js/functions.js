@@ -138,13 +138,14 @@ function fileReader(fname) {
     });
     if (res) return;
 
-    data = fileOpener(fname)
-    is3D = data.length != 1;
 
     //clear everything....
     swapped = 0; xName = "X"; saved = true, index = [], firstSave = true;
     undoRedo.reset()
     swapper.close();
+    
+    data = fileOpener(fname)
+    is3D = data.length != 1;
 
 
     if (figurecontainer.data.length > 1) { // delete extra traces
@@ -558,6 +559,30 @@ function saveAs() {
     saveData();
     firstSave = false;
 }
+
+
+function parseSaveOption(){
+
+    getVal = (x) => document.getElementById(x).value.trim()
+
+    let delimiter = getVal("saveDel")
+    let format = getVal("saveForm").split(',')
+    let saveCols = getVal("saveCol").split(',')
+    let saveHead = getVal("saveHead")
+    let colLength = data[0].length
+
+    if(delimiter=="") delimiter ="\t"
+    
+    if(format=="") format =".8g"
+    if(format.length==1) format = new Array(colLength).fill(format)
+    if(format.length!=1) alertElec("Format should be a single specifier or secifier for each column")
+
+    // if(saveCols=="")
+
+
+
+}
+
 
 
 function saveData() {

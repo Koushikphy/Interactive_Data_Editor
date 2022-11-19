@@ -5,7 +5,7 @@ authors:
   given-names: "Koushik"
   orcid: "https://orcid.org/0000-0001-9093-2255"
 title: "Interactive Data Editor"
-version: 2.12.0
+version: 2.12.1
 doi: https://doi.org/10.5281/zenodo.3947507
-date-released: 2022-04-14
+date-released: 2022-11-19
 url: "https://github.com/Koushikphy/Interactive_Data_Editor"

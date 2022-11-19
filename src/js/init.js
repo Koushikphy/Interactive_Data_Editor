@@ -59,10 +59,10 @@ function openFileFromArgs(fileList) {
             fileReader(files[0])
             for (let i = 1; i < files.length; i++) {
                 addNewFile(files[i])
-
             }
         } catch (error) {
             console.log(error)
+            app.quit();  // quit the app if loading from terminal fails
         }
     }
 }

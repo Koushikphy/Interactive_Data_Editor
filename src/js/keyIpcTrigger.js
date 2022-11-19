@@ -211,8 +211,8 @@ class AutoSaveUtil {
     }
 
     resetReminder = () => {
-        if (this.timeOut == 0) return
         clearInterval(this.reminderInterval)
+        if (this.timeOut == 0) return
         this.reminderInterval = setInterval(() => {
             if (firstSave) {
                 showStatus("You may want to save the file.")

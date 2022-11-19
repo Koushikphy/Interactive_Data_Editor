@@ -1,3 +1,8 @@
+## v2.12.1
+1. Bug with value swapping resolved.
+2. Auto saving error fixed.
+3. Fixed blank screen on loading bad data.
+
 ## v2.12.0
 1. *Auto Corrector*: Automatically detect and rectify bad data.
 2. Bug fix for undo redo.

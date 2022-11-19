@@ -25,7 +25,7 @@ function replaceWithHome(name) { // replaces full path name with the short one
 
 
 function alertElec(msg, type = 1, title = "Failed to execute.") {
-    dialog.showMessageBox(getCurrentWindow(), {
+    dialog.showMessageBoxSync(getCurrentWindow(), {
         type: type == 1 ? "error" : 'warning',
         title: title,
         message: msg,
@@ -52,8 +52,6 @@ function parseData(strDps) {
             line.trim().split(/[\s\t]+/).map(val => {
                 y = parseFloat(val)
                 if (isNaN(y)) alertElec("Bad data found !!!\nCheck the file before opening.")
-                // throw "badData"
-                // }
                 return y
             })
         ))
