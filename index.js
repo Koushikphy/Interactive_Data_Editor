@@ -267,6 +267,14 @@ const homeMenuTemplate = [
                 }
             },
             {
+                label: "Save Preference",
+                enabled: false,
+                id: 'savepref',
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "savepref");
+                }
+            },
+            {
                 label : "Export as image",
                 click() {
                     mainWindow.webContents.send("menuTrigger", "trigdown");
@@ -329,7 +337,7 @@ const homeMenuTemplate = [
                         if(mainWindow!=window) window.close()
                       })
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'tax', 'swapen', "extend", "fill", "filter", 'rgfit', 'lmfit']) {
+                    for (let i of ['save', 'saveas', 'savepref', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'tax', 'swapen', "extend", "fill", "filter", 'rgfit', 'lmfit']) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     mainWindow.reload();

@@ -143,6 +143,9 @@ function ipcTrigger(_, d) {
     } else if (d == 'save' && !firstSave) {
         saveData()
 
+    } else if (d == 'savepref') {
+        saveProp.createui()
+
     } else if (d == '3dview') {
         viewer3D.open()
         analytics.add('3Dviewer')

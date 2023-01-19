@@ -27,9 +27,10 @@ Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
     modeBarButtonsToAdd: [[{
         name: 'Save the image',
         icon: Plotly.Icons.camera,
-        click() { document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`;
-                   $('#popupEx').show() 
-                }
+        click() {
+            document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`;
+            $('#popupEx').show()
+        }
     }]]
 });
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
@@ -49,7 +50,7 @@ function setUpFor2d() {
     $('#yLabel').html('X')
     $('#zLabel').html('Y')
     col = store.get("cols2d", { x: 0, y: 0, z: 0, s: 0 })
-    enableMenu(['save', 'saveas', 'tfs', 'tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf', 'rgfit', 'lmfit', 'smooth', 'fixer'])
+    enableMenu(['save', 'saveas', 'savepref', 'tfs', 'tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf', 'rgfit', 'lmfit', 'smooth', 'fixer'])
     disableMenu(["tax", '3dview'])
 }
 
@@ -60,7 +61,7 @@ function setUpFor3d() {
     $('#zLabel').html('Z')
     setUpSlider();
     col = store.get("cols3d", { x: 0, y: 0, z: 0, s: 0 })
-    enableMenu(['save', 'saveas', 'tfs', 'tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf', 'tax', '3dview', 'smooth', 'fixer'])
+    enableMenu(['save', 'saveas', 'savepref', 'tfs', 'tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf', 'tax', '3dview', 'smooth', 'fixer'])
     disableMenu(["rgfit", 'lmfit'])
 }
 
@@ -143,7 +144,7 @@ function fileReader(fname) {
     swapped = 0; xName = "X"; saved = true, index = [], firstSave = true;
     undoRedo.reset()
     swapper.close();
-    
+
     data = fileOpener(fname)
     is3D = data.length != 1;
 
@@ -190,6 +191,7 @@ function fileReader(fname) {
     toolbarutil.closeToolBar()
     autoSaver.resetReminder()
     sidebar.buildSideBar()
+    saveProp.reset()
     analytics.add('fileLoaded')
 }
 
@@ -561,31 +563,37 @@ function saveAs() {
 }
 
 
-function parseSaveOption(){
+function saveData() {
+    try {
+        var formats = saveProp.formats.map(Plotly.d3.format)
+    } catch (error) {
+        alertElec("Invalid write format")
+    }
 
-    getVal = (x) => document.getElementById(x).value.trim()
+    var checkCol = []
+    saveProp.checks.forEach((e, i) => {if (e) checkCol.push(i) })
 
-    let delimiter = getVal("saveDel")
-    let format = getVal("saveForm").split(',')
-    let saveCols = getVal("saveCol").split(',')
-    let saveHead = getVal("saveHead")
-    let colLength = data[0].length
+    try{
+        var tmpData = swapped ? expRotate(data, col.y, col.x) : data
+        var txt = tmpData.map(x => transpose(x).map(y =>
+            checkCol.map(ind => formats[ind](y[ind])).join('\t')
+        ).join('\n')).join('\n\n')
 
-    if(delimiter=="") delimiter ="\t"
-    
-    if(format=="") format =".8g"
-    if(format.length==1) format = new Array(colLength).fill(format)
-    if(format.length!=1) alertElec("Format should be a single specifier or secifier for each column")
-
-    // if(saveCols=="")
-
-
-
+        fs.writeFileSync(saveNames[currentEditable], txt);
+        showStatus("Data Saved in file " + replaceWithHome(saveNames[currentEditable]));
+        saved = true;
+        autoSaver.resetReminder()
+        analytics.add('saved')
+    } catch (error) {
+        showStatus("Something went wrong! Couldn't save the data...")
+        console.error(error)
+        return false;
+    }
 }
 
 
 
-function saveData() {
+function saveData_old() {
     var tmpData = swapped ? expRotate(data, col.y, col.x) : data
     // https://www.npmjs.com/package/d3-format#locale_formatPrefix
     //^ using d3 format, `g` means decimal/exponent notation, rounded to significant digits
@@ -932,7 +940,7 @@ class Analytics {
             store.set('shown', shown + 1)
             // if (shown % 10 == 0) { // shown after every 10 opening
             // }
-            if(shown==0){
+            if (shown == 0) {
                 setTimeout(() => {
                     showInfo(
                         "Note from developer !",
@@ -973,3 +981,48 @@ class Analytics {
 }
 
 const analytics = new Analytics()
+
+
+class SaveProperties {
+    // https://docs.python.org/3/library/string.html#format-specification-mini-language
+    constructor() {
+    }
+
+    reset() { // should load on every file load and also in every column change
+        this.colLenght = data[0].length
+        this.formats = new Array(this.colLenght).fill('.8g')
+        this.checks = new Array(this.colLenght).fill(true)
+    }
+
+    createui = () => { // reset on every file load
+        document.getElementById('sBody').innerHTML = data[0].map((_, i) => `
+        <tr>
+            <td> ${i + 1}. </td>
+            <td><input type="checkbox" class="sCheck" ${this.checks[i] ? 'checked' : ''}></td>
+            <td><input type="text" class="sFormat" value=${this.formats[i]}></td>
+        </tr>
+        `).join('')
+        $('#popAdSv').show()
+        document.getElementById('popSv').addEventListener('click', () => {
+            try {
+                this.getchecks()
+                this.getformat()
+            } catch (error) {
+                alertElec("Invalid write format")
+            }
+            $('#popAdSv').hide()
+        })
+    }
+
+    getchecks = () => {
+        var ts = $('tBody input:checkbox')
+        for (let i = 0; i < ts.length; i++) this.checks[i] = ts[i].checked ;
+    }
+
+    getformat = () => {
+        var ts = $('tBody input:text')
+        for (let i = 0; i < ts.length; i++) this.formats[i] =  ts[i].value ;
+    }
+}
+
+const saveProp = new SaveProperties()

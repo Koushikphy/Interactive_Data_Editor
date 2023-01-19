@@ -238,21 +238,34 @@
         </div>
 
 
-        <!-- Advanced save popup
-        <div id="popupSetVal" class="popup" style="display: block">
+        <!-- Advanced save popup -->
+        <div id="popAdSv" class="popup">
             <div class="title">
                 <label class='titletxt'>Save Options</label>
                 <b class='closbtn' title="Close">X</b>
             </div>
-            <div class="popmain adSave">
+            <div class="popmain" style="text-align: center;padding: 0.5em">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="padding-right: 10px;">Use column</th>
+                            <th>Format</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sBody"></tbody>
+                </table> 
 
-                <label title="Field delimiter to separate the values">Columns delimiter</label> <input type="text" id='saveDel' value="\t">
-                <label title="Single or sequence of format">Save format</label> <input type="text" id='saveForm'>
-                <label title="Which columns to store">Use columns</label> <input type="text" id='saveCol'>
-                <label title="Any text to put at the top of the file">Header</label> <input type="text" id='saveHead'>
-
+                <div style="text-align: left;margin-top: 0.3em;font-size: 0.75em;margin-bottom: 0.7em;">
+                    &#x1F6C8;<a title="Complete Format Specification" href='javascript:void(0);'
+                        style="text-decoration: underline;color: blue;font-style: italic;"
+                        onclick="shell.openExternal('https://docs.python.org/3/library/string.html#format-specification-mini-language')">Complete Format Specification</a>
+                </div>
+                <div>
+                    <input id="popSv"type="submit" value="Save">
+                </div>
             </div>
-        </div> -->
+
+        </div> 
 
 
         <div id="branding">

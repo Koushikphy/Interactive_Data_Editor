@@ -1,3 +1,6 @@
+## v2.13.0
+1. **Save Preference**: Specify which columns to write and what format to use.
+
 ## v2.12.1
 1. Bug with value swapping resolved.
 2. Auto saving error fixed.
