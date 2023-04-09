@@ -921,7 +921,7 @@ class sideBarUtil {
 
 const sidebar = new sideBarUtil()
 
-class Analytics {
+class AnalyticsOld {
     constructor() {
         // read from userdata if client id is already given or is it a new client
         this.cid = store.get('cid')
@@ -977,6 +977,16 @@ class Analytics {
                 console.error("Cannot post to analytics server")
             }
         })
+    }
+}
+
+// analytics proxy
+class Analytics {
+    constructor() {
+    }
+    add(){
+    }
+    send(){
     }
 }
 

@@ -59,7 +59,7 @@ window.addEventListener('keydown', function (e) {
     } else if ((e.key == "d" || e.key == "D") && index.length) {
         deleteInterpolate()
 
-    } else if ((e.key == "e" || e.key == "E") && index.length) {
+    } else if ((e.key == "e" || e.key == "E") && index.length && enable) {
         deleteExtrapolate()
 
     } else if ((e.key == "k" || e.key == "K") && index.length) {
@@ -233,11 +233,12 @@ const autoSaver = new AutoSaveUtil()
 const conMenu = Menu.buildFromTemplate([
     {
         label: 'Change Value',
+        visible: enable,
         click() { $('#popupSetVal').show() }
     }, {
         label: 'Change Sign',
         accelerator: 'C',
-        click: changeSign
+        click: changeSign,
     }, {
         label: 'Remove Data',
         accelerator: 'X',
@@ -256,7 +257,8 @@ const conMenu = Menu.buildFromTemplate([
             }, {
                 label: 'Regression Fitting',
                 accelerator: 'E',
-                click: deleteExtrapolate
+                click: deleteExtrapolate,
+                visible: enable
             },
         ]
     }

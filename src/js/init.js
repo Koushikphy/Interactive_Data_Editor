@@ -49,7 +49,7 @@ var recentFiles = store.get('files', [])
 if (recentFiles.length != 0) recentMenu();
 
 var recentLocation = store.get('recent', os.userInfo().homedir)
-
+const enable =  store.get('enable', true) 
 
 function openFileFromArgs(fileList) {
     if (!fileList.length) return

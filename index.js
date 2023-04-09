@@ -41,8 +41,13 @@ ipcMain.on('checkClose', function (e, d) {
 
 
 const fs = require('fs')
+const os = require('os')
 const file = path.join(app.getPath('userData'),'ide.conf')
 var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
+
+var enable = ! fs.existsSync(path.join(os.userInfo().homedir,'.iderc'))
+info.enable = enable
+fs.writeFileSync(file,JSON.stringify(info, null, 4))
 
 
 // for capturing proxy authentication request
@@ -65,6 +70,9 @@ app.on('ready', function () {
         if (!authInfo.isProxy) return // not proxy related login
         if (loginCount > 5) return // try for login 5 times if fails then just ignore
         event.preventDefault()
+        // if (authInfo.host == "proxy.iacs.res.in") enable = false
+        // info.enable = enable
+        // fs.writeFileSync(file,JSON.stringify(info, null, 4))
         var aInfo = info.proxy;
         // console.log(aInfo, loginCount);
         if(aInfo && loginCount==0){ // loginCount>0 means proxy was not autheticated
@@ -399,6 +407,7 @@ const homeMenuTemplate = [
         submenu: [{
             label: "Fill Values",
             enabled: false,
+            visible : enable,
             id: "fill",
             click() {
                 mainWindow.webContents.send("menuTrigger", "fill")
@@ -407,6 +416,7 @@ const homeMenuTemplate = [
             label: "Extend Data",
             id: "extend",
             enabled: false,
+            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "extend")
             }
@@ -414,6 +424,7 @@ const homeMenuTemplate = [
             label: "Filter Data",
             id: 'filter',
             enabled: false,
+            visible : enable,
             click() {
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
@@ -421,6 +432,7 @@ const homeMenuTemplate = [
             label: "Auto Smoother",
             enabled: false,
             id: 'smooth',
+            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "smooth")
             }
@@ -428,6 +440,7 @@ const homeMenuTemplate = [
             label: "Auto Corrector",
             enabled: false,
             id: 'fixer',
+            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "fixer")
             }
@@ -435,6 +448,7 @@ const homeMenuTemplate = [
             label: "Points movable horaizontally",
             checked: false,
             type: "checkbox",
+            visible : enable,
             id :"pamh",
             click() {
                 mainWindow.webContents.send("menuTrigger", "pamh")
@@ -449,12 +463,14 @@ const homeMenuTemplate = [
                 label: "Polynomial Regression Fitting",
                 enabled: false,
                 id:"rgfit",
+                visible : enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "rgfit")
                 }
             },{
                 label: "Levenberg-Marquardt Fitting",
                 enabled: false,
+                visible : enable,
                 id :"lmfit",
                 click() {
                     mainWindow.webContents.send("menuTrigger", "lmfit")
@@ -476,6 +492,7 @@ const homeMenuTemplate = [
                 label: "Spreadsheet",
                 enabled: false,
                 id: "spr",
+                visible : enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "spread")
                 }
