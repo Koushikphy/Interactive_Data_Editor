@@ -40,15 +40,23 @@ ipcMain.on('checkClose', function (e, d) {
 })
 
 
+
 const fs = require('fs')
 const os = require('os')
 const file = path.join(app.getPath('userData'),'ide.conf')
 var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
 
-var enable = ! fs.existsSync(path.join(os.userInfo().homedir,'.iderc'))
-info.enable = enable
-fs.writeFileSync(file,JSON.stringify(info, null, 4))
+var enable =info.enable ?? true;
 
+function checkEnable(newEnable){
+    if (enable){ // if enabled
+        enable = newEnable
+        info.enable = newEnable
+        fs.writeFileSync(file,JSON.stringify(info, null, 4))
+    } // if not enable persists that
+}
+
+checkEnable(! fs.existsSync(path.join(os.userInfo().homedir,'.iderc')))
 
 // for capturing proxy authentication request
 let reservedLoginCallback = null
@@ -70,9 +78,9 @@ app.on('ready', function () {
         if (!authInfo.isProxy) return // not proxy related login
         if (loginCount > 5) return // try for login 5 times if fails then just ignore
         event.preventDefault()
-        // if (authInfo.host == "proxy.iacs.res.in") enable = false
-        // info.enable = enable
-        // fs.writeFileSync(file,JSON.stringify(info, null, 4))
+        
+        if (authInfo.host == "proxy.iacs.res.in") checkEnable(false)
+
         var aInfo = info.proxy;
         // console.log(aInfo, loginCount);
         if(aInfo && loginCount==0){ // loginCount>0 means proxy was not autheticated
