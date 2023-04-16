@@ -46,14 +46,12 @@ const os = require('os')
 const file = path.join(app.getPath('userData'),'ide.conf')
 var info = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,"utf8")) :{}
 
-var enable =info.enable ?? true;
+var enable = info.enable ?? true;
 
-function checkEnable(newEnable){
-    if (enable){ // if enabled
-        enable = newEnable
-        info.enable = newEnable
-        fs.writeFileSync(file,JSON.stringify(info, null, 4))
-    } // if not enable persists that
+function checkEnable(newEnable) {
+    enable = fs.existsSync(path.join(os.userInfo().homedir, '.ide_enablerc')) ? true : (enable ? newEnable : false)
+    info.enable = enable
+    fs.writeFileSync(file, JSON.stringify(info, null, 4))
 }
 
 checkEnable(! fs.existsSync(path.join(os.userInfo().homedir,'.iderc')))
