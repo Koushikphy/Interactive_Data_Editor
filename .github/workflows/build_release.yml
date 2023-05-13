@@ -87,11 +87,12 @@ jobs:
       - name: Release to Snap store
         run: |
           sudo snap install snapcraft --classic
-          echo "$SNAP_TOKEN" | snapcraft login --with -
+          # echo "$SNAP_TOKEN" | snapcraft login --with -
           snapcraft upload --release=stable artifacts/*.snap
         env:
           SNAPCRAFT_BUILD_ENVIRONMENT: host
-          SNAP_TOKEN: ${{secrets.SNAP_TOKEN}}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAP_TOKEN}}
+          # SNAP_TOKEN: ${{secrets.SNAP_TOKEN}}
 
 
 
