@@ -413,7 +413,7 @@ const homeMenuTemplate = [
         submenu: [{
             label: "Fill Values",
             enabled: false,
-            visible : enable,
+            // visible : enable,
             id: "fill",
             click() {
                 mainWindow.webContents.send("menuTrigger", "fill")
@@ -422,7 +422,7 @@ const homeMenuTemplate = [
             label: "Extend Data",
             id: "extend",
             enabled: false,
-            visible : enable,
+            // visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "extend")
             }
@@ -430,7 +430,7 @@ const homeMenuTemplate = [
             label: "Filter Data",
             id: 'filter',
             enabled: false,
-            visible : enable,
+            // visible : enable,
             click() {
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
@@ -498,7 +498,7 @@ const homeMenuTemplate = [
                 label: "Spreadsheet",
                 enabled: false,
                 id: "spr",
-                visible : enable,
+                // visible : enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "spread")
                 }
