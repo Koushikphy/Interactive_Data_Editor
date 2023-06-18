@@ -297,6 +297,7 @@ const homeMenuTemplate = [
             ,{
                 label : "Auto Save",
                 id: 'autosave',
+                visible: enable,
                 submenu:[
                     {
                         label : "Off",
@@ -337,6 +338,7 @@ const homeMenuTemplate = [
             },
             {
                 label: "3D plotter",
+                visible: enable,
                 click() {
                     mainWindow.loadFile('./src/html/Plotter.html')
                     Menu.setApplicationMenu(plotMenu);
@@ -345,6 +347,7 @@ const homeMenuTemplate = [
             {
                 label: 'Reload',
                 accelerator: 'CmdOrCtrl+R',
+                visible: enable,
                 click() {
                     mainWindow.webContents.send('windowReload','closeExtra')
                     BrowserWindow.getAllWindows().forEach((window) => {
@@ -400,11 +403,13 @@ const homeMenuTemplate = [
                 accelerator: 'CmdOrCtrl+K',
                 id: 'tfs',
                 enabled: false,
+                visible: enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "pdash")
                 }
             },{
-                role: 'togglefullscreen' 
+                role: 'togglefullscreen' ,
+                visible:enable
             }
         ]
     },
@@ -430,7 +435,7 @@ const homeMenuTemplate = [
             label: "Filter Data",
             id: 'filter',
             enabled: false,
-            // visible : enable,
+            visible : enable,
             click() {
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }

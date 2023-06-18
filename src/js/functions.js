@@ -35,8 +35,7 @@ Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
 });
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
-
-enableMenu = (list) => { for (let i of list) menu.getMenuItemById(i).enabled = true }
+enableMenu = (list) => { for (let i of list)  menu.getMenuItemById(i).enabled = (! enable && ! ['tfs'].includes(i)) }
 disableMenu = (list) => { for (let i of list) menu.getMenuItemById(i).enabled = false }
 hideMenu = (list) => { for (let i of list) menu.getMenuItemById(i).visible = false }
 visibleMenu = (list) => { for (let i of list) menu.getMenuItemById(i).visible = true }
