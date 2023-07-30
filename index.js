@@ -247,6 +247,7 @@ const homeMenuTemplate = [
             {
                 label: "Add file",
                 accelerator: 'CmdOrCtrl+Shift+O',
+                visible: enable,
                 enabled: false,
                 id: 'af',
                 click() {
@@ -256,6 +257,7 @@ const homeMenuTemplate = [
             {
                 label: 'Add Recent Files',
                 enabled: false,
+                visible: enable,
                 id: 'arf',
                 submenu: [],
             },
@@ -282,6 +284,7 @@ const homeMenuTemplate = [
             },
             {
                 label: "Save Preference",
+                visible: enable,
                 enabled: false,
                 id: 'savepref',
                 click() {
@@ -290,6 +293,7 @@ const homeMenuTemplate = [
             },
             {
                 label : "Export as image",
+                visible: enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "trigdown");
                 }
