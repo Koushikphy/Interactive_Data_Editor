@@ -35,10 +35,15 @@ Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
 });
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
-enableMenu = (list) => { for (let i of list)  menu.getMenuItemById(i).enabled = ['tfs'].includes(i) ? enable : true }
-disableMenu = (list) => { for (let i of list) menu.getMenuItemById(i).enabled = false }
-hideMenu = (list) => { for (let i of list) menu.getMenuItemById(i).visible = false }
-visibleMenu = (list) => { for (let i of list) menu.getMenuItemById(i).visible = true }
+function remoevElem(list){
+    const elemToRemove = ["rgfit", 'lmfit','tfs',"saveas"]
+    return enable ? list : list.filter(item => !elemToRemove.includes(item))
+}
+
+enableMenu = (list) => { for (let i of remoevElem(list))  menu.getMenuItemById(i).enabled =  true }
+disableMenu = (list) => { for (let i of remoevElem(list)) menu.getMenuItemById(i).enabled = false }
+hideMenu = (list) => { for (let i of remoevElem(list)) menu.getMenuItemById(i).visible = false }
+visibleMenu = (list) => { for (let i of remoevElem(list)) menu.getMenuItemById(i).visible = true }
 
 
 

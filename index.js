@@ -162,6 +162,7 @@ const helpMenu = {
             }
         }, {
             label: "Sample Data",
+            visible:enable,
             click() {
                 var childWindow = new BrowserWindow({
                     icon: path.join(__dirname, 'figs/charts.png'),
@@ -230,7 +231,7 @@ const homeMenuTemplate = [
     {
         label: 'File',
         submenu: [{
-                label: "Open file",
+                label: "Open File",
                 accelerator: 'CmdOrCtrl+O',
                 click() {
                     mainWindow.webContents.send("menuTrigger", "open");
@@ -239,11 +240,12 @@ const homeMenuTemplate = [
             {
                 label: 'Recent Files',
                 id: 'rf',
+                visible:enable,
                 submenu: [],
             },
-            {
+            ... enable ? [{
                 type: 'separator'
-            },
+            }]:[],
             {
                 label: "Add file",
                 accelerator: 'CmdOrCtrl+Shift+O',
@@ -261,9 +263,9 @@ const homeMenuTemplate = [
                 id: 'arf',
                 submenu: [],
             },
-            {
+            ... enable ? [{
                 type: 'separator'
-            },
+            }]:[],
             {
                 label: "Save",
                 enabled: false,
@@ -277,6 +279,7 @@ const homeMenuTemplate = [
                 label: "Save As",
                 enabled: false,
                 id: 'saveas',
+                visible:enable,
                 accelerator: 'CmdOrCtrl+Shift+S',
                 click() {
                     mainWindow.webContents.send("menuTrigger", "saveas");
@@ -337,9 +340,9 @@ const homeMenuTemplate = [
                     }
                 ]
             },
-            {
+            ... enable ? [{
                 type: 'separator'
-            },
+            }]:[],
             {
                 label: "3D plotter",
                 visible: enable,
@@ -364,11 +367,13 @@ const homeMenuTemplate = [
                     mainWindow.reload();
                 }
             },
-            {
+            ... enable ? [{
                 type: 'separator'
-            },
+            }]:[],
             {
                 label: 'Quit',
+                visible: enable,
+                enable:enable,
                 accelerator: 'CmdOrCtrl+Q',
                 click() {
                     app.quit();
@@ -471,8 +476,10 @@ const homeMenuTemplate = [
         },
       ]
     },
-    {
+    ... enable ? [{
         label: "Fitting",
+
+        visible:enable,
         submenu: [
             {
                 label: "Polynomial Regression Fitting",
@@ -492,7 +499,7 @@ const homeMenuTemplate = [
                 }
             }
         ]
-    },
+    }]:[],
     {
         label: "Window",
         submenu: [{
