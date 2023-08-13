@@ -238,7 +238,7 @@ const homeMenuTemplate = [
                 }
             },
             {
-                label: 'Recent Files',
+                label: 'Open Recent Files',
                 id: 'rf',
                 visible:enable,
                 submenu: [],
@@ -361,7 +361,9 @@ const homeMenuTemplate = [
                         if(mainWindow!=window) window.close()
                       })
                     var men = Menu.getApplicationMenu();
-                    for (let i of ['save', 'saveas', 'savepref', 'tfs','tpl', '3dview', "spr", 'af', 'arf', 'tax', 'swapen', "extend", "fill", "filter", 'rgfit', 'lmfit']) {
+                    
+                    for (let i of ['save', 'savepref', 'tpl', '3dview', "spr", 'af', 
+                    'arf', 'tax', 'swapen', "extend", "fill", "filter", ... enable ? ["rgfit", 'lmfit','tfs',"saveas"] : [] ]) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     mainWindow.reload();

@@ -83,7 +83,7 @@ window.addEventListener('keydown', function (e) {
     } else if ((e.key == "v" || e.key == "V") && e.ctrlKey) {
         pasteThis()
 
-    } else if ((e.key == "x" || e.key == "X") && index.length) {
+    } else if ((e.key == "x" || e.key == "X") && index.length && enable) {
         removeBadData()
 
     } else if (e.key == "ArrowDown" && index.length) {
@@ -108,7 +108,7 @@ window.addEventListener('keydown', function (e) {
     } else if (e.key == "ArrowRight" && !e.ctrlKey && e.shiftKey) {
         moveReflect(true, true)
 
-    } else if ((e.key == "a" || e.key == "A") && e.ctrlKey) {
+    } else if ((e.key == "a" || e.key == "A") && e.ctrlKey && enable) {
         index = Plotly.d3.range(index[0], index[index.length - 1] + 1, 1)
         Plotly.restyle(figurecontainer, { selectedpoints: [index] })
 
@@ -124,13 +124,14 @@ window.addEventListener('keydown', function (e) {
     } else if (e.key == "4" && e.ctrlKey) {
         merge23()
 
-        // }else{
-        //     console.log('No available trigger',e.key)
+    }else{
+            console.log('No available trigger',e.key)
     }
 });
 
 
 function ipcTrigger(_, d) {
+    console.log(d)
     if (d == 'open') {
         fileLoader()
 
@@ -171,7 +172,6 @@ function ipcTrigger(_, d) {
 
     } else if (d == 'tswap' && swapper.active) {
         swapper.close()
-
 
     } else if (d == 'tplots' && !$('#sidebar').width()) {
         sidebar.openSideBar()
@@ -242,6 +242,8 @@ const conMenu = Menu.buildFromTemplate([
     }, {
         label: 'Remove Data',
         accelerator: 'X',
+        visible: enable,
+        enabled: enable,
         click: removeBadData
     }, {
         label: 'Smooth Data',

@@ -493,6 +493,12 @@ a:focus{
     box-shadow: none;
 }
 
+.container{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+}
 
 #container{
     border: 1px solid black;
