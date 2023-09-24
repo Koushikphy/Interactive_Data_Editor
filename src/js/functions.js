@@ -682,6 +682,7 @@ class UndoRedoUtilities {
 
 
     perform = (olddata) => {
+        if (!enable) return
         var arr, tmpSwapped, tmpTh_in;
         [tmpTh_in, col, tmpSwapped, arr] = JSON.parse(olddata);
         if (tmpSwapped != swapped) isswap();

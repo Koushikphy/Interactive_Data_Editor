@@ -173,11 +173,11 @@ function ipcTrigger(_, d) {
     } else if (d == 'tswap' && swapper.active) {
         swapper.close()
 
-    } else if (d == 'tplots' && !$('#sidebar').width()) {
+    } else if (d == 'tplots' && !$('#sidebar').width() && enable) {
         sidebar.openSideBar()
         analytics.add('plotList')
 
-    } else if (d == 'tplots' && $('#sidebar').width()) {
+    } else if (d == 'tplots' && $('#sidebar').width() && enable) {
         sidebar.closeSideBar()
 
     } else if (toolbarutil.availableTools.includes(d)) {

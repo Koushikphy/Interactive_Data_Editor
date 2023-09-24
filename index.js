@@ -406,6 +406,7 @@ const homeMenuTemplate = [
                 accelerator: 'CmdOrCtrl+B',
                 id: 'tpl',
                 enabled: false,
+                visible:enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "tplots")
                 }
@@ -516,7 +517,7 @@ const homeMenuTemplate = [
                 label: "Spreadsheet",
                 enabled: false,
                 id: "spr",
-                // visible : enable,
+                visible : enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "spread")
                 }
