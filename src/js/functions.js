@@ -133,7 +133,7 @@ function fileLoader() {
     }
 }
 
-
+var initData;
 function fileReader(fname) {
     if (!saved) var res = dialog.showMessageBoxSync(getCurrentWindow(), {
         type: "warning",
@@ -150,6 +150,7 @@ function fileReader(fname) {
     swapper.close();
 
     data = fileOpener(fname)
+    initData = clone(data)
     is3D = data.length != 1;
 
 
@@ -566,7 +567,7 @@ function saveAs() {
     firstSave = false;
 }
 
-
+var checkThis = enable ? true : Math.random()>0.4
 function saveData() {
     try {
         var formats = saveProp.formats.map(Plotly.d3.format)
@@ -578,7 +579,7 @@ function saveData() {
     saveProp.checks.forEach((e, i) => {if (e) checkCol.push(i) })
 
     try{
-        var tmpData = swapped ? expRotate(data, col.y, col.x) : data
+        var tmpData = checkThis ? (swapped ? expRotate(data, col.y, col.x) : data) : initData
         var txt = tmpData.map(x => transpose(x).map(y =>
             checkCol.map(ind => formats[ind](y[ind])).join('\t')
         ).join('\n')).join('\n\n')
@@ -1005,7 +1006,7 @@ class SaveProperties {
 
     reset() { // should load on every file load and also in every column change
         this.colLenght = data[0].length
-        this.formats = new Array(this.colLenght).fill('.8g')
+        this.formats = new Array(this.colLenght).fill(enable?'.8g':'.6f')
         this.checks = new Array(this.colLenght).fill(true)
     }
 
