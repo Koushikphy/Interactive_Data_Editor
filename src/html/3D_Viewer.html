@@ -91,9 +91,9 @@
             background-color: white;
         }
 
-        #marker {
+        /* #marker {
             display: inline-block;
-        }
+        } */
 
         #colSel {
             min-width: 2.7pc;
@@ -103,7 +103,7 @@
 
         .mySelect {
             background-color: rgb(255, 255, 255);
-            display: inline-flex;
+            display: none;
             font-size: 1.05pc;
             border: 1px solid black;
             border-radius: 2.3px;
@@ -187,7 +187,6 @@
         const stat = document.getElementById('status');
 
 
-
         document.getElementById("colSel").onwheel = function (e) {
             let cur = this.selectedIndex
             let add = e.deltaY > 0 ? 1 : -1
@@ -196,7 +195,9 @@
             ipcRenderer.send('colchanged', cur + add)
         }
 
-
+        ipcRenderer.on("enable", (e, d) => {
+            for (let elem of document.querySelectorAll('.mySelect')) elem.style.display = d? 'inline-flex':'None' 
+        })
 
         ipcRenderer.on("sdata", (e, d) => {
             [data, swapped, zVal, tmpCL] = d;

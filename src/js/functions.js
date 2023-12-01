@@ -31,7 +31,8 @@ Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
             document.getElementById('imRes').value = `${window.innerWidth}x${window.innerHeight}`;
             $('#popupEx').show()
         }
-    }]]
+    }]],
+    displayModeBar:enable,
 });
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
@@ -408,6 +409,10 @@ class Viewer_3D {
         this.viewerWindow = createWindow('src/html/3D_Viewer.html', "Interactive Data Editor - 3D Viewer", true)
         this.viewerWindow.on("closed", () => { this.viewerWindow = null; this.exportAll = false })
         this.viewerWindow.webContents.once("dom-ready", this.update)
+        this.viewerWindow.webContents.once("dom-ready",()=>{
+            viewer3D.viewerWindow.webContents.send('enable',enable)
+            this.update()
+        })
     }
 
     update = () => {
