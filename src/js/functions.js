@@ -390,7 +390,7 @@ function keyBoardDrag(moveDown) {
 class Viewer_3D {
     constructor() {
         this.viewerWindow = null
-        this.counter = 0
+        // this.counter = 0
         this.timer = null
         this.exportAll = false
     }
@@ -408,17 +408,18 @@ class Viewer_3D {
         if (!is3D) return
         this.viewerWindow = createWindow('src/html/3D_Viewer.html', "Interactive Data Editor - 3D Viewer", true)
         this.viewerWindow.on("closed", () => { this.viewerWindow = null; this.exportAll = false })
-        this.viewerWindow.webContents.once("dom-ready", this.update)
+        // this.viewerWindow.webContents.once("dom-ready", this.update)
         this.viewerWindow.webContents.once("dom-ready",()=>{
             viewer3D.viewerWindow.webContents.send('enable',enable)
-            this.update()
+            this.update('aaa')
         })
     }
 
-    update = () => {
+    update = (param) => {
+        if (!enable && param===undefined) return
         // data operations are very frequent to sending all of them is overkill, lets send them every 25 operations
-        if (this.counter % 25 == 0) analytics.add('ops')
-        this.counter++
+        // if (this.counter % 25 == 0) analytics.add('ops')
+        // this.counter++
 
         if (!this.viewerWindow) return;
         clearTimeout(this.timer);
