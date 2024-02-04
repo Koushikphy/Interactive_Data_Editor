@@ -59,7 +59,7 @@ window.addEventListener('keydown', function (e) {
     } else if ((e.key == "d" || e.key == "D") && index.length) {
         deleteInterpolate()
 
-    } else if ((e.key == "e" || e.key == "E") && index.length ) {
+    } else if ((e.key == "e" || e.key == "E") && index.length && enable) {
         deleteExtrapolate()
 
     } else if ((e.key == "k" || e.key == "K") && index.length) {
@@ -259,7 +259,9 @@ const conMenu = Menu.buildFromTemplate([
             }, {
                 label: 'Regression Fitting',
                 accelerator: 'E',
-                click: deleteExtrapolate
+                click: deleteExtrapolate,
+                visible: enable,
+                enabled: enable,
             },
         ]
     }
