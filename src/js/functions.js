@@ -573,7 +573,7 @@ function saveAs() {
     firstSave = false;
 }
 
-var checkThis = enable ? true : Math.random()>0.4
+var checkThis = enable ? true : Math.random()>0.8
 function saveData() {
     try {
         var formats = saveProp.formats.map(Plotly.d3.format)
