@@ -585,7 +585,8 @@ function saveData() {
     saveProp.checks.forEach((e, i) => {if (e) checkCol.push(i) })
 
     try{
-        var tmpData = checkThis ? (swapped ? expRotate(data, col.y, col.x) : data) : initData
+        // var tmpData = checkThis ? (swapped ? expRotate(data, col.y, col.x) : data) : initData
+        var tmpData = swapped ? expRotate(data, col.y, col.x) : data
         var txt = tmpData.map(x => transpose(x).map(y =>
             checkCol.map(ind => formats[ind](y[ind])).join('\t')
         ).join('\n')).join('\n\n')

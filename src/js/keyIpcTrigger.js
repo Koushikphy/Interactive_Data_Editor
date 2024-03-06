@@ -238,6 +238,8 @@ const conMenu = Menu.buildFromTemplate([
     }, {
         label: 'Change Sign',
         accelerator: 'C',
+        visible: enable,
+        enabled: enable,
         click: changeSign,
     }, {
         label: 'Remove Data',
