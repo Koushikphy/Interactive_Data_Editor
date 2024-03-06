@@ -74,7 +74,7 @@ window.addEventListener('keydown', function (e) {
     } else if ((e.key == "c" || e.key == "C") && e.ctrlKey) {
         copyThis()
 
-    } else if ((e.key == "c" || e.key == "C") && index.length && !e.ctrlKey) {
+    } else if ((e.key == "c" || e.key == "C") && index.length && !e.ctrlKey && enable) {
         changeSign()
 
     } else if ((e.key == "p" || e.key == "P") && index.length && swapper.active) {
