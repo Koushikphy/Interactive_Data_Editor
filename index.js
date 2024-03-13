@@ -439,7 +439,7 @@ const homeMenuTemplate = [
             label: "Extend Data",
             id: "extend",
             enabled: false,
-            // visible : enable,
+            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "extend")
             }
