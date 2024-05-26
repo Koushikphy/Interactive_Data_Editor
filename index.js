@@ -389,6 +389,7 @@ const homeMenuTemplate = [
             {
                 label: "Toggle Axis",
                 accelerator: 'CmdOrCtrl+W',
+                visible:enable,
                 id: 'tax',
                 enabled: false,
                 click(){
