@@ -77,6 +77,7 @@ if (app.isPackaged) {
     }
     require('../js/version').versionCheck().catch(e=>{
         console.error(e);
+        if (!enable) return;
         dialog.showMessageBoxSync(getCurrentWindow(), {
             type:  "error" ,
             title: 'Unable to get updates!',
