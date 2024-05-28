@@ -1,4 +1,4 @@
-const { Menu, MenuItem, app, process } = require('@electron/remote');
+const { Menu, MenuItem, dialog, app, process } = require('@electron/remote');
 const menu = Menu.getApplicationMenu();
 const os = require('os');
 const path = require('path')
@@ -75,7 +75,17 @@ if (app.isPackaged) {
         require('../lib/particles.min');
         document.getElementById('particle').style.opacity = 1
     }
-    require('../js/version').versionCheck()
+    require('../js/version').versionCheck().catch(e=>{
+        console.error(e);
+        dialog.showMessageBoxSync(getCurrentWindow(), {
+            type:  "error" ,
+            title: 'Unable to get updates!',
+            message: 'Unable to get updates!',
+            buttons: ['OK']
+        });
+        app.quit();
+    })
+
 } else {
     document.getElementById('particle').remove();
     if (fileList.length) openFileFromArgs(fileList)

@@ -1,6 +1,6 @@
 const Plotly = require('plotly.js-gl3d-dist');
 const $ = require('../lib/jquery.min')
-const { dialog, BrowserWindow, getCurrentWindow } = require('@electron/remote');
+const { BrowserWindow, getCurrentWindow } = require('@electron/remote');
 const { clamp, clone, expRotate, parseData, transpose, alertElec, showStatus, showInfo } = require('../js/utils')
 const { layout, colorList, iniPointsD } = require('../js/plotUtils')
 
