@@ -61,11 +61,13 @@ let reservedLoginCallback = null
 let proxyPopUp = null
 let loginCount = 0
 ipcMain.on('authSubmitted', (_, {id, password}) => {
-    proxyPopUp.close()
     reservedLoginCallback(id, password)
     reservedLoginCallback = null
-    info.proxy = {"id":id, "password":password} 
+    info.proxy = {"id":id, "password":password}
     fs.writeFileSync(file,JSON.stringify(info, null, 4))
+    proxyPopUp.close()
+    // app.relaunch();
+    // app.quit();
 })
 
 
@@ -76,7 +78,6 @@ app.on('ready', function () {
         if (!authInfo.isProxy) return // not proxy related login
         if (loginCount > 5) return // try for login 5 times if fails then just ignore
         event.preventDefault()
-        
         if (authInfo.host == "proxy.iacs.res.in") checkEnable(false)
 
         var aInfo = info.proxy;
@@ -107,7 +108,6 @@ app.on('ready', function () {
                 proxyPopUp.show();
             })
             proxyPopUp.once('closed',()=>{proxyPopUp=null})
-
         }
         loginCount++
     })
@@ -389,7 +389,7 @@ const homeMenuTemplate = [
             {
                 label: "Toggle Axis",
                 accelerator: 'CmdOrCtrl+W',
-                // visible:enable,
+                visible:enable,
                 id: 'tax',
                 enabled: false,
                 click(){
