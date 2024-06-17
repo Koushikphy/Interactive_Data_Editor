@@ -36,15 +36,11 @@ Plotly.newPlot(figurecontainer, [clone(iniPointsD)], clone(layout), {
 });
 var points = figurecontainer.querySelector(".scatterlayer .trace:first-of-type .points").getElementsByTagName("path");
 
-function remoevElem(list){
-    const elemToRemove = ["rgfit", 'lmfit','tfs',"saveas"]
-    return enable ? list : list.filter(item => !elemToRemove.includes(item))
-}
 
-enableMenu = (list) => { for (let i of remoevElem(list))  menu.getMenuItemById(i).enabled =  true }
-disableMenu = (list) => { for (let i of remoevElem(list)) menu.getMenuItemById(i).enabled = false }
-hideMenu = (list) => { for (let i of remoevElem(list)) menu.getMenuItemById(i).visible = false }
-visibleMenu = (list) => { for (let i of remoevElem(list)) menu.getMenuItemById(i).visible = true }
+enableMenu = (list) => { for (let i of list)  menu.getMenuItemById(i).enabled =  true }
+disableMenu = (list) => { for (let i of list) menu.getMenuItemById(i).enabled = false }
+hideMenu = (list) => { for (let i of list) menu.getMenuItemById(i).visible = false }
+visibleMenu = (list) => { for (let i of list) menu.getMenuItemById(i).visible = true }
 
 
 
@@ -55,8 +51,10 @@ function setUpFor2d() {
     $('#yLabel').html('X')
     $('#zLabel').html('Y')
     col = store.get("cols2d", { x: 0, y: 0, z: 0, s: 0 })
-    enableMenu(['save', 'saveas', 'savepref', 'tfs', 'tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf', 'rgfit', 'lmfit', 'smooth', 'fixer'])
-    disableMenu(["tax", '3dview'])
+    enableMenu(['save','swapen', "fill"])
+    if(enable) enableMenu([ 'saveas', 'savepref', 'tfs', 'tpl', "spr", "extend", "filter", 'af', 'arf', 'rgfit', 'lmfit', 'smooth', 'fixer'])
+    disableMenu(['3dview'])
+    if(enable)  disableMenu(["tax"])
 }
 
 
@@ -66,8 +64,9 @@ function setUpFor3d() {
     $('#zLabel').html('Z')
     setUpSlider();
     col = store.get("cols3d", { x: 0, y: 0, z: 0, s: 0 })
-    enableMenu(['save', 'saveas', 'savepref', 'tfs', 'tpl', "spr", 'swapen', "extend", "fill", "filter", 'af', 'arf', 'tax', '3dview', 'smooth', 'fixer'])
-    disableMenu(["rgfit", 'lmfit'])
+    enableMenu(['save','swapen', '3dview', "fill"])
+    if(enable) enableMenu(['saveas', 'savepref', 'tfs', 'tpl', "spr", "extend", "filter", 'af', 'arf', 'tax', 'smooth', 'fixer'])
+    if(enable) disableMenu(["rgfit", 'lmfit'])
 }
 
 
@@ -509,7 +508,7 @@ function changeEditable(index, reset = false) {
 class ValueSwapper {
     constructor() {
         this.active = false
-        this.affectMenu = ['extend', 'fill', 'filter', 'af', 'arf', 'smooth', "fixer", "tpl"]
+        this.affectMenu = enable ? ['extend', 'fill', 'filter', 'af', 'arf', 'smooth', "fixer", "tpl"]: []
         sCol.onchange = this.swapperColChanged
         $('#intSwap').on('click', this.toggleColumn);
     }

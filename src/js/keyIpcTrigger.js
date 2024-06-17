@@ -1,5 +1,6 @@
 const { ipcRenderer, shell } = require('electron');
-const { downloadImage } = require('../js/download')
+const { downloadImage } = require('../js/download');
+
 
 
 function resizePlot() {
@@ -200,8 +201,10 @@ function ipcTrigger(_, d) {
 
 class AutoSaveUtil {
     constructor() {
-        this.timeOut = enable ? parseInt(store.get('autosave', 0)) : 0 ;
+        this.timeOut = 0;
+        if(!enable) return
         this.reminderInterval = null
+        this.timeOut = parseInt(store.get('autosave', 0));
         this.autoSaveMenuItems = menu.getMenuItemById('autosave').submenu.items;
         this.autoSaveMenuItems[{ 0: 0, 1: 1, 5: 2, 10: 3 }[this.timeOut]].checked = true
     }

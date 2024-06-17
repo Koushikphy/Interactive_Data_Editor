@@ -11,7 +11,7 @@ const {
     BrowserWindow,
     Menu,
     ipcMain,
-    shell,
+    shell
 } = electron;
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -141,6 +141,7 @@ const helpMenu = {
     label: "Help",
     submenu: [{
             label: "Documentation",
+            visible:enable,
             click() {
                 var childWindow = new BrowserWindow({
                     show: false,
@@ -190,6 +191,7 @@ const helpMenu = {
         },
         {
             label: "About",
+            visible:enable,
             click() {
                 var childWindow = new BrowserWindow({
                     icon: path.join(__dirname, 'figs/charts.png'),
@@ -240,16 +242,14 @@ const homeMenuTemplate = [
             {
                 label: 'Open Recent Files',
                 id: 'rf',
-                visible:enable,
                 submenu: [],
             },
-            ... enable ? [{
+            {
                 type: 'separator'
-            }]:[],
+            },
             {
                 label: "Add file",
                 accelerator: 'CmdOrCtrl+Shift+O',
-                visible: enable,
                 enabled: false,
                 id: 'af',
                 click() {
@@ -259,13 +259,12 @@ const homeMenuTemplate = [
             {
                 label: 'Add Recent Files',
                 enabled: false,
-                visible: enable,
                 id: 'arf',
                 submenu: [],
             },
-            ... enable ? [{
+            {
                 type: 'separator'
-            }]:[],
+            },
             {
                 label: "Save",
                 enabled: false,
@@ -279,7 +278,6 @@ const homeMenuTemplate = [
                 label: "Save As",
                 enabled: false,
                 id: 'saveas',
-                visible:enable,
                 accelerator: 'CmdOrCtrl+Shift+S',
                 click() {
                     mainWindow.webContents.send("menuTrigger", "saveas");
@@ -287,7 +285,6 @@ const homeMenuTemplate = [
             },
             {
                 label: "Save Preference",
-                visible: enable,
                 enabled: false,
                 id: 'savepref',
                 click() {
@@ -296,15 +293,12 @@ const homeMenuTemplate = [
             },
             {
                 label : "Export as image",
-                visible: enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "trigdown");
                 }
-            }
-            ,{
+            },{
                 label : "Auto Save",
                 id: 'autosave',
-                visible: enable,
                 submenu:[
                     {
                         label : "Off",
@@ -340,12 +334,11 @@ const homeMenuTemplate = [
                     }
                 ]
             },
-            ... enable ? [{
+            {
                 type: 'separator'
-            }]:[],
+            },
             {
                 label: "3D plotter",
-                visible: enable,
                 click() {
                     mainWindow.loadFile('./src/html/Plotter.html')
                     Menu.setApplicationMenu(plotMenu);
@@ -354,7 +347,6 @@ const homeMenuTemplate = [
             {
                 label: 'Reload',
                 accelerator: 'CmdOrCtrl+R',
-                visible: enable,
                 click() {
                     mainWindow.webContents.send('windowReload','closeExtra')
                     BrowserWindow.getAllWindows().forEach((window) => {
@@ -363,18 +355,17 @@ const homeMenuTemplate = [
                     var men = Menu.getApplicationMenu();
                     
                     for (let i of ['save', 'savepref', 'tpl', '3dview', "spr", 'af', 
-                    'arf', 'tax', 'swapen', "extend", "fill", "filter", ... enable ? ["rgfit", 'lmfit','tfs',"saveas"] : [] ]) {
+                    'arf', 'tax', 'swapen', "extend", "fill", "filter", "rgfit", 'lmfit','tfs',"saveas"]) {
                         men.getMenuItemById(i).enabled = false;
                     }
                     mainWindow.reload();
                 }
             },
-            ... enable ? [{
+            {
                 type: 'separator'
-            }]:[],
+            },
             {
                 label: 'Quit',
-                visible: enable,
                 enable:enable,
                 accelerator: 'CmdOrCtrl+Q',
                 click() {
@@ -389,7 +380,6 @@ const homeMenuTemplate = [
             {
                 label: "Toggle Axis",
                 accelerator: 'CmdOrCtrl+W',
-                visible:enable,
                 id: 'tax',
                 enabled: false,
                 click(){
@@ -407,7 +397,6 @@ const homeMenuTemplate = [
                 accelerator: 'CmdOrCtrl+B',
                 id: 'tpl',
                 enabled: false,
-                visible:enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "tplots")
                 }
@@ -416,13 +405,11 @@ const homeMenuTemplate = [
                 accelerator: 'CmdOrCtrl+K',
                 id: 'tfs',
                 enabled: false,
-                visible: enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "pdash")
                 }
             },{
                 role: 'togglefullscreen' ,
-                visible:enable
             }
         ]
     },
@@ -431,7 +418,6 @@ const homeMenuTemplate = [
         submenu: [{
             label: "Fill Values",
             enabled: false,
-            // visible : enable,
             id: "fill",
             click() {
                 mainWindow.webContents.send("menuTrigger", "fill")
@@ -440,7 +426,6 @@ const homeMenuTemplate = [
             label: "Extend Data",
             id: "extend",
             enabled: false,
-            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "extend")
             }
@@ -448,7 +433,6 @@ const homeMenuTemplate = [
             label: "Filter Data",
             id: 'filter',
             enabled: false,
-            visible : enable,
             click() {
                 mainWindow.webContents.send('menuTrigger', 'filter')
             }
@@ -456,7 +440,6 @@ const homeMenuTemplate = [
             label: "Auto Smoother",
             enabled: false,
             id: 'smooth',
-            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "smooth")
             }
@@ -464,7 +447,6 @@ const homeMenuTemplate = [
             label: "Auto Corrector",
             enabled: false,
             id: 'fixer',
-            visible : enable,
             click() {
                 mainWindow.webContents.send("menuTrigger", "fixer")
             }
@@ -472,7 +454,6 @@ const homeMenuTemplate = [
             label: "Points movable horaizontally",
             checked: false,
             type: "checkbox",
-            visible : enable,
             id :"pamh",
             click() {
                 mainWindow.webContents.send("menuTrigger", "pamh")
@@ -480,30 +461,26 @@ const homeMenuTemplate = [
         },
       ]
     },
-    ... enable ? [{
+    {
         label: "Fitting",
-
-        visible:enable,
         submenu: [
             {
                 label: "Polynomial Regression Fitting",
                 enabled: false,
                 id:"rgfit",
-                visible : enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "rgfit")
                 }
             },{
                 label: "Levenberg-Marquardt Fitting",
                 enabled: false,
-                visible : enable,
                 id :"lmfit",
                 click() {
                     mainWindow.webContents.send("menuTrigger", "lmfit")
                 }
             }
         ]
-    }]:[],
+    },
     {
         label: "Window",
         submenu: [{
@@ -518,7 +495,6 @@ const homeMenuTemplate = [
                 label: "Spreadsheet",
                 enabled: false,
                 id: "spr",
-                visible : enable,
                 click() {
                     mainWindow.webContents.send("menuTrigger", "spread")
                 }
@@ -528,7 +504,74 @@ const homeMenuTemplate = [
     helpMenu
 ];
 
-var homeMenu = Menu.buildFromTemplate(homeMenuTemplate);
+
+const homeMenuTemplate2 = [
+    {
+        label: 'File',
+        submenu: [{
+                label: "Open File",
+                accelerator: 'CmdOrCtrl+O',
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "open");
+                }
+            },
+            {
+                label: "Save",
+                enabled: false,
+                id: 'save',
+                accelerator: 'CmdOrCtrl+S',
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "save");
+                }
+            },
+        ]
+    },
+    {
+        label: "View",
+        submenu: [
+            {
+                label: "Toggle Swapper",
+                enabled: false,
+                id: 'swapen',
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "tswap")
+                }
+            }
+        ]
+    },
+    {
+        label: "Edit",
+        submenu: [
+          {
+                label: "Fill Values",
+                enabled: false,
+                id: "fill",
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "fill")
+                }
+            }
+        ]
+    },
+    {
+        label: "Window",
+        submenu: [
+           {
+                label: "3D Plot Viewer",
+                enabled: false,
+                id: "3dview",
+                click() {
+                    mainWindow.webContents.send("menuTrigger", "3dview")
+                }
+            }
+        ]
+    }, helpMenu
+];
+
+
+
+
+
+var homeMenu = Menu.buildFromTemplate(enable? homeMenuTemplate : homeMenuTemplate2);
 
 
 

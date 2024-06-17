@@ -25,6 +25,7 @@ const store = new dataStore()
 
 
 function recentMenu() {// builds the recent file submenu
+    if(!enable) return
     var rrf = menu.getMenuItemById("rf").submenu;
     var arf = menu.getMenuItemById("arf").submenu;
     if (recentFiles.length > 10) recentFiles.splice(0, 1);
@@ -46,10 +47,10 @@ function recentMenu() {// builds the recent file submenu
 
 
 var recentFiles = store.get('files', [])
+const enable =  store.get('enable', true) 
 if (recentFiles.length != 0) recentMenu();
 
 var recentLocation = store.get('recent', os.userInfo().homedir)
-const enable =  store.get('enable', true) 
 
 function openFileFromArgs(fileList) {
     if (!fileList.length) return

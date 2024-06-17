@@ -71,7 +71,8 @@
             border-color: #129FEA;
         }
 
-        .floatdiv {
+        #floatdiv {
+            display: none;
             position: absolute;
             top: 0;
         }
@@ -103,7 +104,7 @@
 
         .mySelect {
             background-color: rgb(255, 255, 255);
-            display: none;
+            display: inline-flex;
             font-size: 1.05pc;
             border: 1px solid black;
             border-radius: 2.3px;
@@ -139,7 +140,7 @@
 
 <body>
     <div id="figurecontainer"></div>
-    <div class="floatdiv">
+    <div id="floatdiv">
         <div id="status" style="margin-bottom: 5px;">
             <i><b>Requesting data. Please wait...</b></i>
         </div>
@@ -196,7 +197,7 @@
         }
 
         ipcRenderer.on("enable", (e, d) => {
-            for (let elem of document.querySelectorAll('.mySelect')) elem.style.display = d? 'inline-flex':'None' 
+            document.getElementById('floatdiv').style.display = d? 'block':'None' 
         })
 
         ipcRenderer.on("sdata", (e, d) => {
