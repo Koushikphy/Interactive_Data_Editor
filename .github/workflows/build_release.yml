@@ -75,7 +75,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Download builds 
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           path: artifacts
           name: linux-builds
@@ -106,7 +106,7 @@ jobs:
 
 
       - name: Download builds 
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           path: artifacts
 
